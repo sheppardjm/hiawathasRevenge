@@ -36,12 +36,11 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. Space Mono and Special Elite fonts load and render on headings and body text without layout shift
   4. `astro build` produces a static `dist/` folder with no SSR output
   5. Tailwind 4 utility classes resolve correctly in the browser (no missing styles)
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 01-01: Scaffold Astro 6 + Tailwind 4 project with Vite 7 override, TypeScript strict, and Astro Fonts API
-- [ ] 01-02: Define Forest Service design tokens in global.css @theme (colors, typography scale, spacing, shadow values)
-- [ ] 01-03: Create BaseLayout.astro with HTML shell, meta tags, font loading, and Tailwind base styles
+- [ ] 01-01-PLAN.md — Scaffold Astro 6 + Tailwind 4 project with Vite 7 override and Forest Service design tokens in global.css @theme
+- [ ] 01-02-PLAN.md — Create BaseLayout.astro with Astro Fonts API and index.astro with visual identity showcase
 
 ### Phase 2: Data Pipeline
 **Goal**: Running `npm run pipeline` produces valid, well-formed JSON files that all downstream components can consume — route coordinates, elevation data, annotations, and sector definitions
@@ -215,7 +214,7 @@ Note: Phase 3 and Phase 4 can proceed in parallel after Phase 2 completes. Phase
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 0/3 | Not started | - |
+| 1. Foundation | 0/2 | Not started | - |
 | 2. Data Pipeline | 0/4 | Not started | - |
 | 3. Route Map | 0/3 | Not started | - |
 | 4. Elevation Profile | 0/2 | Not started | - |
@@ -229,4 +228,4 @@ Note: Phase 3 and Phase 4 can proceed in parallel after Phase 2 completes. Phase
 
 ---
 *Roadmap created: 2026-03-30*
-*Last updated: 2026-03-30 after initial creation*
+*Last updated: 2026-03-30 after Phase 1 planning*
