@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-03-30)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive showcase that inspires them to ride it and support MBTN.
-**Current focus:** Phase 3 complete — ready for Phase 4
+**Current focus:** Phase 4 in progress — 04-01 complete, 04-02 remaining
 
 ## Current Position
 
-Phase: 3 of 11 (Route Map) — COMPLETE
-Plan: 2 of 2 in current phase (all complete)
-Status: Phase 3 verified and complete
-Last activity: 2026-03-30 — Phase 3 verified (5/5 must-haves passed, human-confirmed)
+Phase: 4 of 11 (Elevation Profile) — In progress
+Plan: 1 of 2 in current phase (1 complete)
+Status: In progress
+Last activity: 2026-03-30 — Completed 04-01-PLAN.md (Chart.js install + ElevationProfile component)
 
-Progress: [█████░░░░░] 23% (7/31 plans complete)
+Progress: [█████░░░░░] 26% (8/31 plans complete)
 
 ## Performance Metrics
 
@@ -30,6 +30,7 @@ Progress: [█████░░░░░] 23% (7/31 plans complete)
 | 01-foundation | 2/2 complete | ~50 min | ~25 min |
 | 02-data-pipeline | 3/3 complete | ~3 min | ~1 min |
 | 03-route-map | 2/2 complete | ~7 min | ~3.5 min |
+| 04-elevation-profile | 1/2 complete | ~2 min | ~2 min |
 
 **Recent Trend:**
 - Last 5 plans: 02-01 (~unknown), 02-02 (1 min), 02-03 (2 min), 03-01 (2 min), 03-02 (~5 min including checkpoint)
@@ -69,6 +70,10 @@ Recent decisions affecting current work:
 - 03-01: addInitHook before L.map() is required for any Leaflet plugin registration
 - 03-02: Route polyline uses forest-900 #1a2e1a (not amber #c8973e) — amber blends with CyclOSM burnt orange road features
 - 03-02: Both GPX files (Munising_Hiawatha_s_Revenge.gpx and Hiawatha_100.gpx) cover identical geographic extent — kept original
+- 04-01: chartjs-plugin-annotation installed now but not registered — deferred to Phase 5 (gravel sector bands)
+- 04-01: Tree-shaken Chart.js import (not chart.js/auto) — LineController, LineElement, PointElement, LinearScale, Filler, Tooltip, Decimation only
+- 04-01: IO-only lazy-init for ElevationProfile (no scroll listener) — avoids premature load triggered by RouteMap's scroll listener
+- 04-01: parsing: false required at BOTH options root and dataset level for LTTB decimation to function
 
 ### Pending Todos
 
@@ -81,5 +86,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-30
-Stopped at: Phase 3 complete — all 2 plans executed, verified (5/5 must-haves), roadmap updated
+Stopped at: Completed 04-01-PLAN.md — Chart.js install and ElevationProfile component
 Resume file: None
