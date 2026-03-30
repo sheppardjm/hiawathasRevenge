@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-03-30)
 ## Current Position
 
 Phase: 2 of 11 (Data Pipeline)
-Plan: 0 of 4 in current phase
-Status: Phase 1 complete, ready to plan Phase 2
-Last activity: 2026-03-30 — Phase 1 verified and complete
+Plan: 1 of 4 in current phase (02-01 complete)
+Status: In progress
+Last activity: 2026-03-30 — Completed 02-01-PLAN.md (GPX parser + route-data.json)
 
-Progress: [██░░░░░░░░] 6% (2/31 plans complete)
+Progress: [███░░░░░░░] 9% (3/31 plans complete)
 
 ## Performance Metrics
 
@@ -44,7 +44,7 @@ Recent decisions affecting current work:
 
 - Foundation: Clone mkUltra stack exactly — Astro 6.x, Tailwind 4.x, Vite 7 override required
 - Foundation: CARTO Dark Matter is default tile fallback; try CyclOSM or Stadia Terrain first for forest aesthetic (resolve in Phase 3)
-- Pipeline: Elevation noise filter threshold (~5m) must be validated against known Garmin/Strava figures for this GPX (Phase 2)
+- Pipeline: Elevation gain must be computed on full-resolution 1927-point set (not simplified). 2m threshold yields 2,258 ft — verified within user GPS range 2,123–2,411 ft (02-01 resolved)
 - Photos: Admin UI writes photos-manifest.json; choose fetch POST vs. CLI script for simplicity at Phase 9
 - 01-01: Tailwind 4 CSS-first approach confirmed — @theme in global.css, no tailwind.config.js
 - 01-01: Vite 7 override required — Tailwind 4.2+ plugin needs Vite 7, Astro 6 ships Vite 6
@@ -55,6 +55,8 @@ Recent decisions affecting current work:
 - 01-02: National Park font (Google) replaces Special Elite for display headings — user-approved National Forest Service aesthetic
 - 01-02: Shield SVG badge with arrowhead and curved textPath is the canonical location branding element (index.astro h1)
 - 01-02: global.css font tokens use var(--font-national-park) / var(--font-space-mono) to bridge Astro-injected variables
+- 02-01: Elevation gain computed on full 1927-point set (not simplified) — RDP strips intermediate changes causing ~45% under-count; 2m filter → 2,258 ft
+- 02-01: route-data.json is the single source of truth for all downstream components (456 simplified points for rendering, full-res used only for elevation calc)
 
 ### Pending Todos
 
@@ -67,5 +69,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-30
-Stopped at: Phase 1 complete — verified, roadmap updated, ready for Phase 2
+Stopped at: Completed 02-01-PLAN.md — GPX parser, route-data.json, elevation fix committed
 Resume file: None
