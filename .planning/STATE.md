@@ -10,27 +10,28 @@ See: .planning/PROJECT.md (updated 2026-03-30)
 ## Current Position
 
 Phase: 2 of 11 (Data Pipeline)
-Plan: 2 of 4 in current phase (02-02 complete)
+Plan: 3 of 4 in current phase (02-03 complete)
 Status: In progress
-Last activity: 2026-03-30 — Completed 02-02-PLAN.md (annotation snapping + annotations.json)
+Last activity: 2026-03-30 — Completed 02-03-PLAN.md (pipeline orchestrator + content collections)
 
-Progress: [████░░░░░░] 13% (4/31 plans complete)
+Progress: [████░░░░░░] 16% (5/31 plans complete)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 3
-- Average duration: ~17 min
-- Total execution time: ~50 min
+- Total plans completed: 5
+- Average duration: ~10 min
+- Total execution time: ~52 min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01-foundation | 2/2 complete | ~50 min | ~25 min |
+| 02-data-pipeline | 3/4 complete | ~3 min | ~1 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (4 min), 01-02 (~45 min including checkpoint + post-approval refinements), 02-01 (~unknown), 02-02 (1 min)
+- Last 5 plans: 01-01 (4 min), 01-02 (~45 min including checkpoint + post-approval refinements), 02-01 (~unknown), 02-02 (1 min), 02-03 (2 min)
 - Trend: On track; data pipeline plans running very fast (pure scripting, no visual checkpoints)
 
 *Updated after each plan completion*
@@ -59,6 +60,9 @@ Recent decisions affecting current work:
 - 02-01: route-data.json is the single source of truth for all downstream components (456 simplified points for rendering, full-res used only for elevation calc)
 - 02-02: annotations.json is a flat array (not keyed object) — required for Astro file() loader which expects array-of-objects with unique id fields
 - 02-02: snapByMileage pattern (nearest-mileage search over points[].miles) is reusable for any future mile-referenced annotation
+- 02-03: process.execPath used in pipeline.js instead of 'node' — guarantees same Node binary across environments
+- 02-03: routeData content collection uses file() with custom parser wrapping single-object JSON as [{id:'route',...}] — Astro file() loader requires array-of-objects
+- 02-03: photos stub collection uses try/catch parser returning [] when photos.json absent — build logs [ERROR] from internal file-loader but does not abort
 
 ### Pending Todos
 
@@ -71,5 +75,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-30
-Stopped at: Completed 02-02-PLAN.md — resolve-annotations.js + annotations.json committed
+Stopped at: Completed 02-03-PLAN.md — pipeline orchestrator + content collections committed
 Resume file: None
