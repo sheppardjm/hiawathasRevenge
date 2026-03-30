@@ -94,49 +94,49 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| MAP-01 | — | Pending |
-| MAP-02 | — | Pending |
-| MAP-03 | — | Pending |
-| MAP-04 | — | Pending |
-| MAP-05 | — | Pending |
-| MAP-06 | — | Pending |
-| MAP-07 | — | Pending |
-| MAP-08 | — | Pending |
-| ELEV-01 | — | Pending |
-| ELEV-02 | — | Pending |
-| ELEV-03 | — | Pending |
-| ELEV-04 | — | Pending |
-| ELEV-05 | — | Pending |
-| PHOTO-01 | — | Pending |
-| PHOTO-02 | — | Pending |
-| PHOTO-03 | — | Pending |
-| PHOTO-04 | — | Pending |
-| PHOTO-05 | — | Pending |
-| PHOTO-06 | — | Pending |
-| CONT-01 | — | Pending |
-| CONT-02 | — | Pending |
-| CONT-03 | — | Pending |
-| CONT-04 | — | Pending |
-| DSGN-01 | — | Pending |
-| DSGN-02 | — | Pending |
-| DSGN-03 | — | Pending |
-| DSGN-04 | — | Pending |
-| DSGN-05 | — | Pending |
-| DSGN-06 | — | Pending |
-| BUILD-01 | — | Pending |
-| BUILD-02 | — | Pending |
-| BUILD-03 | — | Pending |
-| BUILD-04 | — | Pending |
-| BUILD-05 | — | Pending |
-| BUILD-06 | — | Pending |
-| BUILD-07 | — | Pending |
-| BUILD-08 | — | Pending |
+| MAP-01 | Phase 3 | Pending |
+| MAP-02 | Phase 3 | Pending |
+| MAP-03 | Phase 5 | Pending |
+| MAP-04 | Phase 6 | Pending |
+| MAP-05 | Phase 5 | Pending |
+| MAP-06 | Phase 3 | Pending |
+| MAP-07 | Phase 3 | Pending |
+| MAP-08 | Phase 3 | Pending |
+| ELEV-01 | Phase 4 | Pending |
+| ELEV-02 | Phase 5 | Pending |
+| ELEV-03 | Phase 5 | Pending |
+| ELEV-04 | Phase 4 | Pending |
+| ELEV-05 | Phase 4 | Pending |
+| PHOTO-01 | Phase 8 | Pending |
+| PHOTO-02 | Phase 8 | Pending |
+| PHOTO-03 | Phase 9 | Pending |
+| PHOTO-04 | Phase 7 | Pending |
+| PHOTO-05 | Phase 9 | Pending |
+| PHOTO-06 | Phase 7 | Pending |
+| CONT-01 | Phase 10 | Pending |
+| CONT-02 | Phase 10 | Pending |
+| CONT-03 | Phase 10 | Pending |
+| CONT-04 | Phase 10 | Pending |
+| DSGN-01 | Phase 10 | Pending |
+| DSGN-02 | Phase 1 | Pending |
+| DSGN-03 | Phase 1 | Pending |
+| DSGN-04 | Phase 10 | Pending |
+| DSGN-05 | Phase 11 | Pending |
+| DSGN-06 | Phase 11 | Pending |
+| BUILD-01 | Phase 2 | Pending |
+| BUILD-02 | Phase 2 | Pending |
+| BUILD-03 | Phase 2 | Pending |
+| BUILD-04 | Phase 7 | Pending |
+| BUILD-05 | Phase 7 | Pending |
+| BUILD-06 | Phase 2 | Pending |
+| BUILD-07 | Phase 2 | Pending |
+| BUILD-08 | Phase 1 | Pending |
 
 **Coverage:**
-- v1 requirements: 36 total
-- Mapped to phases: 0
-- Unmapped: 36
+- v1 requirements: 37 total
+- Mapped to phases: 37
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-30*
-*Last updated: 2026-03-30 after initial definition*
+*Last updated: 2026-03-30 after roadmap creation — all 37 requirements mapped*
