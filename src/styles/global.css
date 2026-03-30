@@ -1,0 +1,97 @@
+@import "tailwindcss";
+
+@theme {
+  /* ============================================================
+     Forest Service / National Park Color Palette
+     ============================================================ */
+
+  /* Forest greens - primary background family */
+  --color-forest-950: #0d1a0d; /* darkest green, near-black for deep backgrounds */
+  --color-forest-900: #1a2e1a; /* primary dark forest green — main background */
+  --color-forest-800: #2d4a2d; /* slightly lighter green for cards/panels */
+  --color-forest-700: #3d6b3d; /* medium green for borders/accents */
+  --color-forest-600: #4a8a4a; /* brighter green for hover states */
+
+  /* Amber/gold - primary accent, headings, CTAs */
+  --color-amber-500: #c8973e; /* primary warm amber/gold — headings, accents, CTAs */
+  --color-amber-400: #d4a84e; /* lighter amber for hover states */
+  --color-amber-300: #e0b95f; /* lightest amber for subtle highlights */
+
+  /* Rust/terracotta - secondary accent for badges and borders */
+  --color-rust-600: #8b4513; /* rust/terracotta accent for badges/borders */
+  --color-rust-500: #a0522d; /* lighter rust for decorative elements */
+
+  /* Cream/parchment - text colors */
+  --color-cream-100: #f5f0e8; /* primary text color — cream/parchment */
+  --color-cream-200: #e8e0d0; /* secondary text — slightly warmer */
+  --color-cream-50: #faf8f4;  /* lightest cream for highlights */
+
+  /* ============================================================
+     Typography Scale
+     ============================================================ */
+
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 1.875rem;
+  --font-size-4xl: 2.25rem;
+  --font-size-5xl: 3rem;
+
+  /* Font families (loaded by Astro Fonts API in BaseLayout) */
+  --font-mono: 'Space Mono', ui-monospace, monospace;
+  --font-display: 'Special Elite', cursive;
+
+  /* ============================================================
+     Spacing Scale
+     ============================================================ */
+
+  --spacing-section: 4rem;   /* space between major page sections */
+  --spacing-block: 2rem;     /* space between content blocks within a section */
+  --spacing-element: 1rem;   /* space between elements within a block */
+
+  /* ============================================================
+     Shadow Values — ranger station badge aesthetic
+     ============================================================ */
+
+  --shadow-badge: 4px 4px 0px rgba(0, 0, 0, 0.5);  /* hard offset shadow for badge elements */
+  --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.3);     /* softer shadow for cards/panels */
+  --shadow-text: 2px 2px 0px rgba(0, 0, 0, 0.7);    /* text shadow for heading legibility */
+
+  /* ============================================================
+     Border Values
+     ============================================================ */
+
+  --border-badge: 3px solid var(--color-amber-500);   /* bold badge-style border */
+  --border-subtle: 1px solid var(--color-forest-700); /* subtle divider */
+}
+
+@layer base {
+  html {
+    background-color: var(--color-forest-900);
+    color: var(--color-cream-100);
+    font-family: var(--font-mono);
+    line-height: 1.6;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    color: var(--color-amber-500);
+    text-shadow: var(--shadow-text);
+  }
+
+  a {
+    color: var(--color-amber-400);
+    text-decoration-color: var(--color-forest-700);
+  }
+
+  a:hover {
+    color: var(--color-amber-300);
+  }
+}
+
+@layer leaflet {
+  /* Leaflet CSS will be imported here in Phase 3 */
+}
