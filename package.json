@@ -7,8 +7,6 @@
     "preview": "astro preview"
   },
   "dependencies": {
-    "@we-gold/gpxjs": "^1.1.0",
-    "@xmldom/xmldom": "^0.9.9",
     "astro": "^6.1.1",
     "fast-xml-parser": "^5.5.9",
     "simplify-js": "^1.2.4"
