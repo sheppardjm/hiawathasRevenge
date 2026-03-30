@@ -1,0 +1,32 @@
+---
+import { Font } from 'astro:assets';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const {
+  title,
+  description = "A 100-mile cycling showcase through Michigan's Hiawatha National Forest",
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
+    <Font cssVariable="--font-space-mono" preload />
+    <Font cssVariable="--font-special-elite" preload />
+  </head>
+  <body class="min-h-screen bg-forest-900 text-cream-100 font-mono">
+    <main class="max-w-4xl mx-auto px-4 py-8">
+      <slot />
+    </main>
+  </body>
+</html>

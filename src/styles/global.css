@@ -40,9 +40,10 @@
   --font-size-4xl: 2.25rem;
   --font-size-5xl: 3rem;
 
-  /* Font families (loaded by Astro Fonts API in BaseLayout) */
-  --font-mono: 'Space Mono', ui-monospace, monospace;
-  --font-display: 'Special Elite', cursive;
+  /* Font families (loaded by Astro Fonts API in BaseLayout via Font.astro component) */
+  /* --font-space-mono and --font-special-elite are injected by Astro Fonts API */
+  --font-mono: var(--font-space-mono, 'Space Mono', ui-monospace, monospace);
+  --font-display: var(--font-special-elite, 'Special Elite', cursive);
 
   /* ============================================================
      Spacing Scale
