@@ -2739,11 +2739,11 @@
   ],
   "meta": {
     "totalMiles": 101.98,
-    "elevationGainMeters": 378,
-    "elevationGainFeet": 1241,
+    "elevationGainMeters": 688,
+    "elevationGainFeet": 2258,
     "pointCount": 456,
     "originalPointCount": 1927,
     "simplificationTolerance": 0.0002,
-    "elevationThresholdMeters": 5
+    "elevationThresholdMeters": 2
   }
 }
