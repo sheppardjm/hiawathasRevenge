@@ -13,9 +13,9 @@ export default defineConfig({
     },
     {
       provider: fontProviders.google(),
-      name: 'Special Elite',
-      cssVariable: '--font-special-elite',
-      weights: [400],
+      name: 'National Park',
+      cssVariable: '--font-national-park',
+      weights: [400, 600, 700, 800],
       styles: ['normal'],
     },
   ],

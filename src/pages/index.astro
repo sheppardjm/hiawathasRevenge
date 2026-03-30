@@ -4,12 +4,15 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
 <BaseLayout title="Hiawatha's Revenge | 100 Miles Through the Hiawatha National Forest">
 
-  <section class="py-[--spacing-section]">
-    <h1 class="text-5xl text-amber-500 mb-4" style="text-shadow: var(--shadow-text);">
-      Hiawatha's Revenge
-    </h1>
-    <p class="text-xl text-cream-200 max-w-2xl">
-      100 miles of gravel through Michigan's Hiawatha National Forest.
+  <section class="py-[--spacing-section] flex flex-col items-center text-center">
+    <div class="badge">
+      <div class="badge-inner">
+        <span class="badge-top">100 Miles of Gravel Through</span>
+        <h1 class="badge-title">Hiawatha's Revenge</h1>
+        <span class="badge-bottom">Hiawatha National Forest &bull; Michigan</span>
+      </div>
+    </div>
+    <p class="text-xl text-cream-200 max-w-2xl mt-8">
       A ride that tests your legs and rewards your soul.
     </p>
   </section>
@@ -40,3 +43,55 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   </section>
 
 </BaseLayout>
+
+<style>
+  .badge {
+    display: inline-block;
+    padding: 6px;
+    border: 3px solid var(--color-amber-500);
+    border-radius: 12px;
+    box-shadow: var(--shadow-badge);
+    background-color: var(--color-forest-950);
+  }
+
+  .badge-inner {
+    border: 2px solid var(--color-amber-500);
+    border-radius: 8px;
+    padding: 1.5rem 2.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .badge-top,
+  .badge-bottom {
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: var(--color-cream-200);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-size: var(--font-size-sm);
+  }
+
+  .badge-title {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: var(--font-size-4xl);
+    color: var(--color-amber-500);
+    text-shadow: var(--shadow-text);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    line-height: 1.1;
+    margin: 0.25rem 0;
+  }
+
+  @media (min-width: 640px) {
+    .badge-title {
+      font-size: var(--font-size-5xl);
+    }
+    .badge-inner {
+      padding: 2rem 3.5rem;
+    }
+  }
+</style>
