@@ -69,12 +69,11 @@ Plans:
   3. Pinching or scrolling on mobile does not trap the user in the map (gesture handling active)
   4. A reset button on the map returns it to the initial `fitBounds()` view
   5. Leaflet assets are not loaded until the map enters the viewport (IntersectionObserver confirmed in Network tab)
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 03-01: Install Leaflet 1.9.4 and leaflet-gesture-handling; configure tile provider (CyclOSM or Stadia Terrain) with attribution
-- [ ] 03-02: Create `RouteMap.astro` island — dynamically import Leaflet, initialize map with gestureHandling, render GPX polyline from route-data.json
-- [ ] 03-03: Add IntersectionObserver lazy-init pattern with rootMargin: '200px' and custom reset control button
+- [ ] 03-01-PLAN.md — Install Leaflet deps, fix global.css cascade layer order, create RouteMap.astro with CyclOSM tiles and GPX polyline, wire into index.astro
+- [ ] 03-02-PLAN.md — Visual verification of map rendering, tile aesthetics, gesture handling, lazy-loading, and reset button
 
 ### Phase 4: Elevation Profile
 **Goal**: Visitors can see the route's elevation vs. distance as an interactive chart that loads lazily and renders at the correct height on mobile, tablet, and desktop
@@ -215,7 +214,7 @@ Note: Phase 3 and Phase 4 can proceed in parallel after Phase 2 completes. Phase
 |-------|----------------|--------|-----------|
 | 1. Foundation | 2/2 | Complete | 2026-03-30 |
 | 2. Data Pipeline | 3/3 | Complete | 2026-03-30 |
-| 3. Route Map | 0/3 | Not started | - |
+| 3. Route Map | 0/2 | Not started | - |
 | 4. Elevation Profile | 0/2 | Not started | - |
 | 5. Map-Elevation Sync | 0/3 | Not started | - |
 | 6. Restock Markers | 0/1 | Not started | - |
@@ -227,4 +226,4 @@ Note: Phase 3 and Phase 4 can proceed in parallel after Phase 2 completes. Phase
 
 ---
 *Roadmap created: 2026-03-30*
-*Last updated: 2026-03-30 after Phase 2 execution*
+*Last updated: 2026-03-30 after Phase 3 planning*
