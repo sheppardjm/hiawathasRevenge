@@ -13,7 +13,7 @@ This roadmap delivers a visually immersive, static showcase site for the Hiawath
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation** - Astro 6 + Tailwind 4 project scaffold with Forest Service design tokens and base layout
-- [ ] **Phase 2: Data Pipeline** - GPX parsing, annotation resolution, and build orchestration producing all route JSON
+- [x] **Phase 2: Data Pipeline** - GPX parsing, annotation resolution, and build orchestration producing all route JSON
 - [ ] **Phase 3: Route Map** - Leaflet island with GPX polyline, themed tiles, gesture handling, and lazy-load
 - [ ] **Phase 4: Elevation Profile** - Chart.js island with elevation vs. distance, lazy-load, and responsive heights
 - [ ] **Phase 5: Map-Elevation Sync** - CrosshairCustomEvent bus, gravel sector overlays on map and chart
@@ -55,9 +55,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 02-01-PLAN.md — Parse GPX, compute cumulative mileage, apply RDP simplification, apply elevation noise filter, output route-data.json; checkpoint for elevation gain verification
-- [ ] 02-02-PLAN.md — Define restock points and gravel sectors, snap to route coordinates, output annotations.json
-- [ ] 02-03-PLAN.md — Wire pipeline.js orchestrator with prebuild/predev npm hooks; create content.config.ts with Zod schemas for all collections
+- [x] 02-01-PLAN.md — Parse GPX, compute cumulative mileage, apply RDP simplification, apply elevation noise filter, output route-data.json; checkpoint for elevation gain verification
+- [x] 02-02-PLAN.md — Define restock points and gravel sectors, snap to route coordinates, output annotations.json
+- [x] 02-03-PLAN.md — Wire pipeline.js orchestrator with prebuild/predev npm hooks; create content.config.ts with Zod schemas for all collections
 
 ### Phase 3: Route Map
 **Goal**: Visitors can see the full 100-mile GPX route rendered as a polyline on a forest-themed map that lazy-loads on scroll, handles mobile touch correctly, and resets to the default view on demand
@@ -214,7 +214,7 @@ Note: Phase 3 and Phase 4 can proceed in parallel after Phase 2 completes. Phase
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation | 2/2 | Complete | 2026-03-30 |
-| 2. Data Pipeline | 0/4 | Not started | - |
+| 2. Data Pipeline | 3/3 | Complete | 2026-03-30 |
 | 3. Route Map | 0/3 | Not started | - |
 | 4. Elevation Profile | 0/2 | Not started | - |
 | 5. Map-Elevation Sync | 0/3 | Not started | - |
@@ -227,4 +227,4 @@ Note: Phase 3 and Phase 4 can proceed in parallel after Phase 2 completes. Phase
 
 ---
 *Roadmap created: 2026-03-30*
-*Last updated: 2026-03-30 after Phase 1 planning*
+*Last updated: 2026-03-30 after Phase 2 execution*

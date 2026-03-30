@@ -123,13 +123,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DSGN-04 | Phase 10 | Pending |
 | DSGN-05 | Phase 11 | Pending |
 | DSGN-06 | Phase 11 | Pending |
-| BUILD-01 | Phase 2 | Pending |
-| BUILD-02 | Phase 2 | Pending |
-| BUILD-03 | Phase 2 | Pending |
+| BUILD-01 | Phase 2 | Complete |
+| BUILD-02 | Phase 2 | Complete |
+| BUILD-03 | Phase 2 | Complete |
 | BUILD-04 | Phase 7 | Pending |
 | BUILD-05 | Phase 7 | Pending |
-| BUILD-06 | Phase 2 | Pending |
-| BUILD-07 | Phase 2 | Pending |
+| BUILD-06 | Phase 2 | Complete |
+| BUILD-07 | Phase 2 | Complete |
 | BUILD-08 | Phase 1 | Complete |
 
 **Coverage:**
