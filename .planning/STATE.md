@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-03-30)
 ## Current Position
 
 Phase: 2 of 11 (Data Pipeline)
-Plan: 1 of 4 in current phase (02-01 complete)
+Plan: 2 of 4 in current phase (02-02 complete)
 Status: In progress
-Last activity: 2026-03-30 — Completed 02-01-PLAN.md (GPX parser + route-data.json)
+Last activity: 2026-03-30 — Completed 02-02-PLAN.md (annotation snapping + annotations.json)
 
-Progress: [███░░░░░░░] 9% (3/31 plans complete)
+Progress: [████░░░░░░] 13% (4/31 plans complete)
 
 ## Performance Metrics
 
@@ -30,8 +30,8 @@ Progress: [███░░░░░░░] 9% (3/31 plans complete)
 | 01-foundation | 2/2 complete | ~50 min | ~25 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (4 min), 01-02 (~45 min including checkpoint + post-approval refinements)
-- Trend: On track; 01-02 was longer due to visual checkpoint and user-driven font/badge iterations
+- Last 5 plans: 01-01 (4 min), 01-02 (~45 min including checkpoint + post-approval refinements), 02-01 (~unknown), 02-02 (1 min)
+- Trend: On track; data pipeline plans running very fast (pure scripting, no visual checkpoints)
 
 *Updated after each plan completion*
 
@@ -57,6 +57,8 @@ Recent decisions affecting current work:
 - 01-02: global.css font tokens use var(--font-national-park) / var(--font-space-mono) to bridge Astro-injected variables
 - 02-01: Elevation gain computed on full 1927-point set (not simplified) — RDP strips intermediate changes causing ~45% under-count; 2m filter → 2,258 ft
 - 02-01: route-data.json is the single source of truth for all downstream components (456 simplified points for rendering, full-res used only for elevation calc)
+- 02-02: annotations.json is a flat array (not keyed object) — required for Astro file() loader which expects array-of-objects with unique id fields
+- 02-02: snapByMileage pattern (nearest-mileage search over points[].miles) is reusable for any future mile-referenced annotation
 
 ### Pending Todos
 
@@ -69,5 +71,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-30
-Stopped at: Completed 02-01-PLAN.md — GPX parser, route-data.json, elevation fix committed
+Stopped at: Completed 02-02-PLAN.md — resolve-annotations.js + annotations.json committed
 Resume file: None
