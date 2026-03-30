@@ -94,14 +94,14 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| MAP-01 | Phase 3 | Pending |
-| MAP-02 | Phase 3 | Pending |
+| MAP-01 | Phase 3 | Complete |
+| MAP-02 | Phase 3 | Complete |
 | MAP-03 | Phase 5 | Pending |
 | MAP-04 | Phase 6 | Pending |
 | MAP-05 | Phase 5 | Pending |
-| MAP-06 | Phase 3 | Pending |
-| MAP-07 | Phase 3 | Pending |
-| MAP-08 | Phase 3 | Pending |
+| MAP-06 | Phase 3 | Complete |
+| MAP-07 | Phase 3 | Complete |
+| MAP-08 | Phase 3 | Complete |
 | ELEV-01 | Phase 4 | Pending |
 | ELEV-02 | Phase 5 | Pending |
 | ELEV-03 | Phase 5 | Pending |

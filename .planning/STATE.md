@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-03-30)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive showcase that inspires them to ride it and support MBTN.
-**Current focus:** Phase 3 in progress — Plan 01 complete
+**Current focus:** Phase 3 complete — ready for Phase 4
 
 ## Current Position
 
-Phase: 3 of 11 (Route Map) — In Progress
-Plan: 1 of ? in current phase
-Status: Phase 3 Plan 01 complete
-Last activity: 2026-03-30 — Completed 03-01-PLAN.md (RouteMap core implementation)
+Phase: 3 of 11 (Route Map) — COMPLETE
+Plan: 2 of 2 in current phase (all complete)
+Status: Phase 3 verified and complete
+Last activity: 2026-03-30 — Phase 3 verified (5/5 must-haves passed, human-confirmed)
 
-Progress: [████░░░░░░] 19% (6/31 plans complete)
+Progress: [█████░░░░░] 23% (7/31 plans complete)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 6
+- Total plans completed: 7
 - Average duration: ~9 min
-- Total execution time: ~54 min
+- Total execution time: ~60 min
 
 **By Phase:**
 
@@ -29,11 +29,11 @@ Progress: [████░░░░░░] 19% (6/31 plans complete)
 |-------|-------|-------|----------|
 | 01-foundation | 2/2 complete | ~50 min | ~25 min |
 | 02-data-pipeline | 3/3 complete | ~3 min | ~1 min |
-| 03-route-map | 1/? complete | ~2 min | ~2 min |
+| 03-route-map | 2/2 complete | ~7 min | ~3.5 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-02 (~45 min), 02-01 (~unknown), 02-02 (1 min), 02-03 (2 min), 03-01 (2 min)
-- Trend: Implementation plans running fast; Phase 3 Plan 01 was pure code with no visual checkpoints
+- Last 5 plans: 02-01 (~unknown), 02-02 (1 min), 02-03 (2 min), 03-01 (2 min), 03-02 (~5 min including checkpoint)
+- Trend: On track; visual checkpoint plans take longer due to human review
 
 *Updated after each plan completion*
 
@@ -45,7 +45,6 @@ Decisions are logged in PROJECT.md Key Decisions table.
 Recent decisions affecting current work:
 
 - Foundation: Clone mkUltra stack exactly — Astro 6.x, Tailwind 4.x, Vite 7 override required
-- Foundation: CARTO Dark Matter is default tile fallback; try CyclOSM or Stadia Terrain first for forest aesthetic (resolve in Phase 3)
 - Pipeline: Elevation gain must be computed on full-resolution 1927-point set (not simplified). 2m threshold yields 2,258 ft — verified within user GPS range 2,123–2,411 ft (02-01 resolved)
 - Photos: Admin UI writes photos-manifest.json; choose fetch POST vs. CLI script for simplicity at Phase 9
 - 01-01: Tailwind 4 CSS-first approach confirmed — @theme in global.css, no tailwind.config.js
@@ -65,10 +64,11 @@ Recent decisions affecting current work:
 - 02-03: routeData content collection uses file() with custom parser wrapping single-object JSON as [{id:'route',...}] — Astro file() loader requires array-of-objects
 - 02-03: photos stub collection uses try/catch parser returning [] when photos.json absent — build logs [ERROR] from internal file-loader but does not abort
 - 03-01: CyclOSM confirmed as tile layer (not CARTO Dark Matter) — forest-themed bicycle cartography, no API key
-- 03-01: Amber #c8973e polyline — matches project accent token, contrasts well on CyclOSM light tiles (mkUltra used #d4d4d4 for dark tiles)
 - 03-01: Route data shape is routeData.points[].{lat,lon} — points wrapped in points array in route-data.json
 - 03-01: Dynamic import pattern for Leaflet: const L = (await import('leaflet')).default inside initMap()
 - 03-01: addInitHook before L.map() is required for any Leaflet plugin registration
+- 03-02: Route polyline uses forest-900 #1a2e1a (not amber #c8973e) — amber blends with CyclOSM burnt orange road features
+- 03-02: Both GPX files (Munising_Hiawatha_s_Revenge.gpx and Hiawatha_100.gpx) cover identical geographic extent — kept original
 
 ### Pending Todos
 
@@ -81,5 +81,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-30
-Stopped at: Phase 3 Plan 01 complete — RouteMap core implementation, map visible on index page
+Stopped at: Phase 3 complete — all 2 plans executed, verified (5/5 must-haves), roadmap updated
 Resume file: None

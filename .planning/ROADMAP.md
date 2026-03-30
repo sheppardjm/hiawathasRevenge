@@ -14,7 +14,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation** - Astro 6 + Tailwind 4 project scaffold with Forest Service design tokens and base layout
 - [x] **Phase 2: Data Pipeline** - GPX parsing, annotation resolution, and build orchestration producing all route JSON
-- [ ] **Phase 3: Route Map** - Leaflet island with GPX polyline, themed tiles, gesture handling, and lazy-load
+- [x] **Phase 3: Route Map** - Leaflet island with GPX polyline, themed tiles, gesture handling, and lazy-load
 - [ ] **Phase 4: Elevation Profile** - Chart.js island with elevation vs. distance, lazy-load, and responsive heights
 - [ ] **Phase 5: Map-Elevation Sync** - CrosshairCustomEvent bus, gravel sector overlays on map and chart
 - [ ] **Phase 6: Restock Markers** - Restock point markers on map with name and mileage labels
@@ -72,8 +72,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 03-01-PLAN.md — Install Leaflet deps, fix global.css cascade layer order, create RouteMap.astro with CyclOSM tiles and GPX polyline, wire into index.astro
-- [ ] 03-02-PLAN.md — Visual verification of map rendering, tile aesthetics, gesture handling, lazy-loading, and reset button
+- [x] 03-01-PLAN.md — Install Leaflet deps, fix global.css cascade layer order, create RouteMap.astro with CyclOSM tiles and GPX polyline, wire into index.astro
+- [x] 03-02-PLAN.md — Visual verification of map rendering, tile aesthetics, gesture handling, lazy-loading, and reset button
 
 ### Phase 4: Elevation Profile
 **Goal**: Visitors can see the route's elevation vs. distance as an interactive chart that loads lazily and renders at the correct height on mobile, tablet, and desktop
@@ -214,7 +214,7 @@ Note: Phase 3 and Phase 4 can proceed in parallel after Phase 2 completes. Phase
 |-------|----------------|--------|-----------|
 | 1. Foundation | 2/2 | Complete | 2026-03-30 |
 | 2. Data Pipeline | 3/3 | Complete | 2026-03-30 |
-| 3. Route Map | 0/2 | Not started | - |
+| 3. Route Map | 2/2 | Complete | 2026-03-30 |
 | 4. Elevation Profile | 0/2 | Not started | - |
 | 5. Map-Elevation Sync | 0/3 | Not started | - |
 | 6. Restock Markers | 0/1 | Not started | - |
@@ -226,4 +226,4 @@ Note: Phase 3 and Phase 4 can proceed in parallel after Phase 2 completes. Phase
 
 ---
 *Roadmap created: 2026-03-30*
-*Last updated: 2026-03-30 after Phase 3 planning*
+*Last updated: 2026-03-30 after Phase 3 execution*
