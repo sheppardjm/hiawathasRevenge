@@ -15,7 +15,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 1: Foundation** - Astro 6 + Tailwind 4 project scaffold with Forest Service design tokens and base layout
 - [x] **Phase 2: Data Pipeline** - GPX parsing, annotation resolution, and build orchestration producing all route JSON
 - [x] **Phase 3: Route Map** - Leaflet island with GPX polyline, themed tiles, gesture handling, and lazy-load
-- [ ] **Phase 4: Elevation Profile** - Chart.js island with elevation vs. distance, lazy-load, and responsive heights
+- [x] **Phase 4: Elevation Profile** - Chart.js island with elevation vs. distance, lazy-load, and responsive heights
 - [ ] **Phase 5: Map-Elevation Sync** - CrosshairCustomEvent bus, gravel sector overlays on map and chart
 - [ ] **Phase 6: Restock Markers** - Restock point markers on map with name and mileage labels
 - [ ] **Phase 7: Photo Pipeline** - sharp thumbnail generation, photo matching script, and photos.json
@@ -84,11 +84,11 @@ Plans:
   2. The chart lazy-loads via IntersectionObserver and is not loaded until it enters the viewport
   3. The chart renders at 140px tall on mobile, 180px on tablet, and 180px on desktop without overflow
   4. Chart.js assets are not present in the initial page bundle (confirmed in Network tab)
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 04-01: Install Chart.js 4.5.1 and chartjs-plugin-annotation; create `ElevationProfile.astro` island with IntersectionObserver lazy-init
-- [ ] 04-02: Configure Chart.js dataset from route-data.json with LTTB decimation (target ~500 points), responsive height config, and axis labels
+- [x] 04-01-PLAN.md — Install Chart.js 4.5.1 + chartjs-plugin-annotation 3.1.0; create ElevationProfile.astro with line chart, IntersectionObserver lazy-init, responsive height, LTTB decimation; wire into index.astro
+- [x] 04-02-PLAN.md — Visual verification of chart rendering, axis labels, responsive heights, lazy-loading, and Network tab confirmation
 
 ### Phase 5: Map-Elevation Sync
 **Goal**: Hovering the elevation chart moves a bike icon crosshair on the map to the corresponding route position, and gravel sectors appear as color-coded overlays on both the map and the chart
@@ -215,7 +215,7 @@ Note: Phase 3 and Phase 4 can proceed in parallel after Phase 2 completes. Phase
 | 1. Foundation | 2/2 | Complete | 2026-03-30 |
 | 2. Data Pipeline | 3/3 | Complete | 2026-03-30 |
 | 3. Route Map | 2/2 | Complete | 2026-03-30 |
-| 4. Elevation Profile | 0/2 | Not started | - |
+| 4. Elevation Profile | 2/2 | Complete | 2026-03-30 |
 | 5. Map-Elevation Sync | 0/3 | Not started | - |
 | 6. Restock Markers | 0/1 | Not started | - |
 | 7. Photo Pipeline | 0/2 | Not started | - |
@@ -226,4 +226,4 @@ Note: Phase 3 and Phase 4 can proceed in parallel after Phase 2 completes. Phase
 
 ---
 *Roadmap created: 2026-03-30*
-*Last updated: 2026-03-30 after Phase 3 execution*
+*Last updated: 2026-03-30 after Phase 4 execution*
