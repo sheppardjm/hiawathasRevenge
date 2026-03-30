@@ -1,0 +1,119 @@
+---
+// ElevationProfile.astro — Chart.js elevation line chart with IntersectionObserver lazy-init
+// Dynamic import in initChart() keeps Chart.js out of the initial bundle (~30KB vs ~200KB for chart.js/auto)
+// Renders elevation (feet) vs distance (miles) from route-data.json points array
+---
+
+<div id="elevation-chart-container" class="relative w-full h-[140px] sm:h-[180px]">
+  <canvas id="elevation-chart"></canvas>
+</div>
+
+<script>
+  async function initChart() {
+    // Dynamic import — tree-shaken (NOT chart.js/auto) to keep bundle small
+    // Only import components needed for a line chart
+    const {
+      Chart,
+      LineController,
+      LineElement,
+      PointElement,
+      LinearScale,
+      Filler,
+      Tooltip,
+      Decimation
+    } = await import('chart.js');
+
+    // Register only what we use — avoids pulling in CategoryScale, BarController, etc.
+    Chart.register(LineController, LineElement, PointElement, LinearScale, Filler, Tooltip, Decimation);
+
+    // Fetch route data — same source as RouteMap.astro
+    const routeData = await fetch('/data/route-data.json').then(r => r.json());
+
+    // Build dataset: convert elevation from meters to feet, use miles for x-axis
+    // parsing: false requires data to be in {x, y} format, sorted ascending by x
+    const data = routeData.points.map(pt => ({
+      x: pt.miles,
+      y: +(pt.ele * 3.28084).toFixed(1)
+    }));
+
+    const canvas = document.getElementById('elevation-chart');
+    new Chart(canvas, {
+      type: 'line',
+      data: {
+        datasets: [{
+          data,
+          // parsing: false REQUIRED at dataset level for LTTB decimation to function
+          parsing: false,
+          borderColor: '#c8973e',
+          backgroundColor: 'rgba(200, 151, 62, 0.15)',
+          fill: 'start',
+          pointRadius: 0,
+          borderWidth: 1.5,
+          tension: 0
+        }]
+      },
+      options: {
+        // parsing: false REQUIRED at options level for LTTB decimation to function
+        parsing: false,
+        responsive: true,
+        // maintainAspectRatio: false — CSS container controls height (140px/180px)
+        maintainAspectRatio: false,
+        animation: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            mode: 'index',
+            intersect: false,
+            callbacks: {
+              title: (items) => `Mile ${items[0].parsed.x.toFixed(1)}`,
+              label: (item) => `${Math.round(item.parsed.y)} ft`
+            }
+          },
+          decimation: {
+            enabled: true,
+            algorithm: 'lttb',
+            samples: 300,
+            threshold: 400
+          }
+        },
+        scales: {
+          x: {
+            type: 'linear',
+            title: { display: true, text: 'Distance (miles)', color: '#e8e0d0' },
+            ticks: { color: '#e8e0d0', maxTicksLimit: 8 },
+            grid: { color: 'rgba(255,255,255,0.08)' }
+          },
+          y: {
+            type: 'linear',
+            title: { display: true, text: 'Elevation (ft)', color: '#e8e0d0' },
+            ticks: {
+              color: '#e8e0d0',
+              callback: (v) => `${Math.round(v)} ft`
+            },
+            grid: { color: 'rgba(255,255,255,0.08)' }
+          }
+        }
+      }
+    });
+  } // end initChart
+
+  // IntersectionObserver lazy-init — loads Chart.js only when container enters viewport.
+  // The map section above already uses a scroll listener as its primary trigger;
+  // IO alone is sufficient for the elevation chart below it.
+  let chartInitialized = false;
+  const container = document.getElementById('elevation-chart-container');
+
+  if (container) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !chartInitialized) {
+          chartInitialized = true;
+          observer.disconnect();
+          initChart();
+        }
+      },
+      { rootMargin: '0px' }
+    );
+    observer.observe(container);
+  }
+</script>
