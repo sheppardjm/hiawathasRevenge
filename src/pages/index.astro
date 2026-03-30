@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import RouteMap from '../components/RouteMap.astro';
 ---
 
 <BaseLayout title="Hiawatha's Revenge | 100 Miles Through the Hiawatha National Forest">
@@ -52,6 +53,11 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       Upper Peninsula. Dense hardwood forests, pristine inland lakes,
       and miles of quiet forest roads await.
     </p>
+  </section>
+
+  <section id="route" class="py-[--spacing-block]">
+    <h2 class="text-3xl mb-[--spacing-element]">Explore the Route</h2>
+    <RouteMap />
   </section>
 
   <section class="py-[--spacing-block]">
