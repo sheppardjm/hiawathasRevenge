@@ -6,12 +6,12 @@
     "startMile": 1.1,
     "endMile": 2.4,
     "lengthMiles": 1.3,
-    "startLat": 46.35686,
-    "startLon": -86.73175,
-    "endLat": 46.34027,
-    "endLon": -86.74124,
+    "startLat": 46.35699,
+    "startLon": -86.73123,
+    "endLat": 46.34089,
+    "endLon": -86.74108,
     "startIdx": 5,
-    "endIdx": 14
+    "endIdx": 12
   },
   {
     "id": "sector-nf2266",
@@ -20,12 +20,12 @@
     "startMile": 6.7,
     "endMile": 9.9,
     "lengthMiles": 3.2,
-    "startLat": 46.33319,
-    "startLon": -86.65629,
-    "endLat": 46.29102,
-    "endLon": -86.67161,
-    "startIdx": 23,
-    "endIdx": 33
+    "startLat": 46.33311,
+    "startLon": -86.65643,
+    "endLat": 46.29101,
+    "endLon": -86.67163,
+    "startIdx": 24,
+    "endIdx": 34
   },
   {
     "id": "sector-bass-lake",
@@ -34,12 +34,12 @@
     "startMile": 25.3,
     "endMile": 30.1,
     "lengthMiles": 4.8,
-    "startLat": 46.18725,
-    "startLon": -86.45743,
-    "endLat": 46.1221,
-    "endLon": -86.43604,
+    "startLat": 46.18378,
+    "startLon": -86.45716,
+    "endLat": 46.12226,
+    "endLon": -86.43608,
     "startIdx": 110,
-    "endIdx": 132
+    "endIdx": 131
   },
   {
     "id": "sector-nf2217",
@@ -48,12 +48,12 @@
     "startMile": 36.8,
     "endMile": 43.4,
     "lengthMiles": 6.6,
-    "startLat": 46.07159,
-    "startLon": -86.46703,
-    "endLat": 46.07137,
-    "endLon": -86.54383,
-    "startIdx": 157,
-    "endIdx": 180
+    "startLat": 46.07171,
+    "startLon": -86.46715,
+    "endLat": 46.07048,
+    "endLon": -86.54099,
+    "startIdx": 155,
+    "endIdx": 179
   },
   {
     "id": "sector-nd2225",
@@ -62,12 +62,12 @@
     "startMile": 55.7,
     "endMile": 59.6,
     "lengthMiles": 3.9,
-    "startLat": 46.13733,
-    "startLon": -86.60283,
-    "endLat": 46.15285,
-    "endLon": -86.54052,
-    "startIdx": 222,
-    "endIdx": 250
+    "startLat": 46.12846,
+    "startLon": -86.60349,
+    "endLat": 46.14434,
+    "endLon": -86.54451,
+    "startIdx": 231,
+    "endIdx": 252
   },
   {
     "id": "sector-doe-lake",
@@ -76,12 +76,12 @@
     "startMile": 84.8,
     "endMile": 87.9,
     "lengthMiles": 3.1,
-    "startLat": 46.25742,
-    "startLon": -86.67983,
-    "endLat": 46.26225,
-    "endLon": -86.74495,
-    "startIdx": 379,
-    "endIdx": 389
+    "startLat": 46.25736,
+    "startLon": -86.67988,
+    "endLat": 46.2596,
+    "endLon": -86.73686,
+    "startIdx": 380,
+    "endIdx": 388
   },
   {
     "id": "sector-rapid-river",
@@ -90,21 +90,21 @@
     "startMile": 94.6,
     "endMile": 100.9,
     "lengthMiles": 6.3,
-    "startLat": 46.33284,
-    "startLon": -86.78324,
-    "endLat": 46.35695,
-    "endLon": -86.73322,
-    "startIdx": 414,
-    "endIdx": 449
+    "startLat": 46.33281,
+    "startLon": -86.7832,
+    "endLat": 46.35901,
+    "endLon": -86.74208,
+    "startIdx": 415,
+    "endIdx": 442
   },
   {
     "id": "restock-camp7",
     "type": "restock",
     "name": "Camp 7 Lake Campground",
     "mile": 44.7,
-    "lat": 46.05493,
-    "lon": -86.54867,
-    "ele": 232.1,
+    "lat": 46.05214,
+    "lon": -86.5449,
+    "ele": 229.2,
     "snapIdx": 185
   },
   {
@@ -112,9 +112,9 @@
     "type": "restock",
     "name": "Midway General Store",
     "mile": 75.7,
-    "lat": 46.16791,
-    "lon": -86.62359,
-    "ele": 234.9,
-    "snapIdx": 340
+    "lat": 46.16051,
+    "lon": -86.63402,
+    "ele": 244.6,
+    "snapIdx": 339
   }
 ]

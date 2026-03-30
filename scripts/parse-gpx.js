@@ -1,7 +1,7 @@
 /**
  * parse-gpx.js
  *
- * Parses Munising_Hiawatha_s_Revenge.gpx, applies haversine mileage computation
+ * Parses Hiawatha_100.gpx, applies haversine mileage computation
  * on the full-resolution track, then simplifies via RDP (simplify-js) and applies
  * a noise-filtered elevation gain calculation before writing public/data/route-data.json.
  *
@@ -19,7 +19,7 @@ const ROOT = join(__dirname, '..');
 
 // ── 1. Read and parse GPX ──────────────────────────────────────────────────
 
-const gpxContent = readFileSync(join(ROOT, 'Munising_Hiawatha_s_Revenge.gpx'), 'utf-8');
+const gpxContent = readFileSync(join(ROOT, 'Hiawatha_100.gpx'), 'utf-8');
 
 const parser = new XMLParser({ ignoreAttributes: false, attributeNamePrefix: '@_' });
 const parsed = parser.parse(gpxContent);
