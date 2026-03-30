@@ -2,6 +2,9 @@
   "name": "hiawathas-revenge",
   "type": "module",
   "scripts": {
+    "pipeline": "node scripts/pipeline.js",
+    "prebuild": "node scripts/pipeline.js",
+    "predev": "node scripts/pipeline.js",
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview"
