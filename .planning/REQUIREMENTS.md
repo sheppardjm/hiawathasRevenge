@@ -118,8 +118,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CONT-03 | Phase 10 | Pending |
 | CONT-04 | Phase 10 | Pending |
 | DSGN-01 | Phase 10 | Pending |
-| DSGN-02 | Phase 1 | Pending |
-| DSGN-03 | Phase 1 | Pending |
+| DSGN-02 | Phase 1 | Complete |
+| DSGN-03 | Phase 1 | Complete |
 | DSGN-04 | Phase 10 | Pending |
 | DSGN-05 | Phase 11 | Pending |
 | DSGN-06 | Phase 11 | Pending |
@@ -130,7 +130,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | BUILD-05 | Phase 7 | Pending |
 | BUILD-06 | Phase 2 | Pending |
 | BUILD-07 | Phase 2 | Pending |
-| BUILD-08 | Phase 1 | Pending |
+| BUILD-08 | Phase 1 | Complete |
 
 **Coverage:**
 - v1 requirements: 37 total

@@ -12,7 +12,7 @@ This roadmap delivers a visually immersive, static showcase site for the Hiawath
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Foundation** - Astro 6 + Tailwind 4 project scaffold with Forest Service design tokens and base layout
+- [x] **Phase 1: Foundation** - Astro 6 + Tailwind 4 project scaffold with Forest Service design tokens and base layout
 - [ ] **Phase 2: Data Pipeline** - GPX parsing, annotation resolution, and build orchestration producing all route JSON
 - [ ] **Phase 3: Route Map** - Leaflet island with GPX polyline, themed tiles, gesture handling, and lazy-load
 - [ ] **Phase 4: Elevation Profile** - Chart.js island with elevation vs. distance, lazy-load, and responsive heights
@@ -39,8 +39,8 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: 2 plans
 
 Plans:
-- [ ] 01-01-PLAN.md — Scaffold Astro 6 + Tailwind 4 project with Vite 7 override and Forest Service design tokens in global.css @theme
-- [ ] 01-02-PLAN.md — Create BaseLayout.astro with Astro Fonts API and index.astro with visual identity showcase
+- [x] 01-01-PLAN.md — Scaffold Astro 6 + Tailwind 4 project with Vite 7 override and Forest Service design tokens in global.css @theme
+- [x] 01-02-PLAN.md — Create BaseLayout.astro with Astro Fonts API and index.astro with visual identity showcase
 
 ### Phase 2: Data Pipeline
 **Goal**: Running `npm run pipeline` produces valid, well-formed JSON files that all downstream components can consume — route coordinates, elevation data, annotations, and sector definitions
@@ -214,7 +214,7 @@ Note: Phase 3 and Phase 4 can proceed in parallel after Phase 2 completes. Phase
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 0/2 | Not started | - |
+| 1. Foundation | 2/2 | Complete | 2026-03-30 |
 | 2. Data Pipeline | 0/4 | Not started | - |
 | 3. Route Map | 0/3 | Not started | - |
 | 4. Elevation Profile | 0/2 | Not started | - |
