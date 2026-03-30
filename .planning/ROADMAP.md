@@ -52,13 +52,12 @@ Plans:
   3. Elevation gain in `route-data.json` matches known Garmin/Strava figures within a 10% tolerance (noise-filtered)
   4. `annotations.json` contains named restock points and gravel sector definitions each snapped to route coordinates
   5. `npm run build` invokes the pipeline automatically before the Astro build step
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 02-01: Write `scripts/parse-gpx.js` — parse GPX, compute cumulative mileage, apply RDP simplification, apply elevation noise filter, output route-data.json
-- [ ] 02-02: Write `scripts/resolve-annotations.js` — define restock points and gravel sector table, snap to nearest route coordinate, output annotations.json
-- [ ] 02-03: Wire `scripts/pipeline.js` as `prebuild` and `predev` orchestrator invoking all scripts in order; add `npm run pipeline` convenience script
-- [ ] 02-04: Create `src/content.config.ts` with Zod schemas for route-data, annotations, and photos collections using file() loaders
+- [ ] 02-01-PLAN.md — Parse GPX, compute cumulative mileage, apply RDP simplification, apply elevation noise filter, output route-data.json; checkpoint for elevation gain verification
+- [ ] 02-02-PLAN.md — Define restock points and gravel sectors, snap to route coordinates, output annotations.json
+- [ ] 02-03-PLAN.md — Wire pipeline.js orchestrator with prebuild/predev npm hooks; create content.config.ts with Zod schemas for all collections
 
 ### Phase 3: Route Map
 **Goal**: Visitors can see the full 100-mile GPX route rendered as a polyline on a forest-themed map that lazy-loads on scroll, handles mobile touch correctly, and resets to the default view on demand
