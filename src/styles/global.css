@@ -1,4 +1,13 @@
+/* Cascade layer order — declared FIRST, before any imports.
+   Leaflet CSS goes in the lowest-priority layer so
+   Tailwind utilities always win. */
+@layer leaflet, base, components, utilities;
+
+/* Tailwind v4 — CSS-first config, no tailwind.config.js */
 @import "tailwindcss";
+
+@import "leaflet/dist/leaflet.css" layer(leaflet);
+@import "leaflet-gesture-handling/dist/leaflet-gesture-handling.css" layer(leaflet);
 
 @theme {
   /* ============================================================
@@ -91,8 +100,4 @@
   a:hover {
     color: var(--color-amber-300);
   }
-}
-
-@layer leaflet {
-  /* Leaflet CSS will be imported here in Phase 3 */
 }
