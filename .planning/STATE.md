@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-03-30)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive showcase that inspires them to ride it and support MBTN.
-**Current focus:** Phase 2 complete — ready for Phase 3
+**Current focus:** Phase 3 in progress — Plan 01 complete
 
 ## Current Position
 
-Phase: 2 of 11 (Data Pipeline) — COMPLETE
-Plan: 3 of 3 in current phase (all complete)
-Status: Phase 2 verified and complete
-Last activity: 2026-03-30 — Phase 2 verified (5/5 must-haves passed)
+Phase: 3 of 11 (Route Map) — In Progress
+Plan: 1 of ? in current phase
+Status: Phase 3 Plan 01 complete
+Last activity: 2026-03-30 — Completed 03-01-PLAN.md (RouteMap core implementation)
 
-Progress: [████░░░░░░] 16% (5/31 plans complete)
+Progress: [████░░░░░░] 19% (6/31 plans complete)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 5
-- Average duration: ~10 min
-- Total execution time: ~52 min
+- Total plans completed: 6
+- Average duration: ~9 min
+- Total execution time: ~54 min
 
 **By Phase:**
 
@@ -29,10 +29,11 @@ Progress: [████░░░░░░] 16% (5/31 plans complete)
 |-------|-------|-------|----------|
 | 01-foundation | 2/2 complete | ~50 min | ~25 min |
 | 02-data-pipeline | 3/3 complete | ~3 min | ~1 min |
+| 03-route-map | 1/? complete | ~2 min | ~2 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (4 min), 01-02 (~45 min including checkpoint + post-approval refinements), 02-01 (~unknown), 02-02 (1 min), 02-03 (2 min)
-- Trend: On track; data pipeline plans running very fast (pure scripting, no visual checkpoints)
+- Last 5 plans: 01-02 (~45 min), 02-01 (~unknown), 02-02 (1 min), 02-03 (2 min), 03-01 (2 min)
+- Trend: Implementation plans running fast; Phase 3 Plan 01 was pure code with no visual checkpoints
 
 *Updated after each plan completion*
 
@@ -63,6 +64,11 @@ Recent decisions affecting current work:
 - 02-03: process.execPath used in pipeline.js instead of 'node' — guarantees same Node binary across environments
 - 02-03: routeData content collection uses file() with custom parser wrapping single-object JSON as [{id:'route',...}] — Astro file() loader requires array-of-objects
 - 02-03: photos stub collection uses try/catch parser returning [] when photos.json absent — build logs [ERROR] from internal file-loader but does not abort
+- 03-01: CyclOSM confirmed as tile layer (not CARTO Dark Matter) — forest-themed bicycle cartography, no API key
+- 03-01: Amber #c8973e polyline — matches project accent token, contrasts well on CyclOSM light tiles (mkUltra used #d4d4d4 for dark tiles)
+- 03-01: Route data shape is routeData.points[].{lat,lon} — points wrapped in points array in route-data.json
+- 03-01: Dynamic import pattern for Leaflet: const L = (await import('leaflet')).default inside initMap()
+- 03-01: addInitHook before L.map() is required for any Leaflet plugin registration
 
 ### Pending Todos
 
@@ -75,5 +81,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-30
-Stopped at: Phase 2 complete — all 3 plans executed, verified (5/5 must-haves), roadmap updated
+Stopped at: Phase 3 Plan 01 complete — RouteMap core implementation, map visible on index page
 Resume file: None
