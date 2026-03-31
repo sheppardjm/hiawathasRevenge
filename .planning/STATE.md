@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-03-30)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive showcase that inspires them to ride it and support MBTN.
-**Current focus:** Phase 8 in progress — PhotoGallery.astro component complete; PhotoSwipe 5.4.4 installed; gallery wired into index.astro
+**Current focus:** Phase 8 complete — PhotoGallery.astro with PhotoSwipe lightbox (08-01) and copy-images pipeline step for full-res serving (08-02)
 
 ## Current Position
 
-Phase: 8 of 11 (Photo Gallery) — In progress
-Plan: 1 of 2 in current phase (1 complete)
-Status: In progress
-Last activity: 2026-03-31 — Completed 08-01 (PhotoGallery.astro + PhotoSwipe 5.4.4 install)
+Phase: 8 of 11 (Photo Gallery) — Complete
+Plan: 2 of 2 in current phase (2 complete)
+Status: Phase complete
+Last activity: 2026-03-31 — Completed 08-02 (copy-images.js pipeline step + 5-step pipeline)
 
-Progress: [█████░░░░░] 53% (17/32 plans complete)
+Progress: [██████░░░░] 56% (18/32 plans complete)
 
 ## Performance Metrics
 
@@ -34,10 +34,10 @@ Progress: [█████░░░░░] 53% (17/32 plans complete)
 | 05-map-elevation-sync | 4/4 complete | ~7 min | ~2 min |
 | 06-restock-markers | 1/1 complete | ~2 min | ~2 min |
 | 07-photo-pipeline | 2/2 complete | ~6 min | ~3 min |
-| 08-photo-gallery | 1/2 complete | ~2 min | ~2 min |
+| 08-photo-gallery | 2/2 complete | ~4 min | ~2 min |
 
 **Recent Trend:**
-- Last 5 plans: 06-01 (~2 min), 07-01 (~2 min), 07-02 (~4 min), 08-01 (~2 min)
+- Last 5 plans: 07-01 (~2 min), 07-02 (~4 min), 08-01 (~2 min), 08-02 (~2 min)
 - Trend: On track; pure code plans run fast (~2-4 min)
 
 *Updated after each plan completion*
@@ -108,6 +108,9 @@ Recent decisions affecting current work:
 - 08-01: data-cropped=true required on anchor elements — thumbnails use object-fit:cover so PhotoSwipe zoom origin calculation needs crop hint
 - 08-01: CSS import in script block for photoswipe/style.css — Vite bundles into page CSS at build time; not an error
 - 08-01: if (gallery) guard prevents errors when photos.json is empty (no #photo-gallery div rendered)
+- 08-02: copyFileSync (not symlinks) for copy-images.js — symlinks break in CI/production builds
+- 08-02: No filename normalization in copy-images.js — lightbox href uses photo.filename from photos.json which maps to original source name as-is
+- 08-02: Pipeline step ordering: parse-gpx → resolve-annotations → generate-thumbnails → copy-images → match-photos
 
 ### Pending Todos
 
@@ -119,6 +122,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-31T14:56:45Z
-Stopped at: Completed 08-01 (PhotoGallery.astro + PhotoSwipe 5.4.4 install + index.astro wiring)
+Last session: 2026-03-31T15:01:39Z
+Stopped at: Completed 08-02 (copy-images.js + pipeline.js 5-step integration)
 Resume file: None
