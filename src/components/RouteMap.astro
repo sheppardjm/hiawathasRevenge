@@ -77,6 +77,8 @@
     const { GestureHandling } = await import('leaflet-gesture-handling');
     L.Map.addInitHook('addHandler', 'gestureHandling', GestureHandling);
 
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     // Initialize map with gestureHandling enabled
     const map = L.map('map', { gestureHandling: true });
 
@@ -104,7 +106,7 @@
         L.DomEvent.disableClickPropagation(container);
         L.DomEvent.on(btn, 'click', (e) => {
           L.DomEvent.preventDefault(e);
-          map.fitBounds(initialBounds, { padding: [20, 20] });
+          map.fitBounds(initialBounds, { padding: [20, 20], animate: !prefersReducedMotion });
           map.closePopup();
           if (bikeMarker && bikeMarker._map) bikeMarker.remove();
         });
@@ -229,7 +231,7 @@
     }
 
     // Auto-fit map to the full route bounds
-    map.fitBounds(routeLine.getBounds(), { padding: [20, 20] });
+    map.fitBounds(routeLine.getBounds(), { padding: [20, 20], animate: !prefersReducedMotion });
 
     // Capture initial bounds for reset — must be stored after fitBounds
     const initialBounds = routeLine.getBounds();

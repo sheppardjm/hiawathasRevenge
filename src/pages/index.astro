@@ -244,4 +244,10 @@ import DonateCallout from '../components/DonateCallout.astro';
       font-size: var(--font-size-base);
     }
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    .gpx-download {
+      transition: none;
+    }
+  }
 </style>
