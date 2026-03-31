@@ -2,7 +2,7 @@
 
 ## What This Is
 
-A showcase website for Hiawatha's Revenge, a 100-mile cycling ride through Michigan's Hiawatha National Forest that supports the Munising Bay Trail Network (MBTN). The site exists because the current MBTN page doesn't capture how remote and breathtaking the route is — this site does the ride justice with an interactive route map, elevation profile, geotagged photo gallery, and a U.S. Forest Service / National Park visual identity.
+An immersive showcase website for Hiawatha's Revenge, a 100-mile cycling ride through Michigan's Hiawatha National Forest that supports the Munising Bay Trail Network (MBTN). The site features an interactive Leaflet route map with gravel sector overlays and photo markers, a Chart.js elevation profile synced to the map via custom event bus, a PhotoSwipe photo gallery with build-time WebP thumbnails, and a U.S. Forest Service / National Park visual identity with badge h1, topographic patterns, and deep forest greens.
 
 ## Core Value
 
@@ -12,25 +12,25 @@ Visitors experience the beauty and scale of the Hiawatha's Revenge route through
 
 ### Validated
 
-(None yet — ship to validate)
+- ✓ Interactive route map (Leaflet) with CyclOSM tiles, GPX polyline, bike icon crosshair synced to elevation hover — v1.0
+- ✓ Elevation profile chart (Chart.js) synchronized with the route map via CustomEvent bus — v1.0
+- ✓ Gravel sector overlays on map and elevation chart, color-coded by difficulty (green/amber/rust) — v1.0
+- ✓ Restock point markers on the map with water drop icons and name/mileage popups — v1.0
+- ✓ Photo markers on the map at tagged mileage points with leaflet.markercluster — v1.0
+- ✓ Photo gallery with PhotoSwipe lightbox for full-screen viewing — v1.0
+- ✓ Photo manifest admin UI for easily assigning mileage to each photo (dev-only) — v1.0
+- ✓ National park badge-style h1 site name design (shield SVG with arrowhead and curved textPath) — v1.0
+- ✓ U.S. Forest Service / National Park visual theme — deep forest greens, warm amber/gold, bold solid lines, heavy shadows, earthy tones — v1.0
+- ✓ Introductory paragraphs about Hiawatha, Longfellow, Ojibwe history, and the National Forest — v1.0
+- ✓ Donate to MBTN call-to-action prominently featured (rendered twice: above-fold and support section) — v1.0
+- ✓ Responsive design across mobile (375px), tablet (768px), and desktop (1280px) with 52px touch targets — v1.0
+- ✓ Lazy-loaded map and chart assets (IntersectionObserver pattern) — v1.0
+- ✓ Build pipeline: GPX parsing, photo matching, thumbnail generation (WebP), data JSON output — v1.0
+- ✓ Static site built via Astro 6 with Tailwind 4 styling, flat dist/ output — v1.0
 
 ### Active
 
-- [ ] Interactive route map (Leaflet) displaying the 100-mile GPX route with bike icon crosshair synced to elevation hover
-- [ ] Elevation profile chart (Chart.js) synchronized with the route map
-- [ ] Gravel sector overlays on map and elevation chart, color-coded by difficulty
-- [ ] Restock point markers on the map with labels
-- [ ] Photo markers on the map at tagged mileage points with clustered thumbnails
-- [ ] Photo gallery with PhotoSwipe lightbox for full-screen viewing
-- [ ] Photo manifest admin UI for easily assigning mileage to each photo
-- [ ] National park badge-style h1 site name design (Phil Monson-inspired, CSS-only)
-- [ ] U.S. Forest Service / National Park visual theme — deep forest greens, warm amber/gold, bold solid lines, heavy shadows, earthy tones
-- [ ] Introductory paragraphs about Hiawatha (the historical figure) and how the land came to bear his name
-- [ ] Donate to MBTN call-to-action prominently featured
-- [ ] Responsive design across mobile, tablet, and desktop
-- [ ] Lazy-loaded map and chart assets (IntersectionObserver pattern from mkUltra)
-- [ ] Build pipeline: GPX parsing, photo matching, thumbnail generation (WebP), data JSON output
-- [ ] Static site deployed via Astro with Tailwind CSS styling
+(None — next milestone requirements TBD via `/gsd:new-milestone`)
 
 ### Out of Scope
 
@@ -43,13 +43,12 @@ Visitors experience the beauty and scale of the Hiawatha's Revenge route through
 
 ## Context
 
-- **Reference implementation:** github.com/sheppardjm/mkUltraGravel — same tech stack, same map/elevation/photo architecture. This project adapts it for a different route and completely different visual identity.
-- **Route data:** `Munising_Hiawatha_s_Revenge.gpx` already in repo (100-mile route through Hiawatha National Forest, Upper Peninsula Michigan)
-- **Photos:** ~50 route photos in `images/` folder, no GPS EXIF data. Mileage will be assigned via a manifest admin UI.
-- **Inspiration images:** `images/inspiration/` folder contains national park badges (Yosemite, Grand Teton, Grand Canyon), Phil Monson badge designs, Pacific Northwest outdoor patches, arrowhead motifs with topographic lines, bogcore/wilderness illustrations, vintage Americana lettering, woodcut illustration styles, Michigan fantasy map art, native-themed geometric patterns.
-- **Design direction:** The mkUltra site used a dark brutalist/classified-document aesthetic. This site pivots to a U.S. Forest Service / National Park ranger station feel — dark forest greens (#1a2e1a range), warm amber/gold (#c8973e range), rust/terracotta accents, cream/parchment text, heavy badge-style borders, topographic line patterns, bold condensed typography with text shadows.
-- **MBTN:** The Munising Bay Trail Network (mbtn.org) is the beneficiary. The donate CTA links to their site.
-- **Hiawatha context:** Named after the Hiawatha National Forest, itself named after the Longfellow poem "The Song of Hiawatha" which drew on Ojibwe legends of the Great Lakes region. The intro text should respectfully cover this history.
+Shipped v1.0 with 2,223 LOC across Astro/TypeScript/JavaScript/CSS.
+Tech stack: Astro 6, Tailwind 4, Vite 7, Leaflet, Chart.js, PhotoSwipe, sharp, gpxparser.
+Build pipeline: 6-step pipeline.js (parse-gpx → resolve-annotations → generate-thumbnails → copy-images → match-photos → copy-gpx).
+54 route photos with mileage-assigned manifest, 456 simplified route points (from 1,927 source), 2,258 ft elevation gain.
+Reference implementation: github.com/sheppardjm/mkUltraGravel — same architecture, different visual identity.
+MBTN (mbtn.org) is the beneficiary — donate CTA links to their site.
 
 ## Constraints
 
@@ -63,11 +62,18 @@ Visitors experience the beauty and scale of the Hiawatha's Revenge route through
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Clone mkUltra stack exactly | Proven architecture, known patterns, faster development | -- Pending |
-| Photo manifest UI instead of EXIF extraction | Photos lack GPS data; user wants easy mileage assignment | -- Pending |
-| Forest Service / National Park theme | Fits Hiawatha National Forest setting; inspiration images confirm direction | -- Pending |
-| No KOM segments | Ride (not race) — no competitive elements | -- Pending |
-| Donate CTA to MBTN | Ride supports trail network, not registration | -- Pending |
+| Clone mkUltra stack exactly | Proven architecture, known patterns, faster development | ✓ Good — shipped in 2 days |
+| Photo manifest UI instead of EXIF extraction | Photos lack GPS data; user wants easy mileage assignment | ✓ Good — admin UI works well |
+| Forest Service / National Park theme | Fits Hiawatha National Forest setting; inspiration images confirm direction | ✓ Good — cohesive identity |
+| CyclOSM tiles (not Carto Dark Matter) | Forest-themed bicycle cartography, no API key | ✓ Good — excellent fit |
+| National Park font for headings | Replaced Special Elite; better park ranger aesthetic | ✓ Good |
+| Shield SVG badge h1 | Arrowhead + curved textPath, CSS-only | ✓ Good — distinctive branding |
+| Elevation gain on full-res points | RDP strips intermediate changes causing ~45% under-count | ✓ Good — 2,258 ft verified |
+| Direct canvas mousemove for crosshair | Chart.js onHover unreliable with parsing:false | ✓ Good — reliable sync |
+| Water drop SVG for restock markers | Visually distinct from photo cluster markers | ✓ Good |
+| No KOM segments | Ride (not race) — no competitive elements | ✓ Good |
+| Donate CTA to MBTN | Ride supports trail network, not registration | ✓ Good |
+| Remove @astrojs/node for static build | Flat dist/ with no SSR | ✓ Good — deployable anywhere |
 
 ---
-*Last updated: 2026-03-30 after initialization*
+*Last updated: 2026-03-31 after v1.0 milestone*
