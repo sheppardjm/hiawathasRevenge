@@ -19,7 +19,7 @@
 
 **Milestone Goal:** Elevate the site from functional showcase to immersive editorial experience with Ojibwe-inspired design, rewritten narrative, dramatic hero section, and masonry gallery.
 
-- [ ] **Phase 12: Design Foundation** - Color tokens, hex tokenization, and layout restructure that unblock all visual work
+- [x] **Phase 12: Design Foundation** - Color tokens, hex tokenization, and layout restructure that unblock all visual work
 - [ ] **Phase 13: Hero & Event Date** - Full-width hero section with dramatic route photo and prominent event date
 - [ ] **Phase 14: Ojibwe Design System** - Woodland floral beadwork-inspired decorative elements with cultural attribution
 - [ ] **Phase 15: Editorial Content** - Rewritten Hiawatha narrative and photo-integrated route explainer
@@ -37,8 +37,8 @@
   3. BaseLayout.astro no longer constrains main content to max-w-4xl; individual sections control their own widths, and existing page layout is visually unchanged
 **Plans:** 2 plans
 Plans:
-- [ ] 12-01-PLAN.md — Color tokens (@theme static + 4 new families) and layout restructure (BaseLayout + index.astro)
-- [ ] 12-02-PLAN.md — Replace all hardcoded hex values in RouteMap.astro and ElevationProfile.astro with getCSSColor()
+- [x] 12-01-PLAN.md — Color tokens (@theme static + 4 new families) and layout restructure (BaseLayout + index.astro)
+- [x] 12-02-PLAN.md — Replace all hardcoded hex values in RouteMap.astro and ElevationProfile.astro with getCSSColor()
 
 ### Phase 13: Hero & Event Date
 **Goal**: Visitors see a dramatic full-width route photo and the event date immediately upon landing, creating an emotional first impression
@@ -91,7 +91,7 @@ Phases 12 through 16 execute in numeric order. Phase 15 and Phase 16 may execute
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
-| 12. Design Foundation | v1.1 | 0/2 | Planned | - |
+| 12. Design Foundation | v1.1 | 2/2 | Complete | 2026-03-31 |
 | 13. Hero & Event Date | v1.1 | 0/TBD | Not started | - |
 | 14. Ojibwe Design System | v1.1 | 0/TBD | Not started | - |
 | 15. Editorial Content | v1.1 | 0/TBD | Not started | - |

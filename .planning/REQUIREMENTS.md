@@ -67,11 +67,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DSN-01 | Phase 12: Design Foundation | Pending |
-| DSN-02 | Phase 12: Design Foundation | Pending |
+| DSN-01 | Phase 12: Design Foundation | Complete |
+| DSN-02 | Phase 12: Design Foundation | Complete |
 | DSN-03 | Phase 14: Ojibwe Design System | Pending |
 | DSN-04 | Phase 14: Ojibwe Design System | Pending |
-| DSN-05 | Phase 12: Design Foundation | Pending |
+| DSN-05 | Phase 12: Design Foundation | Complete |
 | HERO-01 | Phase 13: Hero & Event Date | Pending |
 | HERO-02 | Phase 13: Hero & Event Date | Pending |
 | HERO-03 | Phase 13: Hero & Event Date | Pending |
