@@ -137,6 +137,22 @@
     min-width: 52px;
   }
 
+  /* prefers-reduced-motion — suppress Leaflet CSS transitions (DSGN-06) */
+  @media (prefers-reduced-motion: reduce) {
+    .leaflet-zoom-anim .leaflet-zoom-animated {
+      transition: none;
+    }
+    .leaflet-fade-anim .leaflet-popup {
+      transition: none;
+    }
+    .leaflet-fade-anim .leaflet-tile {
+      transition: none;
+    }
+    .leaflet-pan-anim .leaflet-tile {
+      transition: none;
+    }
+  }
+
   /* Topographic contour divider — decorative wilderness pattern */
   .topo-divider {
     height: 60px;
