@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-03-30)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive showcase that inspires them to ride it and support MBTN.
-**Current focus:** Phase 10 in progress — route-stats-and-donate-components (10-01) complete; RouteStats.astro and DonateCallout.astro ready for index.astro assembly
+**Current focus:** Phase 10 in progress — 10-01 (RouteStats.astro + DonateCallout.astro) and 10-02 (GPX copy + topo-divider CSS) complete; ready for 10-03 (index.astro assembly)
 
 ## Current Position
 
 Phase: 10 of 11 (Content, Narrative, and Visual Identity) — In progress
-Plan: 1 of N in current phase (1 complete)
-Status: In progress — 10-01 complete, continuing Phase 10
-Last activity: 2026-03-31 — Completed 10-01-PLAN.md (RouteStats.astro + DonateCallout.astro)
+Plan: 2 of N in current phase (2 complete)
+Status: In progress — 10-02 complete, 10-03 next
+Last activity: 2026-03-31 — Completed 10-02-PLAN.md (GPX copy pipeline step + topo-divider CSS class)
 
-Progress: [██████░░░░] 70% (21/30 plans complete)
+Progress: [██████░░░░] 73% (22/30 plans complete)
 
 ## Performance Metrics
 
@@ -36,7 +36,7 @@ Progress: [██████░░░░] 70% (21/30 plans complete)
 | 07-photo-pipeline | 2/2 complete | ~6 min | ~3 min |
 | 08-photo-gallery | 2/2 complete | ~4 min | ~2 min |
 | 09-photo-markers-and-admin | 2/2 complete | ~4 min | ~2 min |
-| 10-content-narrative-and-visual-identity | 1/N complete | ~2 min | ~2 min |
+| 10-content-narrative-and-visual-identity | 2/N complete | ~4 min | ~2 min |
 
 **Recent Trend:**
 - Last 5 plans: 07-02 (~4 min), 08-01 (~2 min), 08-02 (~2 min), 09-01 (prev), 09-02 (~4 min)
@@ -125,6 +125,10 @@ Recent decisions affecting current work:
 - 10-01: (s.data as any).difficulty type assertion required for discriminated union access in Astro frontmatter — TypeScript cannot narrow discriminated union after array .filter() at the type level
 - 10-01: roadMiles computed as totalMiles minus all annotated sector miles (~72.8 mi forest roads, 71.4% of route)
 - 10-01: RouteStats surface colors match Phase 5 map sector overlay colors (forest-600 roads, amber-300 moderate, amber-500 easy, rust-500 hard)
+- 10-02: Only Munising_Hiawatha_s_Revenge.gpx (~164KB) copied to public/ — Hiawatha_100.gpx (252k lines) too large for user download
+- 10-02: copy-gpx added as 6th and final pipeline step — no ordering dependency on other steps
+- 10-02: SVG data URI %23 URL-encoding for # characters in CSS url() — forest-700 (#3d6b3d) encoded as %233d6b3d
+- 10-02: Pipeline step ordering now: parse-gpx → resolve-annotations → generate-thumbnails → copy-images → match-photos → copy-gpx
 
 ### Pending Todos
 
@@ -137,5 +141,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-31
-Stopped at: Completed 10-01-PLAN.md — RouteStats.astro and DonateCallout.astro created; ready for next Phase 10 plan
+Stopped at: Completed 10-02-PLAN.md — GPX copy pipeline step and .topo-divider CSS class; ready for 10-03 (index.astro assembly)
 Resume file: None
