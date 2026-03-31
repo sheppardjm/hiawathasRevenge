@@ -12,46 +12,6 @@ import DonateCallout from '../components/DonateCallout.astro';
 
   <HeroSection />
 
-  <section class="max-w-4xl mx-auto px-4 pt-8 py-[--spacing-section] flex flex-col items-center text-center">
-    <div class="badge">
-      <svg class="badge-shape" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <!-- Top text arc — curves along upper shield interior -->
-          <path id="top-arc" d="M160 250 Q500 130 840 250" />
-          <!-- Bottom text arc — curves along lower shield interior -->
-          <path id="bottom-arc" d="M280 700 Q500 830 720 700" />
-        </defs>
-
-        <!-- Outer shield -->
-        <path d="M500 70 150 175.3v217.1C150 785 500 930 500 930s350-145 350-537.6V175.2L500 70Z" fill="var(--color-forest-950)" stroke="var(--color-amber-500)" stroke-width="12" />
-        <!-- Inner border -->
-        <path d="M500 100 180 196v200C180 762 500 900 500 900s320-138 320-504V196L500 100Z" fill="none" stroke="var(--color-amber-500)" stroke-width="4" />
-
-        <!-- Arrowhead icon -->
-        <g transform="translate(460, 260) scale(2)">
-          <path d="M20 2 L6 40 Q8 38 14 36 L18 50 L20 58 L22 50 L26 36 Q32 38 34 40 Z" fill="var(--color-amber-500)" />
-        </g>
-
-        <!-- Curved top text -->
-        <text class="badge-svg-top" text-anchor="middle">
-          <textPath href="#top-arc" startOffset="50%">Hiawatha National Forest</textPath>
-        </text>
-
-        <!-- Bottom curved text -->
-        <text class="badge-svg-bottom" text-anchor="middle">
-          <textPath href="#bottom-arc" startOffset="50%">&#x2022; Michigan &#x2022;</textPath>
-        </text>
-      </svg>
-      <div class="badge-content">
-        <h1 class="badge-title">Hiawatha's Revenge</h1>
-        <hr class="badge-rule" />
-        <span class="badge-miles">100 Miles</span>
-      </div>
-    </div>
-    <p class="text-xl text-cream-200 max-w-2xl mt-8">
-      A ride that tests your legs and rewards your soul.
-    </p>
-  </section>
 
   <section class="max-w-4xl mx-auto px-4 py-[--spacing-block] flex justify-center">
     <DonateCallout />
@@ -143,76 +103,6 @@ import DonateCallout from '../components/DonateCallout.astro';
 </BaseLayout>
 
 <style>
-  .badge {
-    position: relative;
-    width: 300px;
-    filter: drop-shadow(4px 4px 0px rgba(0, 0, 0, 0.5));
-  }
-
-  .badge-shape {
-    display: block;
-    width: 100%;
-    height: auto;
-  }
-
-  .badge-svg-top {
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: 36px;
-    fill: var(--color-cream-200);
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-  }
-
-  .badge-svg-bottom {
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: 36px;
-    fill: var(--color-cream-200);
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-  }
-
-  .badge-content {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 15% 15% 25%;
-    gap: 0.25rem;
-  }
-
-  .badge-title {
-    font-family: var(--font-display);
-    font-weight: 800;
-    font-size: var(--font-size-xl);
-    color: var(--color-amber-500);
-    text-shadow: var(--shadow-text);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    line-height: 1.1;
-    margin-top: 3rem;
-  }
-
-  .badge-rule {
-    width: 60%;
-    border: none;
-    border-top: 1px solid var(--color-amber-500);
-    opacity: 0.6;
-    margin: 0.25rem 0;
-  }
-
-  .badge-miles {
-    font-family: var(--font-display);
-    font-weight: 700;
-    color: var(--color-cream-50);
-    text-transform: uppercase;
-    letter-spacing: 0.2em;
-    font-size: var(--font-size-sm);
-    margin-top: 0.25rem;
-  }
 
   .gpx-download {
     display: inline-flex;
@@ -237,17 +127,6 @@ import DonateCallout from '../components/DonateCallout.astro';
   }
 
   @media (min-width: 640px) {
-    .badge {
-      width: 420px;
-    }
-    .badge-title {
-      font-size: var(--font-size-3xl);
-    }
-    .badge-miles {
-      font-size: var(--font-size-base);
-    }
-  }
-
   @media (prefers-reduced-motion: reduce) {
     .gpx-download {
       transition: none;

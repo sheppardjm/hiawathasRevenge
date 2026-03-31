@@ -2,6 +2,7 @@
 // HeroSection.astro — full-viewport-width hero with LCP-optimized photo background
 // Hero photo: forest creek with autumn reflections (landscape 2048x1536)
 // Decision: option-creek selected (13-01-PLAN Task 1)
+// Badge overlaid on hero per user feedback
 ---
 
 <section class="hero">
@@ -19,8 +20,31 @@
   />
   <div class="hero-overlay" aria-hidden="true"></div>
   <div class="hero-content">
-    <h1 class="hero-title">Hiawatha's Revenge</h1>
-    <p class="hero-tagline">100 miles through Michigan's Hiawatha National Forest</p>
+    <div class="badge">
+      <svg class="badge-shape" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <path id="top-arc" d="M160 250 Q500 130 840 250" />
+          <path id="bottom-arc" d="M280 700 Q500 830 720 700" />
+        </defs>
+        <path d="M500 70 150 175.3v217.1C150 785 500 930 500 930s350-145 350-537.6V175.2L500 70Z" fill="var(--color-forest-950)" stroke="var(--color-amber-500)" stroke-width="12" />
+        <path d="M500 100 180 196v200C180 762 500 900 500 900s320-138 320-504V196L500 100Z" fill="none" stroke="var(--color-amber-500)" stroke-width="4" />
+        <g transform="translate(460, 260) scale(2)">
+          <path d="M20 2 L6 40 Q8 38 14 36 L18 50 L20 58 L22 50 L26 36 Q32 38 34 40 Z" fill="var(--color-amber-500)" />
+        </g>
+        <text class="badge-svg-top" text-anchor="middle">
+          <textPath href="#top-arc" startOffset="50%">Hiawatha National Forest</textPath>
+        </text>
+        <text class="badge-svg-bottom" text-anchor="middle">
+          <textPath href="#bottom-arc" startOffset="50%">&#x2022; Michigan &#x2022;</textPath>
+        </text>
+      </svg>
+      <div class="badge-inner">
+        <h1 class="badge-title">Hiawatha's Revenge</h1>
+        <hr class="badge-rule" />
+        <span class="badge-miles">100 Miles</span>
+      </div>
+    </div>
+    <p class="hero-tagline">A ride that tests your legs and rewards your soul.</p>
     <div class="hero-date-block">
       <span class="hero-date-label">Ride Date</span>
       <time class="hero-date" datetime="2026-06-06">June 6, 2026</time>
@@ -36,7 +60,8 @@
     min-height: 480px;
     overflow: hidden;
     display: flex;
-    align-items: flex-end;
+    align-items: center;
+    justify-content: center;
   }
 
   @supports not (height: 100svh) {
@@ -68,34 +93,94 @@
   .hero-content {
     position: relative;
     z-index: 1;
-    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
     padding: 2rem;
-    max-width: 64rem;
-    margin: 0 auto;
   }
 
-  .hero-title {
+  .badge {
+    position: relative;
+    width: clamp(200px, 40vw, 420px);
+    filter: drop-shadow(4px 4px 0px rgba(0, 0, 0, 0.5));
+  }
+
+  .badge-shape {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .badge-svg-top {
     font-family: var(--font-display);
-    font-size: clamp(2rem, 5vw + 0.5rem, 4.5rem);
+    font-weight: 600;
+    font-size: 36px;
+    fill: var(--color-cream-200);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+
+  .badge-svg-bottom {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 36px;
+    fill: var(--color-cream-200);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+  }
+
+  .badge-inner {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 15% 15% 25%;
+    gap: 0.25rem;
+  }
+
+  .badge-title {
+    font-family: var(--font-display);
     font-weight: 800;
+    font-size: var(--font-size-xl);
     color: var(--color-amber-500);
     text-shadow: var(--shadow-text);
     text-transform: uppercase;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.08em;
     line-height: 1.1;
-    margin: 0;
+    margin-top: 3rem;
+  }
+
+  .badge-rule {
+    width: 60%;
+    border: none;
+    border-top: 1px solid var(--color-amber-500);
+    opacity: 0.6;
+    margin: 0.25rem 0;
+  }
+
+  .badge-miles {
+    font-family: var(--font-display);
+    font-weight: 700;
+    color: var(--color-cream-50);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    font-size: var(--font-size-sm);
+    margin-top: 0.25rem;
   }
 
   .hero-tagline {
     font-family: var(--font-mono);
     font-size: clamp(0.875rem, 2vw, 1.25rem);
     color: var(--color-cream-100);
-    margin-top: 0.5rem;
+    margin-top: 1.5rem;
     max-width: 36rem;
   }
 
   .hero-date-block {
-    margin-top: 1.5rem;
+    margin-top: 1rem;
     display: flex;
     flex-direction: column;
     gap: 0.125rem;
@@ -115,5 +200,14 @@
     font-weight: 700;
     color: var(--color-gold-500);
     letter-spacing: 0.08em;
+  }
+
+  @media (min-width: 640px) {
+    .badge-title {
+      font-size: var(--font-size-3xl);
+    }
+    .badge-miles {
+      font-size: var(--font-size-base);
+    }
   }
 </style>
