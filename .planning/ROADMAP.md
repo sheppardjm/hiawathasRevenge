@@ -16,7 +16,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 2: Data Pipeline** - GPX parsing, annotation resolution, and build orchestration producing all route JSON
 - [x] **Phase 3: Route Map** - Leaflet island with GPX polyline, themed tiles, gesture handling, and lazy-load
 - [x] **Phase 4: Elevation Profile** - Chart.js island with elevation vs. distance, lazy-load, and responsive heights
-- [ ] **Phase 5: Map-Elevation Sync** - CrosshairCustomEvent bus, gravel sector overlays on map and chart
+- [x] **Phase 5: Map-Elevation Sync** - CrosshairCustomEvent bus, gravel sector overlays on map and chart
 - [ ] **Phase 6: Restock Markers** - Restock point markers on map with name and mileage labels
 - [ ] **Phase 7: Photo Pipeline** - sharp thumbnail generation, photo matching script, and photos.json
 - [ ] **Phase 8: Photo Gallery** - PhotoSwipe lightbox with thumbnail grid
@@ -99,12 +99,13 @@ Plans:
   2. Gravel sectors appear as color-coded polyline segments on the map distinguishable by difficulty
   3. Gravel sectors appear as matching color-coded shaded bands on the elevation chart
   4. Crosshair sync uses distance-along-route (not array index) so it remains accurate even if arrays differ in length
-**Plans**: TBD
+**Plans**: 4 plans
 
 Plans:
-- [ ] 05-01: Implement CustomEvent bus (`elevation:hover`, `map:reset`) in RouteMap.astro and ElevationProfile.astro; wire crosshair bike icon marker
-- [ ] 05-02: Add gravel sector polyline overlays to RouteMap.astro from annotations.json sector definitions; color-code by difficulty
-- [ ] 05-03: Add chartjs-plugin-annotation sector band overlays to ElevationProfile.astro matching map sector colors
+- [x] 05-01-PLAN.md — Implement CustomEvent bus (`elevation:hover`, `map:reset`) in RouteMap.astro and ElevationProfile.astro; wire crosshair bike icon marker
+- [x] 05-02-PLAN.md — Add gravel sector polyline overlays to RouteMap.astro from annotations.json sector definitions
+- [x] 05-03-PLAN.md — Add chartjs-plugin-annotation sector band overlays to ElevationProfile.astro matching map sector colors
+- [x] 05-04-PLAN.md — Gap closure: add difficulty-based color coding to sector overlays on map and chart
 
 ### Phase 6: Restock Markers
 **Goal**: Visitors can see named restock points as markers on the map, each showing the location name and mileage, so they can plan water and food stops on the remote 100-mile route
@@ -216,7 +217,7 @@ Note: Phase 3 and Phase 4 can proceed in parallel after Phase 2 completes. Phase
 | 2. Data Pipeline | 3/3 | Complete | 2026-03-30 |
 | 3. Route Map | 2/2 | Complete | 2026-03-30 |
 | 4. Elevation Profile | 2/2 | Complete | 2026-03-30 |
-| 5. Map-Elevation Sync | 0/3 | Not started | - |
+| 5. Map-Elevation Sync | 4/4 | Complete | 2026-03-30 |
 | 6. Restock Markers | 0/1 | Not started | - |
 | 7. Photo Pipeline | 0/2 | Not started | - |
 | 8. Photo Gallery | 0/2 | Not started | - |
@@ -226,4 +227,4 @@ Note: Phase 3 and Phase 4 can proceed in parallel after Phase 2 completes. Phase
 
 ---
 *Roadmap created: 2026-03-30*
-*Last updated: 2026-03-30 after Phase 4 execution*
+*Last updated: 2026-03-30 after Phase 5 execution*
