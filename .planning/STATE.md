@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-03-30)
 ## Current Position
 
 Phase: 5 of 11 (Map-Elevation Sync) — In progress
-Plan: 1 of 3 in current phase (1 complete)
+Plan: 2 of 3 in current phase (2 complete)
 Status: In progress
-Last activity: 2026-03-31 — Completed 05-01-PLAN.md (CustomEvent bus, crosshair annotation, bike dot marker)
+Last activity: 2026-03-31 — Completed 05-02-PLAN.md (gravel sector polyline overlays, annotations.json fetch)
 
-Progress: [█████░░░░░] 32% (10/31 plans complete)
+Progress: [█████░░░░░] 35% (11/31 plans complete)
 
 ## Performance Metrics
 
@@ -81,6 +81,8 @@ Recent decisions affecting current work:
 - 05-01: snapByMiles O(n) linear scan over pt.miles field (distance-along-route, not array index) — accurate for non-uniform point spacing
 - 05-01: L.divIcon className:'' REQUIRED on custom Leaflet markers — removes default white background/border from leaflet-div-icon class
 - 05-01: chart.update('none') string arg required for high-frequency chart mutations — suppresses Chart.js animation on each mousemove
+- 05-02: slice(startIdx, endIdx + 1) required for polyline segment from index range — JavaScript slice excludes end index, +1 closes off-by-one gap
+- 05-02: All 7 gravel sectors use single amber color (#c8973e) — annotations.json has no difficulty field for differentiation
 
 ### Pending Todos
 
@@ -93,5 +95,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-31
-Stopped at: Completed 05-01-PLAN.md — CustomEvent bus, crosshair annotation, bike dot marker
+Stopped at: Completed 05-02-PLAN.md — gravel sector polyline overlays
 Resume file: None
