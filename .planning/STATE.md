@@ -12,9 +12,9 @@ See: .planning/PROJECT.md (updated 2026-03-30)
 Phase: 00 of 00 (Full-Site UAT Gap Closure)
 Plan: 3 of 5 in current phase (3 complete)
 Status: In progress — UAT gap closure underway
-Last activity: 2026-03-31 — Completed 00-03-PLAN.md (surface label fix — singletrack -> accurate terrain names)
+Last activity: 2026-03-31 — Completed 00-02-PLAN.md (elevation chart X-axis cap + crosshair hover fix)
 
-Progress: [██████████] 100% (30/30 base plans complete) + 2/5 UAT gap plans
+Progress: [██████████] 100% (30/30 base plans complete) + 3/5 UAT gap plans
 
 ## Performance Metrics
 
@@ -143,6 +143,9 @@ Recent decisions affecting current work:
 - 11-04: save-manifest.ts POST endpoint only runs on dev server in static mode — no additional guard needed beyond existing import.meta.env.PROD check
 - 00-01: photo.thumb field in photos.json contains full path /thumbs/filename.webp — use directly as img src, never prepend /thumbs/ (component had the bug, data was correct)
 - 00-01: Restock markers replaced with blue (#4a90d9) water drop SVG divIcon — iconAnchor at [10, 26] bottom-center so pointy tip indicates map location
+- 00-02: Chart.js 4.x onHover callback is unreliable with parsing:false — canvas.addEventListener('mousemove') bypasses internal event pipeline and fires reliably
+- 00-02: X-axis max set to routeData.meta.totalMiles (~101.98) — prevents Chart.js auto-scaling to ~120 miles
+- 00-02: Direct canvas mousemove + Chart.js internal events coexist cleanly — tooltip uses Chart.js pipeline, crosshair sync uses DOM listener
 - 00-03: RouteStats surface labels map difficulty to terrain: easy=Scenic Roads, moderate=FS Gravel Roads, hard=Rugged Two-Track, unlabeled=Pavement & Forest Roads
 
 ### Pending Todos
@@ -156,5 +159,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-31
-Stopped at: Completed 00-03-PLAN.md — surface labels fixed, singletrack removed
+Stopped at: Completed 00-02-PLAN.md — elevation chart X-axis capped at route distance, crosshair hover sync fixed via direct canvas mousemove
 Resume file: None
