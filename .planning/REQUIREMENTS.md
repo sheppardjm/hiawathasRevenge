@@ -107,12 +107,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 | ELEV-03 | Phase 5 | Complete |
 | ELEV-04 | Phase 4 | Complete |
 | ELEV-05 | Phase 4 | Complete |
-| PHOTO-01 | Phase 8 | Pending |
-| PHOTO-02 | Phase 8 | Pending |
+| PHOTO-01 | Phase 8 | Complete |
+| PHOTO-02 | Phase 8 | Complete |
 | PHOTO-03 | Phase 9 | Pending |
 | PHOTO-04 | Phase 7 | Complete |
 | PHOTO-05 | Phase 9 | Pending |
-| PHOTO-06 | Phase 8 | Pending |
+| PHOTO-06 | Phase 8 | Complete |
 | CONT-01 | Phase 10 | Pending |
 | CONT-02 | Phase 10 | Pending |
 | CONT-03 | Phase 10 | Pending |
@@ -139,4 +139,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-03-30*
-*Last updated: 2026-03-31 after Phase 7 execution — BUILD-04, BUILD-05, PHOTO-04 complete*
+*Last updated: 2026-03-31 after Phase 8 execution — PHOTO-01, PHOTO-02, PHOTO-06 complete*

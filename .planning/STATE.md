@@ -5,14 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-03-30)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive showcase that inspires them to ride it and support MBTN.
-**Current focus:** Phase 8 complete — PhotoGallery.astro with PhotoSwipe lightbox (08-01) and copy-images pipeline step for full-res serving (08-02)
+**Current focus:** Phase 8 complete — PhotoGallery.astro with PhotoSwipe lightbox, copy-images pipeline step; ready for Phase 9
 
 ## Current Position
 
-Phase: 8 of 11 (Photo Gallery) — Complete
+Phase: 8 of 11 (Photo Gallery) — Phase complete
 Plan: 2 of 2 in current phase (2 complete)
-Status: Phase complete
-Last activity: 2026-03-31 — Completed 08-02 (copy-images.js pipeline step + 5-step pipeline)
+Status: Phase complete — ready for Phase 9
+Last activity: 2026-03-31 — Completed phase 8 execution (PhotoGallery + copy-images pipeline)
 
 Progress: [██████░░░░] 56% (18/32 plans complete)
 
@@ -122,6 +122,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-31T15:01:39Z
-Stopped at: Completed 08-02 (copy-images.js + pipeline.js 5-step integration)
+Last session: 2026-03-31
+Stopped at: Phase 8 complete — ready for Phase 9 (Photo Markers and Admin)
 Resume file: None

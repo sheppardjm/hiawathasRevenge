@@ -19,7 +19,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 5: Map-Elevation Sync** - CrosshairCustomEvent bus, gravel sector overlays on map and chart
 - [x] **Phase 6: Restock Markers** - Restock point markers on map with name and mileage labels
 - [x] **Phase 7: Photo Pipeline** - sharp thumbnail generation, photo matching script, and photos.json
-- [ ] **Phase 8: Photo Gallery** - PhotoSwipe lightbox with thumbnail grid
+- [x] **Phase 8: Photo Gallery** - PhotoSwipe lightbox with thumbnail grid
 - [ ] **Phase 9: Photo Markers and Admin** - Geotagged map markers, cluster layer, and manifest admin UI
 - [ ] **Phase 10: Content, Narrative, and Visual Identity** - Hiawatha intro, route stats, donate CTA, badge h1, topographic patterns
 - [ ] **Phase 11: Responsive Polish and Production Build** - Touch targets, reduced-motion, full responsive audit, production verification
@@ -146,8 +146,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 08-01-PLAN.md — Install PhotoSwipe 5.4.4; create PhotoGallery.astro with responsive grid, lightbox script, dimension parsing, and empty-state handling; wire into index.astro
-- [ ] 08-02-PLAN.md — Create copy-images.js pipeline step to serve full-resolution source JPGs from public/images/ for lightbox; integrate as step 4 in pipeline.js
+- [x] 08-01-PLAN.md — Install PhotoSwipe 5.4.4; create PhotoGallery.astro with responsive grid, lightbox script, dimension parsing, and empty-state handling; wire into index.astro
+- [x] 08-02-PLAN.md — Create copy-images.js pipeline step to serve full-resolution source JPGs from public/images/ for lightbox; integrate as step 4 in pipeline.js
 
 ### Phase 9: Photo Markers and Admin
 **Goal**: Developers can assign mileage to photos via a browser admin UI, and visitors see geotagged photos as clustered markers on the map that open the gallery lightbox when clicked
@@ -219,11 +219,11 @@ Note: Phase 3 and Phase 4 can proceed in parallel after Phase 2 completes. Phase
 | 5. Map-Elevation Sync | 4/4 | Complete | 2026-03-30 |
 | 6. Restock Markers | 1/1 | Complete | 2026-03-30 |
 | 7. Photo Pipeline | 2/2 | Complete | 2026-03-31 |
-| 8. Photo Gallery | 0/2 | Not started | - |
+| 8. Photo Gallery | 2/2 | Complete | 2026-03-31 |
 | 9. Photo Markers and Admin | 0/2 | Not started | - |
 | 10. Content, Narrative, and Visual Identity | 0/6 | Not started | - |
 | 11. Responsive Polish and Production Build | 0/4 | Not started | - |
 
 ---
 *Roadmap created: 2026-03-30*
-*Last updated: 2026-03-31 after Phase 7 execution*
+*Last updated: 2026-03-31 after Phase 8 execution*
