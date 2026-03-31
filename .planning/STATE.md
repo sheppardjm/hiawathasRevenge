@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-03-30)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive showcase that inspires them to ride it and support MBTN.
-**Current focus:** Phase 11 complete — 11-01 (touch targets), 11-02 through 11-04 all complete; production build produces flat dist/ directory
+**Current focus:** Phase 11 — 11-01 (touch targets) and 11-02 (reduced motion) complete; 11-03 and 11-04 remaining
 
 ## Current Position
 
-Phase: 11 of 11 (Responsive Polish and Production Build) — Complete
-Plan: 4 of 4 in current phase (all 4 complete)
-Status: ALL PHASES COMPLETE — site is production-ready
-Last activity: 2026-03-31 — Completed 11-01-PLAN.md (52px touch targets: Leaflet buttons, PhotoSwipe nav, donate button, GPX link); 11-02 through 11-04 also complete
+Phase: 11 of 11 (Responsive Polish and Production Build)
+Plan: 2 of 4 in current phase
+Status: In progress — 11-01 and 11-02 complete; 11-03 and 11-04 remaining
+Last activity: 2026-03-31 — Completed 11-02-PLAN.md (prefers-reduced-motion overrides: Leaflet CSS, donate button, GPX link, fitBounds JS guard)
 
-Progress: [██████████] 100% (30/30 plans complete)
+Progress: [█████████░] ~90% (28/30 plans complete — 11-03, 11-04 remaining)
 
 ## Performance Metrics
 
@@ -136,6 +136,9 @@ Recent decisions affecting current work:
 - 11-01: No !important needed for Leaflet button size overrides — @layer base already wins over @layer leaflet in declared cascade layer order
 - 11-01: inline-flex replaces inline-block on .donate-button and .gpx-download — required for align-items: center to work; min-height: 52px not height: 52px preserves wrapping
 - 11-01: font-size: 1.25rem on .leaflet-bar a — scales zoom +/- glyphs proportionally with enlarged 52px button
+- 11-02: animate: !prefersReducedMotion (not animate: false) on fitBounds — motion only disabled when user has requested it
+- 11-02: prefersReducedMotion const declared after addInitHook but before ResetControl definition — closure in click handler captures it correctly
+- 11-02: Chart.js (animation: false already) and PhotoSwipe 5 (auto-handles) confirmed no action needed for reduced motion
 - 11-04: Removing @astrojs/node adapter and prerender=false is sufficient for flat static build — Astro static builds skip API routes; admin page emits meta-refresh redirect in dist/
 - 11-04: save-manifest.ts POST endpoint only runs on dev server in static mode — no additional guard needed beyond existing import.meta.env.PROD check
 
@@ -150,5 +153,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-31
-Stopped at: Completed 11-01-PLAN.md — 52px touch targets on Leaflet buttons, PhotoSwipe nav, donate button, GPX link; Phase 11 complete (all 4 plans done); ALL PHASES COMPLETE
+Stopped at: Completed 11-02-PLAN.md — prefers-reduced-motion overrides: Leaflet CSS transitions in @layer base, scoped donate/GPX button overrides, fitBounds animate guard in RouteMap.astro
 Resume file: None
