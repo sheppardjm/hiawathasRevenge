@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-03-30)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive showcase that inspires them to ride it and support MBTN.
-**Current focus:** Phase 10 in progress — 10-01 (RouteStats.astro + DonateCallout.astro) and 10-02 (GPX copy + topo-divider CSS) complete; ready for 10-03 (index.astro assembly)
+**Current focus:** Phase 10 complete — 10-01 (RouteStats.astro + DonateCallout.astro), 10-02 (GPX copy + topo-divider CSS), and 10-03 (index.astro full assembly) all complete; ready for Phase 11
 
 ## Current Position
 
-Phase: 10 of 11 (Content, Narrative, and Visual Identity) — In progress
-Plan: 2 of N in current phase (2 complete)
-Status: In progress — 10-02 complete, 10-03 next
-Last activity: 2026-03-31 — Completed 10-02-PLAN.md (GPX copy pipeline step + topo-divider CSS class)
+Phase: 10 of 11 (Content, Narrative, and Visual Identity) — Complete
+Plan: 3 of 3 in current phase (all 3 complete)
+Status: Phase complete — 10-03 done; Phase 11 next
+Last activity: 2026-03-31 — Completed 10-03-PLAN.md (index.astro full assembly)
 
-Progress: [██████░░░░] 73% (22/30 plans complete)
+Progress: [███████░░░] 77% (23/30 plans complete)
 
 ## Performance Metrics
 
@@ -36,7 +36,7 @@ Progress: [██████░░░░] 73% (22/30 plans complete)
 | 07-photo-pipeline | 2/2 complete | ~6 min | ~3 min |
 | 08-photo-gallery | 2/2 complete | ~4 min | ~2 min |
 | 09-photo-markers-and-admin | 2/2 complete | ~4 min | ~2 min |
-| 10-content-narrative-and-visual-identity | 2/N complete | ~4 min | ~2 min |
+| 10-content-narrative-and-visual-identity | 3/3 complete | ~6 min | ~2 min |
 
 **Recent Trend:**
 - Last 5 plans: 07-02 (~4 min), 08-01 (~2 min), 08-02 (~2 min), 09-01 (prev), 09-02 (~4 min)
@@ -129,6 +129,9 @@ Recent decisions affecting current work:
 - 10-02: copy-gpx added as 6th and final pipeline step — no ordering dependency on other steps
 - 10-02: SVG data URI %23 URL-encoding for # characters in CSS url() — forest-700 (#3d6b3d) encoded as %233d6b3d
 - 10-02: Pipeline step ordering now: parse-gpx → resolve-annotations → generate-thumbnails → copy-images → match-photos → copy-gpx
+- 10-03: DonateCallout rendered twice in index.astro (above-fold between hero/narrative and in Support section) — no state, safe to duplicate
+- 10-03: download="HiawathasRevenge.gpx" clean filename on GPX anchor — source file uses underscores, download attribute gives riders a clean brandable filename
+- 10-03: Page assembly pattern: all data flows through components; index.astro contains only layout and narrative prose
 
 ### Pending Todos
 
@@ -141,5 +144,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-31
-Stopped at: Completed 10-02-PLAN.md — GPX copy pipeline step and .topo-divider CSS class; ready for 10-03 (index.astro assembly)
+Stopped at: Completed 10-03-PLAN.md — index.astro full assembly (narrative, components, GPX download, topo dividers, badge rule); Phase 10 complete
 Resume file: None
