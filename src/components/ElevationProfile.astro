@@ -39,6 +39,22 @@
       y: +(pt.ele * 3.28084).toFixed(1)
     }));
 
+    // Fetch annotations and build sector band overlays
+    const annotations = await fetch('/data/annotations.json').then(r => r.json());
+    const sectors = annotations.filter(a => a.type === 'sector');
+    const sectorAnnotations = {};
+    for (const sector of sectors) {
+      sectorAnnotations[sector.id] = {
+        type: 'box',
+        xMin: sector.startMile,
+        xMax: sector.endMile,
+        // yMin/yMax intentionally omitted — auto-expands to full chart height
+        backgroundColor: 'rgba(200, 151, 62, 0.15)',
+        borderWidth: 0,
+        drawTime: 'beforeDatasetsDraw'
+      };
+    }
+
     const canvas = document.getElementById('elevation-chart');
     const chart = new Chart(canvas, {
       type: 'line',
@@ -94,6 +110,7 @@
           },
           annotation: {
             annotations: {
+              ...sectorAnnotations,
               crosshair: {
                 type: 'line',
                 xMin: 0,
