@@ -5,14 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-03-30)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive showcase that inspires them to ride it and support MBTN.
-**Current focus:** Phase 11 complete — 11-01 through 11-04 all complete; production build produces flat dist/ directory
+**Current focus:** Phase 11 complete — 11-01 (touch targets), 11-02 through 11-04 all complete; production build produces flat dist/ directory
 
 ## Current Position
 
 Phase: 11 of 11 (Responsive Polish and Production Build) — Complete
 Plan: 4 of 4 in current phase (all 4 complete)
 Status: ALL PHASES COMPLETE — site is production-ready
-Last activity: 2026-03-31 — Completed 11-04-PLAN.md (production build fix; flat dist/ output)
+Last activity: 2026-03-31 — Completed 11-01-PLAN.md (52px touch targets: Leaflet buttons, PhotoSwipe nav, donate button, GPX link); 11-02 through 11-04 also complete
 
 Progress: [██████████] 100% (30/30 plans complete)
 
@@ -147,5 +147,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-31
-Stopped at: Completed 11-04-PLAN.md — production build fix (removed @astrojs/node adapter, flat dist/ output verified); Phase 11 complete; ALL PHASES COMPLETE
+Stopped at: Completed 11-03-PLAN.md — RouteStats mobile-first responsive grid (1fr default, 640px breakpoint); 11-03-SUMMARY.md created
 Resume file: None
