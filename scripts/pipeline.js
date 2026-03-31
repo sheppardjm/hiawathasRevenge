@@ -20,6 +20,7 @@ const steps = [
   { name: 'generate-thumbnails', script: 'scripts/generate-thumbnails.js' },
   { name: 'copy-images', script: 'scripts/copy-images.js' },
   { name: 'match-photos', script: 'scripts/match-photos.js' },
+  { name: 'copy-gpx', script: 'scripts/copy-gpx.js' },
 ];
 
 let currentStep = null;
