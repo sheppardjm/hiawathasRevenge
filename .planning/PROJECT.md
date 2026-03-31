@@ -30,7 +30,14 @@ Visitors experience the beauty and scale of the Hiawatha's Revenge route through
 
 ### Active
 
-(None — next milestone requirements TBD via `/gsd:new-milestone`)
+- [ ] Full-width hero section with dramatic route photo and overlay text
+- [ ] Redesigned photo gallery — masonry layout with featured hero images and editorial spacing
+- [ ] Rewritten Hiawatha narrative — witty, sophisticated New Yorker tone about Longfellow's Hiawatha/Nanabozho mix-up, quotes from data.md
+- [ ] Route explainer with integrated photos over topographic background
+- [ ] Event date (June 6, 2026) prominently featured on homepage
+- [ ] Ojibwe woodland floral beadwork motifs and birchbark patterns as decorative design elements
+- [ ] Evolved color scheme — warmer, more vibrant palette inspired by Ojibwe art while maintaining modern sophistication
+- [ ] Sector map labels with names and star difficulty ratings, clickable with slide-out detail panels
 
 ### Out of Scope
 
@@ -41,6 +48,20 @@ Visitors experience the beauty and scale of the Hiawatha's Revenge route through
 - OAuth / user accounts — no login needed
 - Mobile app — web only
 
+## Current Milestone: v1.1 Visual Redesign
+
+**Goal:** Elevate the site from functional showcase to immersive editorial experience with Ojibwe-inspired design, rewritten narrative, and richer visual storytelling.
+
+**Target features:**
+- Full-width hero with dramatic route photography
+- Masonry gallery with editorial photo sizing
+- Witty Hiawatha narrative rewrite (Longfellow's naming blunder)
+- Photo-integrated route explainer over topo background
+- Event date prominence (June 6, 2026)
+- Ojibwe woodland floral/beadwork design system
+- Warmer, more vibrant color palette
+- Interactive sector map labels with detail panels
+
 ## Context
 
 Shipped v1.0 with 2,223 LOC across Astro/TypeScript/JavaScript/CSS.
@@ -49,6 +70,8 @@ Build pipeline: 6-step pipeline.js (parse-gpx → resolve-annotations → genera
 54 route photos with mileage-assigned manifest, 456 simplified route points (from 1,927 source), 2,258 ft elevation gain.
 Reference implementation: github.com/sheppardjm/mkUltraGravel — same architecture, different visual identity.
 MBTN (mbtn.org) is the beneficiary — donate CTA links to their site.
+Inspiration images in `images/inspiration/` — national park badges, Ojibwe motifs, bogcore, arrowhead geometry, Michigan fantasy map.
+Historical context in `data.md` — segment details with star ratings, Hiawatha history with Longfellow critique quote.
 
 ## Constraints
 
@@ -76,4 +99,4 @@ MBTN (mbtn.org) is the beneficiary — donate CTA links to their site.
 | Remove @astrojs/node for static build | Flat dist/ with no SSR | ✓ Good — deployable anywhere |
 
 ---
-*Last updated: 2026-03-31 after v1.0 milestone*
+*Last updated: 2026-03-31 after v1.1 milestone start*
