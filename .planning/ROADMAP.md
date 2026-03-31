@@ -9,9 +9,11 @@ This roadmap delivers a visually immersive, static showcase site for the Hiawath
 **Phase Numbering:**
 - Integer phases (1, 2, 3): Planned milestone work
 - Decimal phases (2.1, 2.2): Urgent insertions (marked with INSERTED)
+- Phase 0: Cross-phase UAT gap closure
 
 Decimal phases appear between their surrounding integers in numeric order.
 
+- [ ] **Phase 0: Full-Site UAT Gap Closure** - Fix photo 404s, crosshair sync, surface labels, elevation X-axis, restock markers
 - [x] **Phase 1: Foundation** - Astro 6 + Tailwind 4 project scaffold with Forest Service design tokens and base layout
 - [x] **Phase 2: Data Pipeline** - GPX parsing, annotation resolution, and build orchestration producing all route JSON
 - [x] **Phase 3: Route Map** - Leaflet island with GPX polyline, themed tiles, gesture handling, and lazy-load
@@ -25,6 +27,23 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 11: Responsive Polish and Production Build** - Touch targets, reduced-motion, full responsive audit, production verification
 
 ## Phase Details
+
+### Phase 0: Full-Site UAT Gap Closure
+**Goal**: All 5 UAT issues resolved — photo gallery loads, crosshair hover syncs, surface labels accurate, elevation chart bounded, restock markers distinct
+**Depends on**: Phase 11 (all phases complete)
+**Requirements**: UAT gaps from full-site acceptance testing
+**Success Criteria** (what must be TRUE):
+  1. Photo gallery thumbnails load without 404s
+  2. Hovering the elevation chart moves a crosshair marker on the map
+  3. Elevation chart X-axis stops at ~102 miles (not ~120)
+  4. Route stats surface breakdown shows actual terrain types (no "singletrack")
+  5. Restock markers are visually distinct from photo markers (water drop icon)
+**Plans**: 3 plans
+
+Plans:
+- [ ] 00-01-PLAN.md — Fix photo 404 double-prefix and restyle restock markers with water drop icon
+- [ ] 00-02-PLAN.md — Fix elevation chart X-axis max and crosshair hover sync
+- [ ] 00-03-PLAN.md — Rename surface type labels from singletrack to actual route surfaces
 
 ### Phase 1: Foundation
 **Goal**: Visitors can open a working Astro site that renders the Forest Service visual identity with correct fonts, colors, and layout shell — ready to receive interactive components
@@ -131,8 +150,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 07-01-PLAN.md — Install sharp 0.34.x; create generate-thumbnails.js producing 400px WebP at 80% quality in public/thumbs/
-- [ ] 07-02-PLAN.md — Create match-photos.js for manifest-to-photos.json generation; integrate both scripts into pipeline.js
+- [x] 07-01-PLAN.md — Install sharp 0.34.x; create generate-thumbnails.js producing 400px WebP at 80% quality in public/thumbs/
+- [x] 07-02-PLAN.md — Create match-photos.js for manifest-to-photos.json generation; integrate both scripts into pipeline.js
 
 ### Phase 8: Photo Gallery
 **Goal**: Visitors can browse all route photos in a responsive grid and open any photo in a full-screen PhotoSwipe lightbox with swipe and keyboard navigation
@@ -192,7 +211,7 @@ Plans:
   3. The page layout adapts correctly at 375px (mobile), 768px (tablet), and 1280px (desktop) without overflow or clipping
   4. `astro build` completes without errors, produces correct static output, and all thumbnails serve from dist/
   5. OSM attribution is visible on the map canvas in the production build
-**Plans**: TBD
+**Plans**: 4 plans
 
 Plans:
 - [x] 11-01-PLAN.md — Audit all interactive controls for 52px touch targets; apply CSS overrides and min-height utilities
@@ -203,12 +222,13 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 → 10 → 11
+Phases execute in numeric order: 0 (gap closure) → then done
 
 Note: Phase 3 and Phase 4 can proceed in parallel after Phase 2 completes. Phase 7 can proceed in parallel with Phase 3 and Phase 4.
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
+| 0. Full-Site UAT Gap Closure | 0/3 | In Progress | - |
 | 1. Foundation | 2/2 | Complete | 2026-03-30 |
 | 2. Data Pipeline | 3/3 | Complete | 2026-03-30 |
 | 3. Route Map | 2/2 | Complete | 2026-03-30 |
@@ -223,4 +243,4 @@ Note: Phase 3 and Phase 4 can proceed in parallel after Phase 2 completes. Phase
 
 ---
 *Roadmap created: 2026-03-30*
-*Last updated: 2026-03-31 after Phase 11 execution*
+*Last updated: 2026-03-31 after Phase 0 gap closure planning*
