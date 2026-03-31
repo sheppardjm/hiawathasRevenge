@@ -58,14 +58,28 @@ function parseDims(filename: string): { w: number; h: number } {
   import PhotoSwipeLightbox from 'photoswipe/lightbox';
   import 'photoswipe/style.css';
 
+  // Module-scope lightbox — accessible by map:photoClick listener below
+  // MUST be at module scope, not inside the if (gallery) block — closure won't capture it otherwise
+  let lightbox = null;
+
   // Guard prevents errors when photos.json is empty (no #photo-gallery div rendered)
   const gallery = document.getElementById('photo-gallery');
   if (gallery) {
-    const lightbox = new PhotoSwipeLightbox({
+    lightbox = new PhotoSwipeLightbox({
       gallery: '#photo-gallery',
       children: 'a',
       pswpModule: () => import('photoswipe')
     });
     lightbox.init();
   }
+
+  // Bridge: map photo marker click -> open lightbox at the clicked photo
+  // Matches CustomEvent dispatched by RouteMap.astro cluster marker click handlers
+  // gallery element MUST be passed explicitly — PhotoSwipe needs it for DOM-connected galleries
+  window.addEventListener('map:photoClick', (e) => {
+    if (!lightbox) return;
+    lightbox.loadAndOpen(e.detail.photoIndex, {
+      gallery: document.getElementById('photo-gallery')
+    });
+  });
 </script>
