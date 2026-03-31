@@ -22,7 +22,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 8: Photo Gallery** - PhotoSwipe lightbox with thumbnail grid
 - [x] **Phase 9: Photo Markers and Admin** - Geotagged map markers, cluster layer, and manifest admin UI
 - [x] **Phase 10: Content, Narrative, and Visual Identity** - Hiawatha intro, route stats, donate CTA, badge h1, topographic patterns
-- [ ] **Phase 11: Responsive Polish and Production Build** - Touch targets, reduced-motion, full responsive audit, production verification
+- [x] **Phase 11: Responsive Polish and Production Build** - Touch targets, reduced-motion, full responsive audit, production verification
 
 ## Phase Details
 
@@ -195,10 +195,10 @@ Plans:
 **Plans**: TBD
 
 Plans:
-- [ ] 11-01: Audit all interactive controls for 52px touch targets; apply Tailwind min-w/min-h utilities where needed; test on 375px viewport
-- [ ] 11-02: Add prefers-reduced-motion media query overrides for chart transitions, map animations, and lightbox transitions
-- [ ] 11-03: Full responsive layout audit at 375px / 768px / 1280px — fix any overflow, clipping, or chart height issues
-- [ ] 11-04: Run `astro build`, verify dist/ output, confirm thumbnails serve, confirm OSM attribution visible, confirm no SSR output
+- [x] 11-01-PLAN.md — Audit all interactive controls for 52px touch targets; apply CSS overrides and min-height utilities
+- [x] 11-02-PLAN.md — Add prefers-reduced-motion media query overrides for Leaflet, donate button, GPX link, and fitBounds JS guard
+- [x] 11-03-PLAN.md — Fix RouteStats grid responsive breakpoint for mobile-first single-column layout
+- [x] 11-04-PLAN.md — Remove @astrojs/node adapter, fix static build to produce flat dist/ with all assets
 
 ## Progress
 
@@ -219,8 +219,8 @@ Note: Phase 3 and Phase 4 can proceed in parallel after Phase 2 completes. Phase
 | 8. Photo Gallery | 2/2 | Complete | 2026-03-31 |
 | 9. Photo Markers and Admin | 2/2 | Complete | 2026-03-31 |
 | 10. Content, Narrative, and Visual Identity | 3/3 | Complete | 2026-03-31 |
-| 11. Responsive Polish and Production Build | 0/4 | Not started | - |
+| 11. Responsive Polish and Production Build | 4/4 | Complete | 2026-03-31 |
 
 ---
 *Roadmap created: 2026-03-30*
-*Last updated: 2026-03-31 after Phase 10 execution*
+*Last updated: 2026-03-31 after Phase 11 execution*

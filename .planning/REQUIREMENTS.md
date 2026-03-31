@@ -48,8 +48,8 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **DSGN-02**: U.S. Forest Service / National Park visual theme — deep forest greens, warm amber/gold, bold solid lines, heavy shadows, earthy tones
 - [ ] **DSGN-03**: Typography with text shadows and bold condensed fonts fitting the park ranger station aesthetic
 - [x] **DSGN-04**: Topographic line patterns or decorative overlays reinforcing the wilderness theme
-- [ ] **DSGN-05**: Responsive layout works across mobile, tablet, and desktop with 52px minimum touch targets
-- [ ] **DSGN-06**: prefers-reduced-motion support for animations
+- [x] **DSGN-05**: Responsive layout works across mobile, tablet, and desktop with 52px minimum touch targets
+- [x] **DSGN-06**: prefers-reduced-motion support for animations
 
 ### Build Pipeline
 
@@ -121,8 +121,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DSGN-02 | Phase 1 | Complete |
 | DSGN-03 | Phase 1 | Complete |
 | DSGN-04 | Phase 10 | Complete |
-| DSGN-05 | Phase 11 | Pending |
-| DSGN-06 | Phase 11 | Pending |
+| DSGN-05 | Phase 11 | Complete |
+| DSGN-06 | Phase 11 | Complete |
 | BUILD-01 | Phase 2 | Complete |
 | BUILD-02 | Phase 2 | Complete |
 | BUILD-03 | Phase 2 | Complete |
@@ -139,4 +139,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-03-30*
-*Last updated: 2026-03-31 after Phase 9 execution — PHOTO-03, PHOTO-05 complete*
+*Last updated: 2026-03-31 after Phase 11 execution — DSGN-05, DSGN-06 complete; all v1 requirements complete*
