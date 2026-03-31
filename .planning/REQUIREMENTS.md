@@ -67,31 +67,31 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DSN-01 | — | Pending |
-| DSN-02 | — | Pending |
-| DSN-03 | — | Pending |
-| DSN-04 | — | Pending |
-| DSN-05 | — | Pending |
-| HERO-01 | — | Pending |
-| HERO-02 | — | Pending |
-| HERO-03 | — | Pending |
-| HERO-04 | — | Pending |
-| NARR-01 | — | Pending |
-| NARR-02 | — | Pending |
-| NARR-03 | — | Pending |
-| NARR-04 | — | Pending |
-| NARR-05 | — | Pending |
-| GAL-01 | — | Pending |
-| GAL-02 | — | Pending |
-| GAL-03 | — | Pending |
-| GAL-04 | — | Pending |
-| GAL-05 | — | Pending |
+| DSN-01 | Phase 12: Design Foundation | Pending |
+| DSN-02 | Phase 12: Design Foundation | Pending |
+| DSN-03 | Phase 14: Ojibwe Design System | Pending |
+| DSN-04 | Phase 14: Ojibwe Design System | Pending |
+| DSN-05 | Phase 12: Design Foundation | Pending |
+| HERO-01 | Phase 13: Hero & Event Date | Pending |
+| HERO-02 | Phase 13: Hero & Event Date | Pending |
+| HERO-03 | Phase 13: Hero & Event Date | Pending |
+| HERO-04 | Phase 13: Hero & Event Date | Pending |
+| NARR-01 | Phase 15: Editorial Content | Pending |
+| NARR-02 | Phase 15: Editorial Content | Pending |
+| NARR-03 | Phase 15: Editorial Content | Pending |
+| NARR-04 | Phase 15: Editorial Content | Pending |
+| NARR-05 | Phase 15: Editorial Content | Pending |
+| GAL-01 | Phase 16: Masonry Gallery | Pending |
+| GAL-02 | Phase 16: Masonry Gallery | Pending |
+| GAL-03 | Phase 16: Masonry Gallery | Pending |
+| GAL-04 | Phase 16: Masonry Gallery | Pending |
+| GAL-05 | Phase 16: Masonry Gallery | Pending |
 
 **Coverage:**
 - v1.1 requirements: 19 total
-- Mapped to phases: 0
-- Unmapped: 19 (populated during roadmap creation)
+- Mapped to phases: 19
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-31*
-*Last updated: 2026-03-31 after initial definition*
+*Last updated: 2026-03-31 after roadmap creation*
