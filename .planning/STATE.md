@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-03-30)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive showcase that inspires them to ride it and support MBTN.
-**Current focus:** Phase 9 complete — admin UI + save-manifest endpoint (09-01) and photo cluster markers + lightbox bridge (09-02) both done; ready for Phase 10
+**Current focus:** Phase 10 in progress — route-stats-and-donate-components (10-01) complete; RouteStats.astro and DonateCallout.astro ready for index.astro assembly
 
 ## Current Position
 
-Phase: 9 of 11 (Photo Markers and Admin) — Phase complete
-Plan: 2 of 2 in current phase (2 complete)
-Status: Phase complete — ready for Phase 10
-Last activity: 2026-03-31 — Completed 09-01-PLAN.md (admin UI + save-manifest endpoint)
+Phase: 10 of 11 (Content, Narrative, and Visual Identity) — In progress
+Plan: 1 of N in current phase (1 complete)
+Status: In progress — 10-01 complete, continuing Phase 10
+Last activity: 2026-03-31 — Completed 10-01-PLAN.md (RouteStats.astro + DonateCallout.astro)
 
-Progress: [██████░░░░] 67% (20/30 plans complete)
+Progress: [██████░░░░] 70% (21/30 plans complete)
 
 ## Performance Metrics
 
@@ -36,6 +36,7 @@ Progress: [██████░░░░] 67% (20/30 plans complete)
 | 07-photo-pipeline | 2/2 complete | ~6 min | ~3 min |
 | 08-photo-gallery | 2/2 complete | ~4 min | ~2 min |
 | 09-photo-markers-and-admin | 2/2 complete | ~4 min | ~2 min |
+| 10-content-narrative-and-visual-identity | 1/N complete | ~2 min | ~2 min |
 
 **Recent Trend:**
 - Last 5 plans: 07-02 (~4 min), 08-01 (~2 min), 08-02 (~2 min), 09-01 (prev), 09-02 (~4 min)
@@ -121,6 +122,9 @@ Recent decisions affecting current work:
 - 09-01: @astrojs/node adapter required in astro.config.ts for prerender=false in Astro 6 — output:static with adapter enables hybrid SSR/static; package was in devDependencies but adapter not wired in config
 - 09-01: Dev-only page pattern: prerender=false + if (import.meta.env.PROD) { return Astro.redirect('/') } — page renders dynamically in dev (live filesystem), returns server-side redirect in production
 - 09-01: Admin page uses standalone HTML with inline CSS (no BaseLayout/Tailwind) — dev tooling must be self-contained
+- 10-01: (s.data as any).difficulty type assertion required for discriminated union access in Astro frontmatter — TypeScript cannot narrow discriminated union after array .filter() at the type level
+- 10-01: roadMiles computed as totalMiles minus all annotated sector miles (~72.8 mi forest roads, 71.4% of route)
+- 10-01: RouteStats surface colors match Phase 5 map sector overlay colors (forest-600 roads, amber-300 moderate, amber-500 easy, rust-500 hard)
 
 ### Pending Todos
 
@@ -133,5 +137,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-31
-Stopped at: Completed 09-01-PLAN.md — Phase 9 fully complete (both 09-01 and 09-02 done); ready for Phase 10
+Stopped at: Completed 10-01-PLAN.md — RouteStats.astro and DonateCallout.astro created; ready for next Phase 10 plan
 Resume file: None
