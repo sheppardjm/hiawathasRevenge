@@ -37,17 +37,17 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Content & Narrative
 
-- [ ] **CONT-01**: Site displays introductory paragraphs about Hiawatha (the historical/literary figure) and how the Hiawatha National Forest came to bear his name
-- [ ] **CONT-02**: Route stats block shows distance (100 mi), total elevation gain, and surface type breakdown
-- [ ] **CONT-03**: GPX file available for direct download so riders can load onto GPS devices
-- [ ] **CONT-04**: Donate to MBTN call-to-action prominently featured with link to mbtn.org
+- [x] **CONT-01**: Site displays introductory paragraphs about Hiawatha (the historical/literary figure) and how the Hiawatha National Forest came to bear his name
+- [x] **CONT-02**: Route stats block shows distance (100 mi), total elevation gain, and surface type breakdown
+- [x] **CONT-03**: GPX file available for direct download so riders can load onto GPS devices
+- [x] **CONT-04**: Donate to MBTN call-to-action prominently featured with link to mbtn.org
 
 ### Design & Theme
 
-- [ ] **DSGN-01**: National park badge-style h1 site name design (CSS-only, Phil Monson-inspired)
+- [x] **DSGN-01**: National park badge-style h1 site name design (CSS-only, Phil Monson-inspired)
 - [ ] **DSGN-02**: U.S. Forest Service / National Park visual theme — deep forest greens, warm amber/gold, bold solid lines, heavy shadows, earthy tones
 - [ ] **DSGN-03**: Typography with text shadows and bold condensed fonts fitting the park ranger station aesthetic
-- [ ] **DSGN-04**: Topographic line patterns or decorative overlays reinforcing the wilderness theme
+- [x] **DSGN-04**: Topographic line patterns or decorative overlays reinforcing the wilderness theme
 - [ ] **DSGN-05**: Responsive layout works across mobile, tablet, and desktop with 52px minimum touch targets
 - [ ] **DSGN-06**: prefers-reduced-motion support for animations
 
@@ -113,14 +113,14 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PHOTO-04 | Phase 7 | Complete |
 | PHOTO-05 | Phase 9 | Complete |
 | PHOTO-06 | Phase 8 | Complete |
-| CONT-01 | Phase 10 | Pending |
-| CONT-02 | Phase 10 | Pending |
-| CONT-03 | Phase 10 | Pending |
-| CONT-04 | Phase 10 | Pending |
-| DSGN-01 | Phase 10 | Pending |
+| CONT-01 | Phase 10 | Complete |
+| CONT-02 | Phase 10 | Complete |
+| CONT-03 | Phase 10 | Complete |
+| CONT-04 | Phase 10 | Complete |
+| DSGN-01 | Phase 10 | Complete |
 | DSGN-02 | Phase 1 | Complete |
 | DSGN-03 | Phase 1 | Complete |
-| DSGN-04 | Phase 10 | Pending |
+| DSGN-04 | Phase 10 | Complete |
 | DSGN-05 | Phase 11 | Pending |
 | DSGN-06 | Phase 11 | Pending |
 | BUILD-01 | Phase 2 | Complete |
