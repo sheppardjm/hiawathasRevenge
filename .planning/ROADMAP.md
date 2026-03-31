@@ -17,7 +17,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 3: Route Map** - Leaflet island with GPX polyline, themed tiles, gesture handling, and lazy-load
 - [x] **Phase 4: Elevation Profile** - Chart.js island with elevation vs. distance, lazy-load, and responsive heights
 - [x] **Phase 5: Map-Elevation Sync** - CrosshairCustomEvent bus, gravel sector overlays on map and chart
-- [ ] **Phase 6: Restock Markers** - Restock point markers on map with name and mileage labels
+- [x] **Phase 6: Restock Markers** - Restock point markers on map with name and mileage labels
 - [ ] **Phase 7: Photo Pipeline** - sharp thumbnail generation, photo matching script, and photos.json
 - [ ] **Phase 8: Photo Gallery** - PhotoSwipe lightbox with thumbnail grid
 - [ ] **Phase 9: Photo Markers and Admin** - Geotagged map markers, cluster layer, and manifest admin UI
@@ -118,7 +118,7 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
-- [ ] 06-01-PLAN.md — Add restock point markers with forest-themed popups to RouteMap.astro and global.css
+- [x] 06-01-PLAN.md — Add restock point markers with forest-themed popups to RouteMap.astro and global.css
 
 ### Phase 7: Photo Pipeline
 **Goal**: Running the build pipeline produces 400px WebP thumbnails for all source images and a validated photos.json mapping each image to a mileage position — ready for the gallery and map markers
@@ -218,7 +218,7 @@ Note: Phase 3 and Phase 4 can proceed in parallel after Phase 2 completes. Phase
 | 3. Route Map | 2/2 | Complete | 2026-03-30 |
 | 4. Elevation Profile | 2/2 | Complete | 2026-03-30 |
 | 5. Map-Elevation Sync | 4/4 | Complete | 2026-03-30 |
-| 6. Restock Markers | 0/1 | Planned | - |
+| 6. Restock Markers | 1/1 | Complete | 2026-03-30 |
 | 7. Photo Pipeline | 0/2 | Not started | - |
 | 8. Photo Gallery | 0/2 | Not started | - |
 | 9. Photo Markers and Admin | 0/2 | Not started | - |
@@ -227,4 +227,4 @@ Note: Phase 3 and Phase 4 can proceed in parallel after Phase 2 completes. Phase
 
 ---
 *Roadmap created: 2026-03-30*
-*Last updated: 2026-03-30 after Phase 5 execution*
+*Last updated: 2026-03-30 after Phase 6 execution*

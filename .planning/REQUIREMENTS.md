@@ -97,16 +97,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | MAP-01 | Phase 3 | Complete |
 | MAP-02 | Phase 3 | Complete |
 | MAP-03 | Phase 5 | Complete |
-| MAP-04 | Phase 6 | Pending |
+| MAP-04 | Phase 6 | Complete |
 | MAP-05 | Phase 5 | Complete |
 | MAP-06 | Phase 3 | Complete |
 | MAP-07 | Phase 3 | Complete |
 | MAP-08 | Phase 3 | Complete |
-| ELEV-01 | Phase 4 | Pending |
+| ELEV-01 | Phase 4 | Complete |
 | ELEV-02 | Phase 5 | Complete |
 | ELEV-03 | Phase 5 | Complete |
-| ELEV-04 | Phase 4 | Pending |
-| ELEV-05 | Phase 4 | Pending |
+| ELEV-04 | Phase 4 | Complete |
+| ELEV-05 | Phase 4 | Complete |
 | PHOTO-01 | Phase 8 | Pending |
 | PHOTO-02 | Phase 8 | Pending |
 | PHOTO-03 | Phase 9 | Pending |
@@ -139,4 +139,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-03-30*
-*Last updated: 2026-03-30 after roadmap creation — all 37 requirements mapped*
+*Last updated: 2026-03-30 after Phase 6 execution — MAP-04 complete*

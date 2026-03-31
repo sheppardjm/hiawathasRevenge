@@ -5,14 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-03-30)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive showcase that inspires them to ride it and support MBTN.
-**Current focus:** Phase 6 in progress — amber restock markers on map with forest-themed click popups
+**Current focus:** Phase 6 complete — amber restock markers on map with forest-themed click popups; ready for Phase 7
 
 ## Current Position
 
-Phase: 6 of 11 (Restock Markers)
-Plan: 1 of ? in current phase (1 complete)
-Status: In progress
-Last activity: 2026-03-31 — Completed 06-01-PLAN.md (restock markers with popup on Leaflet map)
+Phase: 6 of 11 (Restock Markers) — Phase complete
+Plan: 1 of 1 in current phase (1 complete)
+Status: Phase complete — ready for Phase 7
+Last activity: 2026-03-30 — Completed Phase 6 (restock markers with forest-themed popups)
 
 Progress: [█████░░░░░] 44% (14/32 plans complete)
 
@@ -32,6 +32,7 @@ Progress: [█████░░░░░] 44% (14/32 plans complete)
 | 03-route-map | 2/2 complete | ~7 min | ~3.5 min |
 | 04-elevation-profile | 2/2 complete | ~7 min | ~3.5 min |
 | 05-map-elevation-sync | 4/4 complete | ~7 min | ~2 min |
+| 06-restock-markers | 1/1 complete | ~2 min | ~2 min |
 
 **Recent Trend:**
 - Last 5 plans: 03-02 (~5 min), 04-01 (2 min), 04-02 (~5 min checkpoint), 05-01 (~3 min)
@@ -104,6 +105,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-31
-Stopped at: Completed 06-01-PLAN.md — restock markers with forest-themed popups on Leaflet map
+Last session: 2026-03-30
+Stopped at: Phase 6 complete — restock markers verified; ready for Phase 7
 Resume file: None
