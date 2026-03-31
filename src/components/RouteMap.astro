@@ -19,9 +19,19 @@
     background: transparent !important;
     border: none !important;
   }
+
+  :global(.photo-marker) {
+    background: transparent !important;
+    border: none !important;
+  }
 </style>
 
 <script>
+  // Static CSS imports — Vite bundles these into page CSS at build time
+  // MUST be static (not dynamic) so Vite can tree-shake and bundle correctly
+  import 'leaflet.markercluster/dist/MarkerCluster.css';
+  import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
+
   // Module-scope variables — accessible by window event listeners before initMap() runs
   let bikeMarker = null;
   let routePoints = null;
@@ -174,6 +184,48 @@
           { className: 'restock-popup' }
         )
         .addTo(map);
+    }
+
+    // ---- Photo cluster markers ----
+    // CRITICAL: Set window.L before importing the markercluster plugin.
+    // The plugin is UMD and attaches to the global L object during evaluation.
+    window.L = L;
+    await import('leaflet.markercluster/dist/leaflet.markercluster-src.js');
+
+    // Fetch photo data — may be empty array until manifest is saved and pipeline runs
+    const photosData = await fetch('/data/photos.json').then(r => r.json());
+
+    if (photosData.length > 0) {
+      const clusterGroup = L.markerClusterGroup({
+        maxClusterRadius: 50,
+        showCoverageOnHover: false,
+        zoomToBoundsOnClick: true
+      });
+
+      photosData.forEach((photo, index) => {
+        // Amber dot marker to visually distinguish from restock markers (#c8973e amber-500)
+        const photoIcon = L.divIcon({
+          className: 'photo-marker',
+          html: '<div style="width:14px;height:14px;background:#d4a84e;border:2px solid #1a2e1a;border-radius:50%;box-shadow:0 1px 3px rgba(0,0,0,0.4);"></div>',
+          iconSize: [18, 18],
+          iconAnchor: [9, 9]
+        });
+
+        const marker = L.marker([photo.lat, photo.lon], {
+          icon: photoIcon,
+          zIndexOffset: 750  // between restock (500) and bike crosshair (1000)
+        });
+
+        marker.on('click', () => {
+          window.dispatchEvent(new CustomEvent('map:photoClick', {
+            detail: { photoIndex: index }
+          }));
+        });
+
+        clusterGroup.addLayer(marker);
+      });
+
+      clusterGroup.addTo(map);
     }
 
     // Auto-fit map to the full route bounds
