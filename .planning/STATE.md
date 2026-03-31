@@ -5,14 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-03-30)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive showcase that inspires them to ride it and support MBTN.
-**Current focus:** Phase 9 plan 02 complete — photo cluster markers on map wired to PhotoSwipe lightbox; ready for Phase 10
+**Current focus:** Phase 9 complete — admin UI + save-manifest endpoint (09-01) and photo cluster markers + lightbox bridge (09-02) both done; ready for Phase 10
 
 ## Current Position
 
-Phase: 9 of 11 (Photo Markers and Admin) — In progress
+Phase: 9 of 11 (Photo Markers and Admin) — Phase complete
 Plan: 2 of 2 in current phase (2 complete)
 Status: Phase complete — ready for Phase 10
-Last activity: 2026-03-31 — Completed 09-02-PLAN.md (photo cluster markers + lightbox bridge)
+Last activity: 2026-03-31 — Completed 09-01-PLAN.md (admin UI + save-manifest endpoint)
 
 Progress: [██████░░░░] 59% (19/32 plans complete)
 
@@ -118,6 +118,9 @@ Recent decisions affecting current work:
 - 09-02: Module-scope lightbox variable required in PhotoGallery — event listener closure cannot capture block-scoped variable
 - 09-02: Cross-component event bus pattern: RouteMap dispatches window CustomEvent, PhotoGallery listens — reusable for future map→UI bridges
 - 09-02: zIndexOffset layering finalized: polylines(0) < restock markers(500) < photo markers(750) < bike crosshair(1000)
+- 09-01: @astrojs/node adapter required in astro.config.ts for prerender=false in Astro 6 — output:static with adapter enables hybrid SSR/static; package was in devDependencies but adapter not wired in config
+- 09-01: Dev-only page pattern: prerender=false + if (import.meta.env.PROD) { return Astro.redirect('/') } — page renders dynamically in dev (live filesystem), returns server-side redirect in production
+- 09-01: Admin page uses standalone HTML with inline CSS (no BaseLayout/Tailwind) — dev tooling must be self-contained
 
 ### Pending Todos
 
@@ -130,5 +133,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-31
-Stopped at: Completed 09-02-PLAN.md — Phase 9 complete; ready for Phase 10
+Stopped at: Completed 09-01-PLAN.md — Phase 9 fully complete (both 09-01 and 09-02 done); ready for Phase 10
 Resume file: None
