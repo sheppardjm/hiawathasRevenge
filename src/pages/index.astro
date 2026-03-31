@@ -3,6 +3,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import RouteMap from '../components/RouteMap.astro';
 import ElevationProfile from '../components/ElevationProfile.astro';
 import PhotoGallery from '../components/PhotoGallery.astro';
+import RouteStats from '../components/RouteStats.astro';
+import DonateCallout from '../components/DonateCallout.astro';
 ---
 
 <BaseLayout title="Hiawatha's Revenge | 100 Miles Through the Hiawatha National Forest">
@@ -39,6 +41,7 @@ import PhotoGallery from '../components/PhotoGallery.astro';
       </svg>
       <div class="badge-content">
         <h1 class="badge-title">Hiawatha's Revenge</h1>
+        <hr class="badge-rule" />
         <span class="badge-miles">100 Miles</span>
       </div>
     </div>
@@ -47,15 +50,66 @@ import PhotoGallery from '../components/PhotoGallery.astro';
     </p>
   </section>
 
+  <section class="py-[--spacing-block] flex justify-center">
+    <DonateCallout />
+  </section>
+
+  <div class="topo-divider"></div>
+
   <section class="py-[--spacing-block]">
     <h2 class="text-3xl mb-[--spacing-element]">The Route</h2>
-    <p class="text-cream-100 leading-relaxed max-w-prose">
-      Starting and ending in Munising, this route winds through
-      some of the most remote and beautiful terrain in Michigan's
-      Upper Peninsula. Dense hardwood forests, pristine inland lakes,
-      and miles of quiet forest roads await.
-    </p>
+    <div class="max-w-prose space-y-4 text-cream-100 leading-relaxed">
+      <p>
+        In 1855, Henry Wadsworth Longfellow published <em>The Song of Hiawatha</em>,
+        an epic poem that drew on Ojibwe oral traditions collected by ethnographer
+        Henry Rowe Schoolcraft. Set along the shores of Lake Superior in Michigan's
+        Upper Peninsula, the poem wove together legends of the trickster-hero
+        Manabozho under the borrowed name of Hiawatha — a figure from the
+        Haudenosaunee (Iroquois) Confederacy far to the east.
+      </p>
+      <p>
+        Longfellow's poem reshaped how Americans imagined this landscape. When the
+        federal government designated nearly 900,000 acres of Upper Peninsula forest
+        as a National Forest in 1931, they named it after the poem's protagonist:
+        the Hiawatha National Forest. Today the forest stretches across the peninsula
+        from Lake Superior to Lake Michigan, sheltering over 100 miles of Great Lakes
+        shoreline, pristine inland lakes, and dense hardwood wilderness.
+      </p>
+      <p>
+        Hiawatha's Revenge is a 100-mile cycling route that threads through the
+        heart of this forest. Starting and ending in Munising, the route follows
+        quiet forest roads, rugged two-track, and remote singletrack past
+        landscapes that have changed little since Schoolcraft documented the Ojibwe
+        stories that would one day name this land. It is a ride that tests your
+        legs and rewards your soul.
+      </p>
+      <p>
+        The route is organized by the
+        <a href="https://mbtn.org" class="underline hover:text-amber-300">Munising Bay Trail Network</a>
+        (MBTN), a 501(c)(3) nonprofit that builds and maintains singletrack trails
+        across the Hiawatha National Forest. Every mile you ride supports their
+        work preserving access to this extraordinary landscape.
+      </p>
+    </div>
   </section>
+
+  <section class="py-[--spacing-block]">
+    <h2 class="text-3xl mb-[--spacing-element]">Route Stats</h2>
+    <RouteStats />
+  </section>
+
+  <section class="py-[--spacing-block] flex flex-col items-center gap-2">
+    <a
+      href="/Munising_Hiawatha_s_Revenge.gpx"
+      download="HiawathasRevenge.gpx"
+      class="gpx-download"
+    >
+      Download GPX File
+    </a>
+    <span class="text-xs text-cream-200">Load this route onto your GPS device</span>
+  </section>
+
+  <div class="topo-divider"></div>
 
   <section id="route" class="py-[--spacing-block]">
     <h2 class="text-3xl mb-[--spacing-element]">Explore the Route</h2>
@@ -74,11 +128,7 @@ import PhotoGallery from '../components/PhotoGallery.astro';
 
   <section class="py-[--spacing-block]">
     <h2 class="text-3xl mb-[--spacing-element]">Support the Trail</h2>
-    <div class="inline-block border-[3px] border-amber-500 px-8 py-4 shadow-[4px_4px_0px_rgba(0,0,0,0.5)]">
-      <p class="text-amber-400 text-lg font-bold">
-        Donate to the Munising Bay Trail Network
-      </p>
-    </div>
+    <DonateCallout />
   </section>
 
   <section class="py-[--spacing-block] border-t border-forest-700 mt-[--spacing-section]">
@@ -143,6 +193,14 @@ import PhotoGallery from '../components/PhotoGallery.astro';
     margin-top: 3rem;
   }
 
+  .badge-rule {
+    width: 60%;
+    border: none;
+    border-top: 1px solid var(--color-amber-500);
+    opacity: 0.6;
+    margin: 0.25rem 0;
+  }
+
   .badge-miles {
     font-family: var(--font-display);
     font-weight: 700;
@@ -151,6 +209,25 @@ import PhotoGallery from '../components/PhotoGallery.astro';
     letter-spacing: 0.2em;
     font-size: var(--font-size-sm);
     margin-top: 0.25rem;
+  }
+
+  .gpx-download {
+    display: inline-block;
+    border: 2px solid var(--color-forest-700);
+    padding: 0.5rem 1.5rem;
+    color: var(--color-amber-400);
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--font-size-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    text-decoration: none;
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .gpx-download:hover {
+    border-color: var(--color-amber-500);
+    color: var(--color-amber-300);
   }
 
   @media (min-width: 640px) {
