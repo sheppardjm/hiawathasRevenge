@@ -175,15 +175,12 @@ Plans:
   4. A GPX download link is present and downloads the source GPX file when clicked
   5. The site name h1 renders as a national park badge design (CSS-only, no images)
   6. Topographic line patterns or decorative wilderness overlays appear as section dividers or background textures
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 10-01: Write Hiawatha narrative content (historical figure, Longfellow poem, Ojibwe context, National Forest naming, MBTN mission); author in Astro component with appropriate typography
-- [ ] 10-02: Build route stats block pulling distance and elevation gain from route-data.json at build time; add surface type breakdown from annotations.json
-- [ ] 10-03: Create `DonateCallout.astro` with prominent donate button linking to mbtn.org/donate; add above-fold placement
-- [ ] 10-04: Add GPX download link (`<a href="/Munising_Hiawatha_s_Revenge.gpx" download>`) to the page; copy GPX to public/
-- [ ] 10-05: Design and implement national park badge-style h1 in CSS only (border layers, arrowhead motif, condensed lettering, text shadow)
-- [ ] 10-06: Add topographic line SVG or CSS patterns as section background textures or decorative dividers
+- [ ] 10-01-PLAN.md — Create RouteStats.astro (build-time data) and DonateCallout.astro (donate button) components
+- [ ] 10-02-PLAN.md — Add GPX copy pipeline step and topographic pattern CSS class
+- [ ] 10-03-PLAN.md — Assemble index.astro: narrative content, wire components, GPX link, topo dividers, badge refinement
 
 ### Phase 11: Responsive Polish and Production Build
 **Goal**: The site works flawlessly on every screen size, animations respect prefers-reduced-motion, all touch targets meet the 52px minimum, and `astro build` produces a deployable artifact with no errors or warnings
