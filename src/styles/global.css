@@ -9,7 +9,7 @@
 @import "leaflet/dist/leaflet.css" layer(leaflet);
 @import "leaflet-gesture-handling/dist/leaflet-gesture-handling.css" layer(leaflet);
 
-@theme {
+@theme static {
   /* ============================================================
      Forest Service / National Park Color Palette
      ============================================================ */
@@ -34,6 +34,30 @@
   --color-cream-100: #f5f0e8; /* primary text color — cream/parchment */
   --color-cream-200: #e8e0d0; /* secondary text — slightly warmer */
   --color-cream-50: #faf8f4;  /* lightest cream for highlights */
+
+  /* ============================================================
+     v1.1: Ojibwe-inspired color families
+     ============================================================ */
+
+  /* Berry family — decorative/large-text only (fails AA normal text on dark bg) */
+  --color-berry-700: #7a2e3d;
+  --color-berry-600: #9a3a4f;
+  --color-berry-500: #b34d63;
+
+  /* Gold family — PASSES AA normal text on forest-900 and forest-950 */
+  --color-gold-600: #b8860b;
+  --color-gold-500: #d4a017;
+  --color-gold-400: #e6b422;
+
+  /* Lake family — lake-400 PASSES AA; lake-500/600/700 are decorative only */
+  --color-lake-700: #2c5282;
+  --color-lake-600: #2b6cb0;
+  --color-lake-500: #3182ce;
+  --color-lake-400: #4a9eca;
+
+  /* Moss family — decorative/non-text only (fails AA on dark bg) */
+  --color-moss-600: #6b7c3f;
+  --color-moss-500: #7d9448;
 
   /* ============================================================
      Typography Scale
