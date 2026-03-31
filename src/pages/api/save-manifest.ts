@@ -2,8 +2,6 @@ import type { APIRoute } from 'astro';
 import { writeFileSync } from 'fs';
 import { resolve } from 'path';
 
-export const prerender = false;
-
 export const POST: APIRoute = async ({ request }) => {
   if (import.meta.env.PROD) {
     return new Response(JSON.stringify({ error: 'Not available in production' }), {

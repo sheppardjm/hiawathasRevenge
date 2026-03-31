@@ -2,8 +2,6 @@
 import { readFileSync, existsSync, readdirSync } from 'fs';
 import { resolve, basename, extname } from 'path';
 
-export const prerender = false;
-
 if (import.meta.env.PROD) {
   return Astro.redirect('/');
 }
