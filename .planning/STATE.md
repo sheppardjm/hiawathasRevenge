@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-03-30)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive showcase that inspires them to ride it and support MBTN.
-**Current focus:** Phase 4 complete — ready for Phase 5 (gravel sectors)
+**Current focus:** Phase 5 in progress — map-elevation sync cross-component event bus complete
 
 ## Current Position
 
-Phase: 4 of 11 (Elevation Profile) — Complete
-Plan: 2 of 2 in current phase (2 complete)
-Status: Phase complete
-Last activity: 2026-03-30 — Completed 04-02-PLAN.md (elevation chart visual verification)
+Phase: 5 of 11 (Map-Elevation Sync) — In progress
+Plan: 1 of 3 in current phase (1 complete)
+Status: In progress
+Last activity: 2026-03-31 — Completed 05-01-PLAN.md (CustomEvent bus, crosshair annotation, bike dot marker)
 
-Progress: [█████░░░░░] 29% (9/31 plans complete)
+Progress: [█████░░░░░] 32% (10/31 plans complete)
 
 ## Performance Metrics
 
@@ -31,10 +31,11 @@ Progress: [█████░░░░░] 29% (9/31 plans complete)
 | 02-data-pipeline | 3/3 complete | ~3 min | ~1 min |
 | 03-route-map | 2/2 complete | ~7 min | ~3.5 min |
 | 04-elevation-profile | 2/2 complete | ~7 min | ~3.5 min |
+| 05-map-elevation-sync | 1/3 complete | ~3 min | ~3 min |
 
 **Recent Trend:**
-- Last 5 plans: 02-03 (2 min), 03-01 (2 min), 03-02 (~5 min), 04-01 (2 min), 04-02 (~5 min including checkpoint)
-- Trend: On track; visual checkpoint plans take longer due to human review
+- Last 5 plans: 03-02 (~5 min), 04-01 (2 min), 04-02 (~5 min checkpoint), 05-01 (~3 min)
+- Trend: On track; pure code plans run fast (~3 min); visual checkpoint plans take longer
 
 *Updated after each plan completion*
 
@@ -75,6 +76,11 @@ Recent decisions affecting current work:
 - 04-01: IO-only lazy-init for ElevationProfile (no scroll listener) — avoids premature load triggered by RouteMap's scroll listener
 - 04-01: parsing: false required at BOTH options root and dataset level for LTTB decimation to function
 - 04-02: No code changes required — ElevationProfile.astro met all Phase 4 success criteria as built; verified feet/miles axes, 140px/180px heights, IntersectionObserver lazy-loading
+- 05-01: chartjs-plugin-annotation registered inside initChart() (not globally) — lazy-loaded with Chart.js bundle
+- 05-01: Module-scope window listeners in RouteMap (not inside initMap) — guard with !bikeMarker/!routePoints/!leafletMap handles pre-init events safely
+- 05-01: snapByMiles O(n) linear scan over pt.miles field (distance-along-route, not array index) — accurate for non-uniform point spacing
+- 05-01: L.divIcon className:'' REQUIRED on custom Leaflet markers — removes default white background/border from leaflet-div-icon class
+- 05-01: chart.update('none') string arg required for high-frequency chart mutations — suppresses Chart.js animation on each mousemove
 
 ### Pending Todos
 
@@ -86,6 +92,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-30
-Stopped at: Completed 04-02-PLAN.md — elevation chart visual verification (Phase 4 complete)
+Last session: 2026-03-31
+Stopped at: Completed 05-01-PLAN.md — CustomEvent bus, crosshair annotation, bike dot marker
 Resume file: None
