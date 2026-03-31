@@ -85,20 +85,6 @@
         // maintainAspectRatio: false — CSS container controls height (140px/180px)
         maintainAspectRatio: false,
         animation: false,
-        onHover(event, _activeElements, chart) {
-          const pos = Chart.helpers.getRelativePosition(event, chart);
-          const miles = chart.scales.x.getValueForPixel(pos.x);
-          if (miles == null) return;
-          // Clamp to valid range to prevent snapping to route start/end near axis labels
-          const clamped = Math.max(0, Math.min(data[data.length - 1].x, miles));
-          // Dispatch CustomEvent for RouteMap crosshair sync
-          window.dispatchEvent(new CustomEvent('elevation:hover', { detail: { miles: clamped } }));
-          // Update crosshair line position
-          chart.options.plugins.annotation.annotations.crosshair.xMin = clamped;
-          chart.options.plugins.annotation.annotations.crosshair.xMax = clamped;
-          chart.options.plugins.annotation.annotations.crosshair.display = true;
-          chart.update('none');
-        },
         plugins: {
           legend: { display: false },
           tooltip: {
@@ -149,6 +135,26 @@
           }
         }
       }
+    });
+
+    // Direct canvas mousemove — bypasses Chart.js onHover which is unreliable with parsing:false in v4.5.1
+    canvas.addEventListener('mousemove', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const pos = {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top
+      };
+      const miles = chart.scales.x.getValueForPixel(pos.x);
+      if (miles == null) return;
+      // Clamp to valid range
+      const clamped = Math.max(0, Math.min(data[data.length - 1].x, miles));
+      // Dispatch CustomEvent for RouteMap crosshair sync
+      window.dispatchEvent(new CustomEvent('elevation:hover', { detail: { miles: clamped } }));
+      // Update crosshair line position
+      chart.options.plugins.annotation.annotations.crosshair.xMin = clamped;
+      chart.options.plugins.annotation.annotations.crosshair.xMax = clamped;
+      chart.options.plugins.annotation.annotations.crosshair.display = true;
+      chart.update('none');
     });
 
     // Hide crosshair line and notify RouteMap when cursor leaves the chart
