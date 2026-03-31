@@ -17,6 +17,37 @@
 </style>
 
 <script>
+  // Module-scope variables — accessible by window event listeners before initMap() runs
+  let bikeMarker = null;
+  let routePoints = null;
+  let leafletMap = null;
+
+  // snapByMiles — O(n) nearest-distance search over route points
+  // Uses miles field (distance-along-route) — NOT array index — for accurate sync with elevation chart
+  function snapByMiles(points, targetMiles) {
+    let best = points[0];
+    let bestDiff = Math.abs(points[0].miles - targetMiles);
+    for (const pt of points) {
+      const diff = Math.abs(pt.miles - targetMiles);
+      if (diff < bestDiff) { bestDiff = diff; best = pt; }
+    }
+    return best;
+  }
+
+  // Module-scope listeners — registered immediately so they work even before initMap() completes
+  // Guard clauses handle pre-init window safely
+  window.addEventListener('elevation:hover', (e) => {
+    if (!bikeMarker || !routePoints || !leafletMap) return;
+    const { miles } = e.detail;
+    const pt = snapByMiles(routePoints, miles);
+    bikeMarker.setLatLng([pt.lat, pt.lon]);
+    if (!bikeMarker._map) bikeMarker.addTo(leafletMap);
+  });
+
+  window.addEventListener('elevation:leave', () => {
+    if (bikeMarker && bikeMarker._map) bikeMarker.remove();
+  });
+
   async function initMap() {
     // Dynamic import avoids SSR "window is undefined" error — Leaflet requires browser globals
     const L = (await import('leaflet')).default;
@@ -27,6 +58,9 @@
 
     // Initialize map with gestureHandling enabled
     const map = L.map('map', { gestureHandling: true });
+
+    // Assign module-scope reference for use by window event listeners
+    leafletMap = map;
 
     // CyclOSM tile layer — no API key required, forest-themed rendering
     L.tileLayer('https://{s}.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png', {
@@ -51,6 +85,7 @@
           L.DomEvent.preventDefault(e);
           map.fitBounds(initialBounds, { padding: [20, 20] });
           map.closePopup();
+          if (bikeMarker && bikeMarker._map) bikeMarker.remove();
         });
         return container;
       }
@@ -61,12 +96,34 @@
     const routeData = await fetch('/data/route-data.json').then(r => r.json());
     const latlngs = routeData.points.map((pt) => [pt.lat, pt.lon]);
 
+    // Assign module-scope reference for use by snapByMiles in window event listeners
+    routePoints = routeData.points;
+
     const routeLine = L.polyline(latlngs, {
       color: '#1a2e1a',
       weight: 4,
       opacity: 0.9,
       smoothFactor: 1
     }).addTo(map);
+
+    // Bike dot marker — circle dot that moves along the route on elevation chart hover
+    // className: '' REQUIRED — removes default leaflet-div-icon white background/border
+    const bikeIcon = L.divIcon({
+      html: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+        <circle cx="8" cy="8" r="6" fill="#c8973e" stroke="#1a2e1a" stroke-width="2"/>
+      </svg>`,
+      className: '',
+      iconSize: [16, 16],
+      iconAnchor: [8, 8]
+    });
+
+    // Create marker but do NOT add to map — appears on first elevation:hover
+    bikeMarker = L.marker([0, 0], {
+      icon: bikeIcon,
+      interactive: false,
+      keyboard: false,
+      zIndexOffset: 1000
+    });
 
     // Auto-fit map to the full route bounds
     map.fitBounds(routeLine.getBounds(), { padding: [20, 20] });
