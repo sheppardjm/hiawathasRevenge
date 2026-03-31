@@ -18,6 +18,7 @@ const steps = [
   { name: 'parse-gpx', script: 'scripts/parse-gpx.js' },
   { name: 'resolve-annotations', script: 'scripts/resolve-annotations.js' },
   { name: 'generate-thumbnails', script: 'scripts/generate-thumbnails.js' },
+  { name: 'copy-images', script: 'scripts/copy-images.js' },
   { name: 'match-photos', script: 'scripts/match-photos.js' },
 ];
 
