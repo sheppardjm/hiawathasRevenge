@@ -1,196 +1,242 @@
-# Feature Research
+# Feature Landscape: v1.1 Visual Redesign
 
-**Domain:** Single-route cycling showcase / charity ride marketing site
-**Researched:** 2026-03-30
-**Confidence:** MEDIUM-HIGH — strong pattern coverage from multiple real-world examples (bikepacking.com, UNBOUND Gravel, Adventure Cycling Golden Gravel Trail, Gravel Worlds), confirmed against PROJECT.md requirements
-
----
-
-## Feature Landscape
-
-### Table Stakes (Users Expect These)
-
-Features cyclists and donors expect on a route showcase site. Missing these makes the site feel incomplete or untrusted.
-
-| Feature | Why Expected | Complexity | Notes |
-|---------|--------------|------------|-------|
-| Interactive route map | Every serious route showcase has a map — it's the first thing visitors look for | MEDIUM | Leaflet confirmed in PROJECT.md; use tile style matching forest/park theme (Stadia Stamen Terrain or similar — not dark-matter tiles) |
-| Elevation profile | Riders need to understand the climbing before committing | MEDIUM | Chart.js; bikepacking.com, UNBOUND, and Golden Gravel Trail all feature elevation data prominently |
-| Route stats block | Distance, elevation gain, surface type breakdown | LOW | Static callout: 100 miles, total climbing, % gravel. Seen on every reference site |
-| GPX download | Riders expect to load the route onto their Garmin/Wahoo before committing | LOW | Direct file download; confirmed pattern across Gravel Worlds (Ride with GPS), UNBOUND, Golden Gravel Trail |
-| Photo gallery | Visual evidence of the landscape — without it the site cannot inspire | MEDIUM | PhotoSwipe lightbox; 40+ images standard on bikepacking.com route pages |
-| Donate / support CTA | Riders need a clear path to contribute to MBTN | LOW | Single prominent button linking to mbtn.org/donate; confirmed as primary site purpose |
-| Responsive design | Riders research on phones while on the go | MEDIUM | Mobile-first; touch-friendly controls (52px minimum) |
-| Route narrative / context | Riders want to understand what makes this route special before clicking away | LOW | Intro text covering Hiawatha National Forest history and Ojibwe context |
-| Restock / aid point markers | Critical safety info for a remote 100-mile route; riders WILL ask before attempting | LOW | Map markers with labels; seen on UNBOUND checkpoints page and bikepacking.com resupply notes |
-
-### Differentiators (Competitive Advantage)
-
-Features that set this site apart from a basic event listing or a generic route page. These justify the site's existence as a standalone showcase rather than a page on mbtn.org.
-
-| Feature | Value Proposition | Complexity | Notes |
-|---------|-------------------|------------|-------|
-| Map + elevation hover sync | Hovering the elevation chart moves a crosshair on the map — makes the route feel explorable, not just readable | HIGH | Confirmed in PROJECT.md; seen as the signature mkUltra pattern; no other sampled site does this at this fidelity |
-| Geotagged photo markers on map | Photos appear as map pins at their mileage location — riders "ride the route" visually before they ride it physically | HIGH | Depends on photo manifest pipeline; no reference site does this as natively as described |
-| Gravel sector overlays (map + chart) | Color-coded difficulty bands on both the map and elevation profile help riders understand where the hardest sections are | HIGH | Unique to this implementation; UNBOUND shows checkpoints but not surface difficulty gradations |
-| Photo manifest admin UI | Easy in-browser mileage assignment for photos without EXIF data — makes the whole feature maintainable | MEDIUM | Internal tool; not user-facing but enables the photo marker differentiator |
-| National Park badge visual identity | The Forest Service / NPS aesthetic creates instant credibility and emotional resonance with the wilderness setting | MEDIUM | Design, not code; CSS-only badge typography; rare in cycling sites which default to sport/race aesthetics |
-| Historical / cultural intro text | Covering the Hiawatha poem, the Ojibwe legends, and how the forest came to bear this name gives the site depth and meaning beyond "go ride here" | LOW | Writing task, not engineering; differentiates from event-only sites |
-| Curated wilderness photography | ~50 route-specific photos showing actual trail conditions and scenery — not stock cycling photos | LOW | Asset curation, not engineering; bikepacking.com's photo galleries are consistently cited as what makes routes compelling |
-
-### Anti-Features (Commonly Requested, Often Problematic)
-
-Features that seem like natural additions but are explicitly out of scope or actively harmful for this site's purpose.
-
-| Feature | Why Requested | Why Problematic | Alternative |
-|---------|---------------|-----------------|-------------|
-| Race registration / BikeReg integration | Many gravel events have "register now" buttons | This is a ride, not a race — registration implies competitive timing, entry fees, cutoffs. Contradicts the charity/community purpose | Donate to MBTN CTA replaces the "register" action |
-| Countdown timer | Standard on race sites | Implies a specific race date that doesn't exist; makes the site feel stale when the date passes | Remove entirely; the ride is anytime, not a specific date |
-| KOM / segment timing | Strava culture means cyclists often expect segment data | Introduces competitive framing that undercuts the "come enjoy the wilderness" message | Elevation profile shows the challenge without gamifying it |
-| User accounts / login | "Let riders save their progress" | Authentication adds server complexity, maintenance burden, and is completely unnecessary for a static showcase | No accounts; static site |
-| Strava / Komoot embed | "Show who's ridden it" | Pulls in third-party styles and scripts; Strava embed is increasingly paywalled; adds dependency on external API | Curated photo gallery conveys community better than activity feeds |
-| Real-time features | "Show live riders on the map" | Requires backend infrastructure; no race/event exists to drive live data; adds ongoing hosting cost | Static showcase; photos represent the community |
-| Course certification / officials info | Common on race sites | Not a certified race; adding this content implies formal race structure | Leave out entirely |
-| Multiple distance options | Many gravel events offer 25/50/100 options | One iconic 100-mile route is the identity; fragmentation dilutes the narrative | Single route, clearly presented |
-| Comments / social wall | "Community engagement" | Adds moderation burden, spam risk, and backend requirement for a static site | Link to MBTN's Facebook for community discussion |
+**Domain:** Outdoor cycling route showcase -- editorial visual upgrade
+**Researched:** 2026-03-31
+**Milestone:** v1.1 Visual Redesign
+**Confidence:** MEDIUM-HIGH -- patterns verified across UNBOUND Gravel, SBT GRVL, Cycle Oregon, Terra Brasil ecotourism sites, Nature Conservancy, and editorial storytelling site surveys; cultural sensitivity findings verified across multiple Indigenous cultural sources
 
 ---
 
-## Feature Dependencies
+## Context
+
+v1.0 shipped a fully functional showcase: interactive Leaflet map with GPX polyline, gravel sector overlays, restock markers, photo clusters; Chart.js elevation profile synced via CustomEvent bus; PhotoSwipe gallery with uniform grid; Forest Service / National Park badge identity; basic narrative paragraphs. All table-stakes and core differentiators from v1.0 research are built and working.
+
+v1.1 evolves the site from **functional showcase** to **immersive editorial experience**. The existing data infrastructure (GPX pipeline, photo manifest, annotations JSON, event bus) is solid. What changes is how content is presented, not what content exists.
+
+---
+
+## Table Stakes
+
+Features that must be polished for the v1.1 redesign to feel complete. If any of these feel half-done, the redesign looks worse than the current v1.0.
+
+| Feature | Why Expected | Complexity | Depends On | Notes |
+|---------|--------------|------------|------------|-------|
+| Full-width hero section with route photo | Every premium outdoor event site (UNBOUND, SBT GRVL, Cycle Oregon, Nature Conservancy) opens with a dramatic full-bleed photo. The current v1.0 opens with a centered badge on a dark background -- functional but not immersive. Users have been trained by outdoor brands to expect visual drama above the fold. | MEDIUM | Selecting 1-2 hero-quality landscape photos from the 54-photo library; existing Astro image pipeline can handle srcset/WebP | Gradient overlay (bottom-to-top dark) ensures text legibility. Badge h1 relocates INTO the hero rather than floating in void. Must be responsive -- portrait crop on mobile, wide landscape on desktop. UNBOUND uses dark navy overlay; SBT GRVL uses layered typography; Cycle Oregon uses atmospheric full-width. Recommendation: dark gradient overlay approach like Nature Conservancy -- lets the photo breathe while keeping text readable. |
+| Event date (June 6, 2026) prominently placed | SBT GRVL, Cycle Oregon, and UNBOUND all place date + location within the first viewport. UNBOUND specifically stacks "May 28-31, 2026 / Emporia, KS" immediately below the logo. This is the single most important piece of information for prospective riders. Currently absent from v1.0. | LOW | None -- pure markup and styling | Place in hero section, below route name. Format: "June 6, 2026 / Munising, MI" in display font with generous letter-spacing. Do NOT build a countdown timer (explicitly out of scope per PROJECT.md). Static date text is correct -- it persists after the event as a "this happened" marker rather than going stale. |
+| Masonry/editorial photo gallery replacing uniform grid | The current 2/3/4-column uniform grid with square aspect-ratio crops is functional but generic. Editorial outdoor sites (bikepacking.com, Terra Brasil inspiration images) use mixed-size layouts where hero images get 2x space and landscape/portrait orientations are preserved. The uniform grid actively hides the variety of the photography. | MEDIUM | Existing PhotoSwipe lightbox integration; existing photos.json with dimensions parseable from filenames; Tailwind CSS columns utility | Use CSS columns approach (Tailwind `columns-2 md:columns-3 lg:columns-4`) -- proven, no-JS, works today in all browsers. Native CSS Grid masonry (`grid-template-rows: masonry`) is Firefox-only as of March 2026 and not viable. Some photos should be "featured" (larger) -- add a `featured: boolean` field to photos.json manifest. PhotoSwipe integration stays intact since it reads the same `<a>` elements. |
+| Route narrative rewrite with photo integration | The current v1.0 has four paragraphs of plain text under an h2. Editorial sites (Vev storytelling examples, Nature Conservancy, bikepacking.com long-form routes) interleave text with photography. The Hiawatha/Nanabozho story deserves richer treatment -- it is the narrative hook that distinguishes this site from every other gravel route page. | MEDIUM | data.md historical content; 54 existing route photos; writing craft for the New Yorker tone | Structure as alternating text blocks and photo breaks. Not scrollytelling (too complex for this scope) -- instead, use the editorial pattern of full-width or inset photos between prose sections, like a magazine feature. Pull quotes from data.md (the Longfellow critique passage) styled as typographic callouts. Must feel like reading an article, not a brochure. |
+| Color palette evolution to warmer/more vibrant | The current palette (forest-950 through forest-600, amber-500/400/300, rust-600/500, cream-100/200/50) is solid but cool and austere. The inspiration images -- especially bogcore, national park badges (Yosemite, Grand Canyon, Sequoia), and the Arizona/Southwest geometric patterns -- all use warmer, more saturated palettes. The Ojibwe woodland beadwork tradition uses vibrant berry reds, deep blues, and rich greens alongside the earth tones. | LOW | Updating CSS custom properties in global.css @theme block; verifying contrast ratios for accessibility | Expand, do not replace. Add warmer accent colors (berry red, deeper gold, richer greens) alongside existing palette. Key additions: a warmer red-orange for accent (replacing/supplementing rust), a deeper/richer amber, and potentially a muted blue for water/lake references. All additions must maintain WCAG AA contrast against the dark backgrounds. |
+
+## Differentiators
+
+Features that elevate the site from "good outdoor event page" to "something you send to friends." These are what make visitors say "this site is beautiful" rather than just "this site is useful."
+
+| Feature | Value Proposition | Complexity | Depends On | Notes |
+|---------|-------------------|------------|------------|-------|
+| Interactive sector map labels with slide-out detail panels | Currently, sector overlays are color-coded polylines with no labels or click behavior. Adding named labels ("NF2266 - 5 stars") with clickable detail panels transforms the map from a visualization into an exploration tool. Visitors can click a sector and see: name, distance, difficulty stars, surface description, and possibly a representative photo. No reference gravel site does this. | HIGH | Existing annotations.json with sector data; Leaflet map already renders sectors; need to extend sector data with descriptions and optional photo references | Two implementation approaches: (1) Leaflet.SidePanel plugin for a sidebar that slides in from the right, or (2) custom CSS panel absolutely positioned over/beside the map. Recommendation: custom CSS panel rather than plugin dependency -- simpler to style within the existing design system, and the data is already structured. Star ratings rendered as SVG or Unicode. On mobile, panel opens below the map rather than beside it. |
+| Ojibwe woodland floral design elements as decorative system | The existing topo-divider is the only decorative pattern. Replacing/supplementing it with floral motifs inspired by Ojibwe woodland beadwork creates a design language unique to this site. The five-petal blossom, double-curve scroll, vine/tendril patterns, and berry/leaf forms are visually stunning and deeply connected to the land the route traverses. | HIGH | SVG illustration work; cultural sensitivity review (see dedicated section below) | This is the single highest-impact visual differentiator. Use abstract floral forms as: section dividers (replacing topo-divider in some locations), border decorations, background patterns (subtle, low-opacity), and pull-quote ornaments. Do NOT use sacred or ceremonial designs. The Neebin.com Anishinaabe Floral Set provides CC-licensed SVG reference designs created by an Anishinaabe artist specifically for digital use. Floral patterns should feel organic and hand-drawn, not geometric or mechanical. |
+| Photo-integrated route explainer over topographic background | A dedicated section that walks through the route sector-by-sector with integrated photography, layered over a subtle topographic map background. This is the "magazine feature" section -- the visual centerpiece of the editorial redesign. Each sector gets a text block with a representative photo, creating a scrollable route narrative. | HIGH | Existing sector data from annotations.json; selecting representative photos for each sector; topo pattern SVG background | Distinct from the narrative rewrite (which covers history/culture). This section covers the ride itself -- "what you will actually experience." Structure as a vertical timeline or sectioned layout with alternating photo-left/text-right positioning. The topographic background should be subtle (5-10% opacity) and fixed (CSS `background-attachment: fixed` for parallax-lite effect) with `prefers-reduced-motion` fallback. |
+| Witty New Yorker editorial tone for narrative | The current narrative is informative but encyclopedic. The rewrite should have the sophisticated irreverence of a New Yorker "Talk of the Town" piece -- wry about Longfellow's cultural blunder, respectful of Ojibwe culture, affectionate about the landscape, and self-aware about the absurdity of naming a forest after a poem that confused two entirely different Indigenous nations. | MEDIUM | data.md source material; narrative craft | This is a writing differentiator, not a technical one, but it affects component structure: the narrative needs typographic variety (pull quotes, em-dashes, italicized asides) that the current plain `<p>` tags cannot support. Implement as Astro markdown/MDX or as semantic HTML with styled blockquotes, `<aside>` elements, and `<figure>` captions. The tone should make readers want to share the page for the writing, not just the ride. |
+
+## Anti-Features
+
+Features to explicitly NOT build for v1.1. These are commonly seen on outdoor sites but are wrong for this project.
+
+| Anti-Feature | Why Tempting | Why Wrong for This Project | What to Do Instead |
+|--------------|-------------|---------------------------|-------------------|
+| Countdown timer to June 6 | Standard on event sites; UNBOUND has one | PROJECT.md explicitly lists this as Out of Scope. A countdown goes stale the moment the event passes, making the site feel abandoned. The site should work as a permanent showcase, not an ephemeral event page. | Static date text: "June 6, 2026 / Munising, MI" -- dignified, permanent, no JavaScript required. |
+| Parallax scrolling / scrollytelling | Trendy for outdoor editorial sites; CSS scroll-driven animations are now possible without JS | Adds significant complexity for marginal value on a static Astro site. Parallax effects perform poorly on mobile, conflict with `prefers-reduced-motion`, and the site's content does not have the length or narrative arc that scrollytelling demands. The 2-minute read time does not justify a 20-hour parallax implementation. | Use simple CSS `background-attachment: fixed` for the topo pattern in one section (with reduced-motion fallback). Full parallax is overkill. |
+| Video hero / autoplay background video | Many outdoor sites (Patagonia, REI) use video heroes | No video assets exist. Acquiring/editing video adds massive scope. Autoplay video destroys performance metrics, annoys mobile users on data plans, and conflicts with the prefers-reduced-motion commitment. A single dramatic photo is more powerful than mediocre video. | Full-width hero photograph with gradient overlay. One great photo beats one okay video. |
+| Instagram feed embed | SBT GRVL integrates their Instagram grid | Third-party dependency that loads slowly, breaks when API changes, and introduces visual inconsistency. The site's curated 54-photo library is better than a social feed. Instagram embeds also inject their own CSS that fights with custom styling. | Use the existing curated photo library in the masonry gallery. Stronger curation beats more content. |
+| Registration / RSVP form | Natural impulse for an event site | Not a race. No entry fees, no bibs, no cutoffs. Adding registration implies organizational overhead that does not exist and creates data-handling obligations (GDPR, email lists). The ride is: show up on June 6 and ride. | Donate CTA to MBTN is the sole conversion action. Keep it that way. |
+| Multi-page site with separate gallery/map/info pages | As content grows, tempting to split into pages | Single-page design is a feature, not a limitation. The entire experience is one scroll -- map, elevation, photos, narrative, donate. Splitting into pages adds navigation overhead and breaks the immersive flow. All reference sites that feel editorial (Nature Conservancy, bikepacking.com route pages) keep route content on a single page. | Keep single-page architecture. Use smooth scroll anchors for section navigation if needed. |
+| Animated map route drawing | "Watch the route trace itself on the map" | Cool demo, terrible UX. Users want to see the full route immediately so they can zoom/pan to areas of interest. Animation delays access to information. Leaflet does not natively support animated polyline drawing without a plugin. | Show the full route polyline immediately on map load, as currently implemented. |
+| AI-generated Ojibwe art or pattern generation | Tempting shortcut for the floral design system | Using AI to generate art inspired by a specific Indigenous tradition is culturally inappropriate. It strips the human craft and intentionality from designs that carry deep spiritual and historical meaning. Multiple Indigenous cultural sources emphasize that the designs encode medicinal knowledge and spiritual teachings. | Use the open-licensed Neebin.com Anishinaabe Floral Set as reference, create hand-crafted SVGs inspired by (not copied from) the design vocabulary, and credit the tradition clearly. |
+| Dark/light mode toggle | Common UX pattern | The dark forest-green palette IS the identity. A light mode would require a complete parallel design system and would undermine the immersive forest atmosphere that makes the site distinctive. No NPS-themed site offers a light mode. | Ship the dark theme. It is a design decision, not a missing feature. |
+
+---
+
+## Cultural Sensitivity: Ojibwe Design Elements
+
+This section requires special attention because the project draws design inspiration from a living Indigenous culture. The project narrative also explicitly addresses Longfellow's cultural conflation (mixing Haudenosaunee Hiawatha with Ojibwe Nanabozho), which means the site must model the respectful approach it critiques Longfellow for lacking.
+
+### What Is Appropriate
+
+**Abstract floral forms inspired by woodland beadwork vocabulary:**
+- Five-petal blossoms (the "universal wildflower" motif common in Ojibwe beadwork)
+- Double-curve scrolls and tendrils (a pan-Woodland decorative motif, not clan-specific or ceremonial)
+- Berry clusters (strawberry, blueberry -- common in secular beadwork)
+- Vine and leaf forms (organic, flowing lines characteristic of the Woodland style)
+- Color palette drawn from beadwork traditions (berry reds, deep blues, rich greens, warm golds)
+
+**These are appropriate because:**
+- Floral beadwork is a decorative art tradition, not a sacred/ceremonial one
+- The Neebin.com floral set was created by an Anishinaabe artist specifically for digital use and distributed freely
+- The five-petal blossom and double-curve are widely recognized as pan-Woodland decorative vocabulary, not restricted or clan-specific
+- Using these as abstract decorative patterns (section dividers, border ornaments) does not claim to BE Indigenous art -- it draws visual vocabulary from a tradition connected to the land
+
+### What Is NOT Appropriate
+
+**Do not use:**
+- Dreamcatchers (sacred spiritual object, heavily appropriated, not Ojibwe-specific despite popular association)
+- War bonnets / headdress imagery (several inspiration images include these -- they are Plains tradition, NOT Ojibwe, and are the single most contentious appropriation issue in Indigenous design discourse)
+- Medicine wheel or other sacred geometric symbols
+- Clan animal totems or clan-specific imagery
+- Bandolier bag patterns (these are specific ceremonial garments with cultural protocols)
+- "Indian chief" profile silhouettes (multiple inspiration images include these -- they perpetuate stereotypes and have no connection to Ojibwe woodland culture)
+- Teepee/tipi imagery (Plains tradition, not Great Lakes Woodland)
+
+**Critical note on inspiration images:** The inspiration folder contains several images (headdress illustrations, "chief" profiles, skull-with-headdress designs, "Native" branded logos) that represent exactly the kind of pan-Indian stereotyping the site's own narrative critiques Longfellow for. Using these design directions would be hypocritical and harmful. The bogcore aesthetic, national park badges, and woodland floral motifs from the same inspiration folder are the appropriate design directions.
+
+### Implementation Guidance
+
+- Credit the tradition: include a footer note like "Design elements inspired by Anishinaabe woodland floral art traditions"
+- Use abstract/decorative forms, not representational imagery of people or specific artifacts
+- The floral patterns should feel like they grew from the same forest the route passes through
+- Consider the Neebin.com Anishinaabe Floral Set as a reference starting point for SVG work
+- If budget allows, commissioning an Ojibwe/Anishinaabe artist for custom design elements would be the gold standard approach
+
+### Confidence Level
+
+MEDIUM -- cultural sensitivity guidelines synthesized from multiple Indigenous cultural sources (Heart Berry, Royal Alberta Museum, PowWows.com, Mini Tipi, Florida Seminole Tourism). The distinction between decorative floral motifs and sacred imagery is well-documented. The appropriateness of digital use is supported by the Neebin.com floral set's explicit intended purpose. However, the project should remain open to feedback from Ojibwe community members if the opportunity arises.
+
+---
+
+## Feature Dependencies (v1.1 Additions)
 
 ```
-[GPX file]
-    └──parsed-by──> [Build pipeline (gpxparser)]
-                        └──produces──> [Route GeoJSON + elevation data JSON]
-                                           ├──consumed-by──> [Interactive Leaflet map]
-                                           └──consumed-by──> [Chart.js elevation profile]
-                                                                 └──synced-with──> [Map crosshair hover]
+[Hero Section]
+    ├── needs: 1-2 hero-quality landscape photos (select from existing 54)
+    ├── needs: CSS gradient overlay implementation
+    ├── modifies: badge h1 positioning (moves INTO hero)
+    └── modifies: DonateCallout (may relocate below hero instead of separate section)
 
-[Photo manifest UI]
-    └──produces──> [Photo manifest JSON (photo → mileage)]
-                        └──combined-with──> [Route elevation data JSON]
-                                                └──produces──> [Geotagged photo markers on map]
+[Event Date]
+    ├── needs: hero section (date lives inside hero)
+    └── independent of all data pipelines
 
-[Photo manifest JSON]
-    └──consumed-by──> [Build pipeline (sharp)]
-                            └──produces──> [WebP thumbnails]
-                                               └──consumed-by──> [Photo gallery (PhotoSwipe)]
+[Masonry Gallery]
+    ├── needs: photos.json (existing)
+    ├── needs: `featured` field added to photo manifest
+    ├── modifies: PhotoGallery.astro (new layout, same PhotoSwipe integration)
+    └── needs: aspect ratio data from filenames (existing parseDims function)
 
-[Gravel sector data]
-    └──hand-authored──> [Sector JSON (start mile, end mile, difficulty)]
-                            ├──overlaid-on──> [Leaflet map]
-                            └──overlaid-on──> [Chart.js elevation profile]
+[Narrative Rewrite]
+    ├── needs: data.md source content (existing)
+    ├── needs: selected photos for inline placement
+    ├── modifies: index.astro narrative section (major restructure)
+    └── independent of map/chart infrastructure
 
-[Restock point data]
-    └──hand-authored──> [Markers JSON (name, mileage, lat/lng)]
-                            └──displayed-on──> [Leaflet map]
+[Color Palette Evolution]
+    ├── modifies: global.css @theme block
+    ├── affects: ALL components (but only through CSS custom properties)
+    └── should be done FIRST or EARLY so other features inherit new colors
+
+[Sector Detail Panels]
+    ├── needs: annotations.json sector data (existing)
+    ├── needs: sector descriptions and optional photo refs (NEW data)
+    ├── modifies: RouteMap.astro (click handlers on sector polylines)
+    └── needs: CSS panel component (new)
+
+[Ojibwe Floral Design System]
+    ├── needs: SVG illustration work (new assets)
+    ├── modifies: topo-divider (supplemented/replaced in some locations)
+    ├── modifies: global.css (new decorative classes)
+    └── consumed by: section dividers, pull quote ornaments, background patterns
+
+[Route Explainer Section]
+    ├── needs: sector data (existing annotations.json)
+    ├── needs: representative photos per sector (selection from existing 54)
+    ├── needs: topo pattern SVG background (extend existing topo-divider concept)
+    ├── needs: Ojibwe floral design system (for section ornaments)
+    └── new component: RouteExplainer.astro
 ```
 
-### Dependency Notes
+### Dependency Ordering Implications
 
-- **Interactive map requires route GeoJSON:** GPX must be parsed at build time before the map can render. The build pipeline (gpxparser) is a foundational dependency for all map/chart features.
-- **Photo markers require photo manifest:** Until mileage is assigned via the admin UI, photo markers cannot appear on the map. The manifest UI unblocks this differentiator.
-- **Elevation hover sync requires both map and chart:** Map crosshair and Chart.js must be initialized and share a common data model. Implement after both are individually working.
-- **Gravel sector overlays require sectors JSON:** Hand-authored data file. Low complexity once map and chart are working, but requires domain knowledge of the route (knowing where the rough sections are).
-- **Restock points are map-only:** No dependency on elevation data. Can be added any time after the base map works.
-
----
-
-## MVP Definition
-
-### Launch With (v1)
-
-Minimum needed to fulfill the site's core value: inspire riders and drive MBTN donations.
-
-- [ ] Interactive Leaflet map showing the 100-mile GPX route — without this the site has no center of gravity
-- [ ] Elevation profile (Chart.js) with route stats block (distance, gain, % gravel) — riders need the challenge picture
-- [ ] Photo gallery (PhotoSwipe) with curated images — visual inspiration is the conversion mechanism for donations
-- [ ] Donate to MBTN CTA — the explicit purpose of the site
-- [ ] Restock point markers on map — safety-critical for a 100-mile remote wilderness route
-- [ ] Route narrative text (Hiawatha history + Ojibwe context + MBTN mission) — gives the site meaning
-- [ ] National Park badge visual identity — the design is part of the pitch, not decoration
-- [ ] Responsive layout (mobile + desktop) — riders will check this on their phones
-- [ ] GPX download — removes friction for riders who want to load it on their device
-
-### Add After Validation (v1.x)
-
-Features that enhance the experience once core is confirmed working.
-
-- [ ] Photo manifest admin UI — enables geotagged photo markers; add once photo gallery is live and the mileage assignment workflow is understood
-- [ ] Geotagged photo markers on map — depends on manifest UI being built and populated
-- [ ] Map + elevation hover sync (crosshair) — requires both map and chart working stably; signature differentiator worth adding in v1.x
-- [ ] Gravel sector overlays — requires route knowledge and sector JSON authoring; can be done in a single session once base map is stable
-
-### Future Consideration (v2+)
-
-Features to defer — either low ROI or require significant new infrastructure.
-
-- [ ] Printable route card / PDF export — nice for riders planning offline; low priority relative to core mission
-- [ ] Dark/light mode toggle — design is forest-themed and intentional; adding a mode toggle dilutes the aesthetic intent
-- [ ] Ride report / blog section — content maintenance burden; keep MBTN's site as the home for community content
+1. **Color palette first** -- everything else inherits the new palette through CSS custom properties
+2. **Ojibwe floral SVGs early** -- needed by multiple downstream features (dividers, pull quotes, route explainer)
+3. **Hero section and event date together** -- they are the same DOM region
+4. **Masonry gallery independent** -- can be built in parallel with narrative work
+5. **Narrative rewrite independent** -- writing + component work, no data pipeline changes
+6. **Sector detail panels last** -- highest complexity, requires the most new code, and the current map already works well without them
+7. **Route explainer depends on floral system and sector data** -- build after those are ready
 
 ---
 
-## Feature Prioritization Matrix
+## Complexity Assessment
 
-| Feature | User Value | Implementation Cost | Priority |
-|---------|------------|---------------------|----------|
-| Interactive Leaflet map | HIGH | MEDIUM | P1 |
-| Elevation profile (Chart.js) | HIGH | MEDIUM | P1 |
-| Donate CTA | HIGH | LOW | P1 |
-| Photo gallery (PhotoSwipe) | HIGH | MEDIUM | P1 |
-| Route stats block | HIGH | LOW | P1 |
-| GPX download | HIGH | LOW | P1 |
-| Restock point markers | HIGH | LOW | P1 |
-| Route narrative text | HIGH | LOW | P1 |
-| National Park badge identity | HIGH | MEDIUM | P1 |
-| Responsive design | HIGH | MEDIUM | P1 |
-| Map + elevation hover sync | HIGH | HIGH | P2 |
-| Gravel sector overlays | MEDIUM | MEDIUM | P2 |
-| Photo manifest admin UI | MEDIUM | MEDIUM | P2 |
-| Geotagged photo markers | HIGH | HIGH | P2 |
-| Printable route card / PDF | LOW | MEDIUM | P3 |
-| Ride report / blog | LOW | HIGH | P3 |
-
-**Priority key:**
-- P1: Must have for launch
-- P2: Should have, add when possible
-- P3: Nice to have, future consideration
+| Feature | Design Effort | Code Effort | Content Effort | Overall | Risk |
+|---------|--------------|-------------|----------------|---------|------|
+| Full-width hero | Medium | Low | Low (photo selection) | MEDIUM | Low -- well-understood CSS pattern |
+| Event date | Low | Low | None | LOW | None |
+| Masonry gallery | Medium | Medium | Low (featured flags) | MEDIUM | Low -- CSS columns are battle-tested |
+| Narrative rewrite | Low | Low | HIGH (writing craft) | MEDIUM | Medium -- tone is hard to get right |
+| Color palette | Medium | Low | None | LOW | Low -- CSS custom property changes |
+| Sector detail panels | Medium | High | Medium (sector descriptions) | HIGH | Medium -- Leaflet click handling + responsive panel |
+| Ojibwe floral system | HIGH | Medium | None | HIGH | Medium -- SVG illustration quality is make-or-break |
+| Route explainer | Medium | Medium | Medium | MEDIUM | Low if floral system is done first |
+| New Yorker tone narrative | Low | Low | HIGH | MEDIUM | High -- tone is the hardest thing to execute |
 
 ---
 
-## Competitor Feature Analysis
+## Phase Ordering Recommendation
 
-Research examined: bikepacking.com route pages, UNBOUND Gravel routes, Adventure Cycling Golden Gravel Trail, Gravel Worlds, Munising Bay Trail Network (mbtn.org).
+Based on dependency analysis and risk assessment, recommended build sequence:
 
-| Feature | bikepacking.com | UNBOUND Gravel | Golden Gravel Trail | Our Approach |
-|---------|----------------|----------------|---------------------|--------------|
-| Interactive map | Embedded (Ride with GPS) | Off-site via Garmin / RWGPS links | Tab-based static map images | Leaflet native, fully integrated |
-| Elevation profile | Shown on route pages | Listed as stats, no chart | Detailed stats table per section | Chart.js with hover sync |
-| Photo gallery | 40+ photos, grid + lightbox | Hero image only | None visible | PhotoSwipe with 50 curated images |
-| GPX download | Yes | Via RWGPS / Garmin | Yes, free download | Direct file download |
-| Restock / aid points | Text notes + map markers | Checkpoint list with cutoffs | Text narrative with town names | Map markers with labels |
-| Donate / fundraise CTA | None (commercial site) | None (entry fees) | None (free route) | Prominent donate button to mbtn.org |
-| Surface breakdown | Route stats block | N/A (race focus) | Terrain section with % data | Stats block + gravel sector color overlays |
-| Visual identity | Monochrome editorial | Race-branded black/white | Adventure Cycling brand | NPS / Forest Service: deep green, amber, parchment |
-| Map + elevation sync | No | No | No | Yes (crosshair hover) — unique |
-| Photo-to-map pinning | No | No | No | Yes (via photo manifest pipeline) — unique |
+**Phase 1: Foundation (color + design system)**
+- Color palette evolution (everything inherits)
+- Ojibwe floral SVG design elements (needed by downstream features)
+- This phase has no user-visible deliverable on its own but unblocks everything
 
-The two features no reference site offers — elevation-map hover sync and geotagged photo markers — are the signature differentiators that justify building a standalone site instead of submitting a route to bikepacking.com.
+**Phase 2: Above-the-fold transformation**
+- Full-width hero section with gradient overlay
+- Event date placement in hero
+- Badge h1 repositioned into hero
+- This is the first thing visitors see -- ship it for immediate visual impact
+
+**Phase 3: Editorial content**
+- Narrative rewrite with New Yorker tone
+- Photo-integrated text layout
+- Route explainer section over topo background
+- This is the content heart of the redesign
+
+**Phase 4: Gallery redesign**
+- Masonry layout replacing uniform grid
+- Featured photo flags in manifest
+- PhotoSwipe integration maintained
+- Can be built in parallel with Phase 3
+
+**Phase 5: Map interactivity**
+- Sector labels on map
+- Click-to-detail panels
+- Star ratings and descriptions
+- Highest complexity, lowest risk of blocking other work
 
 ---
 
 ## Sources
 
-- [bikepacking.com/routes/croatan-gravel-vanish/](https://bikepacking.com/routes/croatan-gravel-vanish/) — detailed route page feature audit (MEDIUM confidence, WebFetch)
-- [adventurecycling.org — Golden Gravel Trail](https://www.adventurecycling.org/routes-and-maps/adventure-cycling-route-network/golden-gravel-trail/) — route showcase feature audit (MEDIUM confidence, WebFetch)
-- [gravelworlds.com/routes](https://www.gravelworlds.com/routes) — event route page feature audit (MEDIUM confidence, WebFetch)
-- [unboundgravel.com/routes/](https://www.unboundgravel.com/routes/) — gravel event route feature audit (MEDIUM confidence, WebFetch)
-- [mbtn.org](https://www.mbtn.org/) — beneficiary site audit; confirmed donate page at /donate (MEDIUM confidence, WebFetch)
-- PROJECT.md — confirmed features, constraints, out-of-scope list (HIGH confidence, direct read)
-- WebSearch: "gravel cycling event website best design interactive map elevation GPX download 2025" — ecosystem survey (LOW confidence, unverified, used for pattern triangulation only)
-- WebSearch: "MBTN Michigan Bear Trap North trail network" — confirmed MBTN identity and donate URL (MEDIUM confidence, multiple results agree)
+- [UNBOUND Gravel](https://unboundgravel.com) -- hero section, date placement, visual design analysis (MEDIUM confidence, WebFetch)
+- [SBT GRVL](https://sbtgrvl.com) -- hero section, date/location hierarchy, course detail patterns (MEDIUM confidence, WebFetch)
+- [Cycle Oregon GRAVEL '26](https://cycleoregon.com/ride/gravel/) -- hero section, date stacking, course breakdown, photography treatment (MEDIUM confidence, WebFetch)
+- [Neebin.com Anishinaabe Floral Set](https://neebin.com/design/floral_set/) -- open-licensed Ojibwe floral SVG reference by Anishinaabe artist (HIGH confidence, WebFetch)
+- [Heart Berry -- Ojibwe Floral Beadwork as Covert Art](https://www.heartberry.com/blogs/news/17055207-anishinaabeg-use-ojibwe-floral-beadwork-as-covert-art) -- cultural significance of floral designs (MEDIUM confidence, WebSearch)
+- [Robert Desjarlait Fine Arts -- Contemporary Aesthetics of Anishinaabe Floral Art](https://www.robertdesjarlaitfinearts.com/weeblycom/the-contemporary-aesthetics-of-anishinaabe-floral-art) -- design vocabulary analysis (MEDIUM confidence, WebSearch)
+- [Royal Alberta Museum -- Appreciation or Appropriation](https://royalalbertamuseum.ca/blog/appreciation-or-appropriation) -- cultural sensitivity framework (MEDIUM confidence, WebSearch)
+- [Mini Tipi -- Cultural Appropriation vs Cultural Appreciation](https://minitipi.ca/blogs/news/cultural-appropriation-vs-cultural-appreciation) -- Indigenous design guidelines (MEDIUM confidence, WebSearch)
+- [PowWows.com -- Cultural Appropriation vs Appreciation](https://www.powwows.com/cultural-appropriation-vs-appreciation-new-wave-of-indigenous-representation-brings-new-enthusiasm-to-native-culture-art-and-products/) -- contemporary Indigenous representation (MEDIUM confidence, WebSearch)
+- [MDN -- CSS Masonry Layout](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Grid_layout/Masonry_layout) -- browser support status for native masonry (HIGH confidence, official docs)
+- [Cruip -- Masonry Layouts with Tailwind CSS](https://cruip.com/masonry-layouts-with-tailwind-css/) -- CSS columns implementation pattern (MEDIUM confidence, WebSearch verified against MDN)
+- [Leaflet.SidePanel plugin](https://github.com/maxwell-ilai/Leaflet.SidePanel) -- sidebar panel pattern for Leaflet maps (MEDIUM confidence, GitHub)
+- [TravelTime -- Interactive Map Design & UX](https://traveltime.com/blog/interactive-map-design-ux-mobile-desktop) -- map detail panel UX patterns (MEDIUM confidence, WebSearch)
+- [Vev -- 9 Editorial Websites Bringing Long-Form to Life](https://www.vev.design/blog/editorial-websites/) -- editorial layout patterns (MEDIUM confidence, WebSearch)
+- [Ishadeed -- Handling Text Over Images in CSS](https://ishadeed.com/article/handling-text-over-image-css/) -- hero overlay implementation patterns (HIGH confidence, authoritative CSS resource)
+- Inspiration images in `images/inspiration/` -- national park badges (Yosemite, Grand Teton, Sequoia, Grand Canyon), bogcore patterns, outdoor brand patches, topographic art, Michigan fantasy map, arrowhead geometry (HIGH confidence, direct project assets)
+- PROJECT.md -- confirmed active requirements, constraints, out-of-scope list (HIGH confidence, direct read)
+- Existing v1.0 codebase -- index.astro, PhotoGallery.astro, RouteMap.astro, global.css (HIGH confidence, direct read)
 
 ---
-*Feature research for: Hiawatha's Revenge cycling route showcase*
-*Researched: 2026-03-30*
+*Feature research for: Hiawatha's Revenge v1.1 Visual Redesign*
+*Researched: 2026-03-31*
+*Supersedes: v1.0 feature research from 2026-03-30 (which covered initial build features, now all shipped)*

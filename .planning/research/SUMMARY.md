@@ -1,269 +1,209 @@
 # Project Research Summary
 
-**Project:** Hiawatha's Revenge
-**Domain:** Static cycling route showcase / charity ride marketing site
-**Researched:** 2026-03-30
+**Project:** Hiawatha's Revenge v1.1 Visual Redesign
+**Domain:** Static cycling route showcase -- editorial visual upgrade (Astro 6 / Tailwind 4)
+**Researched:** 2026-03-31
 **Confidence:** HIGH
 
 ## Executive Summary
 
-Hiawatha's Revenge is a static single-page showcase site for a 100-mile gravel cycling route through Michigan's Hiawatha National Forest, with the explicit purpose of inspiring riders and driving donations to the Munising Bay Trail Network (MBTN). The project is not a race registration site, not a blog, and not a backend application — it is a visually rich, data-driven static site whose center of gravity is an interactive map, an elevation profile, and a curated photo gallery. The dominant expert pattern for this category is Astro 6 (zero-JS static output, islands architecture) with Leaflet 1.9.4 (map), Chart.js 4.5.1 (elevation), and PhotoSwipe 5.4.4 (gallery) — all validated against the mkUltraGravel reference implementation which is the direct architectural ancestor of this project.
+Hiawatha's Revenge v1.1 transforms an already-functional static cycling route showcase into an immersive editorial experience. The v1.0 site ships with a working interactive map, elevation profile, photo gallery, and narrative -- all the data infrastructure is solid. The v1.1 redesign changes how content is presented, not what content exists. Research across stack, features, architecture, and pitfalls converges on a single critical finding: **this redesign requires zero new npm dependencies.** Every feature -- full-width hero, masonry gallery, slide-out sector panels, Ojibwe-inspired decorative motifs, color palette evolution, and editorial layouts -- is achievable with CSS techniques already available in Tailwind 4 and modern browsers, plus vanilla JavaScript for the one interactive component (sector detail panel using HTML `<dialog>`).
 
-The recommended approach is a two-phase build: first a Node.js pipeline (gpxparser, sharp, exifr) that transforms raw GPX and photos into clean JSON and WebP thumbnails, then an Astro build that assembles those artifacts into static HTML with client-side Leaflet/Chart.js islands. This separation is mandatory — Leaflet and Sharp both assume browser/Node globals that Astro's SSR prerender environment does not provide. Cross-component interaction (elevation chart hover moves a crosshair on the map) is achieved via a lightweight `window.CustomEvent` bus with no framework overhead. The design system uses a National Park Service / Forest Service aesthetic (deep green, amber, parchment) and Space Mono + Special Elite fonts — both self-hosted via Astro 6's built-in Fonts API.
+The recommended approach is to treat this as a layered visual evolution, not a rewrite. The existing Astro component architecture, CustomEvent bus (3 events today, extending to 6-7), lazy-loading patterns, and two-phase build pipeline all remain intact. The biggest structural change is a one-line edit to `BaseLayout.astro` -- removing the global `max-w-4xl` container constraint from `<main>` so individual sections can control their own widths. Everything else is additive: 6 new Astro components, expanded `@theme` color tokens, and SVG decorative elements. The masonry gallery uses CSS `columns` (99%+ browser support), not the still-unshippable native CSS masonry spec (0.02% support). The sector detail panel uses HTML `<dialog>` with `showModal()` (96.86% support) for free accessibility -- focus trapping, Escape key, backdrop, and screen reader announcements with zero custom code.
 
-The dominant risks are architectural, not library-selection risks. Importing Leaflet at module scope crashes the build. Passing raw GPX point counts (3,000–5,000 points) to Chart.js degrades mobile performance. Naive elevation gain summation from GPS data produces figures 2x or more above actual values. Failing to install `leaflet-gesture-handling` traps mobile users in the map. All four risks have deterministic prevention strategies that must be applied in Phase 1 before any component is wired together. The stack is exceptionally well-validated: every core library version is current, and the mkUltraGravel codebase provides proven implementation patterns for every major feature on the roadmap.
-
----
+The two highest-risk areas are cultural sensitivity and color migration. The Ojibwe woodland floral design elements require careful attribution and cultural framing -- the site already critiques Longfellow's cultural appropriation, so using Ojibwe art without context would be hypocritical. The Neebin.com Anishinaabe Floral Set (created by an Anishinaabe artist for digital use) provides a defensible starting point. Color migration is risky because the codebase has hardcoded hex values in Chart.js configs, Leaflet marker SVGs, and inline styles that will not update when `@theme` tokens change -- these must be audited and tokenized before any palette shifts.
 
 ## Key Findings
 
 ### Recommended Stack
 
-The stack is fully constrained by the mkUltraGravel reference implementation and confirmed current against npm and official changelogs as of 2026-03-30. No version drift was found in any core dependency. Two map plugins (`leaflet-gesture-handling` and `leaflet.markercluster`) are unmaintained but stable on Leaflet 1.9.x — do not upgrade either until Leaflet 2.0 ecosystem catches up. The key non-obvious requirement is a Vite 7 override in `package.json` (Astro 6 ships Vite 6 internally; mkUltra forces Vite 7 at the outer project level).
+The v1.1 redesign adds nothing to the dependency tree. The core stack -- Astro 6, Tailwind 4, Leaflet, Chart.js, PhotoSwipe 5, sharp -- is unchanged. All visual features are implemented with CSS and vanilla JS that the existing stack already supports.
 
-**Core technologies:**
-- **Astro 6.1.x** — static site framework; zero-JS components; Vite 6 build pipeline with Vite 7 override; built-in Fonts API; requires Node 22+
-- **Tailwind CSS 4.2.2 + @tailwindcss/vite** — CSS-first config (`@theme` in CSS, no `tailwind.config.js`); runs as Vite plugin in `astro.config.mjs`
-- **Leaflet 1.9.4** — interactive map; no API key; CARTO Dark Matter tiles; must be dynamically imported inside `<script>` blocks
-- **Chart.js 4.5.1** — elevation profile; canvas-based, zero dependencies; built-in LTTB decimation for large GPX datasets
-- **PhotoSwipe 5.4.4** — photo lightbox; used in two modes (HTML gallery anchors + programmatic `loadAndOpen()` from map markers)
-- **gpxparser 3.0.8** — build-time GPX parsing; Node.js only; abandonware but functional
-- **sharp 0.34.5** — build-time WebP thumbnail generation; devDependency; platform-specific binary requiring Node 22.22.2 (Volta-pinned)
-- **exifr 7.1.3** — reads GPS EXIF from photos for mileage-tagged map markers
-- **chartjs-plugin-annotation 3.1.0** — sector band overlays on elevation chart; must be registered before `new Chart()`
+**Core techniques (all zero-dependency):**
+- **CSS `columns` + `break-inside-avoid`**: Masonry gallery layout -- 99%+ browser support, Tailwind `columns-*` utilities built-in
+- **HTML `<dialog>` + `showModal()`**: Sector detail slide-out panel -- 96.86% support, free accessibility
+- **CSS `@starting-style`**: Smooth open/close transitions on `<dialog>` -- 89% support with graceful degradation (instant close in older browsers)
+- **Tailwind 4 `@theme` block extensions**: New color tokens auto-generate utility classes -- zero config, zero plugins
+- **Inline SVG `<pattern>` + CSS `background-image` data URIs**: Ojibwe-inspired decorative elements -- matches existing `topo-divider` technique
+- **CSS Grid `grid-template-areas` + `float` + `shape-outside`**: Editorial photo-text layouts -- 97%+ support
+- **`::first-letter` with `initial-letter` progressive enhancement**: Drop caps -- universal base, 91% enhanced
 
-See `/Users/Sheppardjm/Repos/hiawathasRevenge/.planning/research/STACK.md` for full version matrix and installation commands.
-
----
+**Critical version/support notes:**
+- Do NOT use native CSS masonry (`grid-template-rows: masonry` or `display: grid-lanes`) -- 0.02% global support, Safari 26.4+ only
+- Do NOT add Masonry.js, Isotope, GSAP, or any JS layout/animation library
+- Do NOT add new fonts -- the National Park + Space Mono pairing is the identity
+- Do NOT add Tailwind plugins (@tailwindcss/typography, @tailwindcss/forms) -- custom CSS in `@layer` is sufficient
 
 ### Expected Features
 
-Reference sites audited: bikepacking.com, UNBOUND Gravel, Adventure Cycling Golden Gravel Trail, Gravel Worlds, mbtn.org.
+**Must have (table stakes) -- the redesign looks incomplete without these:**
+- Full-width hero section with route photo, gradient overlay, badge relocation, and event date ("June 6, 2026 / Munising, MI")
+- Masonry/editorial photo gallery replacing the uniform square-crop grid, with featured photo support and natural aspect ratios
+- Route narrative rewrite with photo-integrated editorial layout, pull quotes, and drop caps
+- Color palette evolution -- new berry, gold, lake, and moss accent families extending (not replacing) the existing forest/amber/rust/cream tokens
 
-**Must have (table stakes — P1):**
-- Interactive Leaflet map with 100-mile GPX route polyline
-- Chart.js elevation profile with distance X-axis and route stats block (distance, elevation gain, % gravel)
-- PhotoSwipe photo gallery with 40–50 curated wilderness images
-- Donate to MBTN CTA — explicit site purpose
-- Restock / aid point markers on map — safety-critical for remote 100-mile route
-- GPX file download — riders load to Garmin/Wahoo before attempting
-- Route narrative (Hiawatha history + Ojibwe context + MBTN mission)
-- National Park / Forest Service badge visual identity
-- Responsive design (mobile-first, 52px touch targets minimum)
+**Should have (differentiators) -- what makes the site shareable:**
+- Interactive sector map labels with slide-out detail panels (name, difficulty stars, surface, description)
+- Ojibwe woodland floral design elements as decorative system (section dividers, pull-quote ornaments, background patterns) with cultural attribution
+- Photo-integrated route explainer section over topographic background
+- Witty New Yorker editorial tone for the Hiawatha/Nanabozho narrative
 
-**Should have (differentiators — P2):**
-- Map + elevation hover sync (crosshair) — no reference site does this; the signature feature
-- Geotagged photo markers on map at mileage positions — unique to this implementation
-- Gravel sector color overlays on both map and elevation chart — surface difficulty visualization
-- Photo manifest admin UI — dev-only tool that unblocks the photo marker feature
-
-**Defer (v2+):**
-- Printable route card / PDF export
-- Dark/light mode toggle (contradicts intentional Forest Service aesthetic)
-- Ride report / blog section (content maintenance burden; mbtn.org is the community home)
-
-**Anti-features (explicitly out of scope):**
-Race registration, countdown timers, KOM/segment timing, user accounts, Strava embeds, real-time features, multiple distance options. These introduce competitive framing, backend requirements, or external dependencies that contradict the site's charity showcase purpose.
-
-See `/Users/Sheppardjm/Repos/hiawathasRevenge/.planning/research/FEATURES.md` for full competitor analysis.
-
----
+**Explicitly not building (anti-features):**
+- Countdown timer (goes stale after event, explicitly out of scope)
+- Parallax scrolling / scrollytelling (2-minute read does not justify 20-hour implementation)
+- Video hero (no video assets exist; one great photo beats one okay video)
+- Instagram embed, registration form, multi-page site, animated route drawing, dark/light toggle
+- AI-generated Ojibwe art (culturally inappropriate)
 
 ### Architecture Approach
 
-The architecture is a two-phase pipeline pattern: (1) Node.js scripts transform GPX, photos, and annotations into clean JSON and WebP assets before the Astro build starts, then (2) Astro ingests those JSON files via content collections with Zod schema validation and assembles the static page. Each interactive component (RouteMap, ElevationProfile, PhotoGallery) is an Astro island initialized lazily via `IntersectionObserver` — Leaflet and Chart.js are never loaded until the user scrolls to them. Cross-island communication uses a `window.CustomEvent` bus with semantically named events (`elevation:hover`, `elevation:sectorClick`, `map:reset`, `map:photoClick`) — no state management library is needed.
+The architecture is additive, not a rewrite. The existing CustomEvent bus pattern extends from 3 events to 6-7 with two new event pairs (`sector:click`/`sector:close`, `sector:hover`/`sector:leave`). The critical structural change is moving width constraints from `BaseLayout.astro`'s `<main>` to individual sections in `index.astro`, enabling mixed full-width and constrained-width layouts. Six new Astro components are created; three existing components are modified (RouteMap, ElevationProfile, PhotoGallery); the build pipeline gets two minor schema extensions (photos.json `featured` + `aspectRatio`, annotations.json `stars` + `surface` + `description`). No new pages, layouts, scripts, or dependencies.
 
-**Major components:**
-1. **Build pipeline** (`scripts/`) — `parse-gpx.js`, `resolve-annotations.js`, `match-photos.js`, `generate-thumbnails.js` — run before `astro build` via `npm run pipeline`; produces all JSON and WebP artifacts
-2. **Content collections** (`src/content.config.ts`) — exposes `route-data.json`, `annotations.json`, `photos.json` as typed Astro collections via `file()` loaders and Zod schemas
-3. **`index.astro`** — page shell; fetches collections and passes serialized props to each island
-4. **`RouteMap.astro`** — Leaflet island; polyline, sector overlays, restock markers, photo cluster markers; emits and listens to CustomEvents
-5. **`ElevationProfile.astro`** — Chart.js island; elevation vs. distance with sector shading; emits `elevation:hover`; listens to `map:reset`
-6. **`PhotoGallery.astro`** — PhotoSwipe island; thumbnail grid; programmatic open on `map:photoClick`
-7. **`admin.astro`** — dev-only photo manifest editor; not included in production static build
+**New components (6):**
+1. `HeroSection.astro` -- Full-width hero with photo, overlay gradient, badge SVG (extracted from index.astro), event date
+2. `SectorDetailPanel.astro` -- Slide-out `<dialog>` panel for sector info, listens to `sector:click` events
+3. `NarrativeSection.astro` -- Rewritten Hiawatha narrative with editorial layout, integrated photos, pull quotes
+4. `RouteExplainer.astro` -- Photo-integrated sector-by-sector route overview over topographic background
+5. `OjibweBorder.astro` -- Reusable SVG decorative divider (replaces/supplements `topo-divider`)
+6. `OjibweMotif.astro` -- Standalone decorative SVG motif for pull-quote ornaments and backgrounds
 
-**Key architectural rules:**
-- Data flows down at build time (JSON props from page to islands); events flow sideways at runtime (CustomEvent bus between sibling islands)
-- Islands never share mutable state; the event bus carries only lightweight payloads (index, latlng, sectorId)
-- Large datasets (5,000-point coordinate arrays) are served as `public/data/*.json` and fetched at runtime, not inlined into HTML
+**Modified components (3):**
+1. `RouteMap.astro` -- Add sector labels (L.divIcon at midpoints) and click handlers dispatching `sector:click`
+2. `ElevationProfile.astro` -- Add click callbacks on sector annotation bands dispatching `sector:click`
+3. `PhotoGallery.astro` -- Rewrite from uniform grid to CSS columns masonry, support `featured` flag, remove `aspect-square` crops
 
-See `/Users/Sheppardjm/Repos/hiawathasRevenge/.planning/research/ARCHITECTURE.md` for full component diagram and anti-patterns.
-
----
+**Key architectural patterns preserved:**
+- CustomEvent bus for cross-component communication (no state store needed at 6-7 events)
+- IntersectionObserver lazy loading on RouteMap and ElevationProfile
+- Scoped `<style>` blocks per component; only `@theme` tokens and `@layer` rules in global.css
+- `role="presentation" aria-hidden="true"` for all decorative SVG elements
 
 ### Critical Pitfalls
 
-1. **Leaflet `window is not defined` crashes the build** — Use `client:only="vanilla"` for all Leaflet components; never import Leaflet at the top of `.astro` frontmatter or outside a `<script>` block. Apply this pattern before writing any map code.
+1. **CSS masonry has no production browser support** -- `grid-template-rows: masonry` / `display: grid-lanes` works in 0.02% of browsers. Build the gallery with CSS `columns` (99%+). Use `@supports` only as progressive enhancement. Test in Chrome stable first, always.
 
-2. **Raw GPX data overwhelms Chart.js and Leaflet on mobile** — Apply Ramer-Douglas-Peucker simplification to the polyline and LTTB decimation to the chart dataset at build time. Target ~500 chart points. Bake this into `parse-gpx.js`, not into the client-side component.
+2. **Full-width hero image tanks LCP** -- The current site has no above-fold images and loads sub-1s. Adding a hero photo without `loading="eager"`, `fetchpriority="high"`, `<link rel="preload">`, and responsive `srcset` will push LCP past 2.5s. Generate sizes at 640w/960w/1280w/1920w WebP.
 
-3. **Elevation gain statistics are 2x+ actual due to GPS noise** — Apply a minimum-threshold filter (only count gains >5m between consecutive points) to cumulative elevation during GPX parsing. Validate computed gain against Garmin/Strava figures for this specific route before displaying stats.
+3. **Slide-out panel gets trapped behind Leaflet map z-index** -- Leaflet's container creates its own stacking context with internal z-index 200-1000. The panel DOM element must be a sibling of the map container, never inside it. Use `isolation: isolate` on the map's parent section. On mobile, use a bottom sheet (not side panel) so the map remains partially visible.
 
-4. **Mobile scroll trap ruins user experience** — Install and configure `leaflet-gesture-handling` with `gestureHandling: true` in map options from day one. Non-negotiable for a mid-page embedded map.
+4. **Ojibwe floral motifs without cultural context reads as appropriation** -- Non-negotiable minimum: visible attribution near every use of floral elements, narrative explanation of the cultural connection, and use of generalized abstract forms (not specific ceremonial designs). Use the Neebin.com Anishinaabe Floral Set as reference. Never use AI to generate Indigenous-style art.
 
-5. **Map-elevation sync silently breaks when chart and map use different data arrays** — Produce one canonical reduced dataset at build time shared by both Leaflet and Chart.js. Use distance-along-route (not array index) as the sync key if the two arrays ever differ in length.
-
-6. **OSM tile server violation gets the site blocked** — Never disable `attributionControl`; never pre-fetch tiles programmatically; ensure `© OpenStreetMap contributors` is visible on the map canvas.
-
-See `/Users/Sheppardjm/Repos/hiawathasRevenge/.planning/research/PITFALLS.md` for full recovery strategies and checklist.
-
----
+5. **Color token changes break hardcoded hex values silently** -- The codebase has hex colors in Chart.js configs (`'#c8973e'`), Leaflet SVG strings (`fill="#c8973e"`), and inline styles. These do not update when `@theme` tokens change. Audit all hex references with grep, replace with `getComputedStyle()` reads for JS contexts, and do a "nuclear test" (change amber to bright red) before the real migration.
 
 ## Implications for Roadmap
 
-The build dependency graph from ARCHITECTURE.md dictates a clear phase order. The pipeline must exist before any interactive components can receive data. The map and elevation chart must both be stable before cross-component sync can be built. The admin UI must produce a `photos.json` manifest before photo markers can appear. Visual theme can be applied at any point but design tokens should be established early to avoid rework.
+Based on dependency analysis, risk assessment, and build-order constraints from all four research files:
 
-### Phase 1: Project Foundation and Data Pipeline
+### Phase 1: Design Foundation (Color + Layout Structure)
+**Rationale:** Everything downstream inherits color tokens. The `BaseLayout.astro` width constraint must be removed before any full-width section can exist. These are invisible infrastructure changes that unblock all visual work.
+**Delivers:** Expanded `@theme` color palette (berry, gold, lake, moss families), tokenized hex values in JS components, `BaseLayout.astro` width restructure, per-section container classes in `index.astro`.
+**Addresses:** Color palette evolution (table stake), layout container restructure (prerequisite).
+**Avoids:** Pitfall #5 (hardcoded hex mismatch) by tokenizing before changing values. Pitfall #6 (container breakout) by restructuring layout first.
 
-**Rationale:** Every downstream component depends on the JSON outputs of the build pipeline. No map, chart, or gallery can be built without `route-data.json`. This phase establishes the architecture's load-bearing foundation and avoids the most dangerous pitfalls (Leaflet SSR crash, GPS noise in stats, raw point count overload) before any component code is written.
+### Phase 2: Hero + Event Date
+**Rationale:** The hero is the first thing visitors see and the single highest-impact visual change. It depends on the layout restructure from Phase 1. Event date is trivially embedded in the hero.
+**Delivers:** `HeroSection.astro` with full-width route photo, gradient overlay, repositioned badge SVG, event date ("June 6, 2026 / Munising, MI"), and build-time conditional for date staleness.
+**Addresses:** Full-width hero (table stake), event date (table stake).
+**Avoids:** Pitfall #2 (LCP regression) by implementing `fetchpriority="high"`, `<link rel="preload">`, and responsive `srcset` from the start. Pitfall #9 (stale date) with build-time conditional rendering.
 
-**Delivers:**
-- Astro 6 project scaffolded with Tailwind 4, Vite 7 override, strict TypeScript, and Astro Fonts API (Space Mono + Special Elite)
-- `scripts/parse-gpx.js` producing validated `route-data.json` with RDP-simplified coordinates and threshold-filtered elevation stats
-- `scripts/resolve-annotations.js` producing `annotations.json` (restock points + sector definitions)
-- `src/content.config.ts` with Zod schemas for all collections
-- `npm run pipeline` chained into `npm run build` and `npm run dev`
-- National Park / Forest Service CSS design tokens (`@theme` in `global.css`) — established early to prevent rework
-- BaseLayout.astro with HTML shell, meta tags, and font loading
+### Phase 3: Ojibwe Design System + Decorative Elements
+**Rationale:** The floral motifs are consumed by multiple downstream features (section dividers, pull-quote ornaments, route explainer decorations). Building the SVG design system early unblocks editorial content phases. Cultural attribution framework must be established before any motifs appear.
+**Delivers:** `OjibweBorder.astro`, `OjibweMotif.astro`, SVG pattern definitions, cultural attribution footer text, decision on topo-divider vs. floral-divider placement rules.
+**Addresses:** Ojibwe woodland floral design elements (differentiator).
+**Avoids:** Pitfall #4 (cultural appropriation) by establishing attribution framework first. Pitfall #11 (competing divider languages) by defining intentional placement rules. Pitfall #12 (font overload) by relying on pattern/color/shape, not new typography.
 
-**Addresses:** Interactive map (prerequisite), elevation profile (prerequisite), restock markers (data), gravel sector overlays (data)
-**Avoids:** Leaflet SSR crash (architecture established before any Leaflet code), raw GPX overload (pipeline decimates at build time), inaccurate elevation stats (threshold filter in pipeline)
-**Research flag:** Standard patterns — no additional research needed; mkUltraGravel provides direct reference
+### Phase 4: Editorial Content (Narrative + Route Explainer)
+**Rationale:** The narrative and route explainer are the content heart of the redesign. They depend on the color palette (Phase 1) and Ojibwe decorative system (Phase 3). They have no dependency on the gallery or map interactivity and can be built in parallel with Phase 5.
+**Delivers:** `NarrativeSection.astro` with New Yorker editorial tone, photo-integrated text layouts, pull quotes, drop caps. `RouteExplainer.astro` with sector-by-sector photo narrative over topographic background.
+**Addresses:** Narrative rewrite (table stake), photo-integrated route explainer (differentiator), witty editorial tone (differentiator).
+**Avoids:** Pitfall #10 (tablet breakpoint) by designing three-state responsive layout (mobile/tablet/desktop) with minimum column widths.
 
----
+### Phase 5: Masonry Gallery
+**Rationale:** Gallery can be built in parallel with Phase 4. Depends on Phase 1 (color tokens) but nothing else. Pipeline update for aspect ratios is a minor prerequisite.
+**Delivers:** Rewritten `PhotoGallery.astro` with CSS `columns` masonry, `featured` photo support, natural aspect ratios (no more square crops). Pipeline updates to `match-photos.js` (aspect ratio extraction) and `content.config.ts` (schema additions).
+**Addresses:** Masonry gallery (table stake).
+**Avoids:** Pitfall #1 (broken masonry) by using CSS columns, not native grid masonry. Pitfall #7 (photo index mismatch) by switching from array index to `data-photo-id` for PhotoSwipe bridge. Pitfall #13 (layout shift) by setting explicit dimensions from build-time metadata.
 
-### Phase 2: Route Map and Elevation Profile (Core Interactive Features)
+### Phase 6: Sector Interactivity (Map Labels + Detail Panel)
+**Rationale:** Highest complexity, broadest cross-component impact, and the feature with the most pitfalls. The current map already works well without it. Built last so all prerequisite infrastructure (color tokens, layout structure, design system) is stable.
+**Delivers:** Sector labels on map (L.divIcon), sector click handlers on map and elevation chart, `SectorDetailPanel.astro` as `<dialog>` slide-out panel, `sector:click`/`sector:close` events on the CustomEvent bus. Pipeline update to `resolve-annotations.js` (stars, surface, description fields).
+**Addresses:** Interactive sector detail panels (differentiator).
+**Avoids:** Pitfall #3 (z-index stacking) by placing panel as DOM sibling of map container. Pitfall #8 (mobile unusability) by using bottom sheet pattern below 768px.
 
-**Rationale:** The map and elevation chart are the center of gravity of the site. They must be built together in the same phase because map-elevation hover sync requires both to exist simultaneously and share a canonical dataset. Building them sequentially would require revisiting both when adding sync.
-
-**Delivers:**
-- `RouteMap.astro` — Leaflet island with CARTO Dark Matter tiles, gesture handling, GPX polyline, `fitBounds()` on load, restock point markers, sector polyline overlays
-- `ElevationProfile.astro` — Chart.js island with LTTB decimation, distance X-axis, sector shading bands, `pointRadius: 0` on dataset, `responsive: true`
-- `window.CustomEvent` bus: `elevation:hover` (crosshair sync), `elevation:sectorClick` (map flyTo), `map:reset`
-- `IntersectionObserver` lazy init for both islands (`rootMargin: '200px'`)
-- Route stats block (distance, elevation gain, % gravel) as static callout
-- Both components passing `astro build` without errors
-
-**Uses:** Leaflet 1.9.4, leaflet-gesture-handling, Chart.js 4.5.1, chartjs-plugin-annotation, leaflet.markercluster (placeholder), CARTO tiles
-**Implements:** RouteMap island, ElevationProfile island, CustomEvent bus, IntersectionObserver pattern
-**Avoids:** Mobile scroll trap (gesture handling from day one), map-chart sync drift (single canonical dataset), OSM tile violation (attribution never disabled), Chart.js mobile lag (decimation + pointRadius: 0)
-**Research flag:** Standard patterns — Leaflet + Chart.js + CustomEvent bus are all well-documented; mkUltraGravel provides direct reference
-
----
-
-### Phase 3: Photo Gallery and Image Pipeline
-
-**Rationale:** The gallery is the primary emotional conversion mechanism for MBTN donations. It depends on the thumbnail generation pipeline (sharp) and the photo manifest (photos.json). This phase builds the complete image pipeline from source JPEGs to WebP thumbnails to PhotoSwipe lightbox. Photo manifest admin UI is included here as it directly unblocks geotagged photo markers.
-
-**Delivers:**
-- `scripts/generate-thumbnails.js` — sharp pipeline producing 400px WebP thumbnails at 80% quality in `public/thumbs/`
-- `scripts/match-photos.js` — validates photo paths and emits final `photos.json`
-- `admin.astro` — dev-only photo manifest editor (assign mileage per photo, write `photos.json`)
-- `PhotoGallery.astro` — PhotoSwipe 5 lightbox with thumbnail grid; `data-pswp-width` / `data-pswp-height` set at build time via `getImage()`; `loading="lazy"` on all thumbnails
-- Photo markers on `RouteMap.astro` via `leaflet.markercluster` at mileage positions; `L.divIcon()` for all markers
-- `window.CustomEvent` `map:photoClick` wired from map marker to PhotoGallery `lightbox.loadAndOpen(index)`
-
-**Uses:** sharp, exifr, photoswipe, leaflet.markercluster
-**Implements:** thumbnail pipeline, PhotoGallery island, admin UI, photo marker cluster layer
-**Avoids:** Serving full-res originals in gallery grid (thumbnails only), PhotoSwipe dimension errors (build-time `getImage()`), admin UI path mismatch (validated end-to-end in this phase)
-**Research flag:** Standard patterns for PhotoSwipe and sharp; admin UI file-write pattern may need brief validation — low complexity
-
----
-
-### Phase 4: Content, Donate CTA, and GPX Download
-
-**Rationale:** The non-interactive content — route narrative, donate CTA, GPX download, and responsive layout polish — does not depend on the interactive components but does need them stable first to integrate into the full page layout. Deferring this prevents content rewriting as the layout evolves.
-
-**Delivers:**
-- Route narrative section (Hiawatha history + Ojibwe context + MBTN mission statement)
-- `DonateCallout.astro` — prominent donate button linking to `mbtn.org/donate`
-- GPX download link (`<a href="/Munising_Hiawatha_s_Revenge.gpx" download>`)
-- Full responsive layout audit: mobile-first breakpoints, 52px touch targets, Chart.js `maintainAspectRatio: false` with explicit CSS heights
-- Leaflet fullscreen affordance or external map link for mobile deep exploration
-- Final visual polish: badge typography, elevation chart axis labels, map control styling
-- Production build verification: `astro build` passes; CSS includes all used Tailwind classes; thumbnails serve correctly; attribution visible on map canvas
-
-**Uses:** Tailwind 4 utility classes, Astro Fonts API (Space Mono + Special Elite)
-**Avoids:** Tailwind class purging (static class lists only; no dynamic class construction), mobile chart overflow (explicit container heights), Donate CTA buried below fold
-**Research flag:** No research needed — standard Astro/Tailwind patterns
-
----
+### Phase 7: Responsive Polish + Accessibility Audit
+**Rationale:** Final pass after all features are integrated. Catches interaction bugs between new components.
+**Delivers:** Verified responsive behavior at 375px/768px/1024px/1280px, WCAG AA contrast verification on all new colors, keyboard navigation through sector panel, `prefers-reduced-motion` handling on all animations.
+**Addresses:** Cross-cutting quality across all features.
+**Avoids:** Pitfall #10 (tablet breakpoint) final verification.
 
 ### Phase Ordering Rationale
 
-- **Pipeline before components** — gpxparser and sharp require Node.js globals unavailable in Astro's Vite/SSR context; separating them into `scripts/` is architecturally mandatory, not optional
-- **Map and chart together** — cross-component hover sync requires both to share one canonical dataset; building them in the same phase prevents the index-drift pitfall before it can emerge
-- **Photo pipeline after map/chart** — photo markers depend on the map being stable; the admin UI is only meaningful once there are stable map pins to preview
-- **Content last** — narrative and CTA text are stable regardless of component order; finalizing them after components are locked prevents unnecessary rewrites to accommodate layout shifts
-- **Design tokens in Phase 1** — establishing `@theme` CSS variables early prevents scattered color/font hardcoding that creates rework in every subsequent phase
-
----
+- **Color tokens first** because every component references them. Changing tokens after components are built risks Pitfall #5 (silent color mismatches). Tokenizing hardcoded hex values is a prerequisite, not a nice-to-have.
+- **Layout restructure with colors** because the BaseLayout change is a one-line edit but touches every section's spacing. Doing it early isolates regressions.
+- **Hero before editorial content** because the hero delivers immediate visual impact with low complexity, building momentum. It also validates the full-width layout pattern that other sections reuse.
+- **Ojibwe design system before editorial content** because the narrative sections and route explainer consume floral dividers and motifs. Building the decorative vocabulary first ensures consistent application.
+- **Gallery in parallel with editorial content** because they have no mutual dependencies. Both depend only on Phase 1 (colors).
+- **Sector interactivity last** because it is the highest-complexity feature, touches three existing components (RouteMap, ElevationProfile, index.astro), extends the event bus, and the map already works well without it. If the project runs out of time, deferring this to v1.2 loses the least value.
 
 ### Research Flags
 
-**Phases that can skip `/gsd:research-phase` — standard patterns with direct mkUltraGravel reference:**
-- Phase 1 (Astro scaffolding + GPX pipeline) — direct reference implementation available
-- Phase 2 (Leaflet + Chart.js + CustomEvent bus) — official docs + mkUltra patterns fully cover this
-- Phase 3 (PhotoSwipe + sharp + admin UI) — standard patterns; only admin UI file-write is slightly novel but low complexity
-- Phase 4 (content + responsive polish) — no novel patterns
+Phases likely needing deeper research during planning:
+- **Phase 3 (Ojibwe Design System):** SVG illustration quality and cultural appropriateness require human judgment. The Neebin.com floral set is a starting point but custom SVG work needs design review. Cultural consultation with MBTN's tribal relations contacts is recommended.
+- **Phase 6 (Sector Interactivity):** Leaflet click handler coordination, `<dialog>` as slide-out panel (non-standard usage), `@starting-style` transitions, and mobile bottom sheet pattern all warrant a `/gsd:research-phase` pass. The CustomEvent bus extension is straightforward but the responsive panel UX is not.
 
-**No phase requires `/gsd:research-phase` during planning.** The combination of official documentation confidence (HIGH across all core libraries) and a direct reference implementation (mkUltraGravel) eliminates the need for exploratory research during roadmap execution. Implementation-time validation points are captured in PITFALLS.md's "Looks Done But Isn't" checklist.
-
----
+Phases with standard patterns (skip `/gsd:research-phase`):
+- **Phase 1 (Design Foundation):** Grep-and-replace hex values, extend `@theme` block, remove classes from `<main>`. Entirely mechanical.
+- **Phase 2 (Hero):** Full-width hero with gradient overlay is one of the most documented CSS patterns on the web.
+- **Phase 5 (Masonry Gallery):** CSS `columns` is universally supported. PhotoSwipe bridge update is a known pattern.
+- **Phase 4 (Editorial Content):** CSS Grid + float + shape-outside are mature techniques. The writing itself is the risk, not the code.
+- **Phase 7 (Polish):** Standard responsive testing and accessibility audit.
 
 ## Confidence Assessment
 
 | Area | Confidence | Notes |
 |------|------------|-------|
-| Stack | HIGH | All versions verified against npm registry and official changelogs; mkUltraGravel provides authoritative version pins; only @xmldom/xmldom shows minor drift (0.8.11 vs 0.9.9 current — intentionally held) |
-| Features | MEDIUM-HIGH | Core features confirmed against PROJECT.md and multiple reference sites; competitor analysis is pattern-triangulated from live sites; two features (hover sync, photo markers) are unique enough that no direct competitor reference exists |
-| Architecture | HIGH | Based on official Astro/Leaflet/Chart.js docs and direct mkUltraGravel reference implementation; all patterns are verified against working code |
-| Pitfalls | HIGH | Critical pitfalls verified via official GitHub issues, OSM policy docs, Chart.js performance docs; elevation noise handling confirmed via Ride with GPS support docs and research paper |
+| Stack | HIGH | Zero new dependencies. All CSS techniques verified against Can I Use, MDN, and Tailwind 4 docs. Browser support floor is 89% (@starting-style), with graceful degradation. |
+| Features | MEDIUM-HIGH | Table stakes well-defined by competitive analysis (UNBOUND, SBT GRVL, Cycle Oregon). Cultural sensitivity guidance is solid but inherently incomplete without Ojibwe community engagement. Writing quality (New Yorker tone) is a human judgment call, not a technical research question. |
+| Architecture | HIGH | Based on direct source code analysis of every file in the v1.0 codebase. Component boundaries, event bus patterns, data schemas, and build pipeline are fully understood. All changes are additive. |
+| Pitfalls | HIGH | 5 critical pitfalls identified with verified sources (Can I Use, Leaflet docs, web.dev, Anishinaabe cultural sources, codebase audit). Prevention strategies are specific and actionable. Recovery costs documented for each. |
 
-**Overall confidence: HIGH**
-
----
+**Overall confidence:** HIGH
 
 ### Gaps to Address
 
-- **Tile style choice:** STACK.md recommends CARTO Dark Matter (matches mkUltra); FEATURES.md notes a forest/park route may benefit from CyclOSM or Stadia Terrain tiles for better thematic fit. Resolve during Phase 2 — try both before locking in; CARTO Dark Matter is the safe default.
-
-- **Elevation gain threshold tuning:** The 5-meter minimum threshold filter is a starting recommendation. The actual threshold for this specific GPX file should be validated against the known Garmin/Strava elevation figure for Hiawatha's Revenge before displaying stats. Do this during Phase 1 pipeline work.
-
-- **Photo manifest file-write mechanism for admin UI:** The admin UI writes `photos.json` during dev. The exact mechanism (fetch POST to Astro dev server endpoint vs. CLI script) is described architecturally but not with a verified implementation. Either approach works; choose at Phase 3 based on simplicity.
-
-- **@xmldom/xmldom version pin:** mkUltraGravel pins `^0.8.11`; current is `0.9.9`. No verified testing of 0.9.x compatibility with gpxparser has been done. Stay on `^0.8.11` unless gpxparser breakage is encountered.
-
----
+- **Ojibwe community consultation:** Research provides a solid framework for respectful use of floral design elements, but the highest confidence comes from direct feedback from Ojibwe community members. MBTN likely has tribal relations contacts through the Forest Service. This is a project management action, not a research gap.
+- **Hero photo selection:** No specific photo has been selected from the 54-photo library. The photo must have a centered subject (for `object-cover` cropping across viewports) and work as a dramatic landscape. This is an editorial decision needed before Phase 2 implementation.
+- **Exact hex values for new color tokens:** The berry/gold/lake/moss hex values in STACK.md are starting points. Each must pass WCAG AA contrast verification against `forest-950` (#0d1a0d) and `forest-900` (#1a2e1a). Values may shift during implementation.
+- **Sector descriptions and star ratings data entry:** The `data.md` file has star ratings and segment names but editorial descriptions for each sector's detail panel need to be written. This is content work, not research.
+- **Narrative tone execution:** The New Yorker editorial tone is defined as a goal but cannot be validated by research. The writing must be reviewed by a human for tone calibration.
 
 ## Sources
 
 ### Primary (HIGH confidence)
-- `mkUltraGravel` reference implementation (`package.json`, `astro.config.mjs`, component source) — authoritative version and pattern reference
-- [Astro Islands Architecture Docs](https://docs.astro.build/en/concepts/islands/) — component isolation and hydration patterns
-- [Astro Content Collections — file() loader](https://docs.astro.build/en/guides/content-collections/) — typed data layer
-- [Astro Blog: Astro 6.0](https://astro.build/blog/astro-6/) — Fonts API introduction (March 10, 2026)
-- [Tailwind CSS v4 Blog](https://tailwindcss.com/blog/tailwindcss-v4) — CSS-first config, Vite plugin
-- [Leaflet GitHub Releases](https://github.com/Leaflet/Leaflet/releases) — 1.9.4 latest stable; 2.0 alpha ecosystem status
-- [Chart.js Performance Documentation](https://www.chartjs.org/docs/latest/general/performance.html) — decimation, pointRadius
-- [OSM Foundation Tile Usage Policy](https://operations.osmfoundation.org/policies/tiles/) — attribution requirements
-- [Leaflet.GestureHandling library](https://github.com/elmarquis/Leaflet.GestureHandling) — scroll trap prevention
-- [PhotoSwipe Data Sources docs](https://photoswipe.com/data-sources/) — programmatic open API
-- [npm registry](https://registry.npmjs.org/) — version verification for all core libraries
-- PROJECT.md — confirmed features, constraints, and out-of-scope list
+- [Tailwind CSS v4 Theme Variables](https://tailwindcss.com/docs/theme) -- `@theme` auto-generates utilities, `columns-*` confirmed
+- [Can I Use: HTML Dialog](https://caniuse.com/dialog) -- 96.86% global support
+- [Can I Use: CSS @starting-style](https://caniuse.com/mdn-css_at-rules_starting-style) -- 89% global support
+- [Can I Use: CSS Shapes Level 1](https://caniuse.com/css-shapes) -- 97.2% support for `shape-outside`
+- [Can I Use: CSS Grid Lanes](https://caniuse.com/css-grid-lanes) -- 0.02% support (NOT production viable)
+- [Can I Use: CSS initial-letter](https://caniuse.com/css-initial-letter) -- 91.38% (no Firefox)
+- [MDN: Dialog Element](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog) -- authoritative `<dialog>` docs
+- [Leaflet Reference: Map Panes](https://leafletjs.com/reference.html) -- z-index values for stacking context
+- [web.dev: Optimize LCP](https://web.dev/articles/optimize-lcp) -- hero image performance
+- [Addy Osmani: fetchpriority](https://addyosmani.com/blog/fetch-priority/) -- LCP hero image optimization
+- [Astro Image Docs](https://docs.astro.build/en/guides/images/) -- responsive image pipeline
+- Direct codebase analysis -- all src/ files, global.css, pipeline scripts
 
 ### Secondary (MEDIUM confidence)
-- [bikepacking.com](https://bikepacking.com/routes/croatan-gravel-vanish/) — route page feature audit
-- [Adventure Cycling Golden Gravel Trail](https://www.adventurecycling.org/routes-and-maps/adventure-cycling-route-network/golden-gravel-trail/) — feature audit
-- [UNBOUND Gravel](https://www.unboundgravel.com/routes/) — feature audit
-- [Ride with GPS: GPS Accuracy FAQ](https://support.ridewithgps.com/hc/en-us/articles/4419010957467) — elevation noise documentation
-- [Grant Holtes: A Smoother Approach to Elevation Gain Calculation (July 2025)](https://www.grantholtes.com/assets/documents/Gaia_Elevation_Calculation.pdf) — threshold filter validation
-- [Stamen Maps → Stadia Maps migration](https://stamen.com/here-comes-the-future-of-stamen-maps/) — tile provider context
-- Leaflet GitHub Issues #6552, #8327 — SSR `window is not defined` verification
-
-### Tertiary (LOW confidence)
-- WebSearch "gravel cycling event website best design interactive map elevation GPX download 2025" — used for pattern triangulation only; no specific claims drawn from this
+- [UNBOUND Gravel](https://unboundgravel.com), [SBT GRVL](https://sbtgrvl.com), [Cycle Oregon](https://cycleoregon.com/ride/gravel/) -- competitive feature analysis
+- [Neebin Studios Anishinaabe Floral Set](https://neebin.com/design/floral_set/) -- open-licensed Ojibwe floral SVG reference
+- [Heart Berry: Ojibwe Floral Beadwork as Covert Art](https://www.heartberry.com/blogs/news/17055207-anishinaabeg-use-ojibwe-floral-beadwork-as-covert-art) -- cultural significance
+- [Vincent Design: Indigenous Graphic Design Best Practices](https://vincentdesign.ca/2021/03/08/considerations-and-best-practices-in-indigenous-design/) -- cultural sensitivity framework
+- [Indigenous Protocols for the Visual Arts](https://www.indigenousprotocols.art/) -- cultural use guidelines
+- [USFS Hiawatha NF Tribal Relations](https://www.fs.usda.gov/r09/hiawatha/working-with-us/tribal-relations) -- land context
+- [Smashing Magazine: Magazine Layout with CSS Grid Areas](https://www.smashingmagazine.com/2023/02/build-magazine-layout-css-grid-areas/) -- editorial grid patterns
+- [Ben Nadel: Dialog as Fly-out Sidebar](https://www.bennadel.com/blog/4862-opening-the-dialog-element-as-a-fly-out-sidebar.htm) -- `<dialog>` panel pattern
+- [CSS-Tricks: Masonry Layout is Now grid-lanes](https://css-tricks.com/masonry-layout-is-now-grid-lanes/) -- spec history
 
 ---
-*Research completed: 2026-03-30*
+*Research completed: 2026-03-31*
 *Ready for roadmap: yes*
