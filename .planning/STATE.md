@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-03-30)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive showcase that inspires them to ride it and support MBTN.
-**Current focus:** UAT gap closure — fixing 5 diagnosed issues from full-site UAT
+**Current focus:** All phases complete including UAT gap closure — milestone v1 ready for audit
 
 ## Current Position
 
-Phase: 00 of 00 (Full-Site UAT Gap Closure)
-Plan: 3 of 5 in current phase (3 complete)
-Status: In progress — UAT gap closure underway
-Last activity: 2026-03-31 — Completed 00-02-PLAN.md (elevation chart X-axis cap + crosshair hover fix)
+Phase: 00 of 00 (Full-Site UAT Gap Closure) — Complete
+Plan: 3 of 3 in current phase (all complete)
+Status: Milestone complete — all phases executed, verified, and UAT gaps closed
+Last activity: 2026-03-31 — Phase 0 verified (5/5 must-haves passed)
 
-Progress: [██████████] 100% (30/30 base plans complete) + 3/5 UAT gap plans
+Progress: [██████████] 100% (33/33 plans complete)
 
 ## Performance Metrics
 

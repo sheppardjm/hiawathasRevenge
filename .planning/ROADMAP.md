@@ -13,7 +13,7 @@ This roadmap delivers a visually immersive, static showcase site for the Hiawath
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 0: Full-Site UAT Gap Closure** - Fix photo 404s, crosshair sync, surface labels, elevation X-axis, restock markers
+- [x] **Phase 0: Full-Site UAT Gap Closure** - Fix photo 404s, crosshair sync, surface labels, elevation X-axis, restock markers
 - [x] **Phase 1: Foundation** - Astro 6 + Tailwind 4 project scaffold with Forest Service design tokens and base layout
 - [x] **Phase 2: Data Pipeline** - GPX parsing, annotation resolution, and build orchestration producing all route JSON
 - [x] **Phase 3: Route Map** - Leaflet island with GPX polyline, themed tiles, gesture handling, and lazy-load
@@ -41,9 +41,9 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: 3 plans
 
 Plans:
-- [ ] 00-01-PLAN.md — Fix photo 404 double-prefix and restyle restock markers with water drop icon
-- [ ] 00-02-PLAN.md — Fix elevation chart X-axis max and crosshair hover sync
-- [ ] 00-03-PLAN.md — Rename surface type labels from singletrack to actual route surfaces
+- [x] 00-01-PLAN.md — Fix photo 404 double-prefix and restyle restock markers with water drop icon
+- [x] 00-02-PLAN.md — Fix elevation chart X-axis max and crosshair hover sync
+- [x] 00-03-PLAN.md — Rename surface type labels from singletrack to actual route surfaces
 
 ### Phase 1: Foundation
 **Goal**: Visitors can open a working Astro site that renders the Forest Service visual identity with correct fonts, colors, and layout shell — ready to receive interactive components
@@ -228,7 +228,7 @@ Note: Phase 3 and Phase 4 can proceed in parallel after Phase 2 completes. Phase
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 0. Full-Site UAT Gap Closure | 0/3 | In Progress | - |
+| 0. Full-Site UAT Gap Closure | 3/3 | Complete | 2026-03-31 |
 | 1. Foundation | 2/2 | Complete | 2026-03-30 |
 | 2. Data Pipeline | 3/3 | Complete | 2026-03-30 |
 | 3. Route Map | 2/2 | Complete | 2026-03-30 |
@@ -243,4 +243,4 @@ Note: Phase 3 and Phase 4 can proceed in parallel after Phase 2 completes. Phase
 
 ---
 *Roadmap created: 2026-03-30*
-*Last updated: 2026-03-31 after Phase 0 gap closure planning*
+*Last updated: 2026-03-31 after Phase 0 execution complete*
