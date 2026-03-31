@@ -170,10 +170,13 @@
     for (const stop of restocks) {
       const restockIcon = L.divIcon({
         className: 'restock-marker',
-        html: '<div style="width:14px;height:14px;background:#c8973e;border:2px solid #1a2e1a;border-radius:50%;box-shadow:0 1px 3px rgba(0,0,0,0.4);"></div>',
-        iconSize: [18, 18],
-        iconAnchor: [9, 9],
-        popupAnchor: [0, -12]
+        html: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="26" viewBox="0 0 20 26">
+    <path d="M10 0C10 0 0 12 0 17c0 5.523 4.477 10 10 10s10-4.477 10-10C20 12 10 0 10 0z" fill="#4a90d9" stroke="#1a2e1a" stroke-width="1.5"/>
+    <circle cx="10" cy="17" r="3" fill="rgba(255,255,255,0.5)"/>
+  </svg>`,
+        iconSize: [20, 26],
+        iconAnchor: [10, 26],
+        popupAnchor: [0, -26]
       });
 
       L.marker([stop.lat, stop.lon], {
