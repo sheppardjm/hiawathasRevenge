@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-03-31)
 ## Current Position
 
 Phase: 12 (Design Foundation) -- first of 5 in v1.1
-Plan: 01 of N in Phase 12
-Status: In progress (Plan 01 complete)
-Last activity: 2026-03-31 -- Completed 12-01-PLAN.md (color tokens + layout restructure)
+Plan: 02 of N in Phase 12
+Status: In progress (Plans 01 and 02 complete)
+Last activity: 2026-03-31 -- Completed 12-02-PLAN.md (hex color tokenization in RouteMap + ElevationProfile)
 
-Progress: [█░░░░░░░░░] 10% (v1.1: Phase 12 Plan 01 of 5 phases complete)
+Progress: [██░░░░░░░░] 20% (v1.1: Phase 12 Plans 01-02 of 5 phases complete)
 
 ## Performance Metrics
 
@@ -24,7 +24,7 @@ Progress: [█░░░░░░░░░] 10% (v1.1: Phase 12 Plan 01 of 5 phas
 - Timeline: 2 days (2026-03-30 -> 2026-03-31)
 
 **v1.1:**
-- Plans executed: 1 (12-01)
+- Plans executed: 2 (12-01, 12-02)
 - Phases complete: 0 (Phase 12 in progress)
 
 ## Accumulated Context
@@ -40,6 +40,8 @@ v1.1 decisions made:
 | `@theme static` over `@theme` | Tailwind v4 tree-shakes unused tokens; static forces all to :root for JS getComputedStyle access | 12-01 |
 | Gold (gold-600/500/400) and lake-400 pass WCAG AA on forest-900/950 | Verified during color definition; berry and moss are decorative-only | 12-01 |
 | Per-section width containers (max-w-4xl mx-auto px-4) replace global BaseLayout constraint | Enables Phase 13 full-width hero; sections self-constrain width | 12-01 |
+| getCSSColor() placed inside init functions (not module scope) | getComputedStyle must run after document ready; module scope executes at parse time | 12-02 |
+| rgba(255,255,255,0.08) grid lines kept hardcoded | Generic "subtle grid on dark bg" semantic, not a theme color; tokenizing adds complexity without value | 12-02 |
 
 v1.1 decisions pending:
 - Hero photo selection needed before Phase 13 implementation
@@ -56,6 +58,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-31T21:14:20Z
-Stopped at: Completed 12-01-PLAN.md
+Last session: 2026-03-31T21:20:05Z
+Stopped at: Completed 12-02-PLAN.md
 Resume file: None
