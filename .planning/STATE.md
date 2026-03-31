@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-03-30)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive showcase that inspires them to ride it and support MBTN.
-**Current focus:** Phase 8 complete — PhotoGallery.astro with PhotoSwipe lightbox, copy-images pipeline step; ready for Phase 9
+**Current focus:** Phase 9 plan 02 complete — photo cluster markers on map wired to PhotoSwipe lightbox; ready for Phase 10
 
 ## Current Position
 
-Phase: 8 of 11 (Photo Gallery) — Phase complete
+Phase: 9 of 11 (Photo Markers and Admin) — In progress
 Plan: 2 of 2 in current phase (2 complete)
-Status: Phase complete — ready for Phase 9
-Last activity: 2026-03-31 — Completed phase 8 execution (PhotoGallery + copy-images pipeline)
+Status: Phase complete — ready for Phase 10
+Last activity: 2026-03-31 — Completed 09-02-PLAN.md (photo cluster markers + lightbox bridge)
 
-Progress: [██████░░░░] 56% (18/32 plans complete)
+Progress: [██████░░░░] 59% (19/32 plans complete)
 
 ## Performance Metrics
 
@@ -35,9 +35,10 @@ Progress: [██████░░░░] 56% (18/32 plans complete)
 | 06-restock-markers | 1/1 complete | ~2 min | ~2 min |
 | 07-photo-pipeline | 2/2 complete | ~6 min | ~3 min |
 | 08-photo-gallery | 2/2 complete | ~4 min | ~2 min |
+| 09-photo-markers-and-admin | 2/2 complete | ~4 min | ~2 min |
 
 **Recent Trend:**
-- Last 5 plans: 07-01 (~2 min), 07-02 (~4 min), 08-01 (~2 min), 08-02 (~2 min)
+- Last 5 plans: 07-02 (~4 min), 08-01 (~2 min), 08-02 (~2 min), 09-01 (prev), 09-02 (~4 min)
 - Trend: On track; pure code plans run fast (~2-4 min)
 
 *Updated after each plan completion*
@@ -111,6 +112,12 @@ Recent decisions affecting current work:
 - 08-02: copyFileSync (not symlinks) for copy-images.js — symlinks break in CI/production builds
 - 08-02: No filename normalization in copy-images.js — lightbox href uses photo.filename from photos.json which maps to original source name as-is
 - 08-02: Pipeline step ordering: parse-gpx → resolve-annotations → generate-thumbnails → copy-images → match-photos
+- 09-02: window.L = L MUST be set before dynamic import of leaflet.markercluster-src.js — UMD plugin reads window.L at module evaluation time
+- 09-02: L.markerClusterGroup (lowercase m, factory function) — NOT L.MarkerClusterGroup (capital M)
+- 09-02: loadAndOpen requires { gallery: galleryEl } as second arg for DOM-connected galleries — PhotoSwipe reads data-pswp-width/height from anchors
+- 09-02: Module-scope lightbox variable required in PhotoGallery — event listener closure cannot capture block-scoped variable
+- 09-02: Cross-component event bus pattern: RouteMap dispatches window CustomEvent, PhotoGallery listens — reusable for future map→UI bridges
+- 09-02: zIndexOffset layering finalized: polylines(0) < restock markers(500) < photo markers(750) < bike crosshair(1000)
 
 ### Pending Todos
 
@@ -123,5 +130,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-31
-Stopped at: Phase 8 complete — ready for Phase 9 (Photo Markers and Admin)
+Stopped at: Completed 09-02-PLAN.md — Phase 9 complete; ready for Phase 10
 Resume file: None
