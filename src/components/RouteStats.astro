@@ -1,0 +1,124 @@
+---
+import { getEntry, getCollection } from 'astro:content';
+
+const routeEntry = await getEntry('routeData', 'route');
+const { totalMiles, elevationGainFeet } = routeEntry!.data.meta;
+
+const allAnnotations = await getCollection('annotations');
+const sectors = allAnnotations.filter(a => a.data.type === 'sector');
+const easyMiles = sectors
+  .filter(s => s.data.type === 'sector' && (s.data as any).difficulty === 'easy')
+  .reduce((n, s) => n + (s.data as any).lengthMiles, 0);
+const moderateMiles = sectors
+  .filter(s => s.data.type === 'sector' && (s.data as any).difficulty === 'moderate')
+  .reduce((n, s) => n + (s.data as any).lengthMiles, 0);
+const hardMiles = sectors
+  .filter(s => s.data.type === 'sector' && (s.data as any).difficulty === 'hard')
+  .reduce((n, s) => n + (s.data as any).lengthMiles, 0);
+const roadMiles = Math.round((totalMiles - easyMiles - moderateMiles - hardMiles) * 10) / 10;
+---
+
+<div class="stats-grid">
+  <div class="stat-card">
+    <span class="stat-value">{Math.round(totalMiles)}</span>
+    <span class="stat-label">Miles</span>
+  </div>
+  <div class="stat-card">
+    <span class="stat-value">{elevationGainFeet.toLocaleString()}</span>
+    <span class="stat-label">Feet of Climbing</span>
+  </div>
+  <div class="stat-card">
+    <span class="stat-value">4</span>
+    <span class="stat-label">Surface Types</span>
+  </div>
+</div>
+
+<div class="surface-breakdown">
+  <div class="surface-row">
+    <span class="surface-color" style="background: var(--color-forest-600);"></span>
+    <span class="surface-name">Forest Roads</span>
+    <span class="surface-miles">{roadMiles} mi</span>
+  </div>
+  <div class="surface-row">
+    <span class="surface-color" style="background: var(--color-amber-300);"></span>
+    <span class="surface-name">Moderate Singletrack</span>
+    <span class="surface-miles">{moderateMiles} mi</span>
+  </div>
+  <div class="surface-row">
+    <span class="surface-color" style="background: var(--color-amber-500);"></span>
+    <span class="surface-name">Easy Singletrack</span>
+    <span class="surface-miles">{easyMiles} mi</span>
+  </div>
+  <div class="surface-row">
+    <span class="surface-color" style="background: var(--color-rust-500);"></span>
+    <span class="surface-name">Hard Singletrack</span>
+    <span class="surface-miles">{hardMiles} mi</span>
+  </div>
+</div>
+
+<style>
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .stat-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+    border: 1px solid var(--color-forest-700);
+    background: var(--color-forest-800);
+  }
+
+  .stat-value {
+    font-family: var(--font-display);
+    font-size: var(--font-size-3xl);
+    font-weight: 800;
+    color: var(--color-amber-500);
+    text-shadow: var(--shadow-text);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-family: var(--font-display);
+    font-size: var(--font-size-sm);
+    color: var(--color-cream-200);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-top: 0.25rem;
+  }
+
+  .surface-breakdown {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-width: 28rem;
+  }
+
+  .surface-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: var(--font-size-sm);
+  }
+
+  .surface-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  .surface-name {
+    flex: 1;
+    color: var(--color-cream-100);
+  }
+
+  .surface-miles {
+    color: var(--color-cream-200);
+    font-family: var(--font-mono);
+  }
+</style>
