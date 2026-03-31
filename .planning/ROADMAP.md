@@ -20,7 +20,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 6: Restock Markers** - Restock point markers on map with name and mileage labels
 - [x] **Phase 7: Photo Pipeline** - sharp thumbnail generation, photo matching script, and photos.json
 - [x] **Phase 8: Photo Gallery** - PhotoSwipe lightbox with thumbnail grid
-- [ ] **Phase 9: Photo Markers and Admin** - Geotagged map markers, cluster layer, and manifest admin UI
+- [x] **Phase 9: Photo Markers and Admin** - Geotagged map markers, cluster layer, and manifest admin UI
 - [ ] **Phase 10: Content, Narrative, and Visual Identity** - Hiawatha intro, route stats, donate CTA, badge h1, topographic patterns
 - [ ] **Phase 11: Responsive Polish and Production Build** - Touch targets, reduced-motion, full responsive audit, production verification
 
@@ -161,8 +161,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 09-01-PLAN.md — Create admin.astro (dev-only) and save-manifest.ts POST endpoint for photo manifest editing with mileage inputs per photo
-- [ ] 09-02-PLAN.md — Install leaflet.markercluster, add photo cluster marker layer to RouteMap.astro, wire map:photoClick CustomEvent bridge to PhotoGallery lightbox
+- [x] 09-01-PLAN.md — Create admin.astro (dev-only) and save-manifest.ts POST endpoint for photo manifest editing with mileage inputs per photo
+- [x] 09-02-PLAN.md — Install leaflet.markercluster, add photo cluster marker layer to RouteMap.astro, wire map:photoClick CustomEvent bridge to PhotoGallery lightbox
 
 ### Phase 10: Content, Narrative, and Visual Identity
 **Goal**: Visitors encounter a rich narrative about Hiawatha and the National Forest, a route stats block, a prominent MBTN donate call-to-action, a GPX download link, a national park badge-style h1, and topographic decorative details that complete the Forest Service visual identity
@@ -220,10 +220,10 @@ Note: Phase 3 and Phase 4 can proceed in parallel after Phase 2 completes. Phase
 | 6. Restock Markers | 1/1 | Complete | 2026-03-30 |
 | 7. Photo Pipeline | 2/2 | Complete | 2026-03-31 |
 | 8. Photo Gallery | 2/2 | Complete | 2026-03-31 |
-| 9. Photo Markers and Admin | 0/2 | Not started | - |
+| 9. Photo Markers and Admin | 2/2 | Complete | 2026-03-31 |
 | 10. Content, Narrative, and Visual Identity | 0/6 | Not started | - |
 | 11. Responsive Polish and Production Build | 0/4 | Not started | - |
 
 ---
 *Roadmap created: 2026-03-30*
-*Last updated: 2026-03-31 after Phase 8 execution*
+*Last updated: 2026-03-31 after Phase 9 execution*
