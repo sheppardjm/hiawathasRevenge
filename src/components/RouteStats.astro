@@ -59,9 +59,15 @@ const roadMiles = Math.round((totalMiles - easyMiles - moderateMiles - hardMiles
 <style>
   .stats-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: 1fr;
     gap: 1rem;
     margin-bottom: 1.5rem;
+  }
+
+  @media (min-width: 640px) {
+    .stats-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
   }
 
   .stat-card {
