@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import RouteMap from '../components/RouteMap.astro';
 import ElevationProfile from '../components/ElevationProfile.astro';
+import PhotoGallery from '../components/PhotoGallery.astro';
 ---
 
 <BaseLayout title="Hiawatha's Revenge | 100 Miles Through the Hiawatha National Forest">
@@ -64,6 +65,11 @@ import ElevationProfile from '../components/ElevationProfile.astro';
   <section class="py-[--spacing-block]">
     <h2 class="text-3xl mb-[--spacing-element]">Elevation Profile</h2>
     <ElevationProfile />
+  </section>
+
+  <section class="py-[--spacing-block]">
+    <h2 class="text-3xl mb-[--spacing-element]">Photos</h2>
+    <PhotoGallery />
   </section>
 
   <section class="py-[--spacing-block]">

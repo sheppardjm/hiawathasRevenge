@@ -1,0 +1,71 @@
+---
+// PhotoGallery.astro — Responsive photo grid with PhotoSwipe lightbox
+// Direct JSON import (not content collections) — simpler and handles the empty-array case cleanly
+// PhotoSwipe initialized in <script> block (not frontmatter) to avoid SSR "window is undefined" errors
+import photosData from '../../public/data/photos.json';
+
+type PhotoEntry = {
+  id: string;
+  filename: string;
+  thumb: string;
+  mile: number;
+  lat?: number;
+  lon?: number;
+};
+
+const photos = photosData as PhotoEntry[];
+
+// Extracts pixel dimensions from source filenames like "photo-name-1536x2048.jpg"
+// Used to set data-pswp-width / data-pswp-height on lightbox anchor elements
+function parseDims(filename: string): { w: number; h: number } {
+  const m = filename.match(/-(\d+)x(\d+)/);
+  return m ? { w: Number(m[1]), h: Number(m[2]) } : { w: 1536, h: 2048 };
+}
+---
+
+{photos.length === 0 ? (
+  <p class="text-cream-200 text-sm italic">Photos coming soon.</p>
+) : (
+  <div id="photo-gallery" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+    {photos.map((photo) => {
+      const dims = parseDims(photo.filename);
+      return (
+        <a
+          href={`/images/${photo.filename}`}
+          data-pswp-width={dims.w}
+          data-pswp-height={dims.h}
+          data-cropped="true"
+          target="_blank"
+          rel="noopener"
+          class="block overflow-hidden"
+        >
+          <img
+            src={`/thumbs/${photo.thumb}`}
+            alt=""
+            loading="lazy"
+            decoding="async"
+            class="w-full aspect-square object-cover"
+          />
+        </a>
+      );
+    })}
+  </div>
+)}
+
+<script>
+  // PhotoSwipe lightbox — imported in <script> block so Vite bundles it client-side only
+  // pswpModule uses dynamic import to defer the 30KB core until the user clicks a thumbnail
+  import PhotoSwipeLightbox from 'photoswipe/lightbox';
+  import 'photoswipe/style.css';
+
+  // Guard prevents errors when photos.json is empty (no #photo-gallery div rendered)
+  const gallery = document.getElementById('photo-gallery');
+  if (gallery) {
+    const lightbox = new PhotoSwipeLightbox({
+      gallery: '#photo-gallery',
+      children: 'a',
+      pswpModule: () => import('photoswipe')
+    });
+    lightbox.init();
+  }
+</script>
