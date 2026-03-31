@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-03-30)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive showcase that inspires them to ride it and support MBTN.
-**Current focus:** Phase 7 in progress — sharp installed, 54 WebP thumbnails generated in public/thumbs/; Plan 01 complete, Plan 02 (match-photos) next
+**Current focus:** Phase 7 complete — photo pipeline fully integrated; 54 thumbnails in public/thumbs/, photos.json ready for Phase 9 manifest; Phase 8 next
 
 ## Current Position
 
-Phase: 7 of 11 (Photo Pipeline) — In progress
-Plan: 1 of 2 in current phase (1 complete)
-Status: In progress — Plan 01 complete, ready for Plan 02 (match-photos.js)
-Last activity: 2026-03-31 — Completed 07-01 (sharp install + generate-thumbnails.js + 54 WebP thumbnails)
+Phase: 7 of 11 (Photo Pipeline) — Phase complete
+Plan: 2 of 2 in current phase (2 complete)
+Status: Phase complete — ready for Phase 8
+Last activity: 2026-03-31 — Completed 07-02 (match-photos.js + pipeline.js 4-step orchestration)
 
-Progress: [█████░░░░░] 47% (15/32 plans complete)
+Progress: [█████░░░░░] 50% (16/32 plans complete)
 
 ## Performance Metrics
 
@@ -33,11 +33,11 @@ Progress: [█████░░░░░] 47% (15/32 plans complete)
 | 04-elevation-profile | 2/2 complete | ~7 min | ~3.5 min |
 | 05-map-elevation-sync | 4/4 complete | ~7 min | ~2 min |
 | 06-restock-markers | 1/1 complete | ~2 min | ~2 min |
-| 07-photo-pipeline | 1/2 complete | ~2 min | ~2 min |
+| 07-photo-pipeline | 2/2 complete | ~6 min | ~3 min |
 
 **Recent Trend:**
-- Last 5 plans: 04-02 (~5 min checkpoint), 05-01 (~3 min), 06-01 (~2 min), 07-01 (~2 min)
-- Trend: On track; pure code plans run fast (~2-3 min)
+- Last 5 plans: 05-01 (~3 min), 06-01 (~2 min), 07-01 (~2 min), 07-02 (~4 min)
+- Trend: On track; pure code plans run fast (~2-4 min)
 
 *Updated after each plan completion*
 
@@ -99,6 +99,10 @@ Recent decisions affecting current work:
 - 07-01: autoOrient() before resize() in sharp chain — portrait 1536x2048 sources produce 400x533 thumbnails (not 400x300 landscape)
 - 07-01: Space-to-underscore filename normalization: basename.replace(/ /g, '_') + '.webp' — match-photos.js must use identical derivation for thumb field in photos.json
 - 07-01: readdirSync without recursion naturally excludes images/inspiration/ subdirectory
+- 07-02: photos.json written as empty array when manifest absent — build never fails before Phase 9
+- 07-02: match-photos.js thumb derivation must match generate-thumbnails.js exactly: basename.replace(/ /g, '_') + '.webp'
+- 07-02: snapByMileage copied verbatim from resolve-annotations.js — keeps scripts self-contained, consistent snapping
+- 07-02: match-photos runs last in pipeline — conceptually depends on thumbnails; requires route-data.json from parse-gpx
 
 ### Pending Todos
 
@@ -111,5 +115,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-31
-Stopped at: Phase 7 Plan 01 complete — sharp installed, 54 WebP thumbnails generated; ready for Plan 02 (match-photos.js)
+Stopped at: Phase 7 complete — 07-02 (match-photos.js + pipeline.js 4-step orchestration) done; ready for Phase 8
 Resume file: None
