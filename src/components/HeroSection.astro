@@ -101,9 +101,14 @@
   }
 
   .badge {
-    position: relative;
-    width: clamp(200px, 40vw, 420px);
+    display: grid;
+    width: 240px;
     filter: drop-shadow(4px 4px 0px rgba(0, 0, 0, 0.5));
+  }
+
+  .badge-shape,
+  .badge-inner {
+    grid-area: 1 / 1;
   }
 
   .badge-shape {
@@ -131,8 +136,6 @@
   }
 
   .badge-inner {
-    position: absolute;
-    inset: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -203,6 +206,9 @@
   }
 
   @media (min-width: 640px) {
+    .badge {
+      width: 340px;
+    }
     .badge-title {
       font-size: var(--font-size-3xl);
     }
