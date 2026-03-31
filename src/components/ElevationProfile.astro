@@ -9,6 +9,12 @@
 </div>
 
 <script>
+  const SECTOR_COLORS = {
+    easy:     { fill: 'rgba(138, 154, 91, 0.18)' },
+    moderate: { fill: 'rgba(200, 151, 62, 0.18)' },
+    hard:     { fill: 'rgba(160, 82, 45, 0.18)' },
+  };
+
   async function initChart() {
     // Dynamic import — tree-shaken (NOT chart.js/auto) to keep bundle small
     // Only import components needed for a line chart
@@ -44,12 +50,13 @@
     const sectors = annotations.filter(a => a.type === 'sector');
     const sectorAnnotations = {};
     for (const sector of sectors) {
+      const colors = SECTOR_COLORS[sector.difficulty] || SECTOR_COLORS.moderate;
       sectorAnnotations[sector.id] = {
         type: 'box',
         xMin: sector.startMile,
         xMax: sector.endMile,
         // yMin/yMax intentionally omitted — auto-expands to full chart height
-        backgroundColor: 'rgba(200, 151, 62, 0.15)',
+        backgroundColor: colors.fill,
         borderWidth: 0,
         drawTime: 'beforeDatasetsDraw'
       };

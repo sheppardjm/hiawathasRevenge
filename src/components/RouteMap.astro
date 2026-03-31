@@ -34,6 +34,12 @@
     return best;
   }
 
+  const SECTOR_COLORS = {
+    easy:     { line: '#8a9a5b' },
+    moderate: { line: '#c8973e' },
+    hard:     { line: '#a0522d' },
+  };
+
   // Module-scope listeners — registered immediately so they work even before initMap() completes
   // Guard clauses handle pre-init window safely
   window.addEventListener('elevation:hover', (e) => {
@@ -133,8 +139,9 @@
     for (const sector of sectors) {
       // slice(startIdx, endIdx + 1) — JavaScript slice excludes end index; +1 prevents off-by-one gap
       const sectorPts = latlngs.slice(sector.startIdx, sector.endIdx + 1);
+      const colors = SECTOR_COLORS[sector.difficulty] || SECTOR_COLORS.moderate;
       L.polyline(sectorPts, {
-        color: '#c8973e',
+        color: colors.line,
         weight: 5,
         opacity: 0.85
       }).addTo(map);
