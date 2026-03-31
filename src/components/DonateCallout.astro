@@ -1,0 +1,54 @@
+---
+// DonateCallout.astro — Prominent MBTN donate call-to-action
+---
+<div class="donate-callout">
+  <p class="donate-message">
+    This ride supports the Munising Bay Trail Network, a 501(c)(3) nonprofit
+    building and maintaining trails in the Hiawatha National Forest.
+  </p>
+  <a
+    href="https://mbtn.org/donate"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="donate-button"
+  >
+    Donate to MBTN
+  </a>
+</div>
+
+<style>
+  .donate-callout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1rem;
+  }
+
+  .donate-message {
+    color: var(--color-cream-200);
+    max-width: 32rem;
+    font-size: var(--font-size-sm);
+    line-height: 1.6;
+  }
+
+  .donate-button {
+    display: inline-block;
+    border: 3px solid var(--color-amber-500);
+    padding: 0.75rem 2rem;
+    color: var(--color-amber-400);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--font-size-lg);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    text-decoration: none;
+    box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.5);
+    transition: background-color 0.2s, color 0.2s;
+  }
+
+  .donate-button:hover {
+    background-color: var(--color-amber-500);
+    color: var(--color-forest-950);
+  }
+</style>
