@@ -1,0 +1,119 @@
+---
+// HeroSection.astro — full-viewport-width hero with LCP-optimized photo background
+// Hero photo: cyclists on gravel road through forest (landscape 2048x1536)
+// Decision: option-cyclists selected (13-01-PLAN Task 1)
+---
+
+<section class="hero">
+  <img
+    class="hero-img"
+    src="/images/ozWsaD5fbt9Ql81EN4mrKWdDPZRUjEhRtW2a-rA8pz0-2048x1536.jpg"
+    srcset="/images/ozWsaD5fbt9Ql81EN4mrKWdDPZRUjEhRtW2a-rA8pz0-2048x1536.jpg 2048w"
+    sizes="100vw"
+    alt=""
+    width="2048"
+    height="1536"
+    fetchpriority="high"
+    loading="eager"
+    decoding="async"
+  />
+  <div class="hero-overlay" aria-hidden="true"></div>
+  <div class="hero-content">
+    <h1 class="hero-title">Hiawatha's Revenge</h1>
+    <p class="hero-tagline">100 miles through Michigan's Hiawatha National Forest</p>
+    <div class="hero-date-block">
+      <span class="hero-date-label">Ride Date</span>
+      <time class="hero-date" datetime="2026-06-06">June 6, 2026</time>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    width: 100%;
+    height: 100svh;
+    min-height: 480px;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+  }
+
+  @supports not (height: 100svh) {
+    .hero {
+      height: 100vh;
+    }
+  }
+
+  .hero-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      rgba(13, 26, 13, 0.85) 0%,
+      rgba(13, 26, 13, 0.4) 50%,
+      rgba(13, 26, 13, 0.1) 100%
+    );
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    padding: 2rem;
+    max-width: 64rem;
+    margin: 0 auto;
+  }
+
+  .hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw + 0.5rem, 4.5rem);
+    font-weight: 800;
+    color: var(--color-amber-500);
+    text-shadow: var(--shadow-text);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    line-height: 1.1;
+    margin: 0;
+  }
+
+  .hero-tagline {
+    font-family: var(--font-mono);
+    font-size: clamp(0.875rem, 2vw, 1.25rem);
+    color: var(--color-cream-100);
+    margin-top: 0.5rem;
+    max-width: 36rem;
+  }
+
+  .hero-date-block {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+  }
+
+  .hero-date-label {
+    font-family: var(--font-display);
+    font-size: clamp(0.625rem, 1.5vw, 0.75rem);
+    color: var(--color-cream-200);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+  }
+
+  .hero-date {
+    font-family: var(--font-display);
+    font-size: clamp(1.25rem, 3vw, 2rem);
+    font-weight: 700;
+    color: var(--color-gold-500);
+    letter-spacing: 0.08em;
+  }
+</style>
