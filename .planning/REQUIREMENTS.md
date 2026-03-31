@@ -110,9 +110,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PHOTO-01 | Phase 8 | Pending |
 | PHOTO-02 | Phase 8 | Pending |
 | PHOTO-03 | Phase 9 | Pending |
-| PHOTO-04 | Phase 7 | Pending |
+| PHOTO-04 | Phase 7 | Complete |
 | PHOTO-05 | Phase 9 | Pending |
-| PHOTO-06 | Phase 7 | Pending |
+| PHOTO-06 | Phase 8 | Pending |
 | CONT-01 | Phase 10 | Pending |
 | CONT-02 | Phase 10 | Pending |
 | CONT-03 | Phase 10 | Pending |
@@ -126,8 +126,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | BUILD-01 | Phase 2 | Complete |
 | BUILD-02 | Phase 2 | Complete |
 | BUILD-03 | Phase 2 | Complete |
-| BUILD-04 | Phase 7 | Pending |
-| BUILD-05 | Phase 7 | Pending |
+| BUILD-04 | Phase 7 | Complete |
+| BUILD-05 | Phase 7 | Complete |
 | BUILD-06 | Phase 2 | Complete |
 | BUILD-07 | Phase 2 | Complete |
 | BUILD-08 | Phase 1 | Complete |
@@ -139,4 +139,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-03-30*
-*Last updated: 2026-03-30 after Phase 6 execution — MAP-04 complete*
+*Last updated: 2026-03-31 after Phase 7 execution — BUILD-04, BUILD-05, PHOTO-04 complete*

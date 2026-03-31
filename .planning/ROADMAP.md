@@ -18,7 +18,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 4: Elevation Profile** - Chart.js island with elevation vs. distance, lazy-load, and responsive heights
 - [x] **Phase 5: Map-Elevation Sync** - CrosshairCustomEvent bus, gravel sector overlays on map and chart
 - [x] **Phase 6: Restock Markers** - Restock point markers on map with name and mileage labels
-- [ ] **Phase 7: Photo Pipeline** - sharp thumbnail generation, photo matching script, and photos.json
+- [x] **Phase 7: Photo Pipeline** - sharp thumbnail generation, photo matching script, and photos.json
 - [ ] **Phase 8: Photo Gallery** - PhotoSwipe lightbox with thumbnail grid
 - [ ] **Phase 9: Photo Markers and Admin** - Geotagged map markers, cluster layer, and manifest admin UI
 - [ ] **Phase 10: Content, Narrative, and Visual Identity** - Hiawatha intro, route stats, donate CTA, badge h1, topographic patterns
@@ -123,12 +123,11 @@ Plans:
 ### Phase 7: Photo Pipeline
 **Goal**: Running the build pipeline produces 400px WebP thumbnails for all source images and a validated photos.json mapping each image to a mileage position — ready for the gallery and map markers
 **Depends on**: Phase 2
-**Requirements**: BUILD-04, BUILD-05, PHOTO-04, PHOTO-06
+**Requirements**: BUILD-04, BUILD-05, PHOTO-04
 **Success Criteria** (what must be TRUE):
   1. `npm run pipeline` generates a 400px-wide WebP thumbnail at 80% quality for every source image in `images/`
   2. Thumbnails are written to `public/thumbs/` and load correctly in the browser
   3. `photos.json` exists in `public/data/` with entries containing filename, mileage, and thumbnail path for each photo
-  4. Gallery thumbnail `<img>` elements have `loading="lazy"` and `decoding="async"` attributes
 **Plans**: 2 plans
 
 Plans:
@@ -138,7 +137,7 @@ Plans:
 ### Phase 8: Photo Gallery
 **Goal**: Visitors can browse all route photos in a responsive grid and open any photo in a full-screen PhotoSwipe lightbox with swipe and keyboard navigation
 **Depends on**: Phase 7
-**Requirements**: PHOTO-01, PHOTO-02
+**Requirements**: PHOTO-01, PHOTO-02, PHOTO-06
 **Success Criteria** (what must be TRUE):
   1. The photo gallery shows all route photos as a 2-column grid on mobile, 3-column on tablet, and 4-column on desktop
   2. Clicking any thumbnail opens the PhotoSwipe lightbox with the full-resolution image
@@ -219,7 +218,7 @@ Note: Phase 3 and Phase 4 can proceed in parallel after Phase 2 completes. Phase
 | 4. Elevation Profile | 2/2 | Complete | 2026-03-30 |
 | 5. Map-Elevation Sync | 4/4 | Complete | 2026-03-30 |
 | 6. Restock Markers | 1/1 | Complete | 2026-03-30 |
-| 7. Photo Pipeline | 0/2 | Not started | - |
+| 7. Photo Pipeline | 2/2 | Complete | 2026-03-31 |
 | 8. Photo Gallery | 0/2 | Not started | - |
 | 9. Photo Markers and Admin | 0/2 | Not started | - |
 | 10. Content, Narrative, and Visual Identity | 0/6 | Not started | - |
@@ -227,4 +226,4 @@ Note: Phase 3 and Phase 4 can proceed in parallel after Phase 2 completes. Phase
 
 ---
 *Roadmap created: 2026-03-30*
-*Last updated: 2026-03-31 after Phase 7 planning*
+*Last updated: 2026-03-31 after Phase 7 execution*
