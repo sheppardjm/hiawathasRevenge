@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-03-30)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive showcase that inspires them to ride it and support MBTN.
-**Current focus:** Phase 7 complete — photo pipeline fully integrated; 54 thumbnails in public/thumbs/, photos.json ready for Phase 9 manifest; Phase 8 next
+**Current focus:** Phase 8 in progress — PhotoGallery.astro component complete; PhotoSwipe 5.4.4 installed; gallery wired into index.astro
 
 ## Current Position
 
-Phase: 7 of 11 (Photo Pipeline) — Phase complete
-Plan: 2 of 2 in current phase (2 complete)
-Status: Phase complete — ready for Phase 8
-Last activity: 2026-03-31 — Completed 07-02 (match-photos.js + pipeline.js 4-step orchestration)
+Phase: 8 of 11 (Photo Gallery) — In progress
+Plan: 1 of 2 in current phase (1 complete)
+Status: In progress
+Last activity: 2026-03-31 — Completed 08-01 (PhotoGallery.astro + PhotoSwipe 5.4.4 install)
 
-Progress: [█████░░░░░] 50% (16/32 plans complete)
+Progress: [█████░░░░░] 53% (17/32 plans complete)
 
 ## Performance Metrics
 
@@ -34,9 +34,10 @@ Progress: [█████░░░░░] 50% (16/32 plans complete)
 | 05-map-elevation-sync | 4/4 complete | ~7 min | ~2 min |
 | 06-restock-markers | 1/1 complete | ~2 min | ~2 min |
 | 07-photo-pipeline | 2/2 complete | ~6 min | ~3 min |
+| 08-photo-gallery | 1/2 complete | ~2 min | ~2 min |
 
 **Recent Trend:**
-- Last 5 plans: 05-01 (~3 min), 06-01 (~2 min), 07-01 (~2 min), 07-02 (~4 min)
+- Last 5 plans: 06-01 (~2 min), 07-01 (~2 min), 07-02 (~4 min), 08-01 (~2 min)
 - Trend: On track; pure code plans run fast (~2-4 min)
 
 *Updated after each plan completion*
@@ -103,6 +104,10 @@ Recent decisions affecting current work:
 - 07-02: match-photos.js thumb derivation must match generate-thumbnails.js exactly: basename.replace(/ /g, '_') + '.webp'
 - 07-02: snapByMileage copied verbatim from resolve-annotations.js — keeps scripts self-contained, consistent snapping
 - 07-02: match-photos runs last in pipeline — conceptually depends on thumbnails; requires route-data.json from parse-gpx
+- 08-01: PhotoSwipe DOM-connected gallery via anchor elements (not dataSource array) — correct for static rendering
+- 08-01: data-cropped=true required on anchor elements — thumbnails use object-fit:cover so PhotoSwipe zoom origin calculation needs crop hint
+- 08-01: CSS import in script block for photoswipe/style.css — Vite bundles into page CSS at build time; not an error
+- 08-01: if (gallery) guard prevents errors when photos.json is empty (no #photo-gallery div rendered)
 
 ### Pending Todos
 
@@ -114,6 +119,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-31
-Stopped at: Phase 7 complete — 07-02 (match-photos.js + pipeline.js 4-step orchestration) done; ready for Phase 8
+Last session: 2026-03-31T14:56:45Z
+Stopped at: Completed 08-01 (PhotoGallery.astro + PhotoSwipe 5.4.4 install + index.astro wiring)
 Resume file: None
