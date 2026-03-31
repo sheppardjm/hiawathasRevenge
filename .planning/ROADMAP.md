@@ -129,11 +129,11 @@ Plans:
   2. Thumbnails are written to `public/thumbs/` and load correctly in the browser
   3. `photos.json` exists in `public/data/` with entries containing filename, mileage, and thumbnail path for each photo
   4. Gallery thumbnail `<img>` elements have `loading="lazy"` and `decoding="async"` attributes
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 07-01: Install sharp 0.34.x as devDependency; write `scripts/generate-thumbnails.js` producing 400px WebP at 80% quality in `public/thumbs/`
-- [ ] 07-02: Write `scripts/match-photos.js` — read photo manifest JSON, validate paths, snap mileage to route coordinates, output photos.json; integrate into pipeline
+- [ ] 07-01-PLAN.md — Install sharp 0.34.x; create generate-thumbnails.js producing 400px WebP at 80% quality in public/thumbs/
+- [ ] 07-02-PLAN.md — Create match-photos.js for manifest-to-photos.json generation; integrate both scripts into pipeline.js
 
 ### Phase 8: Photo Gallery
 **Goal**: Visitors can browse all route photos in a responsive grid and open any photo in a full-screen PhotoSwipe lightbox with swipe and keyboard navigation
@@ -227,4 +227,4 @@ Note: Phase 3 and Phase 4 can proceed in parallel after Phase 2 completes. Phase
 
 ---
 *Roadmap created: 2026-03-30*
-*Last updated: 2026-03-30 after Phase 6 execution*
+*Last updated: 2026-03-31 after Phase 7 planning*
