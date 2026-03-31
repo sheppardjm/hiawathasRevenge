@@ -117,4 +117,13 @@
   .leaflet-popup.restock-popup .leaflet-popup-close-button {
     color: var(--color-cream-200);
   }
+
+  /* Topographic contour divider — decorative wilderness pattern */
+  .topo-divider {
+    height: 60px;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="60"><path d="M0 20 Q50 8 100 20 Q150 32 200 20 Q250 8 300 20 Q350 32 400 20" stroke="%233d6b3d" stroke-width="1.5" fill="none"/><path d="M0 35 Q60 22 120 35 Q180 48 240 35 Q300 22 360 35 Q400 42 400 42" stroke="%233d6b3d" stroke-width="1" fill="none" opacity="0.6"/><path d="M0 50 Q80 38 160 50 Q240 62 320 50 Q380 42 400 50" stroke="%233d6b3d" stroke-width="0.75" fill="none" opacity="0.35"/></svg>');
+    background-repeat: repeat-x;
+    background-size: 400px 60px;
+    opacity: 0.7;
+  }
 }
