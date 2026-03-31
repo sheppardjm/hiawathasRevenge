@@ -125,6 +125,21 @@
       zIndexOffset: 1000
     });
 
+    // Fetch annotations and draw gravel sector overlays
+    // Sectors added AFTER routeLine so they render on top of the base dark green polyline
+    const annotations = await fetch('/data/annotations.json').then(r => r.json());
+    const sectors = annotations.filter(a => a.type === 'sector');
+
+    for (const sector of sectors) {
+      // slice(startIdx, endIdx + 1) — JavaScript slice excludes end index; +1 prevents off-by-one gap
+      const sectorPts = latlngs.slice(sector.startIdx, sector.endIdx + 1);
+      L.polyline(sectorPts, {
+        color: '#c8973e',
+        weight: 5,
+        opacity: 0.85
+      }).addTo(map);
+    }
+
     // Auto-fit map to the full route bounds
     map.fitBounds(routeLine.getBounds(), { padding: [20, 20] });
 
