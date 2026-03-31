@@ -23,8 +23,11 @@
       Decimation
     } = await import('chart.js');
 
+    // Dynamic import of chartjs-plugin-annotation for crosshair line
+    const { default: annotationPlugin } = await import('chartjs-plugin-annotation');
+
     // Register only what we use — avoids pulling in CategoryScale, BarController, etc.
-    Chart.register(LineController, LineElement, PointElement, LinearScale, Filler, Tooltip, Decimation);
+    Chart.register(LineController, LineElement, PointElement, LinearScale, Filler, Tooltip, Decimation, annotationPlugin);
 
     // Fetch route data — same source as RouteMap.astro
     const routeData = await fetch('/data/route-data.json').then(r => r.json());
@@ -37,7 +40,7 @@
     }));
 
     const canvas = document.getElementById('elevation-chart');
-    new Chart(canvas, {
+    const chart = new Chart(canvas, {
       type: 'line',
       data: {
         datasets: [{
@@ -59,6 +62,20 @@
         // maintainAspectRatio: false — CSS container controls height (140px/180px)
         maintainAspectRatio: false,
         animation: false,
+        onHover(event, _activeElements, chart) {
+          const pos = Chart.helpers.getRelativePosition(event, chart);
+          const miles = chart.scales.x.getValueForPixel(pos.x);
+          if (miles == null) return;
+          // Clamp to valid range to prevent snapping to route start/end near axis labels
+          const clamped = Math.max(0, Math.min(data[data.length - 1].x, miles));
+          // Dispatch CustomEvent for RouteMap crosshair sync
+          window.dispatchEvent(new CustomEvent('elevation:hover', { detail: { miles: clamped } }));
+          // Update crosshair line position
+          chart.options.plugins.annotation.annotations.crosshair.xMin = clamped;
+          chart.options.plugins.annotation.annotations.crosshair.xMax = clamped;
+          chart.options.plugins.annotation.annotations.crosshair.display = true;
+          chart.update('none');
+        },
         plugins: {
           legend: { display: false },
           tooltip: {
@@ -74,6 +91,19 @@
             algorithm: 'lttb',
             samples: 300,
             threshold: 400
+          },
+          annotation: {
+            annotations: {
+              crosshair: {
+                type: 'line',
+                xMin: 0,
+                xMax: 0,
+                display: false,
+                borderColor: 'rgba(200, 151, 62, 0.6)',
+                borderWidth: 1,
+                borderDash: [4, 4]
+              }
+            }
           }
         },
         scales: {
@@ -94,6 +124,13 @@
           }
         }
       }
+    });
+
+    // Hide crosshair line and notify RouteMap when cursor leaves the chart
+    canvas.addEventListener('mouseleave', () => {
+      window.dispatchEvent(new CustomEvent('elevation:leave'));
+      chart.options.plugins.annotation.annotations.crosshair.display = false;
+      chart.update('none');
     });
   } // end initChart
 
