@@ -20,7 +20,7 @@
 **Milestone Goal:** Elevate the site from functional showcase to immersive editorial experience with Ojibwe-inspired design, rewritten narrative, dramatic hero section, and masonry gallery.
 
 - [x] **Phase 12: Design Foundation** - Color tokens, hex tokenization, and layout restructure that unblock all visual work
-- [ ] **Phase 13: Hero & Event Date** - Full-width hero section with dramatic route photo and prominent event date
+- [x] **Phase 13: Hero & Event Date** - Full-width hero section with dramatic route photo and prominent event date
 - [ ] **Phase 14: Ojibwe Design System** - Woodland floral beadwork-inspired decorative elements with cultural attribution
 - [ ] **Phase 15: Editorial Content** - Rewritten Hiawatha narrative and photo-integrated route explainer
 - [ ] **Phase 16: Masonry Gallery** - Redesigned photo gallery with editorial sizing and featured photos
@@ -49,7 +49,9 @@ Plans:
   2. Hero image loads with fetchpriority="high" and responsive srcset -- LCP remains under 2.5s on simulated 4G
   3. Event date "June 6, 2026" is visible without scrolling on desktop (1280px) and within the first viewport on mobile (375px)
   4. Hero text overlay is readable at 375px, 768px, and 1280px viewports with no text clipping or overflow
-**Plans**: TBD
+**Plans:** 1 plan
+Plans:
+- [x] 13-01-PLAN.md — Select hero photo, create HeroSection.astro with LCP-optimized image + gradient overlay + fluid typography + event date, wire into index.astro
 
 ### Phase 14: Ojibwe Design System
 **Goal**: Ojibwe woodland floral beadwork-inspired decorative elements enrich the visual identity with proper cultural attribution
@@ -92,7 +94,7 @@ Phases 12 through 16 execute in numeric order. Phase 15 and Phase 16 may execute
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
 | 12. Design Foundation | v1.1 | 2/2 | Complete | 2026-03-31 |
-| 13. Hero & Event Date | v1.1 | 0/TBD | Not started | - |
+| 13. Hero & Event Date | v1.1 | 1/1 | Complete | 2026-03-31 |
 | 14. Ojibwe Design System | v1.1 | 0/TBD | Not started | - |
 | 15. Editorial Content | v1.1 | 0/TBD | Not started | - |
 | 16. Masonry Gallery | v1.1 | 0/TBD | Not started | - |

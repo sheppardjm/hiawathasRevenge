@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-03-31)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive showcase that inspires them to ride it and support MBTN.
-**Current focus:** v1.1 Visual Redesign -- Phase 13 (Hero & Event Date)
+**Current focus:** v1.1 Visual Redesign -- Phase 14 (Ojibwe Design System)
 
 ## Current Position
 
-Phase: 12 (Design Foundation) -- COMPLETE
-Plan: All plans complete (2/2)
+Phase: 13 (Hero & Event Date) -- COMPLETE
+Plan: All plans complete (1/1)
 Status: Phase verified and complete
-Last activity: 2026-03-31 -- Phase 12 verified (3/3 must-haves passed)
+Last activity: 2026-03-31 -- Phase 13 verified (4/4 must-haves passed)
 
-Progress: [██░░░░░░░░] 20% (v1.1: 1/5 phases complete)
+Progress: [████░░░░░░] 40% (v1.1: 2/5 phases complete)
 
 ## Performance Metrics
 
@@ -24,8 +24,8 @@ Progress: [██░░░░░░░░] 20% (v1.1: 1/5 phases complete)
 - Timeline: 2 days (2026-03-30 -> 2026-03-31)
 
 **v1.1:**
-- Plans executed: 2 (12-01, 12-02)
-- Phases complete: 1 (Phase 12)
+- Plans executed: 3 (12-01, 12-02, 13-01)
+- Phases complete: 2 (Phase 12, Phase 13)
 
 ## Accumulated Context
 
@@ -43,8 +43,9 @@ v1.1 decisions made:
 | getCSSColor() placed inside init functions (not module scope) | getComputedStyle must run after document ready; module scope executes at parse time | 12-02 |
 | rgba(255,255,255,0.08) grid lines kept hardcoded | Generic "subtle grid on dark bg" semantic, not a theme color; tokenizing adds complexity without value | 12-02 |
 
-v1.1 decisions pending:
-- Hero photo selection needed before Phase 13 implementation
+| Forest creek photo selected as hero background | User chose option-creek over POV, cyclists, lake; provides National Forest identity | 13-01 |
+| Badge overlaid on hero section instead of separate section | User requested badge on hero image; consolidated layout | 13-01 |
+| CSS Grid stacking (grid-area: 1/1) for badge overlay | Absolute positioning failed with Astro scoped styles | 13-01 |
 
 ### Pending Todos
 
@@ -53,11 +54,11 @@ None.
 ### Blockers/Concerns
 
 - Ojibwe community consultation recommended for Phase 14 (cultural sensitivity review)
-- Hero photo must be selected from 54-photo library before Phase 13
+- Hero photo selected: forest creek (irrVhAXH...2048x1536.jpg) — Phase 13 complete
 - Project requires Node >=22.12.0 (Astro 6 requirement) — use Volta (`/Users/Sheppardjm/.volta/bin/node`) or PATH="/Users/Sheppardjm/.volta/bin:$PATH" npm run build
 
 ## Session Continuity
 
 Last session: 2026-03-31
-Stopped at: Phase 12 complete, ready for Phase 13
+Stopped at: Phase 13 complete, ready for Phase 14
 Resume file: None

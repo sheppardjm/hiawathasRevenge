@@ -17,10 +17,10 @@ Requirements for visual redesign milestone. Each maps to roadmap phases.
 
 ### Hero & Event
 
-- [ ] **HERO-01**: Full-width hero section displays a dramatic route photo as background with overlay text (site name, tagline)
-- [ ] **HERO-02**: Hero image is optimized for LCP — uses `<img>` with fetchpriority="high", appropriate srcset, and no lazy-loading
-- [ ] **HERO-03**: Event date (June 6, 2026) is prominently displayed in or near the hero section, visible without scrolling on desktop
-- [ ] **HERO-04**: Hero section is responsive — full viewport width on all breakpoints with readable text overlay at 375px, 768px, and 1280px
+- [x] **HERO-01**: Full-width hero section displays a dramatic route photo as background with overlay text (site name, tagline)
+- [x] **HERO-02**: Hero image is optimized for LCP — uses `<img>` with fetchpriority="high", appropriate srcset, and no lazy-loading
+- [x] **HERO-03**: Event date (June 6, 2026) is prominently displayed in or near the hero section, visible without scrolling on desktop
+- [x] **HERO-04**: Hero section is responsive — full viewport width on all breakpoints with readable text overlay at 375px, 768px, and 1280px
 
 ### Content & Narrative
 
@@ -72,10 +72,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DSN-03 | Phase 14: Ojibwe Design System | Pending |
 | DSN-04 | Phase 14: Ojibwe Design System | Pending |
 | DSN-05 | Phase 12: Design Foundation | Complete |
-| HERO-01 | Phase 13: Hero & Event Date | Pending |
-| HERO-02 | Phase 13: Hero & Event Date | Pending |
-| HERO-03 | Phase 13: Hero & Event Date | Pending |
-| HERO-04 | Phase 13: Hero & Event Date | Pending |
+| HERO-01 | Phase 13: Hero & Event Date | Complete |
+| HERO-02 | Phase 13: Hero & Event Date | Complete |
+| HERO-03 | Phase 13: Hero & Event Date | Complete |
+| HERO-04 | Phase 13: Hero & Event Date | Complete |
 | NARR-01 | Phase 15: Editorial Content | Pending |
 | NARR-02 | Phase 15: Editorial Content | Pending |
 | NARR-03 | Phase 15: Editorial Content | Pending |
@@ -94,4 +94,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-03-31*
-*Last updated: 2026-03-31 after roadmap creation*
+*Last updated: 2026-03-31 after Phase 13 completion*
