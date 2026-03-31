@@ -61,7 +61,9 @@ Plans:
   1. SVG decorative elements (borders, dividers, motifs) inspired by Ojibwe woodland floral beadwork patterns appear as section dividers and ornamental accents, replacing or supplementing existing topo-divider patterns
   2. Cultural attribution for the Ojibwe woodland floral design tradition is visible in the site footer or a design credits section, accessible from any page
   3. All decorative SVG elements use role="presentation" aria-hidden="true" and do not interfere with screen reader navigation
-**Plans**: TBD
+**Plans:** 1 plan
+Plans:
+- [ ] 14-01-PLAN.md — Create FloralDivider.astro with Ojibwe-inspired SVG motifs, replace topo-dividers in index.astro, add cultural attribution to footer
 
 ### Phase 15: Editorial Content
 **Goal**: Visitors read a witty, sophisticated narrative about Longfellow's Hiawatha blunder and explore the route segment-by-segment with integrated photography
