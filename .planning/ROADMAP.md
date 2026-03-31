@@ -75,7 +75,10 @@ Plans:
   3. Content sections use editorial layout -- photos float alongside text with shape-outside wrapping or grid-area placement, not separated into distinct photo/text blocks
   4. Route explainer renders over a topographic background texture, visually distinct from other content sections
   5. Editorial layouts are responsive -- readable single-column flow on mobile (375px), photo-text layouts on tablet (768px) and desktop (1280px)
-**Plans**: TBD
+**Plans:** 2 plans
+Plans:
+- [ ] 15-01-PLAN.md — Create HiawathaExplainer.astro with editorial narrative, wire into index.astro
+- [ ] 15-02-PLAN.md — Create RouteExplainer.astro with segments, photos, star ratings, topo background, wire into index.astro
 
 ### Phase 16: Masonry Gallery
 **Goal**: Photo gallery showcases route photography with editorial sizing, featured hero images, and natural aspect ratios instead of uniform square crops
