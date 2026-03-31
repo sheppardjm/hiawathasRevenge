@@ -14,6 +14,11 @@
     position: relative;
     z-index: 0;
   }
+
+  :global(.restock-marker) {
+    background: transparent !important;
+    border: none !important;
+  }
 </style>
 
 <script>
@@ -145,6 +150,30 @@
         weight: 5,
         opacity: 0.85
       }).addTo(map);
+    }
+
+    // Restock point markers — clickable amber circles with name/mileage popups
+    const restocks = annotations.filter(a => a.type === 'restock');
+
+    for (const stop of restocks) {
+      const restockIcon = L.divIcon({
+        className: 'restock-marker',
+        html: '<div style="width:14px;height:14px;background:#c8973e;border:2px solid #1a2e1a;border-radius:50%;box-shadow:0 1px 3px rgba(0,0,0,0.4);"></div>',
+        iconSize: [18, 18],
+        iconAnchor: [9, 9],
+        popupAnchor: [0, -12]
+      });
+
+      L.marker([stop.lat, stop.lon], {
+        icon: restockIcon,
+        title: stop.name,
+        zIndexOffset: 500
+      })
+        .bindPopup(
+          `<strong>${stop.name}</strong><br>Mile ${stop.mile}`,
+          { className: 'restock-popup' }
+        )
+        .addTo(map);
     }
 
     // Auto-fit map to the full route bounds
