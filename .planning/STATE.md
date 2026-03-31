@@ -133,6 +133,9 @@ Recent decisions affecting current work:
 - 10-03: DonateCallout rendered twice in index.astro (above-fold between hero/narrative and in Support section) — no state, safe to duplicate
 - 10-03: download="HiawathasRevenge.gpx" clean filename on GPX anchor — source file uses underscores, download attribute gives riders a clean brandable filename
 - 10-03: Page assembly pattern: all data flows through components; index.astro contains only layout and narrative prose
+- 11-01: No !important needed for Leaflet button size overrides — @layer base already wins over @layer leaflet in declared cascade layer order
+- 11-01: inline-flex replaces inline-block on .donate-button and .gpx-download — required for align-items: center to work; min-height: 52px not height: 52px preserves wrapping
+- 11-01: font-size: 1.25rem on .leaflet-bar a — scales zoom +/- glyphs proportionally with enlarged 52px button
 - 11-04: Removing @astrojs/node adapter and prerender=false is sufficient for flat static build — Astro static builds skip API routes; admin page emits meta-refresh redirect in dist/
 - 11-04: save-manifest.ts POST endpoint only runs on dev server in static mode — no additional guard needed beyond existing import.meta.env.PROD check
 
@@ -147,5 +150,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-31
-Stopped at: Completed 11-03-PLAN.md — RouteStats mobile-first responsive grid (1fr default, 640px breakpoint); 11-03-SUMMARY.md created
+Stopped at: Completed 11-01-PLAN.md — 52px touch targets on Leaflet buttons, PhotoSwipe nav, donate button, GPX link; Phase 11 complete (all 4 plans done); ALL PHASES COMPLETE
 Resume file: None
