@@ -115,10 +115,10 @@ Plans:
   1. Each restock point defined in annotations.json appears as a distinct marker on the map at its correct GPS coordinate
   2. Clicking or hovering a restock marker shows its name and mileage label in a popup or tooltip
   3. Restock markers are visually distinct from photo markers and route path
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 06-01: Add restock point marker layer to RouteMap.astro using L.marker with L.divIcon; bind popup with name and mileage from annotations.json
+- [ ] 06-01-PLAN.md — Add restock point markers with forest-themed popups to RouteMap.astro and global.css
 
 ### Phase 7: Photo Pipeline
 **Goal**: Running the build pipeline produces 400px WebP thumbnails for all source images and a validated photos.json mapping each image to a mileage position — ready for the gallery and map markers
@@ -218,7 +218,7 @@ Note: Phase 3 and Phase 4 can proceed in parallel after Phase 2 completes. Phase
 | 3. Route Map | 2/2 | Complete | 2026-03-30 |
 | 4. Elevation Profile | 2/2 | Complete | 2026-03-30 |
 | 5. Map-Elevation Sync | 4/4 | Complete | 2026-03-30 |
-| 6. Restock Markers | 0/1 | Not started | - |
+| 6. Restock Markers | 0/1 | Planned | - |
 | 7. Photo Pipeline | 0/2 | Not started | - |
 | 8. Photo Gallery | 0/2 | Not started | - |
 | 9. Photo Markers and Admin | 0/2 | Not started | - |
