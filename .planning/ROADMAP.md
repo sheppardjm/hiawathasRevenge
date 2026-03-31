@@ -21,7 +21,7 @@
 
 - [x] **Phase 12: Design Foundation** - Color tokens, hex tokenization, and layout restructure that unblock all visual work
 - [x] **Phase 13: Hero & Event Date** - Full-width hero section with dramatic route photo and prominent event date
-- [ ] **Phase 14: Ojibwe Design System** - Woodland floral beadwork-inspired decorative elements with cultural attribution
+- [x] **Phase 14: Ojibwe Design System** - Woodland floral beadwork-inspired decorative elements with cultural attribution
 - [ ] **Phase 15: Editorial Content** - Rewritten Hiawatha narrative and photo-integrated route explainer
 - [ ] **Phase 16: Masonry Gallery** - Redesigned photo gallery with editorial sizing and featured photos
 
@@ -63,7 +63,7 @@ Plans:
   3. All decorative SVG elements use role="presentation" aria-hidden="true" and do not interfere with screen reader navigation
 **Plans:** 1 plan
 Plans:
-- [ ] 14-01-PLAN.md — Create FloralDivider.astro with Ojibwe-inspired SVG motifs, replace topo-dividers in index.astro, add cultural attribution to footer
+- [x] 14-01-PLAN.md — Create FloralDivider.astro with Ojibwe-inspired SVG motifs, replace topo-dividers in index.astro, add cultural attribution to footer
 
 ### Phase 15: Editorial Content
 **Goal**: Visitors read a witty, sophisticated narrative about Longfellow's Hiawatha blunder and explore the route segment-by-segment with integrated photography
@@ -97,7 +97,7 @@ Phases 12 through 16 execute in numeric order. Phase 15 and Phase 16 may execute
 |-------|-----------|----------------|--------|-----------|
 | 12. Design Foundation | v1.1 | 2/2 | Complete | 2026-03-31 |
 | 13. Hero & Event Date | v1.1 | 1/1 | Complete | 2026-03-31 |
-| 14. Ojibwe Design System | v1.1 | 0/TBD | Not started | - |
+| 14. Ojibwe Design System | v1.1 | 1/1 | Complete | 2026-03-31 |
 | 15. Editorial Content | v1.1 | 0/TBD | Not started | - |
 | 16. Masonry Gallery | v1.1 | 0/TBD | Not started | - |
 

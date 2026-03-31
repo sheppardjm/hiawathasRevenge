@@ -11,8 +11,8 @@ Requirements for visual redesign milestone. Each maps to roadmap phases.
 
 - [ ] **DSN-01**: Color palette evolves from pure Forest Service green/amber to warmer Ojibwe-inspired tones (berry, gold, lake) while maintaining WCAG AA contrast ratios
 - [ ] **DSN-02**: Hardcoded hex color values in RouteMap.astro and ElevationProfile.astro JavaScript are replaced with CSS custom property references so palette changes propagate automatically
-- [ ] **DSN-03**: Ojibwe woodland floral beadwork-inspired SVG decorative elements (borders, dividers, motifs) replace or supplement existing topo-divider patterns
-- [ ] **DSN-04**: Cultural attribution for Ojibwe woodland floral design tradition appears in site footer or design credits section
+- [x] **DSN-03**: Ojibwe woodland floral beadwork-inspired SVG decorative elements (borders, dividers, motifs) replace or supplement existing topo-divider patterns
+- [x] **DSN-04**: Cultural attribution for Ojibwe woodland floral design tradition appears in site footer or design credits section
 - [ ] **DSN-05**: BaseLayout.astro container width constraint is removed from `<main>` and moved to individual sections, enabling full-width breakout sections
 
 ### Hero & Event
@@ -69,8 +69,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 |-------------|-------|--------|
 | DSN-01 | Phase 12: Design Foundation | Complete |
 | DSN-02 | Phase 12: Design Foundation | Complete |
-| DSN-03 | Phase 14: Ojibwe Design System | Pending |
-| DSN-04 | Phase 14: Ojibwe Design System | Pending |
+| DSN-03 | Phase 14: Ojibwe Design System | Complete |
+| DSN-04 | Phase 14: Ojibwe Design System | Complete |
 | DSN-05 | Phase 12: Design Foundation | Complete |
 | HERO-01 | Phase 13: Hero & Event Date | Complete |
 | HERO-02 | Phase 13: Hero & Event Date | Complete |
@@ -94,4 +94,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-03-31*
-*Last updated: 2026-03-31 after Phase 13 completion*
+*Last updated: 2026-03-31 after Phase 14 completion*
