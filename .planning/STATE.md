@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-03-30)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive showcase that inspires them to ride it and support MBTN.
-**Current focus:** Phase 6 complete — amber restock markers on map with forest-themed click popups; ready for Phase 7
+**Current focus:** Phase 7 in progress — sharp installed, 54 WebP thumbnails generated in public/thumbs/; Plan 01 complete, Plan 02 (match-photos) next
 
 ## Current Position
 
-Phase: 6 of 11 (Restock Markers) — Phase complete
-Plan: 1 of 1 in current phase (1 complete)
-Status: Phase complete — ready for Phase 7
-Last activity: 2026-03-30 — Completed Phase 6 (restock markers with forest-themed popups)
+Phase: 7 of 11 (Photo Pipeline) — In progress
+Plan: 1 of 2 in current phase (1 complete)
+Status: In progress — Plan 01 complete, ready for Plan 02 (match-photos.js)
+Last activity: 2026-03-31 — Completed 07-01 (sharp install + generate-thumbnails.js + 54 WebP thumbnails)
 
-Progress: [█████░░░░░] 44% (14/32 plans complete)
+Progress: [█████░░░░░] 47% (15/32 plans complete)
 
 ## Performance Metrics
 
@@ -33,10 +33,11 @@ Progress: [█████░░░░░] 44% (14/32 plans complete)
 | 04-elevation-profile | 2/2 complete | ~7 min | ~3.5 min |
 | 05-map-elevation-sync | 4/4 complete | ~7 min | ~2 min |
 | 06-restock-markers | 1/1 complete | ~2 min | ~2 min |
+| 07-photo-pipeline | 1/2 complete | ~2 min | ~2 min |
 
 **Recent Trend:**
-- Last 5 plans: 03-02 (~5 min), 04-01 (2 min), 04-02 (~5 min checkpoint), 05-01 (~3 min)
-- Trend: On track; pure code plans run fast (~3 min); visual checkpoint plans take longer
+- Last 5 plans: 04-02 (~5 min checkpoint), 05-01 (~3 min), 06-01 (~2 min), 07-01 (~2 min)
+- Trend: On track; pure code plans run fast (~2-3 min)
 
 *Updated after each plan completion*
 
@@ -94,6 +95,10 @@ Recent decisions affecting current work:
 - 06-01: stop.mile field (not stop.mi) — this project's annotation schema uses 'mile', mkUltra uses 'mi'
 - 06-01: zIndexOffset layering pattern: polylines(0) < restock markers(500) < bike crosshair(1000)
 - 06-01: .leaflet-popup.restock-popup compound selector — className in bindPopup adds class to .leaflet-popup, not .leaflet-popup-content-wrapper
+- 07-01: sharp installed as devDependency only — never import in src/ to avoid Vite bundling native binaries; only used in build scripts/ via execFileSync
+- 07-01: autoOrient() before resize() in sharp chain — portrait 1536x2048 sources produce 400x533 thumbnails (not 400x300 landscape)
+- 07-01: Space-to-underscore filename normalization: basename.replace(/ /g, '_') + '.webp' — match-photos.js must use identical derivation for thumb field in photos.json
+- 07-01: readdirSync without recursion naturally excludes images/inspiration/ subdirectory
 
 ### Pending Todos
 
@@ -105,6 +110,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-30
-Stopped at: Phase 6 complete — restock markers verified; ready for Phase 7
+Last session: 2026-03-31
+Stopped at: Phase 7 Plan 01 complete — sharp installed, 54 WebP thumbnails generated; ready for Plan 02 (match-photos.js)
 Resume file: None
