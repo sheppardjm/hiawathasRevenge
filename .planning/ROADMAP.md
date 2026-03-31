@@ -35,7 +35,10 @@
   1. New color tokens (berry, gold, lake, moss families) are available as Tailwind utilities and CSS custom properties, all passing WCAG AA contrast against dark backgrounds
   2. Zero hardcoded hex color values remain in RouteMap.astro and ElevationProfile.astro JavaScript -- all colors reference CSS custom properties via getComputedStyle()
   3. BaseLayout.astro no longer constrains main content to max-w-4xl; individual sections control their own widths, and existing page layout is visually unchanged
-**Plans**: TBD
+**Plans:** 2 plans
+Plans:
+- [ ] 12-01-PLAN.md — Color tokens (@theme static + 4 new families) and layout restructure (BaseLayout + index.astro)
+- [ ] 12-02-PLAN.md — Replace all hardcoded hex values in RouteMap.astro and ElevationProfile.astro with getCSSColor()
 
 ### Phase 13: Hero & Event Date
 **Goal**: Visitors see a dramatic full-width route photo and the event date immediately upon landing, creating an emotional first impression
@@ -88,7 +91,7 @@ Phases 12 through 16 execute in numeric order. Phase 15 and Phase 16 may execute
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
-| 12. Design Foundation | v1.1 | 0/TBD | Not started | - |
+| 12. Design Foundation | v1.1 | 0/2 | Planned | - |
 | 13. Hero & Event Date | v1.1 | 0/TBD | Not started | - |
 | 14. Ojibwe Design System | v1.1 | 0/TBD | Not started | - |
 | 15. Editorial Content | v1.1 | 0/TBD | Not started | - |
