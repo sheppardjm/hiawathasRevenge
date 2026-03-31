@@ -1,0 +1,125 @@
+---
+import { readFileSync, existsSync, readdirSync } from 'fs';
+import { resolve, basename, extname } from 'path';
+
+export const prerender = false;
+
+if (import.meta.env.PROD) {
+  return Astro.redirect('/');
+}
+
+const manifestPath = resolve(process.cwd(), 'public/data/photos-manifest.json');
+const manifest = existsSync(manifestPath)
+  ? JSON.parse(readFileSync(manifestPath, 'utf8'))
+  : [];
+
+const imagesDir = resolve(process.cwd(), 'images');
+const photoFiles = readdirSync(imagesDir)
+  .filter(f => extname(f).toLowerCase() === '.jpg')
+  .sort();
+
+const mileMap = new Map(manifest.map((m: any) => [m.filename, m.mile]));
+
+function thumbName(filename: string): string {
+  return basename(filename, extname(filename)).replace(/ /g, '_') + '.webp';
+}
+---
+
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Photo Manifest Editor</title>
+  <style>
+    /* Inline styles — admin page is standalone, does not use Tailwind */
+    body { font-family: system-ui, sans-serif; background: #1a2e1a; color: #f5f0e8; padding: 2rem; max-width: 900px; margin: 0 auto; }
+    h1 { color: #c8973e; margin-bottom: 1rem; }
+    .info { color: #e8e0d0; font-size: 0.875rem; margin-bottom: 2rem; }
+    .photo-row { display: flex; align-items: center; gap: 1rem; padding: 0.75rem 0; border-bottom: 1px solid #3d6b3d; }
+    .photo-row img { width: 80px; height: 80px; object-fit: cover; border-radius: 4px; }
+    .photo-row .filename { flex: 1; font-size: 0.75rem; word-break: break-all; color: #e8e0d0; }
+    .photo-row input[type="number"] { width: 80px; padding: 0.25rem 0.5rem; background: #2d4a2d; border: 1px solid #3d6b3d; color: #f5f0e8; border-radius: 4px; font-size: 0.875rem; }
+    .photo-row input[type="number"]:focus { outline: 2px solid #c8973e; border-color: #c8973e; }
+    .actions { position: sticky; bottom: 0; padding: 1rem 0; background: #1a2e1a; border-top: 2px solid #c8973e; margin-top: 1rem; display: flex; gap: 1rem; align-items: center; }
+    button { padding: 0.5rem 1.5rem; background: #c8973e; color: #0d1a0d; border: none; border-radius: 4px; font-weight: 600; cursor: pointer; font-size: 1rem; }
+    button:hover { background: #d4a84e; }
+    .status { font-size: 0.875rem; color: #e8e0d0; }
+    .status.success { color: #8a9a5b; }
+    .status.error { color: #a0522d; }
+  </style>
+</head>
+<body>
+  <h1>Photo Manifest Editor</h1>
+  <p class="info">
+    Assign mile markers to each photo. Save the manifest, then restart
+    <code>npm run dev</code> to regenerate photos.json via the pipeline.
+  </p>
+
+  <div id="photo-list">
+    {photoFiles.map((file) => (
+      <div class="photo-row" data-filename={file}>
+        <img src={`/thumbs/${thumbName(file)}`} alt="" />
+        <span class="filename">{file}</span>
+        <input
+          type="number"
+          step="0.1"
+          min="0"
+          max="105"
+          placeholder="Mile"
+          value={mileMap.has(file) ? mileMap.get(file) : ''}
+          class="mile-input"
+        />
+      </div>
+    ))}
+  </div>
+
+  <div class="actions">
+    <button id="save-btn">Save Manifest</button>
+    <span id="status" class="status"></span>
+  </div>
+
+  <script>
+    const saveBtn = document.getElementById('save-btn');
+    const statusEl = document.getElementById('status');
+
+    saveBtn.addEventListener('click', async () => {
+      const rows = document.querySelectorAll('.photo-row');
+      const manifest = [];
+
+      for (const row of rows) {
+        const filename = row.dataset.filename;
+        const input = row.querySelector('.mile-input');
+        const mile = parseFloat(input.value);
+
+        // Only include photos that have a mileage assigned
+        if (!isNaN(mile)) {
+          manifest.push({ filename, mile });
+        }
+      }
+
+      statusEl.textContent = 'Saving...';
+      statusEl.className = 'status';
+
+      try {
+        const res = await fetch('/api/save-manifest', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(manifest)
+        });
+
+        if (res.ok) {
+          statusEl.textContent = `Saved ${manifest.length} photos. Restart npm run dev to regenerate.`;
+          statusEl.className = 'status success';
+        } else {
+          const data = await res.json();
+          statusEl.textContent = `Error: ${data.error || res.statusText}`;
+          statusEl.className = 'status error';
+        }
+      } catch (err) {
+        statusEl.textContent = `Network error: ${err.message}`;
+        statusEl.className = 'status error';
+      }
+    });
+  </script>
+</body>
+</html>
