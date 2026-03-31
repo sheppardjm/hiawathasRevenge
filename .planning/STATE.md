@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-03-30)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive showcase that inspires them to ride it and support MBTN.
-**Current focus:** Phase 5 gap closure complete — difficulty-based color coding for all 7 gravel sectors (green-gold/amber/rust) on map and elevation chart
+**Current focus:** Phase 6 in progress — amber restock markers on map with forest-themed click popups
 
 ## Current Position
 
-Phase: 5 of 11 (Map-Elevation Sync) — Phase complete (+ gap closure)
-Plan: 4 of 4 in current phase (4 complete)
-Status: Phase complete — ready for Phase 6
-Last activity: 2026-03-31 — Completed 05-04-PLAN.md (difficulty-based color coding for gravel sectors)
+Phase: 6 of 11 (Restock Markers)
+Plan: 1 of ? in current phase (1 complete)
+Status: In progress
+Last activity: 2026-03-31 — Completed 06-01-PLAN.md (restock markers with popup on Leaflet map)
 
-Progress: [█████░░░░░] 41% (13/32 plans complete)
+Progress: [█████░░░░░] 44% (14/32 plans complete)
 
 ## Performance Metrics
 
@@ -89,6 +89,10 @@ Recent decisions affecting current work:
 - 05-04: SECTOR_COLORS at module scope (before initMap/initChart) — accessible in async functions without closure issues
 - 05-04: || SECTOR_COLORS.moderate fallback defensive against missing difficulty field in data
 - 05-04: Difficulty assignments: NF numbered roads = moderate, named scenic roads = easy, Rapid River Truck Trail = hard
+- 06-01: Named className 'restock-marker' (not '') on L.divIcon — enables targeted CSS; requires :global() in <style> to escape Astro scoping
+- 06-01: stop.mile field (not stop.mi) — this project's annotation schema uses 'mile', mkUltra uses 'mi'
+- 06-01: zIndexOffset layering pattern: polylines(0) < restock markers(500) < bike crosshair(1000)
+- 06-01: .leaflet-popup.restock-popup compound selector — className in bindPopup adds class to .leaflet-popup, not .leaflet-popup-content-wrapper
 
 ### Pending Todos
 
@@ -101,5 +105,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-31
-Stopped at: Completed 05-04-PLAN.md — difficulty-based color coding for gravel sectors; Phase 5 gap closure complete
+Stopped at: Completed 06-01-PLAN.md — restock markers with forest-themed popups on Leaflet map
 Resume file: None
