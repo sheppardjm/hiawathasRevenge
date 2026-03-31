@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-03-30)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive showcase that inspires them to ride it and support MBTN.
-**Current focus:** Phase 10 complete — 10-01 (RouteStats.astro + DonateCallout.astro), 10-02 (GPX copy + topo-divider CSS), and 10-03 (index.astro full assembly) all complete; ready for Phase 11
+**Current focus:** Phase 11 complete — 11-01 through 11-04 all complete; production build produces flat dist/ directory
 
 ## Current Position
 
-Phase: 10 of 11 (Content, Narrative, and Visual Identity) — Complete
-Plan: 3 of 3 in current phase (all 3 complete)
-Status: Phase complete — 10-03 done; Phase 11 next
-Last activity: 2026-03-31 — Completed 10-03-PLAN.md (index.astro full assembly)
+Phase: 11 of 11 (Responsive Polish and Production Build) — Complete
+Plan: 4 of 4 in current phase (all 4 complete)
+Status: ALL PHASES COMPLETE — site is production-ready
+Last activity: 2026-03-31 — Completed 11-04-PLAN.md (production build fix; flat dist/ output)
 
-Progress: [███████░░░] 77% (23/30 plans complete)
+Progress: [██████████] 100% (30/30 plans complete)
 
 ## Performance Metrics
 
@@ -37,6 +37,7 @@ Progress: [███████░░░] 77% (23/30 plans complete)
 | 08-photo-gallery | 2/2 complete | ~4 min | ~2 min |
 | 09-photo-markers-and-admin | 2/2 complete | ~4 min | ~2 min |
 | 10-content-narrative-and-visual-identity | 3/3 complete | ~6 min | ~2 min |
+| 11-responsive-polish-and-production-build | 4/4 complete | ~10 min | ~2.5 min |
 
 **Recent Trend:**
 - Last 5 plans: 07-02 (~4 min), 08-01 (~2 min), 08-02 (~2 min), 09-01 (prev), 09-02 (~4 min)
@@ -132,6 +133,8 @@ Recent decisions affecting current work:
 - 10-03: DonateCallout rendered twice in index.astro (above-fold between hero/narrative and in Support section) — no state, safe to duplicate
 - 10-03: download="HiawathasRevenge.gpx" clean filename on GPX anchor — source file uses underscores, download attribute gives riders a clean brandable filename
 - 10-03: Page assembly pattern: all data flows through components; index.astro contains only layout and narrative prose
+- 11-04: Removing @astrojs/node adapter and prerender=false is sufficient for flat static build — Astro static builds skip API routes; admin page emits meta-refresh redirect in dist/
+- 11-04: save-manifest.ts POST endpoint only runs on dev server in static mode — no additional guard needed beyond existing import.meta.env.PROD check
 
 ### Pending Todos
 
@@ -144,5 +147,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-31
-Stopped at: Completed 10-03-PLAN.md — index.astro full assembly (narrative, components, GPX download, topo dividers, badge rule); Phase 10 complete
+Stopped at: Completed 11-04-PLAN.md — production build fix (removed @astrojs/node adapter, flat dist/ output verified); Phase 11 complete; ALL PHASES COMPLETE
 Resume file: None
