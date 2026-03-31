@@ -118,6 +118,25 @@
     color: var(--color-cream-200);
   }
 
+  /* Leaflet control buttons — 52px minimum touch target (DSGN-05) */
+  .leaflet-bar a {
+    width: 52px;
+    height: 52px;
+    line-height: 52px;
+    font-size: 1.25rem;
+  }
+  .leaflet-touch .leaflet-bar a {
+    width: 52px;
+    height: 52px;
+    line-height: 52px;
+  }
+
+  /* PhotoSwipe lightbox nav buttons — 52px minimum touch target (DSGN-05) */
+  /* Default .pswp__button is 50×60px; width is 2px short of 52px requirement */
+  .pswp__button {
+    min-width: 52px;
+  }
+
   /* Topographic contour divider — decorative wilderness pattern */
   .topo-divider {
     height: 60px;
