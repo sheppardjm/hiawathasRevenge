@@ -158,11 +158,11 @@ Plans:
   2. Saving the manifest in the admin UI writes an updated photos.json that the pipeline can consume
   3. Photo markers appear on the map as clustered markers at their assigned mileage positions
   4. Clicking a photo cluster marker or individual marker opens the PhotoSwipe lightbox to that photo
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 09-01: Create `admin.astro` (dev-only) — photo manifest editor with mileage inputs per photo and a save mechanism that writes photos-manifest.json
-- [ ] 09-02: Add photo cluster marker layer to RouteMap.astro using leaflet.markercluster; install leaflet.markercluster; wire `map:photoClick` CustomEvent to PhotoGallery lightbox
+- [ ] 09-01-PLAN.md — Create admin.astro (dev-only) and save-manifest.ts POST endpoint for photo manifest editing with mileage inputs per photo
+- [ ] 09-02-PLAN.md — Install leaflet.markercluster, add photo cluster marker layer to RouteMap.astro, wire map:photoClick CustomEvent bridge to PhotoGallery lightbox
 
 ### Phase 10: Content, Narrative, and Visual Identity
 **Goal**: Visitors encounter a rich narrative about Hiawatha and the National Forest, a route stats block, a prominent MBTN donate call-to-action, a GPX download link, a national park badge-style h1, and topographic decorative details that complete the Forest Service visual identity
