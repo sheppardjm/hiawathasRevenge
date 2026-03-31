@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-03-30)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive showcase that inspires them to ride it and support MBTN.
-**Current focus:** Phase 5 complete — map/elevation unified amber visual language, CustomEvent bus, sector bands and overlays
+**Current focus:** Phase 5 gap closure complete — difficulty-based color coding for all 7 gravel sectors (green-gold/amber/rust) on map and elevation chart
 
 ## Current Position
 
-Phase: 5 of 11 (Map-Elevation Sync) — Phase complete
-Plan: 3 of 3 in current phase (3 complete)
+Phase: 5 of 11 (Map-Elevation Sync) — Phase complete (+ gap closure)
+Plan: 4 of 4 in current phase (4 complete)
 Status: Phase complete — ready for Phase 6
-Last activity: 2026-03-31 — Completed 05-03-PLAN.md (gravel sector box annotation bands on elevation chart)
+Last activity: 2026-03-31 — Completed 05-04-PLAN.md (difficulty-based color coding for gravel sectors)
 
-Progress: [█████░░░░░] 39% (12/31 plans complete)
+Progress: [█████░░░░░] 41% (13/32 plans complete)
 
 ## Performance Metrics
 
@@ -31,7 +31,7 @@ Progress: [█████░░░░░] 39% (12/31 plans complete)
 | 02-data-pipeline | 3/3 complete | ~3 min | ~1 min |
 | 03-route-map | 2/2 complete | ~7 min | ~3.5 min |
 | 04-elevation-profile | 2/2 complete | ~7 min | ~3.5 min |
-| 05-map-elevation-sync | 3/3 complete | ~5 min | ~2 min |
+| 05-map-elevation-sync | 4/4 complete | ~7 min | ~2 min |
 
 **Recent Trend:**
 - Last 5 plans: 03-02 (~5 min), 04-01 (2 min), 04-02 (~5 min checkpoint), 05-01 (~3 min)
@@ -86,6 +86,9 @@ Recent decisions affecting current work:
 - 05-03: sectorAnnotations keyed object (not array) required by chartjs-plugin-annotation 3.1.0 for named annotation access alongside crosshair
 - 05-03: yMin/yMax omitted from box annotations — plugin auto-expands to full chart height; no explicit bounds needed
 - 05-03: drawTime: 'beforeDatasetsDraw' ensures sector bands render behind elevation line dataset
+- 05-04: SECTOR_COLORS at module scope (before initMap/initChart) — accessible in async functions without closure issues
+- 05-04: || SECTOR_COLORS.moderate fallback defensive against missing difficulty field in data
+- 05-04: Difficulty assignments: NF numbered roads = moderate, named scenic roads = easy, Rapid River Truck Trail = hard
 
 ### Pending Todos
 
@@ -98,5 +101,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-31
-Stopped at: Completed 05-03-PLAN.md — gravel sector box annotation bands on elevation chart; Phase 5 complete
+Stopped at: Completed 05-04-PLAN.md — difficulty-based color coding for gravel sectors; Phase 5 gap closure complete
 Resume file: None
