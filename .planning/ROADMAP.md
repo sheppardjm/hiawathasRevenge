@@ -143,11 +143,11 @@ Plans:
   2. Clicking any thumbnail opens the PhotoSwipe lightbox with the full-resolution image
   3. The lightbox supports swipe gestures on mobile and keyboard arrow navigation on desktop
   4. PhotoSwipe assets are not loaded until the gallery is interacted with (lightbox deferred)
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 08-01: Install PhotoSwipe 5.4.4; create `PhotoGallery.astro` island with responsive thumbnail grid from photos.json
-- [ ] 08-02: Wire PhotoSwipe lightbox initialization — set data-pswp-width/height at build time; support keyboard navigation and touch swipe
+- [ ] 08-01-PLAN.md — Install PhotoSwipe 5.4.4; create PhotoGallery.astro with responsive grid, lightbox script, dimension parsing, and empty-state handling; wire into index.astro
+- [ ] 08-02-PLAN.md — Create copy-images.js pipeline step to serve full-resolution source JPGs from public/images/ for lightbox; integrate as step 4 in pipeline.js
 
 ### Phase 9: Photo Markers and Admin
 **Goal**: Developers can assign mileage to photos via a browser admin UI, and visitors see geotagged photos as clustered markers on the map that open the gallery lightbox when clicked
