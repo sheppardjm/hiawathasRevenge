@@ -93,10 +93,25 @@ Plans:
 Plans:
 - [x] 16-01-PLAN.md — Masonry layout with CSS columns, featured photo pipeline, PhotoSwipe preservation
 
+### Phase 17: Tech Debt & Photo Cleanup
+**Goal**: Close all tech debt from v1.1 audit — dead CSS, brace imbalance, comment inaccuracy — and remove 3 duplicate photo pairs from the data pipeline
+**Depends on**: Phase 16 (all v1.1 feature work complete)
+**Requirements**: None (tech debt closure, not new requirements)
+**Gap Closure**: Closes all items from v1.1-MILESTONE-AUDIT.md
+**Success Criteria** (what must be TRUE):
+  1. `.topo-divider` CSS rule is removed from global.css — zero references in HTML or CSS
+  2. `@media (min-width: 640px)` brace imbalance in index.astro `<style>` block is fixed — `prefers-reduced-motion` rule applies at all viewport widths
+  3. gold-600 WCAG AA inline comment accurately states it passes AA large text only (not AA normal text)
+  4. Three `(1)` duplicate photos are removed from photos-manifest.json, source images, public images, and thumbnails — photos.json regenerated with 51 entries (down from 54)
+  5. Build passes cleanly and site renders correctly
+**Plans:** 1 plan
+Plans:
+- [ ] 17-01-PLAN.md — Remove dead CSS, fix brace imbalance, fix WCAG comment, remove duplicate photos and regenerate pipeline
+
 ## Progress
 
 **Execution Order:**
-Phases 12 through 16 execute in numeric order. Phase 15 and Phase 16 may execute in parallel (no mutual dependency; both depend only on Phase 12, and Phase 15 additionally on Phase 14).
+Phases 12 through 16 execute in numeric order. Phase 17 executes after Phase 16 (gap closure).
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
@@ -105,7 +120,8 @@ Phases 12 through 16 execute in numeric order. Phase 15 and Phase 16 may execute
 | 14. Ojibwe Design System | v1.1 | 1/1 | Complete | 2026-03-31 |
 | 15. Editorial Content | v1.1 | 2/2 | Complete | 2026-03-31 |
 | 16. Masonry Gallery | v1.1 | 1/1 | Complete | 2026-03-31 |
+| 17. Tech Debt & Photo Cleanup | v1.1 | 0/1 | Planned | — |
 
 ---
 *Roadmap created: 2026-03-31*
-*Milestone: v1.1 Visual Redesign (19 requirements, 5 phases)*
+*Milestone: v1.1 Visual Redesign (19 requirements, 6 phases)*
