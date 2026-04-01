@@ -9,11 +9,11 @@ Requirements for visual redesign milestone. Each maps to roadmap phases.
 
 ### Design System
 
-- [ ] **DSN-01**: Color palette evolves from pure Forest Service green/amber to warmer Ojibwe-inspired tones (berry, gold, lake) while maintaining WCAG AA contrast ratios
-- [ ] **DSN-02**: Hardcoded hex color values in RouteMap.astro and ElevationProfile.astro JavaScript are replaced with CSS custom property references so palette changes propagate automatically
+- [x] **DSN-01**: Color palette evolves from pure Forest Service green/amber to warmer Ojibwe-inspired tones (berry, gold, lake) while maintaining WCAG AA contrast ratios
+- [x] **DSN-02**: Hardcoded hex color values in RouteMap.astro and ElevationProfile.astro JavaScript are replaced with CSS custom property references so palette changes propagate automatically
 - [x] **DSN-03**: Ojibwe woodland floral beadwork-inspired SVG decorative elements (borders, dividers, motifs) replace or supplement existing topo-divider patterns
 - [x] **DSN-04**: Cultural attribution for Ojibwe woodland floral design tradition appears in site footer or design credits section
-- [ ] **DSN-05**: BaseLayout.astro container width constraint is removed from `<main>` and moved to individual sections, enabling full-width breakout sections
+- [x] **DSN-05**: BaseLayout.astro container width constraint is removed from `<main>` and moved to individual sections, enabling full-width breakout sections
 
 ### Hero & Event
 
@@ -32,11 +32,11 @@ Requirements for visual redesign milestone. Each maps to roadmap phases.
 
 ### Gallery
 
-- [ ] **GAL-01**: Photo gallery uses a masonry-style layout with mixed photo sizes (CSS columns, not uniform grid)
-- [ ] **GAL-02**: 2-4 featured photos are displayed at larger sizes (hero treatment) within the gallery flow
-- [ ] **GAL-03**: Gallery maintains PhotoSwipe lightbox functionality — clicking any photo opens full-screen viewing with navigation
-- [ ] **GAL-04**: Gallery is responsive — single column on mobile, 2 columns on tablet, 3 columns on desktop with appropriate gutter spacing
-- [ ] **GAL-05**: Photos with `featured: true` in photos.json are rendered at larger column-spanning sizes
+- [x] **GAL-01**: Photo gallery uses a masonry-style layout with mixed photo sizes (CSS columns, not uniform grid)
+- [x] **GAL-02**: 2-4 featured photos are displayed at larger sizes (hero treatment) within the gallery flow
+- [x] **GAL-03**: Gallery maintains PhotoSwipe lightbox functionality — clicking any photo opens full-screen viewing with navigation
+- [x] **GAL-04**: Gallery is responsive — single column on mobile, 2 columns on tablet, 3 columns on desktop with appropriate gutter spacing
+- [x] **GAL-05**: Photos with `featured: true` in photos.json are rendered at larger column-spanning sizes
 
 ## v1.2 Requirements
 
@@ -81,11 +81,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | NARR-03 | Phase 15: Editorial Content | Complete |
 | NARR-04 | Phase 15: Editorial Content | Complete |
 | NARR-05 | Phase 15: Editorial Content | Complete |
-| GAL-01 | Phase 16: Masonry Gallery | Pending |
-| GAL-02 | Phase 16: Masonry Gallery | Pending |
-| GAL-03 | Phase 16: Masonry Gallery | Pending |
-| GAL-04 | Phase 16: Masonry Gallery | Pending |
-| GAL-05 | Phase 16: Masonry Gallery | Pending |
+| GAL-01 | Phase 16: Masonry Gallery | Complete |
+| GAL-02 | Phase 16: Masonry Gallery | Complete |
+| GAL-03 | Phase 16: Masonry Gallery | Complete |
+| GAL-04 | Phase 16: Masonry Gallery | Complete |
+| GAL-05 | Phase 16: Masonry Gallery | Complete |
 
 **Coverage:**
 - v1.1 requirements: 19 total
@@ -94,4 +94,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-03-31*
-*Last updated: 2026-03-31 after Phase 15 completion*
+*Last updated: 2026-03-31 after Phase 16 completion*

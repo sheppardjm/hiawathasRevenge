@@ -3,7 +3,7 @@
 ## Milestones
 
 - v1.0 MVP - Phases 0-11 (shipped 2026-03-31)
-- v1.1 Visual Redesign - Phases 12-16 (in progress)
+- v1.1 Visual Redesign - Phases 12-16 (shipped 2026-03-31)
 - v1.2 Map Interactivity - Planned (SECT-01, SECT-02, SECT-03)
 
 ## Phases
@@ -15,7 +15,7 @@
 
 </details>
 
-### v1.1 Visual Redesign (In Progress)
+### v1.1 Visual Redesign (Complete)
 
 **Milestone Goal:** Elevate the site from functional showcase to immersive editorial experience with Ojibwe-inspired design, rewritten narrative, dramatic hero section, and masonry gallery.
 
@@ -23,7 +23,7 @@
 - [x] **Phase 13: Hero & Event Date** - Full-width hero section with dramatic route photo and prominent event date
 - [x] **Phase 14: Ojibwe Design System** - Woodland floral beadwork-inspired decorative elements with cultural attribution
 - [x] **Phase 15: Editorial Content** - Rewritten Hiawatha narrative and photo-integrated route explainer
-- [ ] **Phase 16: Masonry Gallery** - Redesigned photo gallery with editorial sizing and featured photos
+- [x] **Phase 16: Masonry Gallery** - Redesigned photo gallery with editorial sizing and featured photos
 
 ## Phase Details
 
@@ -91,7 +91,7 @@ Plans:
   4. Gallery is responsive -- single column on mobile (375px), 2 columns on tablet (768px), 3 columns on desktop (1280px) with consistent gutter spacing
 **Plans:** 1 plan
 Plans:
-- [ ] 16-01-PLAN.md — Masonry layout with CSS columns, featured photo pipeline, PhotoSwipe preservation
+- [x] 16-01-PLAN.md — Masonry layout with CSS columns, featured photo pipeline, PhotoSwipe preservation
 
 ## Progress
 
@@ -104,7 +104,7 @@ Phases 12 through 16 execute in numeric order. Phase 15 and Phase 16 may execute
 | 13. Hero & Event Date | v1.1 | 1/1 | Complete | 2026-03-31 |
 | 14. Ojibwe Design System | v1.1 | 1/1 | Complete | 2026-03-31 |
 | 15. Editorial Content | v1.1 | 2/2 | Complete | 2026-03-31 |
-| 16. Masonry Gallery | v1.1 | 0/1 | Not started | - |
+| 16. Masonry Gallery | v1.1 | 1/1 | Complete | 2026-03-31 |
 
 ---
 *Roadmap created: 2026-03-31*
