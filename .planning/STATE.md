@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-03-31)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive showcase that inspires them to ride it and support MBTN.
-**Current focus:** v1.1 Visual Redesign -- Phase 15 (Editorial Content)
+**Current focus:** v1.1 Visual Redesign -- Phase 15 complete
 
 ## Current Position
 
-Phase: 15 (Editorial Content) -- In progress
-Plan: 1 of 2 complete
-Status: In progress
-Last activity: 2026-03-31 -- Completed 15-01-PLAN.md (HiawathaExplainer component)
+Phase: 15 (Editorial Content) -- Complete
+Plan: 2 of 2 complete
+Status: Phase complete
+Last activity: 2026-03-31 -- Completed 15-02-PLAN.md (RouteExplainer component)
 
-Progress: [██████░░░░] 62% (v1.1: 3/5 phases, 15-01 done)
+Progress: [████████░░] 80% (v1.1: 4/5 phases, Phase 15 done)
 
 ## Performance Metrics
 
@@ -24,8 +24,8 @@ Progress: [██████░░░░] 62% (v1.1: 3/5 phases, 15-01 done)
 - Timeline: 2 days (2026-03-30 -> 2026-03-31)
 
 **v1.1:**
-- Plans executed: 5 (12-01, 12-02, 13-01, 14-01, 15-01)
-- Phases complete: 3 (Phase 12, Phase 13, Phase 14)
+- Plans executed: 6 (12-01, 12-02, 13-01, 14-01, 15-01, 15-02)
+- Phases complete: 4 (Phase 12, Phase 13, Phase 14, Phase 15)
 
 ## Accumulated Context
 
@@ -53,6 +53,9 @@ v1.1 decisions made:
 
 | No float/shape-outside in HiawathaExplainer | Plan marks float as optional; no contextual image available for narrative; blockquote provides visual break | 15-01 |
 | data.md quote styled as displayed blockquote | Scholarly critique reads as cited source with visual separation; not buried inline | 15-01 |
+| SVG data URI hardcodes hex %233d6b3d (not CSS var) | CSS custom properties cannot resolve inside background-image data URIs; must hardcode hex | 15-02 |
+| no-photo class overrides nth-child alternation at tablet+ | Without override, 520 segment (no photos) produces empty first column in 2-col grid | 15-02 |
+| Photos mapped to segments by mile range filter | p.mile >= startMi && p.mile < endMi; deterministic given photos are already geo-tagged | 15-02 |
 
 ### Pending Todos
 
@@ -67,5 +70,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-31
-Stopped at: Completed 15-01-PLAN.md (HiawathaExplainer component + index.astro wiring)
+Stopped at: Completed 15-02-PLAN.md (RouteExplainer component + index.astro wiring — Phase 15 complete)
 Resume file: None
