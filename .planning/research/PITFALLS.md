@@ -1,554 +1,578 @@
-# Domain Pitfalls: v1.1 Visual Redesign
+# Domain Pitfalls: v1.2 Cultural Maximalism
 
-**Domain:** Visual redesign of existing static cycling route showcase (Astro 6 / Tailwind 4)
+**Domain:** Adding maximalist cultural design (animated dividers, 10+ color palette, historical imagery, repeated motifs, per-sector elevation charts) to an existing static cycling showcase site (Astro 6 / Tailwind 4)
 **Researched:** 2026-03-31
-**Confidence:** HIGH for technical pitfalls, MEDIUM for cultural sensitivity (requires community engagement to reach HIGH)
+**Confidence:** HIGH for performance/accessibility, MEDIUM for cultural sensitivity, MEDIUM for visual coherence
 
 ---
 
 ## Critical Pitfalls
 
-Mistakes that cause rewrites, community harm, or major regressions.
+Mistakes that cause performance regressions, accessibility failures, or cultural harm. Recovery cost: HIGH.
 
 ---
 
-### Pitfall 1: CSS Masonry Has No Production Browser Support — Shipping It Without Fallback Breaks the Gallery
+### Pitfall 1: Animated SVG Dividers Ignore prefers-reduced-motion and Break Existing Accessibility Compliance
 
 **What goes wrong:**
-The developer implements `grid-template-rows: masonry` (or the newer `display: grid-lanes` syntax) for the photo gallery, tests it in Safari Technology Preview or Firefox with a flag enabled, and ships. In production, Chrome, Edge, Safari stable, and all mobile browsers render a broken grid with items stacked in equal-height rows or collapsing on top of each other. The gallery — the most visual part of the redesign — looks worse than the current uniform grid.
+The developer creates beautiful animated SVG section dividers with CSS animations (stroke-dashoffset draws, color cycling, pulsing opacity). The animations ship without `prefers-reduced-motion` support. Users with vestibular disorders or motion sensitivity experience discomfort. The site drops from WCAG AA compliant (v1.1 achievement) to non-compliant, undoing v1.1's accessibility work.
 
 **Why it happens:**
-As of March 2026, `grid-template-rows: masonry` is supported only in Safari Technology Preview (not Safari stable) and Firefox behind the `layout.css.grid-template-masonry-value.enabled` flag (disabled by default). Chrome, Edge, Opera, and all mobile browsers have zero support. The CSS Working Group is still debating whether masonry belongs in CSS Grid (as `grid-template-rows: masonry`) or as a separate `display: grid-lanes` module. The spec is not stable. Developers read blog posts celebrating "native CSS masonry" and miss the fine print about browser support.
+The existing site already has `prefers-reduced-motion` support for Leaflet transitions and the GPX download button transition. But new animated dividers are built as new components without checking the existing pattern. The developer tests visually, sees beautiful animations, and forgets that ~25% of users have motion sensitivity settings enabled. CSS animations in SVGs are easy to add but easy to forget to suppress.
 
 **Consequences:**
-- Gallery layout breaks for ~85%+ of visitors (Chrome + Edge + Safari stable market share)
-- If no `@supports` fallback, items either collapse or render as a standard grid with awkward gaps
-- Debugging reports from users on different browsers are confusing because the developer's browser works fine
+- WCAG AA compliance regression (existing compliance was explicitly achieved in v1.1 Phase 17)
+- Users with motion sensitivity see constant animation across every section boundary
+- If multiple dividers animate simultaneously, the cumulative visual motion is significantly worse than a single animation
+- Legal risk if the site claims accessibility compliance
 
 **Prevention:**
-1. Do NOT use native CSS masonry as the primary layout. Use it only as a progressive enhancement behind `@supports`.
-2. Build the primary gallery layout using one of these proven approaches:
-   - **CSS `columns` (column-count)** — simple, no JS, items flow top-to-bottom then left-to-right (reading order issue on some layouts)
-   - **CSS Grid with explicit row spans** — calculate `grid-row: span N` based on known image aspect ratios at build time (Astro can do this in frontmatter)
-   - **JavaScript masonry library** — Masonry.js, Colcade, or a lightweight custom implementation
-3. Progressive enhancement layer: wrap native masonry in `@supports (grid-template-rows: masonry)` so browsers that support it get the native version, others get the fallback.
-4. The recommended approach for this project: **CSS Grid with build-time row span calculation**. Astro already knows image dimensions at build time (from the photo pipeline). Compute `aspect-ratio` and assign `grid-row: span 2` to portrait images, `span 1` to landscape. This gives a masonry-like effect with zero JS and universal browser support.
+1. Wrap ALL animation CSS in `@media (prefers-reduced-motion: no-preference)` blocks -- animations are opt-IN, not opt-OUT
+2. The static fallback (no animation) should be the DEFAULT state; animation is the progressive enhancement
+3. Follow the existing pattern in `global.css` (lines 165-178) which already suppresses Leaflet transitions
+4. For SVG animations, also check JavaScript-driven animations via `window.matchMedia('(prefers-reduced-motion: reduce)')` if using SMIL or JS-based animation
+5. Test: enable "Reduce Motion" in macOS System Settings > Accessibility > Display before shipping any animation phase
 
 **Warning signs:**
-- Gallery looks perfect in Firefox Nightly but broken in Chrome
-- `@supports` query not present alongside masonry properties
-- No fallback grid styles defined
+- Animated divider component has no `@media (prefers-reduced-motion)` query
+- Animation plays immediately on page load without IntersectionObserver gating
+- CSS has `animation-play-state: running` without a reduced-motion override
 
-**Detection:** Test in Chrome stable (the largest browser by market share) before any other browser.
+**Detection:** Toggle "Reduce Motion" in OS accessibility settings. ALL animations should stop completely. Not slow down -- STOP.
 
-**Phase to address:** The gallery redesign phase. Decide fallback strategy before writing any gallery CSS.
+**Which phase should address it:** The animated divider phase. Establish the `prefers-reduced-motion` pattern in the FIRST animated component so all subsequent animations copy it.
 
-**Confidence:** HIGH — Verified via [Can I Use: grid-template-rows masonry](https://caniuse.com/mdn-css_properties_grid-template-rows_masonry) and [MDN Web Docs masonry layout](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Grid_layout/Masonry_layout).
+**Recovery cost if hit:** MEDIUM -- CSS-only fix, but requires auditing every animated element across the site.
 
 ---
 
-### Pitfall 2: Full-Width Hero Image Tanks LCP on a Static Site That Was Otherwise Fast
+### Pitfall 2: New Color Palette Fails WCAG AA Contrast on the Existing Dark Background
 
 **What goes wrong:**
-The developer adds a dramatic full-width hero image above the fold. The existing site has no above-fold images — the badge SVG and text load instantly. Adding a large hero photo pushes LCP from sub-1-second to 3-4+ seconds. The site feels noticeably slower, especially on mobile where the hero image may be 500KB+ at full viewport width.
+The developer adds turquoise, red, yellow, and black to the palette, picks visually appealing hex values, and uses them for text, headings, and labels. Several combinations fail WCAG AA contrast requirements (4.5:1 for normal text, 3:1 for large text) against the existing `--color-forest-950` (#0d1a0d) and `--color-forest-900` (#1a2e1a) backgrounds. The site looks vibrant but is unreadable for users with low vision.
 
 **Why it happens:**
-Several compounding mistakes:
-1. **Lazy loading the hero** — Astro's `<Image>` component defaults to `loading="lazy"`. A hero image MUST be `loading="eager"` because it is above the fold.
-2. **Missing `fetchpriority="high"`** — Without this attribute, the browser deprioritizes the image behind stylesheets and scripts.
-3. **No `<link rel="preload">`** — The browser doesn't discover the hero image until it parses the HTML and finds the `<img>` tag. Preloading in `<head>` starts the fetch earlier.
-4. **Single enormous image** — Serving a 2400px-wide WebP to a 375px mobile screen wastes bandwidth.
-5. **No `sizes` attribute** — Browser downloads the largest srcset image by default.
+The existing v1.1 palette was carefully tested for WCAG compliance -- the comments in `global.css` explicitly note which colors pass and which are "decorative only" (e.g., berry-700 fails AA normal text, moss-500 fails AA on dark backgrounds). Adding 4+ new color families without the same rigor breaks the carefully established system. Specific traps:
+- **Red on dark green** (#CC0000 on #1a2e1a) = 3.2:1 ratio -- fails AA normal text
+- **Turquoise values** vary wildly -- #40E0D0 passes on dark (10.7:1) but #008080 fails (3.4:1)
+- **Yellow** is tricky -- bright yellow (#FFD700) passes on dark (10.1:1) but looks washed out; darker gold (#B8860B) was already flagged as large-text-only in v1.1
+- **Black text** on dark green backgrounds is invisible
 
 **Consequences:**
-- LCP regression from excellent (<1s) to poor (>2.5s)
-- Core Web Vitals score drops, affecting SEO if the site is indexed
-- Mobile users on cellular connections see a blank hero area for seconds
-- The site *feels* slower even though it has more content
+- Some text becomes unreadable for the ~8% of users with color vision deficiencies
+- WCAG AA compliance is lost (the v1.1 milestone explicitly achieved this)
+- The carefully documented contrast notes in `global.css` become unreliable
 
 **Prevention:**
-1. Use Astro's `<Image>` or `<Picture>` component with `layout="full-width"` — this auto-generates `srcset` and `sizes` attributes for responsive delivery.
-2. Explicitly set `loading="eager"` and `fetchpriority="high"` on the hero image (override Astro defaults).
-3. Add `<link rel="preload" as="image" href="..." fetchpriority="high">` in the `<head>` for the hero image, with `imagesrcset` and `imagesizes` attributes matching the `<img>`.
-4. Generate multiple sizes at build time: 640w, 960w, 1280w, 1920w at minimum. Use WebP format.
-5. Set explicit `width` and `height` attributes (or CSS `aspect-ratio`) to prevent layout shift (CLS).
-6. Consider using the Astro `image.layout: 'full-width'` config option (responsive images were unflagged in Astro 5+ and available in Astro 6).
+1. For EVERY new color token, document its contrast ratio against BOTH `--color-forest-950` and `--color-forest-900` in the CSS comment, following the v1.1 pattern
+2. Use WebAIM Contrast Checker (https://webaim.org/resources/contrastchecker/) before committing any new color
+3. Designate each color as "text-safe" (passes 4.5:1), "large-text-only" (passes 3:1 but not 4.5:1), or "decorative-only" (fails 3:1)
+4. Create tints/shades of each new color to ensure at least one text-safe variant exists per family
+5. Test with Chrome DevTools "Emulate vision deficiency" for deuteranopia, protanopia, and tritanopia
+6. Specific recommendations for the 4 new colors:
+   - **Turquoise:** Use a light variant like #5BCECE (7.5:1 on dark) for text; darker #2C7A7B for decorative
+   - **Red:** Use #E53E3E (5.2:1 on dark) for text; avoid pure red #FF0000 which has color-blindness issues with green backgrounds
+   - **Yellow:** Use #ECC94B (9.5:1 on dark) for text; this is close to existing gold tokens
+   - **Black:** Only usable on light backgrounds -- create light section backgrounds if black text is needed
 
 **Warning signs:**
-- Hero image `<img>` tag has `loading="lazy"` (inspect element)
-- No `<link rel="preload">` for the hero in page source `<head>`
-- Only one image size served regardless of viewport width
-- Lighthouse LCP element points to the hero image with >2.5s timing
+- New color tokens added without contrast ratio comments
+- Text using colors marked "decorative-only" in v1.1
+- No vision deficiency testing before shipping
 
-**Detection:** Run Lighthouse on the built static site with throttled mobile connection. LCP element should load in <2.5s.
+**Detection:** Run axe DevTools or Lighthouse accessibility audit; contrast failures will be flagged automatically.
 
-**Phase to address:** The hero section phase. Get the image pipeline and preload right before building the visual layout around it.
+**Which phase should address it:** The color palette expansion phase. Define ALL new tokens with contrast documentation BEFORE using them in components.
 
-**Confidence:** HIGH — Verified via [web.dev LCP optimization](https://web.dev/articles/optimize-lcp), [Addy Osmani's fetchpriority guide](https://addyosmani.com/blog/fetch-priority/), and [Astro image docs](https://docs.astro.build/en/guides/images/).
+**Recovery cost if hit:** MEDIUM -- changing colors after the fact requires updating every component that uses them, and may require redesigning sections if the compliant color looks different enough to change the aesthetic.
 
 ---
 
-### Pitfall 3: Slide-Out Panel Gets Trapped Behind Leaflet Map Due to Stacking Context
+### Pitfall 3: Cultural Sensitivity Regression -- Expanding "Maximalist Cultural Mashup" Without Maintaining Ojibwe Attribution Context
 
 **What goes wrong:**
-The developer builds a slide-out detail panel for sector information that should appear over the map when a sector label is clicked. The panel renders but is invisible — trapped behind the Leaflet map tiles. Increasing `z-index` to 9999 on the panel has no effect. The developer wastes hours tweaking z-index values that never work.
+v1.1 established careful Ojibwe cultural attribution: hand-authored SVG motifs (not taken from Neebin Studios due to licensing ambiguity), specific Ojibwe/Anishinaabe attribution in the footer (not generic "Native American"), and design elements clearly inspired-by rather than copied-from beadwork traditions. The v1.2 "Cultural Maximalism" milestone adds historical Hiawatha imagery (Longfellow illustrations, theatrical productions) and layers shield/arrowhead motifs throughout. The risk: the expanded visual layer drowns out the careful cultural context, making the site look like it's celebrating Longfellow's problematic conflation rather than critiquing it.
 
 **Why it happens:**
-Leaflet's `.leaflet-container` creates its own CSS stacking context. Inside that context, Leaflet manages internal z-index layers:
-- `tilePane`: z-index 200
-- `overlayPane`: z-index 400
-- `shadowPane`: z-index 500
-- `markerPane`: z-index 600
-- `tooltipPane`: z-index 650
-- `popupPane`: z-index 700
-
-The current codebase sets `.route-map { z-index: 0 }` on the map container — this creates a stacking context where the map's internal z-index values are scoped. But the slide-out panel, if it is a *sibling* of the map container or inside a parent that doesn't create a higher stacking context, cannot escape the map's rendering order by z-index alone.
-
-Additionally, Leaflet's control elements (`.leaflet-top`, `.leaflet-bottom`) use `z-index: 1000`. If the panel overlaps these areas, it must exceed 1000 within the same stacking context.
+The HiawathaExplainer component does an excellent job of critiquing Longfellow's cultural confusion in text. But v1.2 is adding maximalist visual elements -- historical Hiawatha illustrations, shield/arrowhead motifs repeated everywhere, bold "cultural" colors. If the visual design celebrates the very imagery the text critiques, the message becomes contradictory. A visitor who scrolls past the text but absorbs the visuals gets the wrong message.
 
 **Consequences:**
-- Panel appears behind the map — user clicks a sector and nothing visible happens
-- Developer enters a z-index arms race, adding increasingly absurd values
-- Potential regression: changing z-index on the map container may break existing marker layering or popup rendering
+- The site appears to celebrate Longfellow's romanticized "Indian" imagery rather than critique it
+- The Ojibwe cultural attribution in the footer feels performative if the visuals lean into stereotypical "Indian" imagery
+- Community backlash from Indigenous peoples who see their culture being used as decoration
+- The irony the site intends (using Longfellow's own imagery to critique him) requires textual framing that may not survive a maximalist visual-first approach
 
 **Prevention:**
-1. **Place the slide-out panel as a sibling of the map container, NOT inside it.** The panel should be a separate DOM element adjacent to (not inside) the `#map` div. Since both are children of the same parent, normal z-index ordering works.
-2. **Use `isolation: isolate` on the map's parent section** to contain the map's stacking context without affecting the panel.
-3. **Define a project-wide z-index scale** and document it:
-   ```
-   Map container:    z-index: 0 (already set)
-   Map internals:    z-index 200-1000 (Leaflet-managed, don't touch)
-   Slide-out panel:  z-index: 50 (relative to section parent, above map's 0)
-   ```
-4. **On mobile, don't overlay the panel on the map at all.** Instead, push the panel below the map or use a bottom sheet pattern. Overlaying a panel on a 60vh map on a 375px screen leaves zero usable map area.
-5. Keep the existing `z-index: 0` on `.route-map` — it correctly scopes Leaflet's internal stacking. Do not remove it or change it to `auto`.
+1. Frame historical Hiawatha imagery explicitly as "Longfellow's fiction" visually -- use visual treatments (sepia, halftone, editorial framing, caption context) that signal "historical artifact" rather than "celebration"
+2. Pair EVERY historical illustration with contextual text (caption, pull quote) that situates it in the critique
+3. Keep Ojibwe-inspired design elements (FloralDivider, color palette) clearly distinct from Longfellow-era imagery -- do not blend the two visual languages
+4. The shield/arrowhead motif is currently National Park Service aesthetic (the arrowhead in HeroSection SVG references NPS branding, not Indigenous symbolism) -- keep this framing. If expanding the motif, maintain the "ranger badge" context, not a generic "Native American" context
+5. Review the footer attribution text after v1.2 changes to ensure it still accurately describes the relationship between the design and Ojibwe culture
+6. Consider adding a brief visual note near historical images: "Illustration from [source], [year]" to establish provenance and temporal distance
 
 **Warning signs:**
-- Panel HTML is inside the `#map` div or the Leaflet container
-- Panel CSS uses `z-index` values in the hundreds or thousands
-- Panel works on a test page without the map but disappears when the map is present
+- Historical illustrations used without captions or context
+- Ojibwe-inspired motifs and Longfellow-era imagery placed adjacent without distinction
+- Shield/arrowhead motif described as "Native American" rather than "National Park Service"
+- Footer attribution text not updated to reflect new visual elements
 
-**Detection:** Use browser DevTools "Layers" panel (Chrome) to visualize stacking contexts. The panel and map should be in sibling stacking contexts.
+**Detection:** Read the site as a first-time visitor who skips text and only looks at images. Does it look like a celebration of "Indian culture" or a critique of Longfellow's appropriation? If the former, the framing is wrong.
 
-**Phase to address:** The interactive sector map phase. Design the DOM structure and z-index strategy before implementing the panel animation.
+**Which phase should address it:** The historical imagery phase AND the motif system phase. Establish the visual framing convention before adding any historical images.
 
-**Confidence:** HIGH — Verified via [Leaflet official reference: default pane z-index values](https://leafletjs.com/reference.html), [Leaflet issue #6555](https://github.com/Leaflet/Leaflet/issues/6555), and [Leaflet issue #2782](https://github.com/Leaflet/Leaflet/issues/2782). Codebase z-index verified in `src/components/RouteMap.astro`.
+**Recovery cost if hit:** HIGH -- requires rethinking the visual narrative, not just swapping images. The wrong framing can't be fixed with CSS.
 
 ---
 
-### Pitfall 4: Ojibwe Floral Motifs Used Without Cultural Context Reads as Appropriation
+### Pitfall 4: LCP Regression from Animated Dividers or New Images Above the Fold
 
 **What goes wrong:**
-The developer uses Ojibwe woodland floral beadwork motifs as purely decorative CSS patterns — borders, dividers, backgrounds — without any acknowledgment of their cultural origin, meaning, or the Ojibwe people's connection to the land the route traverses. The site looks beautiful, but an Ojibwe community member or ally sees their cultural art used as wallpaper on a cycling event site and rightfully calls it appropriation. At best, this is embarrassing. At worst, it harms the project's relationship with the community whose land the ride traverses and whom MBTN works alongside.
+The existing hero section achieves excellent LCP through careful optimization: `fetchpriority="high"`, `loading="eager"`, explicit width/height, and CSS Grid badge overlay. Adding animated SVG dividers, new background images, or historical illustrations near the top of the page pushes competing resources into the critical rendering path. The browser now has to download the hero image AND parse/render complex animated SVGs AND potentially fetch new images, degrading LCP from <2.5s to >4s on mobile.
 
 **Why it happens:**
-The designer treats floral motifs as an aesthetic choice — "pretty flowers that fit the forest theme." They miss (or are unaware of) several critical layers of meaning:
+Each new visual element near the top of the page competes for:
+- **Network bandwidth** -- hero image, new illustrations, SVG assets all need downloading
+- **Main thread time** -- CSS animation parsing, SVG rendering, paint operations
+- **GPU memory** -- animated elements with `will-change: transform` or `translate3d()` create compositor layers
 
-1. **Ojibwe floral beadwork is not generic folk art.** During the era when Indigenous medicines were outlawed, Anishinaabe elders encoded knowledge of medicinal plants into floral beadwork designs. The flowers are not decorative — they are a form of covert cultural preservation and resistance. (Source: [Heart Berry: Anishinaabeg Use Ojibwe Floral Beadwork as Covert Art](https://www.heartberry.com/blogs/news/17055207-anishinaabeg-use-ojibwe-floral-beadwork-as-covert-art))
-
-2. **The site already acknowledges the naming problem.** The existing narrative explains that Longfellow conflated Haudenosaunee Hiawatha with Ojibwe Nanabozho. Using Ojibwe art purely decoratively — without deeper engagement — would contradict the site's own stated awareness.
-
-3. **The Hiawatha National Forest is Ojibwe land.** The Forest Service maintains [tribal relations](https://www.fs.usda.gov/r09/hiawatha/working-with-us/tribal-relations) with federally recognized tribes culturally affiliated with the land. The ride literally passes through this territory.
-
-**Consequences:**
-- Social media criticism that could harm MBTN's reputation and community relationships
-- Loss of trust with tribal partners who work with the Forest Service on trail management
-- Having to remove design elements and rush a redesign under pressure
-- Missing an opportunity to do something genuinely respectful and meaningful
-
-**Prevention:**
-
-**Minimum standard (non-negotiable):**
-1. **Attribution on every page that uses floral motifs.** Not hidden in a footer — visible near the design elements. Example: "Decorative motifs inspired by Ojibwe woodland floral beadwork traditions. The Hiawatha National Forest lies on the ancestral homeland of the Anishinaabe people."
-2. **Never reproduce specific sacred or ceremonial designs.** Use generalized floral patterns inspired by the aesthetic vocabulary (flowing vines, symmetrical petals, leaf forms) rather than copying specific beadwork patterns from museum pieces or ceremonial items.
-3. **Explain the cultural connection in the site narrative.** The existing Hiawatha text already discusses Longfellow's appropriation — extend this to explain why the site honors Ojibwe art traditions and what they mean.
-
-**Higher standard (recommended):**
-4. **Use designs from explicitly open resources.** The [Neebin Design Anishinaabe Floral Set](https://neebin.com/design/floral_set/) by Neebinnaukzhik Southall (Anishinaabe artist) was created "with the intention that it can be used by anyone" and is available in SVG/AI/PNG formats. Using these designs (with artist credit) is the most defensible approach.
-5. **Consider commissioning an Ojibwe artist.** Even a modest commission for custom SVG motifs gives the project authentic designs and a real relationship. MBTN likely has connections through their Forest Service tribal relations work.
-6. **Use the design elements to tell the deeper story.** Instead of motifs as wallpaper, pair them with content about Ojibwe connections to the land, the medicine-encoding tradition, and the ongoing Anishinaabe presence in the Upper Peninsula.
-
-**What NOT to do:**
-- Do not use the word "tribal" as a design aesthetic
-- Do not describe the motifs as "Native-inspired" without specificity (which nation? which tradition?)
-- Do not use motifs from sacred or ceremonial contexts (medicine bundles, clan symbols, midewiwin scrolls)
-- Do not present the motifs as "historical" — Ojibwe beadwork is a living tradition with active contemporary artists
-- Do not use AI-generated "Ojibwe-style" patterns (these homogenize distinct tribal art traditions and often produce inauthentic results)
-
-**Warning signs:**
-- Floral motifs appear on the site with no attribution or cultural context anywhere
-- Design brief describes motifs as "decorative elements" with no mention of Ojibwe culture
-- Motifs are copied from museum photographs of specific historical pieces
-- No Ojibwe or Anishinaabe person has seen the designs before launch
-
-**Detection:** Before launch, ask: "If an Ojibwe community member visited this site, would they feel their culture was respected or extracted?" If you cannot confidently answer "respected," the design needs more work.
-
-**Phase to address:** This must be addressed in the design system / color palette phase, BEFORE any floral motifs are created or implemented. The cultural framework should precede the pixels.
-
-**Confidence:** MEDIUM — Cultural sensitivity research is inherently incomplete without direct community engagement. The sources consulted ([Heart Berry](https://www.heartberry.com/blogs/news/17055207-anishinaabeg-use-ojibwe-floral-beadwork-as-covert-art), [Neebin Design](https://neebin.com/design/floral_set/), [Indigenous Protocols for the Visual Arts](https://www.indigenousprotocols.art/), [USFS Tribal Relations](https://www.fs.usda.gov/r09/hiawatha/working-with-us/tribal-relations)) provide a solid framework, but the highest confidence comes from direct consultation with Ojibwe community members — which is a project management step, not a research step.
-
----
-
-### Pitfall 5: Color Scheme Change Breaks Existing Components Invisibly
-
-**What goes wrong:**
-The developer updates the `@theme` color tokens in `global.css` — changing forest greens to warmer tones, adjusting amber values, adding new accent colors — and existing components silently break. Text becomes unreadable against new backgrounds. Borders disappear. The chart becomes illegible. The map popups lose contrast. The badge SVG colors clash with the new palette. The developer doesn't notice because each component looks "fine" in isolation but the overall page is inconsistent.
-
-**Why it happens:**
-The existing codebase uses Tailwind 4's `@theme` CSS custom properties extensively. Every component references these tokens:
-- `--color-forest-900` appears as `bg-forest-900` in BaseLayout.astro's body class
-- `--color-amber-500` is hardcoded in SVG `fill` attributes in the badge, in Chart.js config objects (`borderColor: '#c8973e'`), and in Leaflet marker HTML strings
-- `--color-cream-100` is used for text throughout
-- `--color-forest-700` is used for borders, grid lines, and Leaflet popup styles
-
-The problem: **not all color references go through the theme tokens.** The codebase has hardcoded hex values in:
-- RouteMap.astro: `color: '#1a2e1a'` (route polyline), `fill="#c8973e"` (bike marker SVG), `fill="#4a90d9"` (restock marker), `background:#d4a84e` (photo marker)
-- ElevationProfile.astro: `borderColor: '#c8973e'`, `grid: { color: 'rgba(255,255,255,0.08)' }`, sector fill colors as rgba values
-- index.astro: SVG fill values using `var()` references (these are fine) but also inline styles
-- DonateCallout.astro: references theme tokens correctly
-
-Changing the `@theme` tokens updates Tailwind classes and `var()` references but leaves all hardcoded hex values unchanged. The result is a jarring mismatch between elements that updated and elements that didn't.
+The existing site has exactly ONE above-fold resource (the hero image). v1.2 could easily add 3-5 more competing resources in the first viewport.
 
 **Consequences:**
-- Chart.js elevation line remains old amber while headings shift to new amber
-- Leaflet markers remain old colors while surrounding UI changes
-- Route polyline color doesn't match new forest green
-- Restock popup background mismatches new panel backgrounds
-- Partial color update looks worse than no update at all
+- LCP regression from good (<2.5s) to poor (>4s)
+- Core Web Vitals failure if the site is indexed
+- The site FEELS slower even if total page weight hasn't increased much
+- Mobile users on 3G/4G connections are disproportionately affected
 
 **Prevention:**
-1. **Audit all color references before changing any tokens.** Search for every hex color in the `src/` directory. The specific values to find:
-   - `#0d1a0d`, `#1a2e1a`, `#2d4a2d`, `#3d6b3d`, `#4a8a4a` (forest greens)
-   - `#c8973e`, `#d4a84e`, `#e0b95f` (ambers)
-   - `#8b4513`, `#a0522d` (rusts)
-   - `#f5f0e8`, `#e8e0d0`, `#faf8f4` (creams)
-   - `#4a90d9` (restock blue)
-   - Any `rgba()` values derived from these
-2. **Replace hardcoded hex values with CSS custom property references** wherever possible. For JavaScript contexts (Chart.js config, Leaflet inline HTML), read the CSS custom property value at runtime:
-   ```javascript
-   const style = getComputedStyle(document.documentElement);
-   const amber = style.getPropertyValue('--color-amber-500').trim();
-   ```
-3. **Create a color migration checklist** that lists every component and whether its colors are tokenized or hardcoded.
-4. **Test the color change with a "nuclear" test:** temporarily change `--color-amber-500` to bright red. Everything that should be amber but stays amber is a hardcoded value that will break during the real migration.
+1. **No new images above the fold.** Historical illustrations, landscape photos, and new decorative images should appear below the first viewport only
+2. **Animated dividers below the fold only.** The first section divider (after HeroSection + DonateCallout) already appears below the fold -- keep it that way
+3. **Gate animations with IntersectionObserver**, following the existing pattern in ElevationProfile.astro (lines 192-207). Animations should not start until the element enters the viewport
+4. **Keep the hero image pipeline unchanged.** Do not add overlay animations, filters, or additional resources to the hero section
+5. **Inline critical SVGs, lazy-load decorative ones.** The existing FloralDivider is inline SVG (~2KB) which is fine. If adding larger SVG motifs (>5KB), consider lazy loading
+6. **Test with Lighthouse on simulated mobile** after every visual addition phase
 
 **Warning signs:**
-- `grep -r '#c8973e' src/` returns results in JavaScript/TypeScript files (not just CSS)
-- Chart.js or Leaflet config objects contain string hex values
-- SVG elements use `fill="..."` with hex values instead of `fill="var(--color-...)"`
+- New `<img>` tags in the first 100vh of the page without `loading="lazy"`
+- Animated SVGs visible without scrolling
+- Multiple `will-change` properties in above-fold CSS
+- Lighthouse LCP element changes from the hero image to something else
 
-**Detection:** After the color change, take full-page screenshots at 375px, 768px, and 1280px and compare every element for color consistency. Automated visual regression testing (Percy, Chromatic) would be ideal but overkill for this project.
+**Detection:** Run Lighthouse mobile audit. LCP should still be the hero image, loading in <2.5s. If LCP element changes, something new is competing.
 
-**Phase to address:** The design system / color palette phase. Tokenize all hardcoded colors BEFORE changing any token values.
+**Which phase should address it:** Every phase that adds visual content. But especially the content layout overhaul phase which rearranges sections.
 
-**Confidence:** HIGH — Verified by direct audit of the codebase. Hardcoded hex values confirmed in RouteMap.astro, ElevationProfile.astro, and global.css.
+**Recovery cost if hit:** MEDIUM -- removing/deferring the offending element, but debugging which element caused the regression can be time-consuming.
 
 ---
 
 ## Moderate Pitfalls
 
-Mistakes that cause delays, rework, or visible quality issues.
+Mistakes that cause visual inconsistency, technical debt, or partial regressions. Recovery cost: MEDIUM.
 
 ---
 
-### Pitfall 6: Full-Width Hero Breaks the Existing max-w-4xl Page Container
+### Pitfall 5: Multiple Chart.js Instances for Per-Sector Elevation Snippets Cause Memory Bloat and Initialization Lag
 
 **What goes wrong:**
-The current `BaseLayout.astro` wraps all content in `<main class="max-w-4xl mx-auto px-4 py-8">`. This constrains everything to 896px centered. A full-width hero image needs to break out of this container and span the entire viewport. The developer either:
-- (a) Removes `max-w-4xl` from `<main>`, breaking the layout of every existing section, or
-- (b) Tries CSS tricks like `width: 100vw; margin-left: calc(-50vw + 50%);` which causes horizontal scrollbar issues, or
-- (c) Restructures the entire page layout, touching every section and introducing regressions.
+v1.2 adds per-sector elevation snippets -- small elevation profile charts for each of the 7 route segments. The developer creates 7 separate Chart.js canvas instances, each importing the full Chart.js library, each with its own data fetch, annotation plugin, and event listeners. On a mid-range mobile device, this causes:
+- 7x canvas context allocation (~50MB combined GPU memory)
+- 7x annotation plugin initialization
+- Visible lag when scrolling through the segment section as charts initialize one by one
 
 **Why it happens:**
-The v1.0 design was correctly built around a single constrained container. A visual redesign that mixes full-width sections (hero, topo dividers, potentially gallery) with constrained content sections requires a fundamentally different layout approach.
+The existing ElevationProfile.astro creates ONE Chart.js instance with careful optimization: dynamic imports for tree-shaking, LTTB decimation, `parsing: false`, IntersectionObserver lazy-init. Copying this pattern 7 times seems logical but ignores the compounding cost. Each Chart.js instance:
+- Allocates a separate canvas rendering context
+- Registers plugins independently
+- Fetches route-data.json independently (7 identical fetches)
+- Creates separate event listeners
+
+**Consequences:**
+- Memory usage spikes on mobile (each canvas context + backing store = ~7MB on a 400px-wide canvas)
+- Possible browser crashes on older mobile devices (iOS Safari is particularly memory-constrained)
+- Scroll jank as IntersectionObserver triggers 7 chart initializations in quick succession
+- Redundant network requests for the same JSON data
 
 **Prevention:**
-1. **Restructure the layout to alternate between full-width and constrained sections.** Move the `max-w-4xl mx-auto px-4` from `<main>` to individual sections that need it. The hero and other full-bleed sections get no container constraint.
-2. **Use a wrapper pattern:**
-   ```html
-   <main>
-     <section class="w-full"><!-- hero, full width --></section>
-     <section class="max-w-4xl mx-auto px-4"><!-- constrained content --></section>
-     <section class="w-full"><!-- gallery, full width --></section>
-   </main>
+1. **Share a single Chart.js import.** Import Chart.js once in a shared module, register components once, and create instances from the shared registration
+2. **Fetch data once.** Load route-data.json once and slice it for each sector, rather than 7 independent fetches
+3. **Consider static SVG sparklines instead of Chart.js.** Per-sector elevation snippets are simple line charts showing ~30-50 data points over a short distance. An inline SVG `<polyline>` generated at build time by Astro would be:
+   - Zero JavaScript
+   - Zero runtime memory
+   - Instant rendering (no IntersectionObserver needed)
+   - Consistent with the SVG motif approach of v1.2
+4. **If using Chart.js, stagger initialization.** Do not initialize all 7 charts when the section enters the viewport. Use per-chart IntersectionObserver so only visible charts initialize
+5. **Use the `destroy()` method** if charts scroll out of view and won't return (unlikely on a single-page site but good hygiene)
+
+**Warning signs:**
+- Multiple `await import('chart.js')` calls across the page
+- 7 separate `fetch('/data/route-data.json')` calls in the network tab
+- DevTools Performance tab shows long tasks during scroll through segment section
+- Mobile Safari crashes or reloads the page
+
+**Detection:** Chrome DevTools Memory tab -- take a heap snapshot before and after scrolling through the segment section. Look for multiple Chart instances.
+
+**Which phase should address it:** The per-sector elevation snippet phase. Decide between Chart.js instances vs. static SVG sparklines BEFORE implementation.
+
+**Recommended approach:** Static SVG `<polyline>` sparklines generated at Astro build time. This eliminates all runtime cost and fits the v1.2 SVG-centric design language.
+
+**Recovery cost if hit:** MEDIUM -- refactoring from 7 Chart.js instances to static SVGs requires rewriting the component, but the data pipeline already has the elevation data.
+
+---
+
+### Pitfall 6: Shield/Arrowhead Motif Repetition Causes Visual Fatigue and SVG File Size Bloat
+
+**What goes wrong:**
+The developer takes the existing shield/arrowhead badge from HeroSection.astro and repeats it as section icons, background watermarks, decorative corners, and divider elements throughout the entire page. By the time a user scrolls halfway down, they have seen the same motif 15+ times. The motif stops being distinctive and becomes wallpaper. Simultaneously, if each instance is an inline SVG (the current pattern), the HTML payload grows by ~2-3KB per instance.
+
+**Why it happens:**
+The brief says "Shield/arrowhead motif repeated throughout site as backgrounds, section icons, and decorative elements -- maximalist cultural layering." This is a valid design goal, but "repeated throughout" can mean either "used as a consistent thread across sections" (good) or "stamped on everything" (bad). The existing badge SVG in HeroSection.astro is 14 lines of SVG code. Repeating it verbatim 15+ times adds ~20KB to the HTML and creates visual monotony.
+
+**Consequences:**
+- **Visual fatigue:** The motif loses impact. The hero badge -- currently the most distinctive element on the site -- becomes just another decoration
+- **HTML bloat:** 15 inline SVGs at 1-3KB each = 15-45KB added to a single-page HTML payload
+- **Rendering cost:** Each inline SVG creates DOM nodes that the browser must parse, layout, and paint. 15 complex SVGs with paths, transforms, and gradients measurably slow down initial paint
+- **Maintenance burden:** Changing the motif design means updating 15+ instances
+
+**Prevention:**
+1. **Vary the motif, don't repeat it.** Create 3-4 variations: full badge (hero only), arrowhead silhouette (section icons), simplified shield outline (background watermarks), and a minimal arrowhead accent (decorative borders). Each context gets a different abstraction level
+2. **Use CSS background-image for repeated decorative instances.** A single SVG referenced via `background-image: url('data:image/svg+xml,...')` or external SVG file is rendered once and tiled by the GPU. No DOM bloat
+3. **Limit to ~5 total visible instances** on a full page scroll. Maximalism does not mean repetition -- it means density of different elements
+4. **Use `<symbol>` + `<use>` for inline SVG reuse.** Define the SVG once in a `<defs>` block at the top of the page, reference it with `<use href="#shield">`. This keeps the DOM lighter and makes updates single-point
+5. **Apply the "highway sign test":** If a user scrolled at moderate speed, would they notice each motif instance, or would they blur together? If they blur, there are too many
+
+**Warning signs:**
+- Same SVG markup copy-pasted into multiple components
+- More than 5 visible shield/arrowhead instances on screen at any scroll position
+- SVG-heavy HTML payload (check `document.querySelectorAll('svg').length` in console)
+
+**Detection:** View page source and count inline SVG instances. If >8, consolidate.
+
+**Which phase should address it:** The motif system phase. Define the motif vocabulary (which variations, which contexts) BEFORE placing instances.
+
+**Recovery cost if hit:** MEDIUM -- requires designing variations and refactoring placements, but the SVGs themselves are small and easy to modify.
+
+---
+
+### Pitfall 7: Content Layout Overhaul Breaks Existing Responsive Layouts
+
+**What goes wrong:**
+v1.2 rearranges section order, adds new sections (historical imagery, enriched segments), and changes the content flow. The existing responsive layouts -- particularly RouteExplainer's alternating grid (`grid-template-columns: min(280px, 35%) 1fr` with `:nth-child(even)` reversal) and the PhotoGallery's CSS columns masonry -- break at certain viewport widths when new content is added around them or their internal structure changes.
+
+**Why it happens:**
+The existing responsive layouts are tuned for specific content shapes:
+- RouteExplainer segment cards assume 7 segments with photos attached. Adding inline elevation snippets, Strava links, or richer descriptions changes the card height, causing grid alignment issues
+- PhotoGallery CSS columns are sensitive to the number and aspect ratios of images. Adding historical illustrations with different aspect ratios (landscape engravings vs. portrait photos) changes column flow
+- The global `max-w-4xl mx-auto px-4` container pattern is consistent across all sections. Breaking out to full-width for new sections (landscape photos, full-bleed dividers) requires careful handling of the container boundary
+
+**Consequences:**
+- Layout breaks at tablet breakpoint (768px) where grid columns collapse
+- Text content overflows containers on narrow mobile viewports
+- Alternating photo/text layout loses its rhythm when card heights vary
+- Full-width breakout sections create horizontal scrollbars on mobile
+
+**Prevention:**
+1. **Test at 5 viewport widths after every layout change:** 375px (iPhone SE), 414px (iPhone 14), 768px (iPad), 1024px (iPad landscape), 1280px (desktop). The existing site was designed for these breakpoints
+2. **Do not modify RouteExplainer's grid structure.** Add new elements (Strava links, elevation snippets) INSIDE the existing `.segment-content` div, not alongside it. The grid areas are `"photo"` and `"content"` -- new elements belong in `"content"`
+3. **For full-width breakout sections** (landscape photos, new dividers), use the `break-out` negative-margin pattern:
+   ```css
+   .full-width {
+     width: 100vw;
+     margin-left: calc(-50vw + 50%);
+   }
    ```
-3. **Do this layout restructure as a standalone commit before adding the hero.** If the restructure breaks anything, the regression is isolated and easy to diagnose.
+   This escapes the `max-w-4xl` container without breaking the document flow
+4. **Add landscape photos as their own sections** between existing sections, not inside them. This avoids disrupting the existing component layout
+5. **When adding historical imagery to existing components,** wrap new images in their own container with explicit `max-width` and `aspect-ratio` to prevent them from inheriting the parent's responsive behavior
 
 **Warning signs:**
-- Hero image is constrained to 896px wide with visible margins on desktop
-- Horizontal scrollbar appears after adding the hero
-- Removing `max-w-4xl` from `<main>` causes all text sections to span full width
+- Horizontal scrollbar appears on mobile
+- Content overlaps at 768px breakpoint (where grid switches from 2-col to 1-col)
+- Photo/text alternation rhythm is broken (two photos in a row on one side)
+- New sections have different horizontal padding than existing sections
 
-**Phase to address:** First phase of the visual redesign — layout restructure should precede any new sections.
+**Detection:** Chrome DevTools responsive mode, drag the width slider from 375px to 1280px. Watch for layout jumps and overflows.
 
-**Confidence:** HIGH — Verified from direct reading of BaseLayout.astro (`max-w-4xl mx-auto px-4 py-8` on `<main>`).
+**Which phase should address it:** The content layout overhaul phase. Test every viewport width after every section change.
+
+**Recovery cost if hit:** LOW to MEDIUM -- CSS fixes, but debugging which change broke which breakpoint requires careful bisection.
 
 ---
 
-### Pitfall 7: Masonry Gallery Breaks Photo-to-Lightbox Index Mapping
+### Pitfall 8: Strava Segment Links Become Dead Links or Create Poor External Link UX
 
 **What goes wrong:**
-The current PhotoGallery.astro renders photos in a flat grid with `photos.map((photo, index) => ...)`. PhotoSwipe uses the DOM order index to open the lightbox at the correct photo. The `map:photoClick` event from RouteMap.astro dispatches `photoIndex` based on the original array index. If the masonry layout reorders photos (e.g., by featured status, by aspect ratio for visual balance, or by CSS columns which flow top-to-bottom), the DOM order no longer matches the array index. Clicking a photo marker on the map opens the wrong photo in the lightbox.
+The developer adds Strava segment links to each route segment card. Two failure modes:
+1. **Dead links:** Strava segment URLs change, the segment is deleted, or the user's Strava privacy settings hide the segment. Visitors click and get a 404 or login wall
+2. **UX confusion:** Links open in the same tab, navigating users away from the site with no clear way back. Or they open in a new tab without `rel="noopener noreferrer"`, creating a security issue
 
 **Why it happens:**
-CSS columns reorder items visually: in a 3-column layout, items 1, 4, 7 appear in column 1; items 2, 5, 8 in column 2; items 3, 6, 9 in column 3. The DOM order (1, 2, 3, 4...) no longer matches the visual order. PhotoSwipe reads DOM order. The map dispatches array index.
+Strava has a documented history of URL instability. In late 2024, Strava removed external links entirely (reinstated March 2025). Segment URLs (`strava.com/segments/{id}`) depend on the segment existing and being public. If the segment creator makes it private or Strava changes their URL scheme, links break silently. Additionally, Strava segment pages require authentication to view full details -- unauthenticated visitors see a limited view or login prompt.
+
+**Consequences:**
+- Dead Strava links make the site look unmaintained
+- Users without Strava accounts hit a login wall, which is a frustrating experience
+- Links opening in the same tab lose the user's scroll position on a long single-page site
+- Missing `rel="noopener"` on external links is a minor security issue (tabnabbing)
 
 **Prevention:**
-1. **Keep the photo array order consistent between the map and gallery.** If the gallery reorders photos for visual layout, maintain a `data-photo-id` attribute on each gallery item and look up by ID, not index.
-2. **If using CSS columns, be aware of the reordering.** Either:
-   - Use CSS Grid (not columns) which preserves source order, or
-   - Update the PhotoSwipe initialization to use a data attribute for identification instead of DOM index
-3. **Update the `map:photoClick` handler** to find the gallery item by `data-photo-id` rather than position index:
-   ```javascript
-   // Instead of lightbox.loadAndOpen(e.detail.photoIndex, ...)
-   const items = gallery.querySelectorAll('a');
-   const targetIndex = [...items].findIndex(a => a.dataset.photoId === e.detail.photoId);
-   lightbox.loadAndOpen(targetIndex, ...);
-   ```
+1. **Open in new tab** with `target="_blank" rel="noopener noreferrer"` -- standard for external links
+2. **Add visual indicator** for external links (small arrow icon or "Strava" badge) so users know they're leaving the site
+3. **Use aria-label** for accessibility: `aria-label="View [segment name] on Strava (opens in new tab)"` so screen readers announce the destination
+4. **Accept link fragility** -- Strava links WILL eventually break. Mitigate by:
+   - Making Strava links supplementary, not essential. The segment should have all important info (distance, difficulty, description) directly on the page
+   - Using the stable URL format: `https://www.strava.com/segments/{numeric_id}` (not app deep links like `strava.app.link/...`)
+   - Adding a fallback: "Can't see the segment? You may need a Strava account."
+5. **The user mentioned providing Strava links during implementation** -- hardcode them in the Astro component data, not fetched from an API. This makes them easy to update when they break
 
 **Warning signs:**
-- Clicking a photo marker on the map opens a different photo in the lightbox
-- Gallery uses CSS `columns` or `column-count` (which reorders DOM flow)
-- Photos have a "featured" sort that changes their visual position
+- External links without `target="_blank"` on a long single-page site
+- Missing `rel="noopener noreferrer"` on external links
+- No visual distinction between internal and external links
+- Strava links that require authentication to view useful content
 
-**Phase to address:** The gallery redesign phase. Update the PhotoSwipe bridge before or alongside the masonry layout work.
+**Detection:** Click every Strava link in an incognito window (logged out). Verify the page shows useful content without authentication.
 
-**Confidence:** HIGH — Verified from direct reading of PhotoGallery.astro and RouteMap.astro (index-based photoClick dispatch on line 225 of RouteMap.astro).
+**Which phase should address it:** The segment enrichment phase. Define the Strava link pattern once, use it consistently across all segments.
+
+**Recovery cost if hit:** LOW -- adding attributes and visual indicators is straightforward CSS/HTML.
 
 ---
 
-### Pitfall 8: Slide-Out Panel Unusable on Mobile — Covers Map With No Way to Dismiss
+### Pitfall 9: Historical Public Domain Imagery Has Unclear Copyright Status or Poor Image Quality
 
 **What goes wrong:**
-The slide-out detail panel works great on desktop (300px panel alongside a wide map). On mobile (375px), the panel covers the entire map. The user cannot see the sector they clicked, cannot interact with the map, and may not discover how to dismiss the panel (especially if the close button is behind a Leaflet control). The UX degrades to a dead end.
+The developer sources "public domain" Hiawatha illustrations from Google Images or a blog post. The image is actually: (a) a modern reproduction with its own copyright, (b) a photograph of a public domain work where the photograph itself is copyrighted, or (c) genuinely public domain but at 300px resolution, looking blurry and unprofessional when rendered on a modern display.
 
 **Why it happens:**
-Desktop-first panel design without mobile breakpoint consideration. A 300px panel on a 375px screen leaves 75px of visible map — useless. The Leaflet gestureHandling overlay may also conflict with panel touch gestures.
+Copyright for historical imagery is complex:
+- The original 1855 Hiawatha illustrations ARE public domain (pre-1929 U.S. publication)
+- But a high-resolution SCAN of those illustrations may carry its own copyright (the "sweat of the brow" doctrine varies by jurisdiction)
+- Theatrical production photos from the early 1900s may be public domain, but photos from 1929-1989 require checking renewal status
+- Musical production photos (the 1941 Hiawatha musical, later productions) may still be under copyright
+- Google Images provides no copyright verification -- it shows everything
+
+**Consequences:**
+- DMCA takedown notice if copyrighted images are used
+- Legal liability for the site owner / MBTN (the beneficiary nonprofit)
+- Low-resolution images look terrible on Retina displays, undermining the "award-winning" design goal
+- Time wasted sourcing, placing, and styling images that must later be removed
 
 **Prevention:**
-1. **On mobile (< 768px), use a bottom sheet pattern instead of a side panel.** The panel slides up from the bottom, covering the lower 40-60% of the screen. The user can still see the map above. Swiping down dismisses it.
-2. **Include a visible, large (52px minimum) close/dismiss affordance.** Do not rely on clicking outside the panel — that conflicts with the map's gesture handling.
-3. **When the panel is open on mobile, disable map interaction** to prevent conflicting gestures. Re-enable when dismissed.
-4. **Test the panel at 375px width with the map at its current 60vh height.** The arithmetic must work: panel height + visible map area + close button = usable.
-5. **Add `prefers-reduced-motion: reduce` handling** to skip panel slide animations.
+1. **Source only from verified collections:**
+   - Library of Congress (loc.gov) -- search "Hiawatha Longfellow" in Prints & Photographs division
+   - Smithsonian Open Access (si.edu/openaccess) -- CC0 license, high resolution
+   - Wikimedia Commons -- check the license on EACH image individually (not all are public domain)
+   - Internet Archive (archive.org) -- original book scans with clear provenance
+   - New York Public Library Digital Collections -- public domain images clearly marked
+2. **Verify each image individually.** "Public domain" status depends on publication date, country, and whether the specific reproduction has its own rights
+3. **Document provenance** for every image: source URL, original publication date, license/rights status, date accessed. Store this in a JSON manifest similar to the existing photo pipeline
+4. **Set a minimum resolution:** 1200px wide minimum for landscape illustrations, 800px for smaller decorative elements. Historical engravings can be upscaled modestly with sharp's `resize()` but scanned images below 600px will look bad
+5. **Test historical illustrations against the existing visual language.** Black-and-white 19th-century engravings will look jarring next to vibrant WebP route photos unless given consistent visual treatment (sepia toning, border framing, background color)
 
 **Warning signs:**
-- Panel CSS has no mobile breakpoint styles
-- Panel width is a fixed pixel value (not responsive)
-- No close button visible when panel is open
-- Panel opens but covers 100% of the map on mobile
+- Image sourced from Pinterest, Google Images, or a blog without checking the original source
+- No provenance documentation for sourced images
+- Images at <600px resolution
+- Mix of color photos and unprocessed B&W engravings with no visual cohesion
 
-**Phase to address:** The interactive sector map phase. Design the mobile panel UX before the desktop version — it's harder and constrains the desktop design.
+**Detection:** For each historical image, answer: "Where was this originally published, and when?" If you can't answer, the provenance is insufficient.
 
-**Confidence:** HIGH — Verified from codebase: map is 60vh height (min 400px), page is max-w-4xl (896px), current 52px touch target requirement established.
+**Which phase should address it:** The historical imagery sourcing phase. Source and verify ALL images before designing layouts around them.
 
----
-
-### Pitfall 9: Event Date (June 6, 2026) Becomes Stale and Embarrassing After the Event
-
-**What goes wrong:**
-"June 6, 2026" is hardcoded into the page. After the event passes, the site proudly displays a date in the past. In July 2026, it looks like the site is unmaintained. By January 2027, it looks abandoned. If the ride happens annually, the 2026 date actively misleads visitors about when the next one is.
-
-**Why it happens:**
-Static sites have no server-side logic to hide or update dates. The date is baked into HTML at build time. Nobody remembers to rebuild and redeploy after the event passes.
-
-**Prevention:**
-1. **Build-time date logic in Astro frontmatter.** Compute whether the date is in the future or past at build time:
-   ```astro
-   ---
-   const eventDate = new Date('2026-06-06T08:00:00-04:00'); // EDT
-   const now = new Date();
-   const isUpcoming = eventDate > now;
-   ---
-   {isUpcoming ? (
-     <div>June 6, 2026</div>
-   ) : (
-     <div>Check back for next year's date</div>
-   )}
-   ```
-2. **Include the timezone explicitly** when displaying the date. "June 6, 2026" is ambiguous — is that EDT? The event is in Michigan (Eastern Time). Display as "June 6, 2026 - Munising, MI" or "Saturday, June 6, 2026 (Eastern Time)."
-3. **Do NOT use client-side JavaScript to compute the date comparison.** This causes a flash of incorrect content (the static HTML shows the date, then JS hides it). The comparison should happen at build time.
-4. **Set a calendar reminder to rebuild and redeploy after the event.** Or, if deploying to Netlify/Vercel/Cloudflare Pages, schedule a rebuild via their cron/scheduled build feature.
-5. **Design the date display to degrade gracefully.** The section should look complete with or without a specific date. "2026 Edition - Date TBD" is better than a stale "June 6, 2026" in 2027.
-
-**Warning signs:**
-- Date is hardcoded as a string in HTML with no conditional logic
-- No timezone indicator alongside the date
-- No plan for who rebuilds the site after the event
-
-**Phase to address:** The editorial content / event date phase. Implement the conditional date logic when adding the date display.
-
-**Confidence:** HIGH — Standard static site lifecycle issue, verified by [Jim Nielsen's blog post on dates in static site generators](https://blog.jim-nielsen.com/2023/date-and-time-in-ssg/).
-
----
-
-### Pitfall 10: Editorial Photo-Text Layouts Break at Tablet Breakpoint
-
-**What goes wrong:**
-The developer creates beautiful editorial layouts with large photos alongside text blocks (magazine-style "photo left, text right" sections). They look great at desktop (1280px) and acceptable at mobile (375px, stacked). But at tablet width (768-1024px), the layout enters an awkward middle ground: the photo is too narrow to be impactful, the text column is too narrow to be readable, and the two together feel cramped. This is the "responsive uncanny valley."
-
-**Why it happens:**
-Developers test at mobile and desktop, skipping the tablet range. The CSS breakpoint system (Tailwind's `sm:640px`, `md:768px`, `lg:1024px`) creates cliff-edge transitions. A layout that works at 767px (stacked) and 1024px (side-by-side) may be broken at 800px.
-
-**Prevention:**
-1. **Design for three distinct states:** stacked (mobile), two-column narrow (tablet), two-column wide (desktop). Use `md:` for the transition to side-by-side and adjust proportions at `lg:`.
-2. **Set minimum content widths.** Text columns should never be narrower than ~280px (about 45 characters per line for readability). If the photo + text cannot both meet their minimums, stack them.
-3. **Use `aspect-ratio` on photo containers** to maintain proportions across breakpoints. Without it, photos either squish or overflow.
-4. **Use `object-fit: cover` with explicit `aspect-ratio`** on editorial images so they crop gracefully rather than distorting.
-5. **Test specifically at 768px, 834px (iPad), and 1024px (iPad landscape).** These are the danger zone widths.
-
-**Warning signs:**
-- Layout has only two states (mobile and desktop) with no tablet consideration
-- Photo widths are percentage-based without minimum constraints
-- Text alongside narrow photos becomes a single-word-per-line column
-
-**Phase to address:** The editorial layout / route explainer phase. Define the three-state responsive behavior before writing layout CSS.
-
-**Confidence:** HIGH — Standard responsive design pitfall, verified by current Tailwind breakpoint values and the project's existing responsive design requirements (375px, 768px, 1280px in PROJECT.md).
+**Recovery cost if hit:** HIGH for copyright issues (legal, takedown, redesign around removed images). LOW for quality issues (swap image, re-optimize).
 
 ---
 
 ## Minor Pitfalls
 
-Mistakes that cause annoyance or minor quality issues, but are straightforward to fix.
+Mistakes that cause annoyance, minor technical debt, or localized issues. Recovery cost: LOW.
 
 ---
 
-### Pitfall 11: Topo Divider Pattern Clashes With New Ojibwe Floral Dividers
+### Pitfall 10: Page Weight Exceeds Performance Budget with Maximalist Additions
 
 **What goes wrong:**
-The existing site uses `.topo-divider` elements (topographic contour line SVG patterns) as section separators. The redesign adds Ojibwe floral motif dividers. If both coexist, the page has two competing visual languages — contour lines (U.S. Forest Service) and floral patterns (Ojibwe) — creating a confused visual identity that looks indecisive rather than intentional.
+The existing site is 34MB total (dist/ directory), dominated by 29MB of route photos (51 images, ~500-700KB each as full-resolution JPEGs in `public/images/`). Adding historical illustrations, new landscape photos between sections, multiple animated SVGs, expanded CSS for 10+ color tokens, and 7 per-sector elevation charts pushes the total page weight to 50MB+ and individual page load to >5MB transferred.
+
+**Why it happens:**
+Each maximalist addition seems small in isolation:
+- 6-8 historical illustrations at 200-400KB each = 1.5-3MB
+- 4-6 landscape section-break photos at 400-700KB each = 2-4MB
+- Animated SVG dividers with complex paths = 5-15KB each (small individually)
+- Per-sector Chart.js instances = ~200KB shared library + 7 canvas contexts
+- Expanded CSS = negligible file size but increased parse time
+
+Combined, these additions can increase transferred bytes by 30-50%.
+
+**Consequences:**
+- Mobile users on cellular connections experience noticeably slower loads
+- Median mobile page weight is already 2,362KB (2025 data) -- exceeding this puts the site in the slowest percentiles
+- Build time increases as the pipeline processes more images through sharp
 
 **Prevention:**
-Decide early whether the redesign replaces topo dividers entirely or keeps them for specific sections. Recommended approach: keep topo patterns for the map/elevation sections (where the cartographic language makes sense) and use floral motifs for the narrative/gallery sections. Document this in the design system so it's intentional, not accidental.
+1. **Set a performance budget:** Total page transfer size <3MB on first load (excluding lazy-loaded images below the fold)
+2. **Process ALL new images through the existing pipeline.** Historical illustrations should get the same treatment as route photos: 400px WebP thumbnails at 80% quality for inline display, full-resolution lazy-loaded on click/zoom
+3. **Lazy-load everything below the fold.** Use `loading="lazy"` on all images except the hero. The existing site already does this
+4. **Use srcset for new responsive images** rather than serving single full-resolution files
+5. **Prefer CSS/SVG decoration over raster images** where possible. A CSS gradient section background is 0KB; a landscape photo is 500KB
+6. **Monitor with `npx lighthouse` after each visual addition phase**
 
-**Phase to address:** Design system phase — before implementing any new dividers.
+**Warning signs:**
+- New images added to `public/images/` without corresponding thumbnails
+- Total `dist/` size growing >10% between phases
+- Network tab showing >3MB transferred on initial page load
 
-**Confidence:** HIGH — Verified from codebase: `.topo-divider` class exists in global.css and is used twice in index.astro.
+**Detection:** `du -sh dist/` after each build. Track the number over time.
+
+**Which phase should address it:** Every phase. Set the budget at the start and check it at the end of every phase.
+
+**Recovery cost if hit:** LOW -- compress images, lazy-load, or remove the heaviest additions. The infrastructure for optimization already exists in the pipeline.
 
 ---
 
-### Pitfall 12: New Fonts for Ojibwe Design Clash With Existing National Park + Space Mono Pairing
+### Pitfall 11: Visual Incoherence from 10+ Color Palette Without a Color Hierarchy
 
 **What goes wrong:**
-The developer adds a third font to complement the Ojibwe design elements. Three font families on one page creates visual noise and slows page load (each Google Font adds ~20-50KB). The existing National Park (display) + Space Mono (body) pairing is already well-established.
+The developer adds turquoise, red, yellow, and black alongside the existing 12 color tokens (forest, amber, rust, cream, berry, gold, lake, moss families). With 16+ color tokens, every section uses a different combination. The page looks like a patchwork quilt rather than a cohesive design. There is no visual hierarchy telling the user what is primary, secondary, or accent.
+
+**Why it happens:**
+The v1.1 palette has a clear hierarchy: forest greens for backgrounds, amber/gold for headings and CTAs, cream for body text, and berry/moss/lake as sparingly-used accents. Adding 4 new color families without defining their role in the hierarchy destroys this clarity. The temptation of maximalism is to use ALL the colors ALL the time.
+
+**Consequences:**
+- The eye has nowhere to rest -- every section competes for attention
+- CTAs (Donate to MBTN) lose prominence because they no longer stand out from the background
+- The "National Park" aesthetic identity from v1.0/v1.1 is diluted
+- The site feels amateurish rather than "award-winning non-profit"
 
 **Prevention:**
-Do not add new font families. The Ojibwe design elements should work through color, pattern, and shape — not typography. If a different text treatment is needed for specific elements, use weight/size/spacing variations of the existing fonts. The National Park display font is already versatile across weights (400, 600, 700, 800).
+1. **Define roles BEFORE adding colors:**
+   - **Primary:** forest green backgrounds (existing), amber headings (existing) -- UNCHANGED
+   - **Secondary:** turquoise for section differentiation, red for emphasis/alerts
+   - **Accent:** yellow for decorative highlights, black for contrast/text on light backgrounds
+   - **Legacy:** berry, lake, moss remain in their existing decorative roles
+2. **Rule of three per section:** No section should use more than 3 color families (background + text + one accent). The variety comes from different sections using different accent colors
+3. **Create a color usage guide** in the CSS comments or a design doc showing which color goes where
+4. **Multi-color section differentiation should be SUBTLE** -- tinted backgrounds (e.g., `--color-forest-950` with a slight turquoise or red tint via `color-mix()`) rather than bold solid colors
 
-**Phase to address:** Design system phase.
+**Warning signs:**
+- A single section uses 5+ distinct colors
+- New color tokens used without defined purpose
+- Amber/gold CTAs no longer visually stand out
+- Sections look like they belong to different websites
 
-**Confidence:** HIGH — Verified from astro.config.ts: two fonts already loaded with preload.
+**Detection:** Squint at the page or view it at 25% zoom. The color hierarchy should be visible even when details are blurred.
+
+**Which phase should address it:** The color palette expansion phase. Define roles and rules first, THEN add tokens.
+
+**Recovery cost if hit:** LOW -- redefining color usage is CSS-only, but requires design decisions about which colors go where.
 
 ---
 
-### Pitfall 13: Masonry Gallery Images Without Explicit Dimensions Cause Layout Shift
+### Pitfall 12: Build Time Regression from Adding New Image Categories to the Pipeline
 
 **What goes wrong:**
-In a masonry layout, if images load without explicit width/height attributes or CSS `aspect-ratio`, the layout recalculates and jumps as each image loads. This is especially jarring in a masonry layout where one image's dimensions affect the position of everything below it.
+The existing pipeline processes 51 route photos through sharp (parse GPX, resolve annotations, generate thumbnails, copy images, match photos, copy GPX). Adding historical illustrations as a new image category means the pipeline must also process, thumbnail, and catalog these images. If the pipeline isn't updated to handle the new category, the new images either (a) aren't processed at all and appear as raw full-resolution files, or (b) are mixed into the existing photo manifest and appear incorrectly on the route map.
+
+**Why it happens:**
+The existing pipeline (scripts/pipeline.js) has 6 sequential steps designed for route photos. Historical illustrations are a fundamentally different category: they don't have mileage assignments, they shouldn't appear on the route map, and they need different thumbnail dimensions (landscape engravings vs. portrait phone photos). Dropping them into the same `images/` source directory without pipeline changes causes mismatches.
+
+**Consequences:**
+- Historical illustrations appear as unoptimized full-resolution files (500KB+ each instead of thumbnails)
+- OR they're processed as route photos and show up in the photo gallery/map markers incorrectly
+- Build time increases proportionally to new image count
+- Pipeline errors if new images don't have the expected EXIF/filename format
 
 **Prevention:**
-1. Calculate image dimensions at build time (Astro frontmatter) and set `width`, `height`, and `aspect-ratio` on every image element.
-2. Use CSS `aspect-ratio` on the container, not just the image, so the space is reserved even before the image starts loading.
-3. The current photo pipeline already extracts dimensions from filenames (`parseDims` function in PhotoGallery.astro). Extend this to set explicit attributes on the masonry grid items.
+1. **Separate source directories** for route photos (`images/`) and historical illustrations (`images/historical/` or similar)
+2. **Add a new pipeline step** (or modify `generate-thumbnails.js`) to handle historical images with their own output directory and dimensions
+3. **Create a separate manifest** for historical images (e.g., `historical-images.json`) with fields like `source`, `date`, `caption`, `license` -- distinct from the route photo manifest
+4. **Thumbnail dimensions** for historical illustrations should match their display context, not the 400px route photo standard. Landscape engravings might need 800px wide thumbnails
+5. **Consider whether historical images need the pipeline at all.** If there are only 6-8 illustrations and they're already in WebP format at appropriate resolution, they can live in `public/` directly without pipeline processing
 
-**Phase to address:** Gallery redesign phase.
+**Warning signs:**
+- Historical images placed in the same `images/` directory as route photos
+- Pipeline generates thumbnails for files that aren't route photos
+- New images appear in the photo gallery or on map markers
+- Build time doubles without explanation
 
-**Confidence:** HIGH — Verified from existing `parseDims` function in PhotoGallery.astro that already extracts dimensions.
+**Detection:** Run `npm run pipeline` and check if only expected files are processed. Verify `photos.json` doesn't include historical images.
+
+**Which phase should address it:** The historical imagery phase. Decide on the image storage/processing strategy before adding files.
+
+**Recovery cost if hit:** LOW -- moving files to separate directories and updating the pipeline is straightforward.
 
 ---
 
 ## Phase-Specific Warnings
 
-| Phase Topic | Likely Pitfall | Severity | Mitigation |
-|-------------|---------------|----------|------------|
-| Design system / color palette | Color token change breaks hardcoded hex in JS components (#5) | Critical | Audit and tokenize all hex values before changing tokens |
-| Design system / color palette | Ojibwe motifs used without cultural context (#4) | Critical | Establish attribution framework before creating motifs |
-| Hero section | Hero image tanks LCP (#2) | Critical | fetchpriority="high", preload, srcset, eager loading |
-| Hero section | Full-width hero breaks max-w-4xl container (#6) | Moderate | Restructure layout container before adding hero |
-| Gallery redesign | Masonry layout broken in 85%+ of browsers (#1) | Critical | Build-time row span calculation, @supports progressive enhancement |
-| Gallery redesign | Photo-to-lightbox index mapping breaks (#7) | Moderate | Use data-photo-id instead of array index |
-| Gallery redesign | Layout shift from lazy-loaded images (#13) | Minor | Build-time dimensions, CSS aspect-ratio |
-| Interactive sector map | Slide-out panel trapped behind Leaflet (#3) | Critical | Panel as sibling of map container, not inside it |
-| Interactive sector map | Panel unusable on mobile (#8) | Moderate | Bottom sheet pattern on mobile, disable map interaction |
-| Editorial layouts | Tablet breakpoint layout breaks (#10) | Moderate | Three-state responsive design, minimum column widths |
-| Event date display | Stale date after event (#9) | Moderate | Build-time conditional rendering, timezone |
-| Visual identity | Competing divider languages (#11) | Minor | Intentional placement rules for topo vs. floral |
-| Visual identity | Font overload (#12) | Minor | No new fonts — use existing pairing |
+| Phase Topic | Likely Pitfall | Mitigation | Severity |
+|-------------|---------------|------------|----------|
+| Animated section dividers | Animation without prefers-reduced-motion (Pitfall 1) | Build reduced-motion support into the first component template | Critical |
+| Animated section dividers | GPU layer explosion from multiple animated SVGs (related to Pitfall 4) | Use `transform` and `opacity` only; avoid `will-change` on more than 3 elements simultaneously | Moderate |
+| Bold color palette | WCAG contrast failures on dark backgrounds (Pitfall 2) | Test every new token with contrast checker before committing | Critical |
+| Bold color palette | Visual incoherence without color hierarchy (Pitfall 11) | Define color roles before adding tokens | Minor |
+| Historical imagery | Copyright status unclear (Pitfall 9) | Source only from LOC, Smithsonian, Wikimedia, Internet Archive | Critical |
+| Historical imagery | Cultural framing is wrong (Pitfall 3) | Frame as "Longfellow's fiction," pair with contextual text | Critical |
+| Historical imagery | Build pipeline conflict (Pitfall 12) | Separate directory and manifest for historical images | Minor |
+| Shield/arrowhead motifs | Visual fatigue from over-repetition (Pitfall 6) | Limit to 5 visible instances; create 3-4 abstraction levels | Moderate |
+| Content layout overhaul | Responsive layout regression (Pitfall 7) | Test 5 viewport widths after every layout change | Moderate |
+| Content layout overhaul | LCP regression from new above-fold content (Pitfall 4) | No new images or animations in first viewport | Critical |
+| Per-sector elevation snippets | Chart.js memory bloat from 7 instances (Pitfall 5) | Use static SVG sparklines instead of Chart.js | Moderate |
+| Strava links | Dead links and poor external link UX (Pitfall 8) | Supplementary info only; `target="_blank"` with `rel="noopener"` | Minor |
+| Overall maximalism | Page weight exceeds budget (Pitfall 10) | Set 3MB transfer budget; check after every phase | Minor |
 
 ---
 
-## "Looks Done But Isn't" Checklist for v1.1
+## Pre-Implementation Checklist
 
-- [ ] **Masonry gallery:** Renders correctly in Chrome stable (not just Safari TP or Firefox Nightly)
-- [ ] **Hero image:** Lighthouse LCP < 2.5s on throttled mobile; no `loading="lazy"` on hero `<img>`
-- [ ] **Slide-out panel:** Visible and usable at 375px width; close button meets 52px touch target
-- [ ] **Ojibwe motifs:** Attribution text visible on every page using floral elements; narrative explains the cultural connection
-- [ ] **Color migration:** `grep -r '#c8973e' src/` returns zero results (all hardcoded hex replaced with token references)
-- [ ] **Photo lightbox:** Map marker click opens correct photo after gallery reorder (test with first and last photo)
-- [ ] **Event date:** Date display conditionally renders based on build-time comparison; timezone specified
-- [ ] **Editorial layouts:** Text readable at 768px width (no single-word columns); photos maintain aspect ratio
-- [ ] **Topo vs. floral dividers:** Each divider type used intentionally, not randomly mixed
-- [ ] **Page container:** Full-width sections (hero, gallery) are truly full-width; constrained sections maintain max-w-4xl
+Before starting any v1.2 implementation phase, verify:
 
----
-
-## Recovery Strategies
-
-| Pitfall | Recovery Cost | Recovery Steps |
-|---------|---------------|----------------|
-| Masonry broken in production (#1) | LOW | Add `@supports` fallback grid; keep masonry as enhancement |
-| Hero kills LCP (#2) | LOW | Add preload link tag, change loading to eager, add fetchpriority; < 30 min |
-| Panel behind map (#3) | MEDIUM | Restructure DOM to make panel a sibling; may require refactoring event wiring |
-| Cultural appropriation complaint (#4) | HIGH | Cannot be fixed with code — requires community engagement, possible design removal, public response |
-| Color migration half-done (#5) | MEDIUM | Finish hex-to-token migration; systematic grep + replace |
-| Container breakout issues (#6) | MEDIUM | Restructure main container; touches every section |
-| Photo index mismatch (#7) | LOW | Add data-photo-id attributes; update event handler; < 1 hour |
-| Panel unusable on mobile (#8) | MEDIUM | Implement bottom sheet pattern; requires new responsive CSS |
-| Stale date (#9) | LOW | Add Astro frontmatter conditional; rebuild + deploy |
-| Tablet layout broken (#10) | LOW-MEDIUM | Add `md:` breakpoint styles; test at 768px |
+- [ ] Performance budget defined (target: <3MB initial transfer, LCP <2.5s mobile)
+- [ ] New color tokens have documented contrast ratios against forest-950 and forest-900
+- [ ] Animation components include `@media (prefers-reduced-motion: reduce)` blocks
+- [ ] Historical images have documented provenance (source, date, license)
+- [ ] Cultural framing strategy established (Longfellow critique vs. celebration)
+- [ ] Motif vocabulary defined (which variations, which contexts, maximum instances)
+- [ ] New image storage strategy decided (separate directory from route photos)
+- [ ] Per-sector elevation approach decided (Chart.js vs. static SVG)
+- [ ] Responsive breakpoints tested (375px, 414px, 768px, 1024px, 1280px)
+- [ ] `prefers-reduced-motion` toggle tested in OS accessibility settings
 
 ---
 
 ## Sources
 
-**CSS Masonry:**
-- [Can I Use: grid-template-rows masonry](https://caniuse.com/mdn-css_properties_grid-template-rows_masonry) -- HIGH confidence
-- [MDN: Masonry layout guide](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Grid_layout/Masonry_layout) -- HIGH confidence
-- [Smashing Magazine: Native CSS Masonry Layout](https://www.smashingmagazine.com/native-css-masonry-layout-css-grid/) -- MEDIUM confidence
-- [CSS-Tricks: Masonry Layout is Now grid-lanes](https://css-tricks.com/masonry-layout-is-now-grid-lanes/) -- MEDIUM confidence
+**Animation and performance:**
+- [SVG Animation Encyclopedia 2025](https://www.svgai.org/blog/research/svg-animation-encyclopedia-complete-guide)
+- [Smashing Magazine: Optimising SVGs](https://www.smashingmagazine.com/2025/06/smashing-animations-part-4-optimising-svgs/)
+- [CSS GPU Animation: Doing It Right -- Smashing Magazine](https://www.smashingmagazine.com/2016/12/gpu-animation-doing-it-right/)
+- [CSS Animation Performance GPU Acceleration](https://www.usefulfunctions.co.uk/2025/11/08/css-animation-performance-gpu-acceleration-techniques/)
 
-**Hero Image Performance:**
-- [web.dev: Optimize Largest Contentful Paint](https://web.dev/articles/optimize-lcp) -- HIGH confidence
-- [Addy Osmani: fetchpriority=high for LCP hero images](https://addyosmani.com/blog/fetch-priority/) -- HIGH confidence
-- [Astro: Images guide](https://docs.astro.build/en/guides/images/) -- HIGH confidence
-- [web.dev: Fetch Priority API](https://web.dev/articles/fetch-priority) -- HIGH confidence
+**Accessibility and contrast:**
+- [WebAIM Contrast Checker](https://webaim.org/resources/contrastchecker/)
+- [Color Contrast Accessibility WCAG 2025 Guide](https://www.allaccessible.org/blog/color-contrast-accessibility-wcag-guide-2025)
+- [Pope Tech: Accessible Animation and Movement](https://blog.pope.tech/2025/12/08/design-accessible-animation-and-movement/)
+- [MDN: prefers-reduced-motion](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/prefers-reduced-motion)
 
-**Leaflet Stacking / Z-Index:**
-- [Leaflet official reference: Map panes and z-index values](https://leafletjs.com/reference.html) -- HIGH confidence
-- [Leaflet issue #6555: z-index of .leaflet-top should be lower](https://github.com/Leaflet/Leaflet/issues/6555) -- HIGH confidence
-- [Leaflet issue #2782: z-index problems with controls](https://github.com/Leaflet/Leaflet/issues/2782) -- HIGH confidence
-- [Leaflet: Working with map panes tutorial](https://leafletjs.com/examples/map-panes/) -- HIGH confidence
+**Cultural sensitivity:**
+- [Communication Arts: Decolonizing Native American Design](https://www.commarts.com/columns/decolonizing-native-american-design)
+- [Sketch Design Repeat: Avoiding Cultural Appropriation in Design](https://sketchdesignrepeat.com/avoiding-cultural-appropriation-in-surface-pattern-design/)
+- [The Framekeeper Project: Public Domain Ethics](https://theframekeeperproject.org/can-i-use-that-image-a-guide-to-public-domain-ethics/)
 
-**Ojibwe Cultural Sensitivity:**
-- [Heart Berry: Anishinaabeg Use Ojibwe Floral Beadwork as Covert Art](https://www.heartberry.com/blogs/news/17055207-anishinaabeg-use-ojibwe-floral-beadwork-as-covert-art) -- HIGH confidence (Anishinaabe-authored source)
-- [Neebin Design: Anishinaabe Floral Set](https://neebin.com/design/floral_set/) -- HIGH confidence (Anishinaabe artist's explicit usage terms)
-- [Indigenous Protocols for the Visual Arts](https://www.indigenousprotocols.art/) -- HIGH confidence
-- [USFS Hiawatha National Forest: Tribal Relations](https://www.fs.usda.gov/r09/hiawatha/working-with-us/tribal-relations) -- HIGH confidence
-- [Robert Desjarlait: Contemporary Aesthetics of Anishinaabe Floral Art](https://www.robertdesjarlaitfinearts.com/weeblycom/the-contemporary-aesthetics-of-anishinaabe-floral-art) -- MEDIUM confidence
-- [Inquiries Journal: Native Design in Modern Fashion](http://www.inquiriesjournal.com/articles/1730/native-design-in-modern-fashion-the-transformations-of-native-american-flower-beadwork) -- MEDIUM confidence
+**Public domain imagery:**
+- [Library of Congress Prints & Photographs](https://www.loc.gov/pictures/)
+- [Smithsonian Open Access](https://www.si.edu/openaccess)
+- [University of Iowa: Finding Public Domain Images](https://guides.lib.uiowa.edu/artsimages/publicdomain)
+- [Oregon State: Copyright and Public Domain](https://guides.library.oregonstate.edu/copyright/publicdomain)
 
-**Tailwind 4 Theme Migration:**
-- [Tailwind CSS: Theme variables documentation](https://tailwindcss.com/docs/theme) -- HIGH confidence
+**Chart.js performance:**
+- [Chart.js Performance Documentation](https://www.chartjs.org/docs/latest/general/performance.html)
+- [Chart.js Memory Leak Issue #11299](https://github.com/chartjs/Chart.js/issues/11299)
 
-**Static Site Dates:**
-- [Jim Nielsen: Date and Time with a Static Site Generator](https://blog.jim-nielsen.com/2023/date-and-time-in-ssg/) -- MEDIUM confidence
+**Strava URL stability:**
+- [DC Rainmaker: Strava Backtracks on External Links](https://www.dcrainmaker.com/2025/03/strava-backtracks-now-allows-external-links-again.html)
+- [Strava Press: Links Are Back](https://press.strava.com/articles/links-are-back-on-strava)
 
-**Responsive Design:**
-- [MDN: Common grid layouts](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Grid_layout/Common_grid_layouts) -- HIGH confidence
-- [Tailwind CSS: Responsive design](https://tailwindcss.com/docs/responsive-design) -- HIGH confidence
-
----
-*Pitfalls research for: v1.1 Visual Redesign (Hiawatha's Revenge)*
-*Researched: 2026-03-31*
-*Replaces v1.0 pitfalls research from 2026-03-30*
+**Maximalist design:**
+- [Ester: Maximalist Web Design -- Can Bold Aesthetics Be Functional?](https://ester.co/blog/maximalist-web-design)
+- [Figma: Web Design Statistics 2026](https://www.figma.com/resource-library/web-design-statistics/)

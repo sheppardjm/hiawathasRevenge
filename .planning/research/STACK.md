@@ -1,690 +1,727 @@
-# Technology Stack
+# Technology Stack: v1.2 Cultural Maximalism
 
-**Project:** Hiawatha's Revenge v1.1 Visual Redesign
+**Project:** Hiawatha's Revenge v1.2 Cultural Maximalism
 **Researched:** 2026-03-31
-**Scope:** Stack additions and CSS techniques for visual redesign features ONLY
-**Confidence:** HIGH for CSS techniques; MEDIUM for native CSS masonry (browser support evolving)
-
-## Context
-
-The v1.0 stack is validated and stable (see v1.0 STACK.md, 2026-03-30). This document covers ONLY what is needed for the v1.1 visual redesign features. The core stack (Astro 6, Tailwind 4, Leaflet, Chart.js, PhotoSwipe, sharp) does not change.
-
-**Key constraint:** This is a static site with no JS frameworks. Every technique below must work with vanilla CSS/JS inside Astro `<script>` blocks. No React, no Vue, no Svelte components.
+**Scope:** Stack additions for animated SVG dividers, bold color palette, historical imagery, shield motifs, Strava integration, per-sector sparklines
+**Overall Confidence:** HIGH
+**Core constraint:** Zero new npm dependencies. CSS/SVG-only approach. Static output only.
 
 ---
 
-## New Stack Additions
+## Executive Summary
 
-### Zero New Dependencies
+The v1.2 cultural maximalism features require **zero new npm packages**. Every feature -- animated SVG dividers, bold multicolored palette, shield motifs, per-sector sparklines, and Strava embedding -- can be implemented with CSS animations, inline SVG, build-time data processing, and a single external embed script. The existing Astro 6 / Tailwind 4 / Chart.js stack handles everything.
 
-**The v1.1 redesign requires NO new npm packages.** Every feature can be implemented with CSS techniques already available in Tailwind 4 + modern CSS + vanilla JavaScript. This is the single most important finding of this research.
-
-| Feature | Implementation | New Library Needed? |
-|---------|---------------|-------------------|
-| Masonry gallery | CSS `columns` (Tailwind `columns-*` utilities) | NO |
-| Full-width hero | CSS `object-fit` + gradient overlay | NO |
-| Slide-out detail panel | HTML `<dialog>` + CSS `@keyframes` + vanilla JS | NO |
-| SVG decorative patterns | Inline SVG `<pattern>` / CSS `background-image` data URIs | NO |
-| Color palette evolution | Tailwind `@theme` custom properties | NO |
-| Editorial layout | CSS Grid `grid-template-areas` + `float` + `shape-outside` | NO |
-| Drop caps | CSS `::first-letter` (+ `initial-letter` where supported) | NO |
+The one external dependency is Strava's embed script (`strava-embeds.com/embed.js`), which is loaded via `<script>` tag and requires no API key or authentication.
 
 ---
 
-## Feature-by-Feature Technical Specification
+## 1. CSS Animation Techniques for Multicolored Animated Dividers
 
-### 1. Masonry Gallery Layout
+### Recommendation: CSS `@keyframes` + CSS custom properties + `@property` for color animation
 
-**Recommendation: CSS `columns` with Tailwind utilities. Do NOT use native CSS masonry.**
+Three techniques, layered by capability:
 
-#### Why CSS Columns, Not Native Grid Masonry
+### Technique A: `stroke-dasharray` / `stroke-dashoffset` Line Drawing (Primary)
 
-Native CSS masonry has been through years of specification debate. As of March 2026:
+Animate SVG paths to "draw themselves" on scroll. The vine-of-life in FloralDivider.astro is a perfect candidate.
 
-| Approach | Status | Global Support | Production Ready? |
-|----------|--------|---------------|-------------------|
-| `display: grid-lanes` (new spec) | Working Draft | 0.02% (Safari 26.4+ only) | NO |
-| `grid-template-rows: masonry` (old spec) | Superseded by grid-lanes | Firefox flag only | NO |
-| CSS `columns` + `break-inside: avoid` | Stable standard | 99%+ | YES |
+```css
+@keyframes draw-vine {
+  from { stroke-dashoffset: var(--path-length); }
+  to   { stroke-dashoffset: 0; }
+}
 
-Source: [Can I Use - CSS Grid Lanes](https://caniuse.com/css-grid-lanes) -- 0.02% global support as of March 2026. Chrome 140+ and Firefox 77+ have it behind flags. Only Safari 26.4+ ships it enabled. This is not viable for production.
+.animated-vine path {
+  stroke-dasharray: var(--path-length);
+  stroke-dashoffset: var(--path-length);
+  animation: draw-vine 2s ease-out forwards;
+  animation-play-state: paused;
+}
 
-#### Implementation with Tailwind 4
+.animated-vine.in-view path {
+  animation-play-state: running;
+}
+```
 
-Tailwind 4 ships `columns-*` and `break-inside-*` utilities that map directly to the CSS columns approach:
+**How it works:** Set `stroke-dasharray` to the path's total length (one dash = full path). Offset the dash by the full length (hiding it), then animate offset to 0 (revealing it). Use `getTotalLength()` in a small `<script>` to measure paths at runtime and set `--path-length`.
+
+**Browser support:** 99%+ (stroke-dasharray is SVG 1.1, universally supported).
+**Performance:** Excellent. `stroke-dashoffset` is compositor-friendly and does not trigger layout/paint.
+
+Source: [CSS-Tricks -- How SVG Line Animation Works](https://css-tricks.com/svg-line-animation-works/)
+
+### Technique B: CSS `@property` for Gradient Color Cycling
+
+Animate gradient color stops smoothly -- impossible with regular CSS custom properties because the browser does not know they are `<color>` values. `@property` registration tells the browser the type, enabling interpolation.
+
+```css
+@property --divider-color-1 {
+  syntax: '<color>';
+  inherits: false;
+  initial-value: #14b8a6; /* turquoise-500 */
+}
+
+@property --divider-color-2 {
+  syntax: '<color>';
+  inherits: false;
+  initial-value: #ef4444; /* scarlet-500 */
+}
+
+@keyframes color-shift {
+  0%   { --divider-color-1: #14b8a6; --divider-color-2: #ef4444; }
+  33%  { --divider-color-1: #facc15; --divider-color-2: #14b8a6; }
+  66%  { --divider-color-1: #ef4444; --divider-color-2: #facc15; }
+  100% { --divider-color-1: #14b8a6; --divider-color-2: #ef4444; }
+}
+
+.animated-divider {
+  background: linear-gradient(90deg, var(--divider-color-1), var(--divider-color-2));
+  animation: color-shift 8s ease-in-out infinite;
+}
+```
+
+**Browser support:** 96.02% (Chrome 85+, Firefox 128+, Safari 16.4+, Edge 85+).
+Source: [Can I Use -- CSS @property](https://caniuse.com/mdn-css_at-rules_property)
+
+**Fallback:** Without `@property`, the gradient shows static colors. Use `@supports` to detect:
+
+```css
+@supports (animation-name: test) and (not (syntax: '<color>')) {
+  /* Fallback: use filter hue-rotate for color shifting */
+  .animated-divider {
+    filter: hue-rotate(0deg);
+    animation: hue-cycle 8s linear infinite;
+  }
+}
+```
+
+Source: [Josh W. Comeau -- Color Shifting in CSS](https://www.joshwcomeau.com/animation/color-shifting/)
+
+### Technique C: SVG `fill` / `stroke` Animation via CSS
+
+Animate SVG element colors directly with CSS keyframes. Simpler than `@property` gradients but limited to individual elements, not gradient stops.
+
+```css
+@keyframes blossom-pulse {
+  0%, 100% { fill: var(--color-gold-400); }
+  50%      { fill: var(--color-scarlet-400); }
+}
+
+.animated-blossom ellipse {
+  animation: blossom-pulse 4s ease-in-out infinite;
+}
+
+.animated-blossom ellipse:nth-child(2) {
+  animation-delay: 0.3s;
+}
+```
+
+**Browser support:** 99%+ (CSS animation of SVG presentation attributes is universally supported in modern browsers).
+**Performance:** Triggers repaint but not layout. Acceptable for small SVG elements.
+
+### Technique Comparison
+
+| Technique | Use Case | Browser Support | Performance | Complexity |
+|-----------|----------|----------------|-------------|------------|
+| `stroke-dashoffset` | Vine/path drawing on scroll | 99%+ | Excellent | Low |
+| CSS `@property` gradients | Multicolor gradient cycling | 96% | Excellent | Medium |
+| SVG `fill`/`stroke` CSS | Individual element color shifts | 99%+ | Good | Low |
+| `filter: hue-rotate()` | Full-element color cycling fallback | 99%+ | Excellent | Low |
+
+### What NOT to Use
+
+| Technology | Why Not |
+|------------|---------|
+| **GSAP / GreenSock** | 23KB+ JS library. CSS handles all needed animations. Overkill for scroll-triggered draws and color cycling. |
+| **Lottie / Bodymovin** | Requires After Effects export pipeline + 50KB+ player. SVG path animation is simpler for vine/floral motifs. |
+| **SMIL animation** | 97% support, NOT deprecated (Chrome reversed deprecation). But CSS animations are more maintainable, debuggable, and Tailwind-integrated. SMIL is appropriate only for `<img src="file.svg">` contexts where CSS cannot reach. |
+| **Web Animations API (JS)** | Adds JS complexity for what CSS handles. Reserve for programmatic needs. |
+| **`motion-path` / `offset-path`** | 96% support but only useful for moving elements along paths (e.g., floating particles). Not needed for divider color/draw animations. |
+
+### Reduced Motion
+
+All animations MUST respect `prefers-reduced-motion`:
+
+```css
+@media (prefers-reduced-motion: reduce) {
+  .animated-vine path,
+  .animated-divider,
+  .animated-blossom ellipse {
+    animation: none;
+    /* Show final state immediately */
+    stroke-dashoffset: 0;
+  }
+}
+```
+
+The existing codebase already follows this pattern (see `global.css` line 165-178).
+
+---
+
+## 2. Historical Hiawatha Imagery -- Public Domain Sources
+
+### Recommendation: Harrison Fisher 1906 illustrations as primary source, Frederic Remington 1891 as secondary
+
+Three verified public domain illustration collections exist for The Song of Hiawatha, each with distinct visual character:
+
+### Primary Source: Harrison Fisher (1906)
+
+**What:** 69 illustrations (16 color, 53 black-and-white) for the 1906 Bobbs-Merrill edition.
+**Style:** Romantic, detailed portraiture. Color plates have rich warm tones. Ideal for the maximalist aesthetic.
+**Access:** [hiawatha.digital/illustrations](https://hiawatha.digital/illustrations) -- high-resolution digital scans, downloadable via browser, explicitly marked "copyright has expired -- in the public domain."
+**Quality:** Digitized in 2024 from a very good copy. High resolution suitable for web use.
+**Why primary:** Color illustrations match the bold palette. Romantic style complements the editorial narrative tone. 69 images provide extensive selection.
+
+**Confidence: HIGH** -- Public domain status is unambiguous (1906 publication, author died 1934).
+
+### Secondary Source: Frederic Remington (1891)
+
+**What:** 22 black-and-white oil paintings, one per canto, for the 1891 Houghton Mifflin deluxe edition.
+**Style:** Documentary realism, action-oriented. Strong line work.
+**Access:**
+- [Metropolitan Museum of Art](https://www.metmuseum.org/art/collection/search/11864) -- Open Access, unrestricted use including commercial
+- [Internet Archive](https://archive.org/details/songhiawatha00wyetgoog) -- full scan of 1891 edition
+- [Library of Congress](https://www.loc.gov/item/20006813) -- digital catalog record
+**Quality:** Museum-quality scans from the Met. Internet Archive scans are adequate but lower resolution.
+**Why secondary:** Black-and-white only. Best used for textural elements, background watermarks, or monochrome accent images.
+
+**Confidence: HIGH** -- Pre-1928 publication, Met Open Access policy explicitly permits unrestricted reuse.
+
+### Tertiary Source: Wikimedia Commons Category
+
+**What:** 45+ files across 5 subcategories including theatrical productions, landscapes, and additional illustrated editions.
+**Access:** [Category:The Song of Hiawatha](https://commons.wikimedia.org/wiki/Category:The_Song_of_Hiawatha)
+**Notable items:**
+- Albert Bierstadt "Departure of Hiawatha" (c. 1868) -- landscape painting
+- 1931 theatrical production photographs (41 files)
+- 1898 Altemus edition illustrations
+**Why tertiary:** Mixed quality. Individual items need license verification. Best for supplementary/decorative use.
+
+**Confidence: MEDIUM** -- Items are individually licensed; verify each before use.
+
+### Implementation Approach
+
+1. **Download** selected Fisher color illustrations to `public/images/historical/`
+2. **Process** through existing sharp pipeline (`generate-thumbnails` script) to create optimized WebP thumbnails
+3. **Reference** in components via standard `<img>` tags with `loading="lazy"`
+4. **Credit** illustrator in alt text and in a credits section (good form for public domain use)
+
+No new build tooling needed. The existing `generate-thumbnails` pipeline handles new images automatically.
+
+### Sources NOT to Use
+
+| Source | Why Not |
+|--------|---------|
+| **Getty Images / Alamy** | Watermarked previews; licensing fees for hi-res even on public domain works |
+| **Pinterest** | Unverified provenance, low resolution, unclear rights |
+| **AI-generated "Hiawatha" images** | Culturally inappropriate. The project uses authentic historical illustrations that contextualize the poem's actual cultural history |
+
+---
+
+## 3. Bold Color Palette Expansion -- WCAG AA Verified
+
+### Recommendation: Add three new color families (turquoise, scarlet, sun) to `@theme static` block
+
+The existing palette (forest, amber, rust, cream, berry, gold, lake, moss) is woodland-muted. The v1.2 maximalist aesthetic demands bolder, higher-saturation accent colors drawn from Haudenosaunee wampum belts (purple/white), Ojibwe beadwork (turquoise/red/yellow), and the bold graphic sensibility of non-profit event branding.
+
+### WCAG AA Contrast Ratios Against Primary Background
+
+All ratios calculated against `forest-950` (#0d1a0d), the darkest background used on the site.
+
+| Token | Hex | Ratio vs #0d1a0d | AA Normal (4.5:1) | AA Large (3:1) | Recommended Use |
+|-------|-----|-------------------|---------------------|------------------|-----------------|
+| **turquoise-400** | `#2dd4bf` | 9.64:1 | PASS | PASS | Bright accent, highlights, hover states |
+| **turquoise-500** | `#14b8a6` | 7.21:1 | PASS | PASS | Primary turquoise text, links, headings |
+| **turquoise-600** | `#0d9488` | 4.79:1 | PASS | PASS | Subtle accent, borders, decorative |
+| **scarlet-400** | `#f87171` | 6.48:1 | PASS | PASS | Text-safe red, callout text |
+| **scarlet-500** | `#ef4444` | 4.77:1 | PASS | PASS | Primary bold red, badges, alerts |
+| **scarlet-600** | `#dc2626` | 3.71:1 | FAIL | PASS | Large text/headings only, decorative fills |
+| **sun-400** | `#facc15` | 11.71:1 | PASS | PASS | Primary bold yellow, energy accent |
+| **sun-500** | `#eab308` | 9.35:1 | PASS | PASS | Secondary yellow, text-safe |
+
+### Additions to `global.css` @theme static Block
+
+```css
+@theme static {
+  /* ... existing forest/amber/rust/cream/berry/gold/lake/moss tokens ... */
+
+  /* ============================================================
+     v1.2: Bold Cultural Maximalism Color Families
+     ============================================================ */
+
+  /* Turquoise family -- Great Lakes water, Ojibwe beadwork accent
+     All three pass AA normal text on forest-950 */
+  --color-turquoise-600: #0d9488;
+  --color-turquoise-500: #14b8a6;
+  --color-turquoise-400: #2dd4bf;
+
+  /* Scarlet family -- bold energy, wampum/beadwork red
+     scarlet-600 is large-text/decorative ONLY (3.71:1 fails AA normal) */
+  --color-scarlet-600: #dc2626;
+  --color-scarlet-500: #ef4444;
+  --color-scarlet-400: #f87171;
+
+  /* Sun family -- warmth, energy, bold highlight
+     Both pass AA normal text comfortably */
+  --color-sun-500: #eab308;
+  --color-sun-400: #facc15;
+}
+```
+
+**How Tailwind 4 generates utilities:** Defining `--color-turquoise-500` inside `@theme static` automatically creates `text-turquoise-500`, `bg-turquoise-500`, `border-turquoise-500`, etc., plus all responsive/state variants. No configuration file needed.
+
+### Palette Interaction with Existing Tokens
+
+The new families complement rather than replace existing tokens:
+
+| Context | Existing Token | v1.2 Alternative | When to Use v1.2 |
+|---------|---------------|------------------|------------------|
+| Headings | `amber-500` | Keep `amber-500` | Amber stays for primary headings -- it's the brand |
+| Accent borders | `forest-700` | `turquoise-600` | For sections needing visual pop |
+| Callout backgrounds | `forest-800` | Gradient using turquoise + scarlet | For cultural history sections |
+| Links | `amber-400` | `turquoise-400` | For links in turquoise-themed sections |
+| Badges | `rust-600` | `scarlet-500` | For difficulty/alert badges wanting more contrast |
+| Highlights | `gold-400` | `sun-400` | For maximum visual energy moments |
+
+### Palette Governance Rule
+
+The bold colors should appear in **culturally-themed sections** (Hiawatha explainer, historical imagery, shield motifs) while the woodland palette (forest/amber/cream) remains dominant for **route/ride content** (map, elevation, photos, stats). This prevents the maximalist palette from overwhelming the site's core identity.
+
+---
+
+## 4. SVG Motif System -- Shield/Arrowhead Repeating Pattern
+
+### Recommendation: SVG `<symbol>` + `<use>` for icons, CSS `background-image` data URIs for repeating backgrounds
+
+The existing HeroSection.astro already contains a hand-crafted SVG shield badge (the ranger-station shield with arrowhead, lines 24-40). Extract the shield path as a reusable `<symbol>` and propagate it throughout the site.
+
+### Architecture: Three Tiers of Motif Usage
+
+**Tier 1: `<symbol>` + `<use>` for Inline Icons**
+
+Define once in a shared SVG sprite, reference everywhere:
 
 ```html
-<!-- Responsive masonry gallery -->
-<div class="columns-2 gap-2 sm:columns-3 lg:columns-4">
-  <div class="break-inside-avoid mb-2">
-    <a href="/images/photo.jpg" data-pswp-width="1536" data-pswp-height="2048">
-      <img src="/thumbs/photo.webp" alt="" loading="lazy" class="w-full rounded" />
-    </a>
-  </div>
-  <!-- More items... -->
+<!-- In BaseLayout.astro or a shared component -->
+<svg class="sr-only" aria-hidden="true">
+  <defs>
+    <symbol id="shield-motif" viewBox="0 0 100 120">
+      <!-- Simplified shield path from HeroSection badge -->
+      <path d="M50 5 L10 20 V55 C10 90 50 110 50 110 S90 90 90 55 V20 Z"
+            fill="currentColor" />
+    </symbol>
+    <symbol id="arrowhead-motif" viewBox="0 0 40 60">
+      <path d="M20 2 L6 40 Q8 38 14 36 L18 50 L20 58 L22 50 L26 36 Q32 38 34 40 Z"
+            fill="currentColor" />
+    </symbol>
+  </defs>
+</svg>
+
+<!-- Usage anywhere -->
+<svg class="w-6 h-6 text-turquoise-500"><use href="#shield-motif" /></svg>
+<svg class="w-4 h-4 text-scarlet-500"><use href="#arrowhead-motif" /></svg>
+```
+
+**Why `<symbol>` + `<use>`:** Zero HTTP requests. `currentColor` inherits from Tailwind `text-*` classes. Cacheable in the DOM. The same technique used by every SVG icon system (Heroicons, Lucide, etc.) but without the npm dependency.
+
+**Browser support:** 99%+ (SVG `<use>` with fragment identifiers).
+
+**Tier 2: CSS `background-image` Data URI for Repeating Backgrounds**
+
+The RouteExplainer.astro already uses this pattern for topo-line backgrounds (line 75). Extend it for shield motifs:
+
+```css
+.shield-bg {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="60" height="72" viewBox="0 0 60 72"><path d="M30 3 L6 12 V33 C6 54 30 66 30 66 S54 54 54 33 V12 Z" fill="none" stroke="%233d6b3d" stroke-width="1" opacity="0.12"/></svg>');
+  background-repeat: repeat;
+  background-size: 60px 72px;
+}
+```
+
+**Performance:** Excellent. Data URI SVGs are parsed inline, no HTTP request. At ~200 bytes per motif, negligible payload.
+
+**Tier 3: CSS `mask-image` for Decorative Overlays**
+
+Use shield shapes as masks over gradient backgrounds for bold section headers:
+
+```css
+.shield-mask-accent {
+  background: linear-gradient(135deg, var(--color-turquoise-500), var(--color-scarlet-500));
+  -webkit-mask-image: url('data:image/svg+xml;utf8,<svg>...</svg>');
+  mask-image: url('data:image/svg+xml;utf8,<svg>...</svg>');
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+```
+
+**Browser support:** CSS `mask-image` is 97%+ with `-webkit-` prefix. Source: [Can I Use -- CSS Masks](https://caniuse.com/css-masks).
+
+### Motif Inventory
+
+| Motif | Source | Uses |
+|-------|--------|------|
+| Shield | Extracted from HeroSection badge `<path>` | Section headers, list bullets, background pattern |
+| Arrowhead | Extracted from HeroSection badge tree/arrow | Directional indicators, divider accents |
+| Vine (existing) | FloralDivider.astro S-curve path | Section dividers (animated in v1.2) |
+| Blossom (existing) | FloralDivider.astro five-petal cluster | Decorative accent points |
+
+### What NOT to Build
+
+| Approach | Why Not |
+|----------|---------|
+| External SVG sprite file | Adds HTTP request for something achievable with inline `<symbol>` |
+| Icon font | Accessibility issues, no multicolor support, larger payload than inline SVG |
+| Heroicons/Lucide/Phosphor | 3-5 custom motifs do not justify an icon library dependency |
+| Canvas-based rendering | No semantic benefit over SVG, worse accessibility, cannot be styled with CSS |
+
+---
+
+## 5. Strava Segment/Route Integration
+
+### Recommendation: Strava route embed (div + external script), NOT iframe, NOT API
+
+Strava offers two embed formats. The modern one is preferred:
+
+### Modern Embed (Recommended)
+
+```html
+<div class="strava-embed-placeholder"
+     data-embed-type="route"
+     data-embed-id="[ROUTE_ID]"
+     data-style="standard"
+     data-slippy="true">
+</div>
+<script src="https://strava-embeds.com/embed.js"></script>
+```
+
+**Features included in embed:**
+- Interactive map with route trace
+- Elevation profile (toggleable)
+- Distance and elevation gain display
+- "Flyover" 3D preview button
+- "View on Strava" link
+- Responsive width
+
+**Requirements:**
+- Route must be **public** on Strava
+- No API key needed
+- No authentication needed
+- Works on static sites
+
+### Segment Embeds (Also Available)
+
+Individual segments can be embedded similarly:
+
+```html
+<iframe height="405" width="590" frameborder="0"
+        allowtransparency="true" scrolling="no"
+        src="https://www.strava.com/segments/[SEGMENT_ID]/embed">
+</iframe>
+```
+
+The segment ID is the number in the Strava URL: `strava.com/segments/7041089` --> ID is `7041089`.
+
+### Reliability Concern
+
+**January 2026 incident:** Strava club widget embeds broke globally from January 20 to February 19, 2026. The issue was specific to **club-level widgets**, not individual activity or route embeds. It was resolved with a server-side fix.
+
+**Mitigation for static site:**
+1. Wrap the Strava embed in a container with fallback text
+2. Use `loading="lazy"` pattern (load embed script only when section is in viewport)
+3. Provide a direct Strava link as fallback if embed fails
+
+```html
+<div id="strava-embed-container">
+  <div class="strava-embed-placeholder" data-embed-type="route" data-embed-id="[ID]" data-style="standard" data-slippy="true"></div>
+  <noscript>
+    <a href="https://www.strava.com/routes/[ROUTE_ID]">View route on Strava</a>
+  </noscript>
 </div>
 ```
 
-**Tailwind utilities used (all built-in, no config needed):**
+### Alternative: Link-Only Approach (Simpler, More Reliable)
 
-| Utility | CSS Output | Purpose |
-|---------|-----------|---------|
-| `columns-2` | `columns: 2` | 2-column layout on mobile |
-| `sm:columns-3` | `columns: 3` at 640px+ | 3 columns on tablet |
-| `lg:columns-4` | `columns: 4` at 1024px+ | 4 columns on desktop |
-| `gap-2` | `column-gap: 0.5rem` | Gutter between columns |
-| `break-inside-avoid` | `break-inside: avoid-column` | Prevent image splitting across columns |
-| `mb-2` | `margin-bottom: 0.5rem` | Vertical spacing between items |
+Instead of embedding, simply link to the Strava route/segment pages with styled buttons:
 
-**Browser support:** Universal. CSS `columns` is supported in all browsers since IE10.
+```html
+<a href="https://www.strava.com/routes/[ROUTE_ID]"
+   class="inline-flex items-center gap-2 px-4 py-2 border border-scarlet-500 text-scarlet-400 font-display uppercase tracking-wider text-sm hover:bg-scarlet-500/10"
+   target="_blank" rel="noopener noreferrer">
+  <svg class="w-4 h-4"><use href="#strava-logo" /></svg>
+  View on Strava
+</a>
+```
 
-**Limitation to document:** CSS columns flow content top-to-bottom per column (not left-to-right across rows). Photo ordering will be column-first, not row-first. For a photo gallery this is acceptable -- photos will still group geographically when sorted by mile marker. If strict left-to-right reading order is required later, a JS-based solution like CSS Grid with explicit `grid-row` placement would be needed, but this adds complexity for marginal benefit.
+**Recommendation:** Use the modern `div` embed for the main route (one instance, prominent placement). Use link-only approach for individual segments within RouteExplainer cards. This limits embed script loading to one instance while still connecting every segment to Strava.
 
-**PhotoSwipe integration:** No changes needed. PhotoSwipe reads `<a>` elements from the gallery container. Changing the layout CSS from `grid` to `columns` does not affect the DOM structure or PhotoSwipe's initialization.
+### What NOT to Do
 
-**Featured photos:** Add `featured: boolean` to `photos.json`. Featured photos render at native aspect ratio (removing `aspect-square object-cover`) and get prominent placement. All photos now show at natural aspect ratio instead of square crops -- the masonry layout accommodates mixed sizes inherently.
+| Approach | Why Not |
+|----------|---------|
+| **Strava API v3** | Requires OAuth, API key, server-side token refresh. Fundamentally incompatible with static site. |
+| **Scraping Strava data** | TOS violation. Strava explicitly prohibits scraping. |
+| **Caching embed content** | The embed script loads dynamically. Cannot be statically captured. |
+| **Multiple full embeds** | Each embed loads the full embed.js script + map tiles. One embed per page is the practical limit for performance. |
 
-#### Confidence: HIGH
-CSS columns is a mature, universally-supported technique. Tailwind 4 utilities are verified in official documentation.
+Sources:
+- [Strava Partners -- How to Embed a Route](https://partners.strava.com/resources/how-to-embed-a-strava-route)
+- [Strava Support -- Sharing Activities and Routes](https://support.strava.com/hc/en-us/articles/216918527)
+- [Strava Community Hub -- January 2026 Embed Issue](https://communityhub.strava.com/developers-api-7/strava-widgets-embedded-on-website-stopped-working-since-20-jan-2026-12591)
 
 ---
 
-### 2. Full-Width Hero Image Section
+## 6. Per-Sector Elevation Sparklines
 
-**Recommendation: `<img>` with `object-cover` + absolute-positioned gradient overlay + text. Break out of the `max-w-4xl` container.**
+### Recommendation: Build-time SVG generation in Astro frontmatter. No new libraries.
 
-#### Breaking the Container
+The existing ElevationProfile.astro uses Chart.js for the full-route elevation chart. Per-sector sparklines should NOT use Chart.js -- they are small, non-interactive, and should be zero-JS.
 
-The current `BaseLayout.astro` wraps all content in:
-```html
-<main class="max-w-4xl mx-auto px-4 py-8">
-```
+### Approach: Astro Build-Time SVG Path Generation
 
-The hero section must break out of this container to be full-width. Two approaches:
+Generate `<svg>` sparklines at build time in Astro component frontmatter, using the existing `route-data.json` points array.
 
-**Option A (Recommended): Move hero OUTSIDE `<main>`**
-```html
-<body>
-  <section class="relative h-[70vh] min-h-[400px] w-full overflow-hidden">
-    <!-- Hero content -->
-  </section>
-  <main class="max-w-4xl mx-auto px-4 py-8">
-    <!-- Everything else -->
-  </main>
-</body>
-```
+```astro
+---
+// SectorSparkline.astro
+import routeData from '../../public/data/route-data.json';
 
-**Option B: Negative margin breakout**
-```css
-.hero-full-width {
-  width: 100vw;
-  margin-left: calc(-50vw + 50%);
+interface Props {
+  startMile: number;
+  endMile: number;
+  width?: number;
+  height?: number;
 }
-```
 
-Option A is cleaner -- it does not fight the container. Requires restructuring `BaseLayout.astro` to support a named slot or moving hero markup before `<main>`.
+const { startMile, endMile, width = 120, height = 32 } = Astro.props;
 
-#### Hero Image Technique
+// Filter points for this sector
+const points = routeData.points.filter(
+  (p) => p.miles >= startMile && p.miles <= endMile
+);
 
-```html
-<section class="relative h-[70vh] min-h-[400px] w-full overflow-hidden">
-  <!-- Background image -->
-  <img
-    src="/images/hero-landscape.webp"
-    alt="Hiawatha National Forest trail through morning mist"
-    class="absolute inset-0 w-full h-full object-cover"
-    loading="eager"
-    decoding="async"
+if (points.length < 2) return;
+
+// Convert elevation from meters to feet
+const elevations = points.map((p) => p.ele * 3.28084);
+const miles = points.map((p) => p.miles);
+
+const minEle = Math.min(...elevations);
+const maxEle = Math.max(...elevations);
+const minMile = miles[0];
+const maxMile = miles[miles.length - 1];
+const eleRange = maxEle - minEle || 1;
+const mileRange = maxMile - minMile || 1;
+
+// Generate SVG polyline points
+// Y is inverted (SVG 0,0 is top-left)
+const svgPoints = points
+  .map((p, i) => {
+    const x = ((miles[i] - minMile) / mileRange) * width;
+    const y = height - ((elevations[i] - minEle) / eleRange) * (height - 4) - 2;
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  })
+  .join(' ');
+
+// Area fill path (close to bottom)
+const areaPath = `M0,${height} L${svgPoints.split(' ').map((p, i) => {
+  if (i === 0) return p;
+  return `L${p}`;
+}).join(' ')} L${width},${height} Z`;
+
+const gainFt = Math.round(maxEle - elevations[0]);
+---
+
+<svg
+  viewBox={`0 0 ${width} ${height}`}
+  width={width}
+  height={height}
+  preserveAspectRatio="none"
+  aria-label={`Elevation profile: ${Math.round(minEle)}ft to ${Math.round(maxEle)}ft`}
+  role="img"
+  class="sector-sparkline"
+>
+  <polyline
+    points={svgPoints}
+    fill="none"
+    stroke="var(--color-amber-500)"
+    stroke-width="1.5"
+    vector-effect="non-scaling-stroke"
   />
-  <!-- Gradient overlay for text legibility -->
-  <div class="absolute inset-0 bg-gradient-to-t from-forest-950/90 via-forest-950/40 to-transparent"></div>
-  <!-- Text content -->
-  <div class="absolute inset-0 flex flex-col items-center justify-end pb-12 text-center">
-    <!-- Badge + title + date -->
-  </div>
-</section>
-```
-
-**Tailwind utilities used (all built-in):**
-
-| Utility | Purpose |
-|---------|---------|
-| `relative` / `absolute inset-0` | Stacking context for image + overlay + text |
-| `h-[70vh] min-h-[400px]` | Viewport-relative height with minimum |
-| `object-cover` | Image fills container, crops overflow |
-| `bg-gradient-to-t` | Bottom-to-top gradient |
-| `from-forest-950/90 via-forest-950/40 to-transparent` | Dark at bottom (text area), transparent at top (image visible) |
-
-**Why `<img>` not `background-image`:** Semantic HTML. The hero photo has alt text. `<img>` works with Astro's image optimization pipeline. `object-cover` on an `<img>` gives identical visual results to `background-size: cover` but with better semantics and optimization potential.
-
-**Responsive behavior:** On mobile, `h-[70vh]` still works. Consider `md:h-[80vh]` for larger viewports. The image crops via `object-cover` -- select a hero photo where the subject is centered so cropping works in both portrait and landscape viewports. Use `object-position` if the focal point is off-center: `object-[center_30%]`.
-
-**Performance:** Mark hero image `loading="eager"` (not lazy) since it is above the fold and part of LCP.
-
-#### Confidence: HIGH
-All techniques are standard CSS with universal browser support. Tailwind gradient utilities are documented and tested.
-
----
-
-### 3. Slide-Out Detail Panel (Map Sector Interactions)
-
-**Recommendation: HTML `<dialog>` element with CSS keyframe animation + vanilla JS `showModal()` / `close()`. No library needed.**
-
-#### Why `<dialog>`
-
-| Approach | Pros | Cons |
-|----------|------|------|
-| HTML `<dialog>` + `showModal()` | Built-in focus trapping, backdrop, Escape key, accessibility | Requires JS to open/close |
-| CSS-only (`:target` or `:checked`) | Zero JS | No focus trapping, accessibility issues, URL hash pollution |
-| Custom div + JS | Full control | Must implement focus trapping, Escape key, aria-modal, backdrop manually |
-
-`<dialog>` is the clear winner. It provides free accessibility (focus trap, Escape to close, `aria-modal` automatic, screen reader announcements) with 96.86% global browser support. Source: [Can I Use - Dialog](https://caniuse.com/dialog).
-
-#### Slide-Out Pattern
-
-Override `<dialog>` default centering to position it as a right-side panel:
-
-```css
-dialog.sector-panel {
-  /* Override UA defaults */
-  position: fixed;
-  inset: 0 0 0 auto; /* top right bottom left -- pin to right edge */
-  height: 100vh;
-  max-height: 100vh;
-  width: min(400px, 85vw); /* 400px or 85% viewport on mobile */
-  margin: 0;
-  padding: 0;
-  border: none;
-  border-left: 2px solid var(--color-forest-700);
-  background: var(--color-forest-900);
-  color: var(--color-cream-100);
-  overflow-y: auto;
-}
-
-/* Backdrop */
-dialog.sector-panel::backdrop {
-  background: rgba(0, 0, 0, 0.5);
-}
-
-/* Slide-in animation */
-dialog.sector-panel[open] {
-  animation: panel-enter 250ms ease-out;
-}
-
-@keyframes panel-enter {
-  from { translate: 100% 0; }
-  to { translate: 0 0; }
-}
-
-/* Respect reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  dialog.sector-panel[open] {
-    animation: none;
-  }
-}
-```
-
-#### Smooth Close Animation with `@starting-style`
-
-The challenge: `<dialog>` disappears instantly on `close()` because `display` changes from `block` to `none`. CSS `@starting-style` enables smooth exit transitions.
-
-**Browser support for `@starting-style`:** 89% global. Chrome 117+, Edge 117+, Firefox 129+, Safari 17.5+. Source: [Can I Use - @starting-style](https://caniuse.com/mdn-css_at-rules_starting-style).
-
-```css
-/* Entry state for smooth open */
-@starting-style {
-  dialog.sector-panel[open] {
-    translate: 100% 0;
-    opacity: 0;
-  }
-  dialog.sector-panel[open]::backdrop {
-    opacity: 0;
-  }
-}
-
-/* Open state */
-dialog.sector-panel[open] {
-  translate: 0 0;
-  opacity: 1;
-  transition: translate 250ms ease-out,
-              opacity 250ms ease-out,
-              overlay 250ms allow-discrete,
-              display 250ms allow-discrete;
-}
-
-dialog.sector-panel[open]::backdrop {
-  opacity: 1;
-  transition: opacity 250ms ease-out,
-              overlay 250ms allow-discrete,
-              display 250ms allow-discrete;
-}
-
-/* Closed state (for exit transition) */
-dialog.sector-panel {
-  translate: 100% 0;
-  opacity: 0;
-  transition: translate 250ms ease-in,
-              opacity 250ms ease-in,
-              overlay 250ms allow-discrete,
-              display 250ms allow-discrete;
-}
-```
-
-**Fallback for older browsers:** Without `@starting-style`, the panel opens with the keyframe animation and closes instantly. This is acceptable degraded behavior -- the panel still functions, just without a smooth close.
-
-#### Integration with Leaflet Map
-
-The existing codebase uses `window.dispatchEvent(new CustomEvent(...))` for cross-component communication (e.g., `elevation:hover`, `map:photoClick`). The detail panel follows this same pattern:
-
-```javascript
-// In RouteMap.astro -- sector click handler
-sectorPolyline.on('click', () => {
-  window.dispatchEvent(new CustomEvent('map:sectorClick', {
-    detail: { sectorId: sector.id, name: sector.name, difficulty: sector.difficulty, ... }
-  }));
-});
-
-// In SectorPanel.astro -- listen and populate
-window.addEventListener('map:sectorClick', (e) => {
-  const panel = document.querySelector('dialog.sector-panel');
-  // Populate panel content from e.detail
-  panel.showModal();
-});
-```
-
-This matches the existing event bus architecture. No new patterns introduced.
-
-#### Confidence: HIGH
-`<dialog>` has 96.86% support. `@starting-style` has 89% support (graceful degradation for the 11% without it). The vanilla JS pattern matches the existing CustomEvent architecture.
-
----
-
-### 4. Ojibwe Woodland Floral Design Elements (CSS/SVG Patterns)
-
-**Recommendation: Hand-crafted SVG patterns inspired by (not copying) woodland floral traditions, delivered as inline SVG `<pattern>` elements and CSS `background-image` data URIs.**
-
-#### Cultural Sensitivity -- Critical Note
-
-Ojibwe woodland floral beadwork is a living cultural tradition. Best practices from Indigenous design consultants:
-
-1. **Create original designs inspired by the aesthetic vocabulary** (curved flowing stems, symmetrical floral forms, leaf and petal shapes) rather than directly copying specific traditional patterns
-2. **Acknowledge the cultural source** in the site's content -- the route passes through Ojibwe homelands and the Hiawatha National Forest is named after Ojibwe cultural traditions (already documented in the existing narrative text)
-3. **Avoid sacred or ceremonial symbols** -- stick to the secular floral/botanical vocabulary
-4. **Consider consultation** with MBTN or local Ojibwe community members on appropriateness
-
-The [Neebin Studios Anishinaabe Floral Set](https://neebin.com/design/floral_set/) is a free resource created by an Anishinaabe designer specifically for broader use, including digital applications. The SVG files from this set could serve as reference for creating site-specific decorative elements, or potentially be used directly with proper attribution.
-
-Sources: [Neebin Studios](https://neebin.com/design/floral_set/), [Vincent Design - Best Practices in Indigenous Graphic Design](https://vincentdesign.ca/2021/03/08/considerations-and-best-practices-in-indigenous-design/), [Communication Arts - Decolonizing Native American Design](https://www.commarts.com/columns/decolonizing-native-american-design)
-
-#### Technical Implementation
-
-**Approach 1: SVG `<pattern>` for repeating borders/dividers**
-
-Replace the current `topo-divider` (topographic contour lines) with a floral pattern:
-
-```html
-<!-- Define once in BaseLayout or a shared SVG defs block -->
-<svg class="sr-only" aria-hidden="true">
-  <defs>
-    <pattern id="floral-border" x="0" y="0" width="120" height="40"
-             patternUnits="userSpaceOnUse">
-      <!-- Simplified floral motif path data here -->
-      <path d="M60 5 C50 15, 40 10, 30 20 S20 30, 30 35 S50 30, 60 35
-               S70 30, 80 35 S90 30, 80 20 S70 10, 60 5Z"
-            fill="none" stroke="var(--color-amber-500)" stroke-width="1.5" opacity="0.5" />
-    </pattern>
-  </defs>
+  <polyline
+    points={`0,${height} ${svgPoints} ${width},${height}`}
+    fill="var(--color-amber-500)"
+    fill-opacity="0.15"
+    stroke="none"
+  />
 </svg>
 ```
 
-**Approach 2: CSS `background-image` data URIs for section decorations**
+### Why Build-Time SVG, Not Chart.js
 
-Inline SVG in CSS, matching the existing `topo-divider` pattern:
+| Factor | Chart.js Mini-Charts | Build-Time SVG |
+|--------|---------------------|----------------|
+| JS payload | ~30KB per instance (even with dynamic import) | 0 KB |
+| Render timing | After hydration + IntersectionObserver | Immediate (in HTML) |
+| Interactivity | Tooltip on hover | None needed for sparklines |
+| Accessibility | Canvas -- needs `aria-label` on canvas | SVG -- native `aria-label`, `role="img"` |
+| Instances | 7 sectors = 7 Chart.js instances | 7 tiny SVGs, ~200 bytes each |
+| Total overhead | ~30KB JS + 7 canvas elements | ~1.4KB total inline SVG |
+
+**The choice is clear.** Sparklines are tiny, non-interactive, and appear in a list. Build-time SVG is the right tool.
+
+### SVG Sparkline Technique Details
+
+**Core SVG attributes:**
+- `viewBox="0 0 120 32"` -- coordinate space matching pixel dimensions
+- `preserveAspectRatio="none"` -- stretch to fill container (sparklines should adapt to width)
+- `vector-effect="non-scaling-stroke"` -- keep stroke width consistent when scaling
+
+Source: [Alex Plescan -- Easy SVG Sparklines](https://alexplescan.com/posts/2023/07/08/easy-svg-sparklines/)
+
+**Path generation:**
+- `M` (moveto) sets starting point
+- `L` (lineto) draws line segments
+- Y coordinates are inverted: `height - ((value - min) / range) * height`
+- Area fill closes path to bottom edge with additional bottom-left and bottom-right points
+
+**Integration with RouteExplainer.astro:**
+Add `<SectorSparkline startMile={seg.startMi} endMile={seg.endMi} />` to each segment card. The sparkline renders inline, zero JS, and uses existing color tokens.
+
+### Styling
 
 ```css
-.floral-divider {
-  height: 60px;
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="120" height="60"><!-- floral path --></svg>');
-  background-repeat: repeat-x;
-  background-size: 120px 60px;
-  opacity: 0.6;
+.sector-sparkline {
+  display: block;
+  width: 100%;
+  max-width: 120px;
+  height: 32px;
+}
+
+/* Difficulty-based colors via parent class */
+.sector-card[data-difficulty="hard"] .sector-sparkline polyline {
+  stroke: var(--color-scarlet-500);
+}
+.sector-card[data-difficulty="easy"] .sector-sparkline polyline {
+  stroke: var(--color-moss-500);
 }
 ```
-
-This matches the exact technique already used for `.topo-divider` in `global.css` (line 157-163). No new patterns needed.
-
-**Approach 3: CSS `mask-image` for decorative overlays on section backgrounds**
-
-```css
-.section-floral-accent {
-  mask-image: url('data:image/svg+xml;utf8,<svg>...</svg>');
-  mask-repeat: repeat;
-  mask-size: 200px 200px;
-}
-```
-
-CSS `mask-image` has 97%+ browser support with `-webkit-` prefix.
-
-#### Performance Considerations
-
-| Technique | Payload | Performance |
-|-----------|---------|-------------|
-| Inline SVG `<pattern>` | 0 HTTP requests, ~500B per pattern | Excellent -- renders immediately |
-| CSS `background-image` data URI | 0 HTTP requests, ~500B-2KB per pattern | Excellent -- cached in CSS |
-| External SVG file | 1 HTTP request per file | Good -- cacheable but extra request |
-| PNG/raster pattern | Larger files, no scaling | Poor -- avoid |
-
-**Recommendation:** Use data URI SVG in CSS (approach 2) for dividers and borders, matching the existing `topo-divider` precedent. Use inline SVG `<pattern>` (approach 1) for more complex decorative elements that need to reference theme colors via CSS custom properties.
-
-#### Confidence: MEDIUM
-The technical implementation is straightforward (HIGH confidence). Cultural sensitivity requires human judgment and potentially community consultation (MEDIUM confidence on appropriateness -- flag for review).
 
 ---
 
-### 5. Color Palette Evolution
+## SVG Animation Approach Decision Matrix
 
-**Recommendation: Expand the `@theme` block in `global.css` with additional warm tones. Do NOT replace existing colors -- extend them.**
+For the various animated elements in v1.2, use this decision matrix:
 
-#### Additions to @theme
+| Element | Animation Type | Technique | Why |
+|---------|---------------|-----------|-----|
+| FloralDivider vine | Draw-on-scroll | `stroke-dashoffset` + IntersectionObserver | Path drawing is the natural animation for a vine |
+| FloralDivider blossoms | Color pulse | CSS `fill` animation | Simple color cycling on small elements |
+| Section divider gradients | Color cycling | CSS `@property` gradients | Smooth multicolor gradient transitions |
+| Shield motif appearance | Fade/scale on scroll | CSS `opacity` + `transform` + IntersectionObserver | Standard reveal animation |
+| Background patterns | None (static) | No animation | Background textures should be stable |
 
-```css
-@theme {
-  /* === EXISTING (keep as-is) === */
-  /* --color-forest-950 through --color-forest-600 */
-  /* --color-amber-500 through --color-amber-300 */
-  /* --color-rust-600, --color-rust-500 */
-  /* --color-cream-100, --color-cream-200, --color-cream-50 */
+**IntersectionObserver pattern (reusable):**
+The existing codebase uses IntersectionObserver for lazy-loading (ElevationProfile.astro lines 193-206). Extend the same pattern for scroll-triggered animations:
 
-  /* === NEW: Warmer accent family === */
-  --color-berry-700: #7a2e3d;  /* deep berry for subtle accents */
-  --color-berry-600: #9a3a4f;  /* primary berry red -- section accents, callout borders */
-  --color-berry-500: #b34d63;  /* lighter berry for hover states */
+```javascript
+const observer = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-view');
+        observer.unobserve(entry.target);
+      }
+    });
+  },
+  { rootMargin: '0px', threshold: 0.2 }
+);
 
-  /* === NEW: Richer gold family (supplement amber) === */
-  --color-gold-600: #b8860b;   /* dark goldenrod -- richer than amber-500 */
-  --color-gold-500: #d4a017;   /* warm gold -- premium accent */
-  --color-gold-400: #e6b422;   /* bright gold for highlights */
-
-  /* === NEW: Lake/water blue (Ojibwe blue) === */
-  --color-lake-700: #2c5282;   /* deep lake blue */
-  --color-lake-600: #2b6cb0;   /* primary blue -- water references, links variant */
-  --color-lake-500: #3182ce;   /* lighter blue for hover */
-
-  /* === NEW: Deeper forest greens === */
-  --color-forest-850: #243d24; /* between 900 and 800 -- card backgrounds */
-  --color-moss-600: #6b7c3f;   /* warmer yellow-green -- nature accent */
-}
+document.querySelectorAll('.animate-on-scroll').forEach((el) => observer.observe(el));
 ```
-
-**How Tailwind 4 @theme auto-generates utilities:**
-
-When you define `--color-berry-600: #9a3a4f` inside `@theme`, Tailwind 4 automatically generates:
-- `bg-berry-600`, `text-berry-600`, `border-berry-600`, `ring-berry-600`, etc.
-- All responsive and state variants (`hover:bg-berry-600`, `md:text-berry-600`)
-- No plugin or config file needed
-
-This is verified behavior from the [Tailwind CSS v4 documentation](https://tailwindcss.com/docs/theme) -- "Theme variables aren't just CSS variables -- they also instruct Tailwind to create new utility classes."
-
-#### Contrast Verification Required
-
-All new colors must pass WCAG AA (4.5:1 for body text, 3:1 for large text) against the primary backgrounds:
-
-| Color | Against `forest-950` (#0d1a0d) | Against `forest-900` (#1a2e1a) | Use Case |
-|-------|-------------------------------|-------------------------------|----------|
-| berry-600 (#9a3a4f) | Must verify | Must verify | Accent borders, callout highlights |
-| gold-500 (#d4a017) | Must verify | Must verify | Premium accent, replacing some amber-500 uses |
-| lake-600 (#2b6cb0) | Must verify | Must verify | Water references, alternate link color |
-
-**Action item for implementation:** Run each new color through a contrast checker against `forest-950` and `forest-900`. Adjust lightness as needed to hit AA ratios. The specific hex values above are starting points -- the exact values may shift during implementation to meet contrast requirements.
-
-#### Confidence: HIGH
-Tailwind 4 `@theme` color extension is well-documented and verified. The exact hex values are design recommendations (will need visual review during implementation), but the mechanism is certain.
 
 ---
 
-### 6. Editorial Photo-Integrated Content Layout
+## Complete Stack Summary
 
-**Recommendation: CSS Grid with `grid-template-areas` for structured sections + CSS `float` with `shape-outside` for text-wrap effects. Use `::first-letter` for drop caps.**
+### Unchanged from v1.1
 
-#### Magazine-Style Section Layout
+| Technology | Version | Role |
+|------------|---------|------|
+| Astro | 6.x | Static site generator |
+| Tailwind CSS | 4.x | CSS-first utility framework |
+| Vite | 7.x | Build tool (via Astro) |
+| Chart.js | 4.x | Full-route elevation profile (existing) |
+| Leaflet | 1.x | Route map |
+| PhotoSwipe | 5.x | Photo lightbox |
+| sharp | latest | Image optimization pipeline |
 
-```html
-<section class="editorial-section">
-  <div class="grid md:grid-cols-[1fr_1.5fr] gap-8 items-start">
-    <img src="/images/forest-trail.webp" alt="..." class="w-full rounded" />
-    <div class="prose">
-      <p class="first-letter:text-5xl first-letter:font-display first-letter:text-amber-500 first-letter:float-left first-letter:mr-2 first-letter:mt-1">
-        In 1855, Henry Wadsworth Longfellow published...
-      </p>
-    </div>
-  </div>
-</section>
-```
+### New for v1.2
 
-**Tailwind utilities for editorial grids (all built-in):**
+| Technology | Version | Role | Type |
+|------------|---------|------|------|
+| CSS `@property` | N/A (native CSS) | Gradient color animation | CSS feature, no dependency |
+| CSS `stroke-dashoffset` | N/A (SVG/CSS) | Vine drawing animation | CSS feature, no dependency |
+| SVG `<symbol>` + `<use>` | N/A (SVG 1.1) | Shield/arrowhead motif system | HTML/SVG pattern, no dependency |
+| Strava embed script | External | Route embed | `<script src="strava-embeds.com/embed.js">` |
+| Build-time SVG sparklines | N/A (Astro frontmatter) | Per-sector elevation profiles | Astro template logic, no dependency |
 
-| Utility | Purpose |
-|---------|---------|
-| `md:grid-cols-[1fr_1.5fr]` | Asymmetric 2-column grid (image narrower than text) |
-| `md:grid-cols-[1.5fr_1fr]` | Alternating: text wider, image right |
-| `gap-8` | Generous whitespace between columns |
-| `items-start` | Top-align grid children (prevent image stretching) |
+### New npm Dependencies
 
-#### Text Wrapping with `shape-outside`
-
-For inline photos within prose sections:
-
-```css
-.editorial-inset-photo {
-  float: right;
-  width: 45%;
-  margin: 0 0 1rem 1.5rem;
-  shape-outside: inset(0); /* Text wraps around the rectangle */
-}
-
-/* For circular crop photos */
-.editorial-round-photo {
-  float: left;
-  width: 200px;
-  height: 200px;
-  border-radius: 50%;
-  margin: 0 1.5rem 1rem 0;
-  shape-outside: circle(50%); /* Text wraps around the circle */
-  object-fit: cover;
-}
-```
-
-**Browser support for `shape-outside`:** 97.2% global. Chrome 37+, Edge 79+, Safari 7.1+, Firefox 62+. Source: [Can I Use - CSS Shapes Level 1](https://caniuse.com/css-shapes). This is production-ready.
-
-#### Drop Caps
-
-Two approaches, layered with progressive enhancement:
-
-**Base approach -- `::first-letter` (universal support):**
-```css
-.editorial-drop-cap::first-letter {
-  float: left;
-  font-family: var(--font-display);
-  font-size: 3.5em;
-  line-height: 0.8;
-  padding-right: 0.1em;
-  color: var(--color-amber-500);
-}
-```
-
-Tailwind 4 provides the `first-letter:` variant, so this can also be done inline:
-```html
-<p class="first-letter:float-left first-letter:text-5xl first-letter:font-display first-letter:text-amber-500 first-letter:leading-none first-letter:pr-1">
-```
-
-**Enhanced approach -- `initial-letter` (91% support, no Firefox):**
-```css
-@supports (initial-letter: 3) {
-  .editorial-drop-cap::first-letter {
-    initial-letter: 3; /* spans 3 lines */
-    float: none; /* initial-letter handles positioning */
-    margin-right: 0.2em;
-  }
-}
-```
-
-`initial-letter` automatically sizes and aligns the drop cap to span the specified number of text lines. Browser support: 91.38% (Chrome 110+, Safari 9+, Edge 110+ -- but NOT Firefox). Source: [Can I Use - CSS initial-letter](https://caniuse.com/css-initial-letter).
-
-**Recommendation:** Use `::first-letter` with `float` as the base (works everywhere), with `@supports (initial-letter: 3)` as progressive enhancement. The base approach is sufficient -- `initial-letter` is a nice-to-have.
-
-#### Pull Quotes / Typographic Callouts
-
-For the Longfellow critique passages from `data.md`:
-
-```html
-<blockquote class="border-l-4 border-amber-500 pl-6 my-8 text-xl font-display text-cream-200 italic">
-  "He has woven together their beautiful traditions into a whole..."
-</blockquote>
-```
-
-All Tailwind utilities, no custom CSS needed.
-
-#### Confidence: HIGH
-CSS Grid, float, `::first-letter`, and `shape-outside` are all mature, universally-supported CSS. Tailwind 4 provides utilities for all of them.
-
----
-
-## Full-Width Section Pattern (Shared)
-
-Both the hero and editorial full-width photo sections need to break out of the `max-w-4xl` container. This requires a structural change to `BaseLayout.astro`.
-
-**Recommendation: Introduce a slot-based layout system.**
-
-```astro
-<!-- BaseLayout.astro -->
-<body class="min-h-screen bg-forest-900 text-cream-100 font-mono">
-  <slot name="hero" /> <!-- Full-width, outside main container -->
-  <main class="max-w-4xl mx-auto px-4 py-8">
-    <slot /> <!-- Default slot, constrained width -->
-  </main>
-</body>
-```
-
-This allows full-width sections via `<section slot="hero">` while keeping all other content in the constrained container. An alternative is to use the negative margin breakout technique (`width: 100vw; margin-left: calc(-50vw + 50%)`) which avoids layout restructuring, but the slot approach is cleaner and more maintainable.
-
-For mid-page full-width photo breaks in the editorial sections, the negative margin technique is appropriate since those cannot use a named slot.
-
----
-
-## What NOT to Add
-
-| Technology | Why NOT | Use Instead |
-|------------|---------|-------------|
-| Masonry.js / Isotope.js | 25KB+ JS library for a layout CSS handles natively via `columns`. Overkill for a photo gallery. | CSS `columns` + `break-inside-avoid` |
-| CSS Grid masonry (`display: grid-lanes`) | 0.02% browser support. Only Safari 26.4+. Not production viable. | CSS `columns` |
-| React/Vue/Svelte for slide-out panel | Massive overhead for a single interactive component. Breaks the vanilla-JS-islands pattern. | HTML `<dialog>` + vanilla JS |
-| Framer Motion / GSAP for animations | Only the slide-out panel needs animation. CSS `@keyframes` + `@starting-style` handle this. | CSS animations |
-| Lightbox replacement (e.g., GLightbox) | PhotoSwipe 5 is already integrated and working. The masonry layout change does not require a lightbox change. | Keep PhotoSwipe 5.4.4 |
-| Icon library (Heroicons, Lucide) | The site uses inline SVG for all icons (map markers, badge). A library adds dependencies for 3-4 icons. | Hand-crafted inline SVG |
-| Web font additions | National Park and Space Mono cover display and body. Adding more fonts increases payload and visual inconsistency. | Existing font stack |
-| CSS-in-JS (Emotion, styled-components) | Incompatible with Astro's static extraction. Tailwind 4 CSS-first approach is the right tool. | Tailwind 4 `@theme` + utilities |
-| Tailwind plugins (Typography, Forms) | The editorial layout needs custom prose styling, not the opinionated `@tailwindcss/typography` defaults. The site has no forms. | Custom CSS in `@layer base` / `@layer components` |
+**None.**
 
 ---
 
 ## Browser Support Summary
 
-All techniques recommended in this document and their support status:
+| Feature | Global Support | Minimum Browser | Fallback |
+|---------|---------------|-----------------|----------|
+| CSS `@keyframes` + SVG `fill`/`stroke` | 99%+ | All modern | N/A |
+| `stroke-dasharray` / `stroke-dashoffset` | 99%+ | All modern | N/A |
+| CSS `@property` | 96.02% | Chrome 85+, FF 128+, Safari 16.4+ | Static gradient (no animation) |
+| SVG `<symbol>` + `<use>` | 99%+ | All modern | N/A |
+| CSS `mask-image` | 97%+ | All modern (with `-webkit-` prefix) | No mask (element still visible) |
+| IntersectionObserver | 99%+ | All modern | N/A |
+| `prefers-reduced-motion` | 99%+ | All modern | N/A |
+| Strava embed | N/A (third-party) | Depends on Strava | Fallback link to Strava page |
 
-| Feature | Global Support | Minimum Browser | Graceful Fallback |
-|---------|---------------|-----------------|-------------------|
-| CSS `columns` | 99%+ | IE10+ | N/A -- universal |
-| `break-inside: avoid` | 99%+ | IE10+ | N/A -- universal |
-| `object-fit: cover` | 98%+ | Edge 16+ | N/A -- universal |
-| CSS Grid `grid-template-areas` | 97%+ | All modern | N/A -- universal |
-| `shape-outside` | 97.2% | Chrome 37+, FF 62+, Safari 7.1+ | Falls back to rectangular wrap |
-| HTML `<dialog>` + `showModal()` | 96.86% | Chrome 37+, FF 98+, Safari 15.4+ | N/A -- target audience uses modern browsers |
-| `::backdrop` pseudo-element | 96.86% | Same as `<dialog>` | No backdrop (functional, less polished) |
-| `@starting-style` | 89% | Chrome 117+, FF 129+, Safari 17.5+ | Panel opens with animation, closes instantly |
-| `initial-letter` | 91.38% | Chrome 110+, Safari 9+ (NOT Firefox) | `::first-letter` + `float` fallback |
-| CSS `translate` property | 95%+ | All modern (Baseline 2025) | Use `transform: translateX()` |
-| `allow-discrete` transitions | ~89% | Same as `@starting-style` | Instant open/close without transition |
-
-**No feature below 89% support.** All features at <95% have explicit fallbacks documented above.
-
----
-
-## Integration with Existing Tailwind 4 @theme System
-
-All v1.1 additions integrate with the existing CSS-first configuration pattern:
-
-**global.css additions:**
-```css
-@theme {
-  /* ... existing tokens (unchanged) ... */
-
-  /* v1.1: Warmer palette additions */
-  --color-berry-700: #7a2e3d;
-  --color-berry-600: #9a3a4f;
-  --color-berry-500: #b34d63;
-  --color-gold-600: #b8860b;
-  --color-gold-500: #d4a017;
-  --color-gold-400: #e6b422;
-  --color-lake-700: #2c5282;
-  --color-lake-600: #2b6cb0;
-  --color-lake-500: #3182ce;
-  --color-forest-850: #243d24;
-  --color-moss-600: #6b7c3f;
-
-  /* v1.1: Editorial typography additions */
-  --font-size-6xl: 3.75rem;  /* hero title */
-  --font-size-7xl: 4.5rem;   /* hero title on desktop */
-
-  /* v1.1: Shadow additions */
-  --shadow-hero: 0 4px 30px rgba(0, 0, 0, 0.4);  /* hero overlay shadow */
-}
-
-@layer components {
-  /* v1.1: Floral divider (replaces or supplements topo-divider) */
-  .floral-divider {
-    height: 60px;
-    background-image: url('data:image/svg+xml;utf8,<svg ...>...</svg>');
-    background-repeat: repeat-x;
-    background-size: 120px 60px;
-    opacity: 0.6;
-  }
-
-  /* v1.1: Sector panel dialog overrides */
-  .sector-panel { /* ... dialog styles ... */ }
-}
-```
-
-**No changes to existing `@layer` structure.** The `@layer leaflet, base, components, utilities` order in `global.css` is preserved. New component styles go in `@layer components`. New base styles go in `@layer base`.
+No feature below 96% support. All features below 99% have documented fallbacks.
 
 ---
 
 ## Sources
 
-### Verified (HIGH confidence)
-- [Tailwind CSS v4 - Theme Variables](https://tailwindcss.com/docs/theme) -- `@theme` auto-generates utility classes from custom properties
-- [Tailwind CSS v4 - Columns](https://tailwindcss.com/docs/columns) -- `columns-*` and `break-inside-*` utilities confirmed in official docs
-- [Can I Use - HTML Dialog](https://caniuse.com/dialog) -- 96.86% global support
-- [Can I Use - CSS @starting-style](https://caniuse.com/mdn-css_at-rules_starting-style) -- 89% global support
-- [Can I Use - CSS Shapes Level 1](https://caniuse.com/css-shapes) -- 97.2% global support for `shape-outside`
-- [Can I Use - CSS initial-letter](https://caniuse.com/css-initial-letter) -- 91.38% partial support (no Firefox)
-- [Can I Use - CSS Grid Lanes](https://caniuse.com/css-grid-lanes) -- 0.02% support, not production viable
-- [Ben Nadel - Dialog Element as Fly-out Sidebar](https://www.bennadel.com/blog/4862-opening-the-dialog-element-as-a-fly-out-sidebar.htm) -- `<dialog>` sidebar pattern with CSS keyframe animation
-- [MDN - Dialog Element](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog) -- authoritative `<dialog>` documentation
+### Verified (HIGH Confidence)
 
-### Cross-Referenced (MEDIUM confidence)
-- [CSS-Tricks - Masonry Layout is Now grid-lanes](https://css-tricks.com/masonry-layout-is-now-grid-lanes/) -- spec history, grid-lanes syntax evolution
-- [WebKit - Introducing CSS Grid Lanes](https://webkit.org/blog/17660/introducing-css-grid-lanes/) -- Safari implementation details
-- [Smashing Magazine - How to Build a Magazine Layout with CSS Grid Areas](https://www.smashingmagazine.com/2023/02/build-magazine-layout-css-grid-areas/) -- editorial grid patterns
-- [LogRocket - Animating dialog and popover with @starting-style](https://blog.logrocket.com/animating-dialog-popover-elements-css-starting-style/) -- `@starting-style` animation patterns
-- [DevToolbox - CSS @starting-style Complete Guide 2026](https://devtoolbox.dedyn.io/blog/css-starting-style-guide) -- current `@starting-style` usage patterns
+**CSS Animation:**
+- [Can I Use -- CSS @property](https://caniuse.com/mdn-css_at-rules_property) -- 96.02% global support (Chrome 85+, FF 128+, Safari 16.4+)
+- [Can I Use -- SVG SMIL](https://caniuse.com/svg-smil) -- 97.25% but CSS preferred for maintainability
+- [CSS-Tricks -- How SVG Line Animation Works](https://css-tricks.com/svg-line-animation-works/) -- `stroke-dashoffset` technique
+- [Josh W. Comeau -- Color Shifting in CSS](https://www.joshwcomeau.com/animation/color-shifting/) -- `@property` gradient animation patterns
 
-### Cultural References
-- [Neebin Studios - Anishinaabe Floral Set](https://neebin.com/design/floral_set/) -- free Anishinaabe floral SVG set, created by Anishinaabe designer for broad use
-- [Vincent Design - Best Practices in Indigenous Graphic Design](https://vincentdesign.ca/2021/03/08/considerations-and-best-practices-in-indigenous-design/) -- cultural sensitivity guidelines
-- [Communication Arts - Decolonizing Native American Design](https://www.commarts.com/columns/decolonizing-native-american-design) -- principles for respectful use
+**Public Domain Imagery:**
+- [hiawatha.digital/illustrations](https://hiawatha.digital/illustrations) -- 69 Harrison Fisher illustrations (1906), public domain, high-resolution downloads
+- [Metropolitan Museum of Art -- Remington Hiawatha](https://www.metmuseum.org/art/collection/search/11864) -- Open Access, unrestricted reuse
+- [Wikimedia Commons -- Song of Hiawatha](https://commons.wikimedia.org/wiki/Category:The_Song_of_Hiawatha) -- 45+ files in category
+
+**Strava Integration:**
+- [Strava Partners -- How to Embed a Route](https://partners.strava.com/resources/how-to-embed-a-strava-route) -- official embed documentation
+- [Strava Community Hub -- Jan 2026 Embed Issue](https://communityhub.strava.com/developers-api-7/strava-widgets-embedded-on-website-stopped-working-since-20-jan-2026-12591) -- resolved Feb 19, 2026
+
+**Color Contrast:**
+- [WebAIM Contrast Checker](https://webaim.org/resources/contrastchecker/) -- WCAG AA ratio calculations
+- Contrast ratios computed locally using WCAG 2.0 relative luminance formula
+
+### Cross-Referenced (MEDIUM Confidence)
+
+- [Alex Plescan -- Easy SVG Sparklines](https://alexplescan.com/posts/2023/07/08/easy-svg-sparklines/) -- build-time SVG sparkline technique
+- [SVG Genie -- SVG Masks and Shape Dividers](https://www.svggenie.com/blog/svg-masks-shape-dividers-web-design) -- CSS mask-image pattern approaches
+- [Digital Thrive -- CSS Gradient Animation Guide](https://digitalthriveai.com/en-us/resources/web-development/the-state-of-changing-gradients-with-css-transitions-and-animations/) -- `@property` gradient animation patterns
 
 ---
 
-*Stack research for: Hiawatha's Revenge v1.1 Visual Redesign*
+*Stack research for: Hiawatha's Revenge v1.2 Cultural Maximalism*
 *Researched: 2026-03-31*
-*Previous version: v1.0 stack research dated 2026-03-30 -- core stack unchanged*
+*Previous version: v1.1 stack research dated 2026-03-31 -- core stack unchanged*

@@ -1,208 +1,192 @@
 # Project Research Summary
 
-**Project:** Hiawatha's Revenge v1.1 Visual Redesign
-**Domain:** Static cycling route showcase -- editorial visual upgrade (Astro 6 / Tailwind 4)
+**Project:** Hiawatha's Revenge v1.2 Cultural Maximalism
+**Domain:** Maximalist cultural design layer for a static cycling showcase site (Astro 6 / Tailwind 4)
 **Researched:** 2026-03-31
 **Confidence:** HIGH
 
 ## Executive Summary
 
-Hiawatha's Revenge v1.1 transforms an already-functional static cycling route showcase into an immersive editorial experience. The v1.0 site ships with a working interactive map, elevation profile, photo gallery, and narrative -- all the data infrastructure is solid. The v1.1 redesign changes how content is presented, not what content exists. Research across stack, features, architecture, and pitfalls converges on a single critical finding: **this redesign requires zero new npm dependencies.** Every feature -- full-width hero, masonry gallery, slide-out sector panels, Ojibwe-inspired decorative motifs, color palette evolution, and editorial layouts -- is achievable with CSS techniques already available in Tailwind 4 and modern browsers, plus vanilla JavaScript for the one interactive component (sector detail panel using HTML `<dialog>`).
+Hiawatha's Revenge v1.2 transforms a well-designed cycling showcase into something that feels like an award-winning cultural heritage site. The research converges on a key structural insight: **v1.2 is almost entirely additive**. The v1.1 architecture -- Astro 6 components, Tailwind 4 `@theme static` tokens, inline SVG dividers, IntersectionObserver patterns, CustomEvent bus for map/chart sync -- remains untouched. None of the seven feature areas (animated SVG dividers, bold palette expansion, historical imagery, shield motifs, content layout enrichment, per-sector sparklines, Strava links) touch the existing client-side interactive components (RouteMap, ElevationProfile, PhotoGallery) or their data flow. This is a design and content milestone, not an interactivity milestone, which dramatically reduces technical risk.
 
-The recommended approach is to treat this as a layered visual evolution, not a rewrite. The existing Astro component architecture, CustomEvent bus (3 events today, extending to 6-7), lazy-loading patterns, and two-phase build pipeline all remain intact. The biggest structural change is a one-line edit to `BaseLayout.astro` -- removing the global `max-w-4xl` container constraint from `<main>` so individual sections can control their own widths. Everything else is additive: 6 new Astro components, expanded `@theme` color tokens, and SVG decorative elements. The masonry gallery uses CSS `columns` (99%+ browser support), not the still-unshippable native CSS masonry spec (0.02% support). The sector detail panel uses HTML `<dialog>` with `showModal()` (96.86% support) for free accessibility -- focus trapping, Escape key, backdrop, and screen reader announcements with zero custom code.
+The recommended approach is CSS/SVG-first with zero new npm dependencies. Animated section dividers use `stroke-dashoffset` line drawing and CSS `@property` gradient cycling (96%+ browser support with graceful fallbacks). Per-sector elevation sparklines are build-time SVG polylines generated in Astro frontmatter -- zero JavaScript, zero runtime cost, 1.4KB total for all seven segments versus 30KB+ per Chart.js instance. The bold palette adds three new color families (turquoise, scarlet, sun) to `@theme static`, all WCAG AA-verified against the dark forest backgrounds. Historical imagery comes from verified public domain sources (Harrison Fisher 1906 illustrations, Frederic Remington 1891 paintings via Met Open Access and Internet Archive). The one external dependency is Strava's embed script for a single route embed, with per-segment Strava links as simple anchor tags.
 
-The two highest-risk areas are cultural sensitivity and color migration. The Ojibwe woodland floral design elements require careful attribution and cultural framing -- the site already critiques Longfellow's cultural appropriation, so using Ojibwe art without context would be hypocritical. The Neebin.com Anishinaabe Floral Set (created by an Anishinaabe artist for digital use) provides a defensible starting point. Color migration is risky because the codebase has hardcoded hex values in Chart.js configs, Leaflet marker SVGs, and inline styles that will not update when `@theme` tokens change -- these must be audited and tokenized before any palette shifts.
+The primary risks are not technical but compositional: maintaining WCAG AA contrast compliance with an expanded palette (Pitfall 2), respecting `prefers-reduced-motion` across all new animations (Pitfall 1), and preserving the site's cultural critique framing as maximalist visuals are layered on (Pitfall 3). The palette expansion phase must land first with documented contrast ratios, the first animated component must establish the `prefers-reduced-motion` pattern, and historical imagery must be framed as "Longfellow's fiction" not celebration. All four researchers independently converged on these three constraints.
 
 ## Key Findings
 
 ### Recommended Stack
 
-The v1.1 redesign adds nothing to the dependency tree. The core stack -- Astro 6, Tailwind 4, Leaflet, Chart.js, PhotoSwipe 5, sharp -- is unchanged. All visual features are implemented with CSS and vanilla JS that the existing stack already supports.
+The v1.2 stack requires zero new npm packages. The existing Astro 6 / Tailwind 4 / Vite 7 / Chart.js / Leaflet / PhotoSwipe / sharp stack handles everything. New capabilities come from native CSS and SVG features, not libraries.
 
-**Core techniques (all zero-dependency):**
-- **CSS `columns` + `break-inside-avoid`**: Masonry gallery layout -- 99%+ browser support, Tailwind `columns-*` utilities built-in
-- **HTML `<dialog>` + `showModal()`**: Sector detail slide-out panel -- 96.86% support, free accessibility
-- **CSS `@starting-style`**: Smooth open/close transitions on `<dialog>` -- 89% support with graceful degradation (instant close in older browsers)
-- **Tailwind 4 `@theme` block extensions**: New color tokens auto-generate utility classes -- zero config, zero plugins
-- **Inline SVG `<pattern>` + CSS `background-image` data URIs**: Ojibwe-inspired decorative elements -- matches existing `topo-divider` technique
-- **CSS Grid `grid-template-areas` + `float` + `shape-outside`**: Editorial photo-text layouts -- 97%+ support
-- **`::first-letter` with `initial-letter` progressive enhancement**: Drop caps -- universal base, 91% enhanced
+**New stack elements (all zero-dependency):**
+- **CSS `@property`**: Enables smooth gradient color animation by registering custom properties as `<color>` type -- 96% browser support, static gradient fallback
+- **CSS `stroke-dashoffset`**: SVG path "draw-on-scroll" animation -- 99%+ support, the standard technique for vine/floral line drawing
+- **SVG `<symbol>` + `<use>`**: Reusable shield/arrowhead motif system with zero HTTP requests and `currentColor` inheritance from Tailwind classes
+- **Build-time SVG sparklines**: Astro frontmatter generates `<polyline>` elements from route-data.json at build time -- zero JavaScript shipped to client
+- **Strava embed script**: Single external `<script>` for one route embed; per-segment links are plain `<a>` tags
 
-**Critical version/support notes:**
-- Do NOT use native CSS masonry (`grid-template-rows: masonry` or `display: grid-lanes`) -- 0.02% global support, Safari 26.4+ only
-- Do NOT add Masonry.js, Isotope, GSAP, or any JS layout/animation library
-- Do NOT add new fonts -- the National Park + Space Mono pairing is the identity
-- Do NOT add Tailwind plugins (@tailwindcss/typography, @tailwindcss/forms) -- custom CSS in `@layer` is sufficient
+**Explicitly rejected:**
+- GSAP/GreenSock (23KB+ for what CSS handles), Lottie (50KB+ player), Chart.js for sparklines (7 instances = memory bloat), Strava API (requires OAuth/server), Strava iframe embeds (7 external requests), any icon library (3-5 custom motifs do not justify a dependency)
 
 ### Expected Features
 
-**Must have (table stakes) -- the redesign looks incomplete without these:**
-- Full-width hero section with route photo, gradient overlay, badge relocation, and event date ("June 6, 2026 / Munising, MI")
-- Masonry/editorial photo gallery replacing the uniform square-crop grid, with featured photo support and natural aspect ratios
-- Route narrative rewrite with photo-integrated editorial layout, pull quotes, and drop caps
-- Color palette evolution -- new berry, gold, lake, and moss accent families extending (not replacing) the existing forest/amber/rust/cream tokens
+**Must have (table stakes):**
+- Section color differentiation -- alternating backgrounds using expanded palette; the most visible change for least effort
+- Content layout enrichment -- inline historical photos, pull quotes, generous whitespace, subheadings in HiawathaExplainer
+- Segment/route enrichment -- Strava links, elevation sparklines, terrain detail expansion in RouteExplainer
+- Bold palette expansion -- turquoise, scarlet, sun families added to `@theme static` with WCAG AA documentation
+- Historical Hiawatha imagery -- 2-4 Harrison Fisher color illustrations from 1906 public domain edition
 
-**Should have (differentiators) -- what makes the site shareable:**
-- Interactive sector map labels with slide-out detail panels (name, difficulty stars, surface, description)
-- Ojibwe woodland floral design elements as decorative system (section dividers, pull-quote ornaments, background patterns) with cultural attribution
-- Photo-integrated route explainer section over topographic background
-- Witty New Yorker editorial tone for the Hiawatha/Nanabozho narrative
+**Should have (differentiators):**
+- Animated multicolored section dividers -- vine drawing on scroll, blossom color cycling, section-specific color theming
+- Shield/arrowhead motif system -- extracted from hero badge, repeated as heading icons, background watermarks, blockquote ornaments
+- Dramatic pull quote treatment -- oversized quotation marks, background shift, National Park typeface, arrowhead ornament
+- CSS scroll-driven section reveals -- fade/slide-in on scroll using IntersectionObserver (CSS `animation-timeline: view()` has only 83% support; use IO as primary)
 
-**Explicitly not building (anti-features):**
-- Countdown timer (goes stale after event, explicitly out of scope)
-- Parallax scrolling / scrollytelling (2-minute read does not justify 20-hour implementation)
-- Video hero (no video assets exist; one great photo beats one okay video)
-- Instagram embed, registration form, multi-page site, animated route drawing, dark/light toggle
-- AI-generated Ojibwe art (culturally inappropriate)
+**Defer (v1.3+):**
+- Scroll-driven reveals via CSS `animation-timeline: view()` as primary (Firefox still behind flag)
+- Parallax scrolling (performance issues on mobile Safari, motion sickness risk)
+- Dark/light mode toggle (dark forest palette IS the brand identity)
+- Video content (no assets exist, autoplay destroys Core Web Vitals)
+- AI-generated cultural imagery (contradicts the site's cultural critique narrative)
+- Scroll-jacking/snap scrolling (breaks natural scroll behavior)
 
 ### Architecture Approach
 
-The architecture is additive, not a rewrite. The existing CustomEvent bus pattern extends from 3 events to 6-7 with two new event pairs (`sector:click`/`sector:close`, `sector:hover`/`sector:leave`). The critical structural change is moving width constraints from `BaseLayout.astro`'s `<main>` to individual sections in `index.astro`, enabling mixed full-width and constrained-width layouts. Six new Astro components are created; three existing components are modified (RouteMap, ElevationProfile, PhotoGallery); the build pipeline gets two minor schema extensions (photos.json `featured` + `aspectRatio`, annotations.json `stars` + `surface` + `description`). No new pages, layouts, scripts, or dependencies.
+v1.2 features break into three integration tiers: (1) pure CSS/SVG additions with zero JavaScript and zero data flow changes (animated dividers, shield motifs, color expansion), (2) data-layer extensions with small backward-compatible schema additions (historical imagery categories, Strava links), and (3) component modifications that are purely presentational template/style changes within existing components (HiawathaExplainer and RouteExplainer enrichment). Nothing touches the CustomEvent bus, lazy-loading patterns, or the three complex client-side components.
 
-**New components (6):**
-1. `HeroSection.astro` -- Full-width hero with photo, overlay gradient, badge SVG (extracted from index.astro), event date
-2. `SectorDetailPanel.astro` -- Slide-out `<dialog>` panel for sector info, listens to `sector:click` events
-3. `NarrativeSection.astro` -- Rewritten Hiawatha narrative with editorial layout, integrated photos, pull quotes
-4. `RouteExplainer.astro` -- Photo-integrated sector-by-sector route overview over topographic background
-5. `OjibweBorder.astro` -- Reusable SVG decorative divider (replaces/supplements `topo-divider`)
-6. `OjibweMotif.astro` -- Standalone decorative SVG motif for pull-quote ornaments and backgrounds
+**New components (4):**
+1. `AnimatedDivider.astro` -- Scroll-triggered animated SVG divider with vine/arrowhead/shield variants; replaces FloralDivider instances
+2. `ShieldMotif.astro` -- Reusable decorative SVG (sm/md/lg) for headings, bullets, watermarks
+3. `ElevationSparkline.astro` -- Build-time SVG polyline sparkline for per-sector elevation profiles
+4. `HistoricalFigure.astro` -- Image + figcaption component for historical illustrations with float positioning
 
-**Modified components (3):**
-1. `RouteMap.astro` -- Add sector labels (L.divIcon at midpoints) and click handlers dispatching `sector:click`
-2. `ElevationProfile.astro` -- Add click callbacks on sector annotation bands dispatching `sector:click`
-3. `PhotoGallery.astro` -- Rewrite from uniform grid to CSS columns masonry, support `featured` flag, remove `aspect-square` crops
+**Modified components (6):**
+- `global.css` -- Add color tokens to `@theme static` (~15 lines)
+- `HiawathaExplainer.astro` -- Historical imagery, pull quotes, typography, motif accents
+- `RouteExplainer.astro` -- Sparklines, Strava links, motif markers, expanded descriptions
+- `index.astro` -- Import AnimatedDivider, replace FloralDivider instances
+- `match-photos.js` -- Handle `mile: null` and `category` field for historical images
+- `content.config.ts` -- Add `category`, `caption`, make `mile` nullable
 
-**Key architectural patterns preserved:**
-- CustomEvent bus for cross-component communication (no state store needed at 6-7 events)
-- IntersectionObserver lazy loading on RouteMap and ElevationProfile
-- Scoped `<style>` blocks per component; only `@theme` tokens and `@layer` rules in global.css
-- `role="presentation" aria-hidden="true"` for all decorative SVG elements
+**Unchanged (12):** BaseLayout, HeroSection, RouteMap, ElevationProfile, PhotoGallery, RouteStats, DonateCallout, FloralDivider (preserved, not modified), pipeline.js, parse-gpx.js, generate-thumbnails.js, copy-gpx.js
 
 ### Critical Pitfalls
 
-1. **CSS masonry has no production browser support** -- `grid-template-rows: masonry` / `display: grid-lanes` works in 0.02% of browsers. Build the gallery with CSS `columns` (99%+). Use `@supports` only as progressive enhancement. Test in Chrome stable first, always.
+1. **Animated SVGs ignore `prefers-reduced-motion`** -- All animations MUST default to static; animation is progressive enhancement, not baseline. Build the `prefers-reduced-motion` pattern into the FIRST animated component so all subsequent animations copy it. Test by enabling "Reduce Motion" in macOS Accessibility settings -- all animation should STOP, not slow down.
 
-2. **Full-width hero image tanks LCP** -- The current site has no above-fold images and loads sub-1s. Adding a hero photo without `loading="eager"`, `fetchpriority="high"`, `<link rel="preload">`, and responsive `srcset` will push LCP past 2.5s. Generate sizes at 640w/960w/1280w/1920w WebP.
+2. **New palette fails WCAG AA contrast** -- Red on dark green fails AA normal text (3.2:1). Every new token needs documented contrast ratios against both forest-950 and forest-900. Designate each as "text-safe" (4.5:1+), "large-text-only" (3:1+), or "decorative-only". The STACK research pre-computed all ratios: scarlet-600 (#dc2626) at 3.71:1 fails AA normal text and is large-text/decorative ONLY.
 
-3. **Slide-out panel gets trapped behind Leaflet map z-index** -- Leaflet's container creates its own stacking context with internal z-index 200-1000. The panel DOM element must be a sibling of the map container, never inside it. Use `isolation: isolate` on the map's parent section. On mobile, use a bottom sheet (not side panel) so the map remains partially visible.
+3. **Cultural sensitivity regression** -- Maximalist historical imagery (Longfellow-era illustrations) risks celebrating the romanticization the site's text explicitly critiques. Prevention: frame historical images with sepia/halftone treatment as "historical artifacts", pair every illustration with contextual captioning, keep Ojibwe-inspired design elements (floral motifs) visually distinct from Longfellow-era imagery. Recovery cost if framing is wrong: HIGH.
 
-4. **Ojibwe floral motifs without cultural context reads as appropriation** -- Non-negotiable minimum: visible attribution near every use of floral elements, narrative explanation of the cultural connection, and use of generalized abstract forms (not specific ceremonial designs). Use the Neebin.com Anishinaabe Floral Set as reference. Never use AI to generate Indigenous-style art.
+4. **LCP regression from above-fold additions** -- No new images or animated SVGs in the first viewport. Gate all animations with IntersectionObserver. Keep the hero image as the sole above-fold resource. Test with Lighthouse mobile after every visual phase.
 
-5. **Color token changes break hardcoded hex values silently** -- The codebase has hex colors in Chart.js configs (`'#c8973e'`), Leaflet SVG strings (`fill="#c8973e"`), and inline styles. These do not update when `@theme` tokens change. Audit all hex references with grep, replace with `getComputedStyle()` reads for JS contexts, and do a "nuclear test" (change amber to bright red) before the real migration.
+5. **Chart.js memory bloat from sparklines** -- Solved by architecture decision: use build-time SVG sparklines, not Chart.js. This is a settled question; the STACK, ARCHITECTURE, and PITFALLS researchers all independently converged on SVG sparklines as the correct approach.
 
 ## Implications for Roadmap
 
-Based on dependency analysis, risk assessment, and build-order constraints from all four research files:
+Based on dependency analysis across all four research files, the features form a clear five-phase structure with a strict ordering rationale.
 
-### Phase 1: Design Foundation (Color + Layout Structure)
-**Rationale:** Everything downstream inherits color tokens. The `BaseLayout.astro` width constraint must be removed before any full-width section can exist. These are invisible infrastructure changes that unblock all visual work.
-**Delivers:** Expanded `@theme` color palette (berry, gold, lake, moss families), tokenized hex values in JS components, `BaseLayout.astro` width restructure, per-section container classes in `index.astro`.
-**Addresses:** Color palette evolution (table stake), layout container restructure (prerequisite).
-**Avoids:** Pitfall #5 (hardcoded hex mismatch) by tokenizing before changing values. Pitfall #6 (container breakout) by restructuring layout first.
+### Phase 1: Color Foundation and Pipeline Prep
+**Rationale:** Every visual feature downstream consumes the new color tokens. The palette must be defined, WCAG-verified, and documented BEFORE any component uses it. Pipeline prep for historical images is independent work that can happen here without blocking anything.
+**Delivers:** 8 new color tokens in `@theme static` with contrast documentation; `match-photos.js` and `content.config.ts` updated for historical image category; activation of orphaned v1.1 tokens (lake-500, berry-500, moss-600)
+**Addresses:** Table Stakes #4 (Bold Palette Expansion), prerequisite for all visual features
+**Avoids:** Pitfall 2 (WCAG contrast failures) by documenting ratios at definition time; Pitfall 11 (visual incoherence) by defining color roles before use; Pitfall 12 (pipeline conflicts) by updating the pipeline before adding images
 
-### Phase 2: Hero + Event Date
-**Rationale:** The hero is the first thing visitors see and the single highest-impact visual change. It depends on the layout restructure from Phase 1. Event date is trivially embedded in the hero.
-**Delivers:** `HeroSection.astro` with full-width route photo, gradient overlay, repositioned badge SVG, event date ("June 6, 2026 / Munising, MI"), and build-time conditional for date staleness.
-**Addresses:** Full-width hero (table stake), event date (table stake).
-**Avoids:** Pitfall #2 (LCP regression) by implementing `fetchpriority="high"`, `<link rel="preload">`, and responsive `srcset` from the start. Pitfall #9 (stale date) with build-time conditional rendering.
+### Phase 2: Decorative Component Library
+**Rationale:** AnimatedDivider, ShieldMotif, and ElevationSparkline are independent components with no cross-dependencies. Building them before content enrichment means the enrichment phases can simply import and place them. Critically, AnimatedDivider establishes the `prefers-reduced-motion` pattern that all subsequent animations must follow.
+**Delivers:** Three new Astro components ready for integration; the animation accessibility pattern established and tested
+**Addresses:** Differentiator #1 (Animated Dividers), Differentiator #2 (Shield Motif System), per-sector sparkline infrastructure
+**Avoids:** Pitfall 1 (motion accessibility) by establishing the pattern in the first animated component; Pitfall 5 (Chart.js bloat) by using build-time SVG; Pitfall 6 (motif visual fatigue) by defining the motif vocabulary and variation levels upfront
 
-### Phase 3: Ojibwe Design System + Decorative Elements
-**Rationale:** The floral motifs are consumed by multiple downstream features (section dividers, pull-quote ornaments, route explainer decorations). Building the SVG design system early unblocks editorial content phases. Cultural attribution framework must be established before any motifs appear.
-**Delivers:** `OjibweBorder.astro`, `OjibweMotif.astro`, SVG pattern definitions, cultural attribution footer text, decision on topo-divider vs. floral-divider placement rules.
-**Addresses:** Ojibwe woodland floral design elements (differentiator).
-**Avoids:** Pitfall #4 (cultural appropriation) by establishing attribution framework first. Pitfall #11 (competing divider languages) by defining intentional placement rules. Pitfall #12 (font overload) by relying on pattern/color/shape, not new typography.
+### Phase 3: Historical Imagery and Content Enrichment
+**Rationale:** With palette tokens, decorative components, and pipeline prep all in place, this phase does the editorial work: sourcing/processing historical illustrations, restructuring HiawathaExplainer with inline photos and pull quotes, and enriching RouteExplainer with sparklines, Strava links, and expanded descriptions. This is the largest phase by content effort.
+**Delivers:** HiawathaExplainer transformed with historical imagery, dramatic pull quotes, typography hierarchy; RouteExplainer enriched with sparklines, Strava links, motif accents; 2-4 processed historical illustrations in the pipeline
+**Addresses:** Table Stakes #2 (Content Layout Enrichment), Table Stakes #3 (Segment/Route Enrichment), Table Stakes #5 (Historical Imagery), Differentiator #4 (Pull Quote Treatment)
+**Avoids:** Pitfall 3 (cultural sensitivity) by framing historical images as artifacts with contextual captions; Pitfall 7 (responsive breakage) by adding elements INSIDE existing grid areas; Pitfall 8 (dead Strava links) by making them supplementary with proper UX patterns; Pitfall 9 (copyright) by using only verified public domain sources
 
-### Phase 4: Editorial Content (Narrative + Route Explainer)
-**Rationale:** The narrative and route explainer are the content heart of the redesign. They depend on the color palette (Phase 1) and Ojibwe decorative system (Phase 3). They have no dependency on the gallery or map interactivity and can be built in parallel with Phase 5.
-**Delivers:** `NarrativeSection.astro` with New Yorker editorial tone, photo-integrated text layouts, pull quotes, drop caps. `RouteExplainer.astro` with sector-by-sector photo narrative over topographic background.
-**Addresses:** Narrative rewrite (table stake), photo-integrated route explainer (differentiator), witty editorial tone (differentiator).
-**Avoids:** Pitfall #10 (tablet breakpoint) by designing three-state responsive layout (mobile/tablet/desktop) with minimum column widths.
+### Phase 4: Section Color Differentiation and Page Assembly
+**Rationale:** Section-specific backgrounds need the animated dividers to transition between them, and they need the content enrichment to be complete so colors are applied to final content. This is the phase that makes the page feel like a "journey through distinct moments" rather than "one long page."
+**Delivers:** Section-specific background colors; AnimatedDividers placed between sections in index.astro replacing FloralDividers; the full maximalist visual composition assembled
+**Addresses:** Table Stakes #1 (Section Color Differentiation), final page assembly
+**Avoids:** Pitfall 4 (LCP regression) by keeping all new content below the fold; Pitfall 10 (page weight) by running Lighthouse audit after assembly
 
-### Phase 5: Masonry Gallery
-**Rationale:** Gallery can be built in parallel with Phase 4. Depends on Phase 1 (color tokens) but nothing else. Pipeline update for aspect ratios is a minor prerequisite.
-**Delivers:** Rewritten `PhotoGallery.astro` with CSS `columns` masonry, `featured` photo support, natural aspect ratios (no more square crops). Pipeline updates to `match-photos.js` (aspect ratio extraction) and `content.config.ts` (schema additions).
-**Addresses:** Masonry gallery (table stake).
-**Avoids:** Pitfall #1 (broken masonry) by using CSS columns, not native grid masonry. Pitfall #7 (photo index mismatch) by switching from array index to `data-photo-id` for PhotoSwipe bridge. Pitfall #13 (layout shift) by setting explicit dimensions from build-time metadata.
-
-### Phase 6: Sector Interactivity (Map Labels + Detail Panel)
-**Rationale:** Highest complexity, broadest cross-component impact, and the feature with the most pitfalls. The current map already works well without it. Built last so all prerequisite infrastructure (color tokens, layout structure, design system) is stable.
-**Delivers:** Sector labels on map (L.divIcon), sector click handlers on map and elevation chart, `SectorDetailPanel.astro` as `<dialog>` slide-out panel, `sector:click`/`sector:close` events on the CustomEvent bus. Pipeline update to `resolve-annotations.js` (stars, surface, description fields).
-**Addresses:** Interactive sector detail panels (differentiator).
-**Avoids:** Pitfall #3 (z-index stacking) by placing panel as DOM sibling of map container. Pitfall #8 (mobile unusability) by using bottom sheet pattern below 768px.
-
-### Phase 7: Responsive Polish + Accessibility Audit
-**Rationale:** Final pass after all features are integrated. Catches interaction bugs between new components.
-**Delivers:** Verified responsive behavior at 375px/768px/1024px/1280px, WCAG AA contrast verification on all new colors, keyboard navigation through sector panel, `prefers-reduced-motion` handling on all animations.
-**Addresses:** Cross-cutting quality across all features.
-**Avoids:** Pitfall #10 (tablet breakpoint) final verification.
+### Phase 5: Polish, Accessibility Audit, and Performance Validation
+**Rationale:** All content is in place. This phase adds scroll-driven section reveals (if the animation budget allows), runs comprehensive accessibility and performance audits, and tests across breakpoints. Scroll reveals are explicitly last because they animate the completed page -- doing them earlier means re-tuning every time content changes.
+**Delivers:** Optional scroll-driven reveals via IntersectionObserver; verified WCAG AA compliance; verified performance budget (<3MB transfer, LCP <2.5s); responsive testing across 5 breakpoints
+**Addresses:** Differentiator #3 (Scroll-Driven Reveals), cross-cutting quality gates
+**Avoids:** All pitfalls via comprehensive audit; specifically Pitfall 1 (final `prefers-reduced-motion` verification), Pitfall 2 (final contrast audit), Pitfall 4 (final Lighthouse check), Pitfall 10 (final page weight check)
 
 ### Phase Ordering Rationale
 
-- **Color tokens first** because every component references them. Changing tokens after components are built risks Pitfall #5 (silent color mismatches). Tokenizing hardcoded hex values is a prerequisite, not a nice-to-have.
-- **Layout restructure with colors** because the BaseLayout change is a one-line edit but touches every section's spacing. Doing it early isolates regressions.
-- **Hero before editorial content** because the hero delivers immediate visual impact with low complexity, building momentum. It also validates the full-width layout pattern that other sections reuse.
-- **Ojibwe design system before editorial content** because the narrative sections and route explainer consume floral dividers and motifs. Building the decorative vocabulary first ensures consistent application.
-- **Gallery in parallel with editorial content** because they have no mutual dependencies. Both depend only on Phase 1 (colors).
-- **Sector interactivity last** because it is the highest-complexity feature, touches three existing components (RouteMap, ElevationProfile, index.astro), extends the event bus, and the map already works well without it. If the project runs out of time, deferring this to v1.2 loses the least value.
+- **Color tokens first** because every feature consumes them -- this is the unanimous recommendation from FEATURES, ARCHITECTURE, and PITFALLS researchers
+- **Components before content** because content enrichment imports the components; building them in isolation enables parallel testing
+- **Content enrichment before section colors** because section backgrounds wrap completed content; applying colors to half-finished content means re-testing
+- **Scroll reveals absolutely last** because they animate the final composition; any content change after reveals means re-tuning animation timing
+- **Historical imagery sourcing runs in parallel** with component development (manual download/processing task with no code dependencies)
 
 ### Research Flags
 
 Phases likely needing deeper research during planning:
-- **Phase 3 (Ojibwe Design System):** SVG illustration quality and cultural appropriateness require human judgment. The Neebin.com floral set is a starting point but custom SVG work needs design review. Cultural consultation with MBTN's tribal relations contacts is recommended.
-- **Phase 6 (Sector Interactivity):** Leaflet click handler coordination, `<dialog>` as slide-out panel (non-standard usage), `@starting-style` transitions, and mobile bottom sheet pattern all warrant a `/gsd:research-phase` pass. The CustomEvent bus extension is straightforward but the responsive panel UX is not.
+- **Phase 3 (Content Enrichment):** Editorial judgment calls -- where to break text with photos, which historical illustrations to select, how to frame the cultural critique visually. This is design/editorial work, not technical research, but it will require iteration.
+- **Phase 3 (Strava Integration):** Strava segment IDs must be created manually on Strava. This is a prerequisite task, not a research gap, but it blocks the Strava links feature.
 
-Phases with standard patterns (skip `/gsd:research-phase`):
-- **Phase 1 (Design Foundation):** Grep-and-replace hex values, extend `@theme` block, remove classes from `<main>`. Entirely mechanical.
-- **Phase 2 (Hero):** Full-width hero with gradient overlay is one of the most documented CSS patterns on the web.
-- **Phase 5 (Masonry Gallery):** CSS `columns` is universally supported. PhotoSwipe bridge update is a known pattern.
-- **Phase 4 (Editorial Content):** CSS Grid + float + shape-outside are mature techniques. The writing itself is the risk, not the code.
-- **Phase 7 (Polish):** Standard responsive testing and accessibility audit.
+Phases with standard patterns (skip research-phase):
+- **Phase 1 (Color Foundation):** Adding tokens to `@theme static` is a proven 20-line CSS change. Contrast checking is mechanical.
+- **Phase 2 (Decorative Components):** SVG animation with `stroke-dashoffset`, `<symbol>` + `<use>`, and build-time SVG generation are all thoroughly documented with code examples in the STACK and ARCHITECTURE research files.
+- **Phase 4 (Section Colors):** Applying background classes to `<section>` elements is trivial CSS.
+- **Phase 5 (Polish):** Standard Lighthouse/axe audit workflow.
 
 ## Confidence Assessment
 
 | Area | Confidence | Notes |
 |------|------------|-------|
-| Stack | HIGH | Zero new dependencies. All CSS techniques verified against Can I Use, MDN, and Tailwind 4 docs. Browser support floor is 89% (@starting-style), with graceful degradation. |
-| Features | MEDIUM-HIGH | Table stakes well-defined by competitive analysis (UNBOUND, SBT GRVL, Cycle Oregon). Cultural sensitivity guidance is solid but inherently incomplete without Ojibwe community engagement. Writing quality (New Yorker tone) is a human judgment call, not a technical research question. |
-| Architecture | HIGH | Based on direct source code analysis of every file in the v1.0 codebase. Component boundaries, event bus patterns, data schemas, and build pipeline are fully understood. All changes are additive. |
-| Pitfalls | HIGH | 5 critical pitfalls identified with verified sources (Can I Use, Leaflet docs, web.dev, Anishinaabe cultural sources, codebase audit). Prevention strategies are specific and actionable. Recovery costs documented for each. |
+| Stack | HIGH | Zero new dependencies. All CSS/SVG techniques verified against MDN and Can I Use with specific browser support percentages. Contrast ratios pre-computed. |
+| Features | MEDIUM-HIGH | Feature patterns verified across 10+ award-winning sites (charity: water, National Geographic, UNBOUND Gravel, WWF, museum brands). Cultural color research cross-referenced across multiple Ojibwe sources. Minor gap: exact Strava segment IDs not yet created. |
+| Architecture | HIGH | Based on direct source code analysis of all existing components, pipeline scripts, and data schemas. Every modification path tested against existing patterns. Build dependency graph fully mapped. |
+| Pitfalls | HIGH | 12 pitfalls identified with specific detection methods, prevention steps, and recovery costs. Critical pitfalls (accessibility, contrast, cultural sensitivity) have actionable prevention checklists. |
 
 **Overall confidence:** HIGH
 
 ### Gaps to Address
 
-- **Ojibwe community consultation:** Research provides a solid framework for respectful use of floral design elements, but the highest confidence comes from direct feedback from Ojibwe community members. MBTN likely has tribal relations contacts through the Forest Service. This is a project management action, not a research gap.
-- **Hero photo selection:** No specific photo has been selected from the 54-photo library. The photo must have a centered subject (for `object-cover` cropping across viewports) and work as a dramatic landscape. This is an editorial decision needed before Phase 2 implementation.
-- **Exact hex values for new color tokens:** The berry/gold/lake/moss hex values in STACK.md are starting points. Each must pass WCAG AA contrast verification against `forest-950` (#0d1a0d) and `forest-900` (#1a2e1a). Values may shift during implementation.
-- **Sector descriptions and star ratings data entry:** The `data.md` file has star ratings and segment names but editorial descriptions for each sector's detail panel need to be written. This is content work, not research.
-- **Narrative tone execution:** The New Yorker editorial tone is defined as a goal but cannot be validated by research. The writing must be reviewed by a human for tone calibration.
+- **Strava segment IDs**: Must be created on Strava before per-segment links can be added. This is a manual task (ride the route or create segments from GPX data). Not a research gap but a prerequisite with no workaround.
+- **Harrison Fisher illustration selection**: 69 illustrations are available; selecting 2-4 and determining placement within HiawathaExplainer is an editorial judgment call that cannot be resolved by research alone. Download the full set during Phase 1 pipeline prep, make selections during Phase 3 implementation.
+- **Animation timing and organic feel**: The FEATURES researcher flagged that making SVG floral animations feel "organic, not mechanical" is a design tuning challenge. CSS animation durations (8-12s vine sway, 20-30s color cycling) are suggested ranges but will require visual iteration.
+- **Orphaned v1.1 color tokens**: 8 tokens defined but unused from v1.1. Phase 1 should activate some (lake-500, berry-500, moss-600) but decisions on which to activate and where depend on section color design decisions in Phase 4.
+- **CSS `animation-timeline: view()` support**: Firefox support still behind a flag (March 2026). The IntersectionObserver fallback is battle-tested in this codebase, so this gap has zero impact on functionality. Consider revisiting for v1.3 if Firefox ships support.
 
 ## Sources
 
 ### Primary (HIGH confidence)
-- [Tailwind CSS v4 Theme Variables](https://tailwindcss.com/docs/theme) -- `@theme` auto-generates utilities, `columns-*` confirmed
-- [Can I Use: HTML Dialog](https://caniuse.com/dialog) -- 96.86% global support
-- [Can I Use: CSS @starting-style](https://caniuse.com/mdn-css_at-rules_starting-style) -- 89% global support
-- [Can I Use: CSS Shapes Level 1](https://caniuse.com/css-shapes) -- 97.2% support for `shape-outside`
-- [Can I Use: CSS Grid Lanes](https://caniuse.com/css-grid-lanes) -- 0.02% support (NOT production viable)
-- [Can I Use: CSS initial-letter](https://caniuse.com/css-initial-letter) -- 91.38% (no Firefox)
-- [MDN: Dialog Element](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog) -- authoritative `<dialog>` docs
-- [Leaflet Reference: Map Panes](https://leafletjs.com/reference.html) -- z-index values for stacking context
-- [web.dev: Optimize LCP](https://web.dev/articles/optimize-lcp) -- hero image performance
-- [Addy Osmani: fetchpriority](https://addyosmani.com/blog/fetch-priority/) -- LCP hero image optimization
-- [Astro Image Docs](https://docs.astro.build/en/guides/images/) -- responsive image pipeline
-- Direct codebase analysis -- all src/ files, global.css, pipeline scripts
+- Direct source code analysis of all 21 project files (9 components, 6 pipeline scripts, global.css, content.config.ts, astro.config.ts, route-data.json, photos-manifest.json)
+- [Can I Use -- CSS @property](https://caniuse.com/mdn-css_at-rules_property) -- 96.02% global support
+- [MDN -- CSS stroke-dasharray animation](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/animation-timeline)
+- [WebAIM Contrast Checker](https://webaim.org/resources/contrastchecker/) -- WCAG AA ratio calculations
+- [Strava Partners -- Route Embed Documentation](https://partners.strava.com/resources/how-to-embed-a-strava-route)
+- [Internet Archive -- Song of Hiawatha 1908 Edition](https://archive.org/details/songhiawatha00wyetgoog) -- "NOT_IN_COPYRIGHT"
+- [Metropolitan Museum of Art -- Remington Hiawatha](https://www.metmuseum.org/art/collection/search/11864) -- Open Access
+- [hiawatha.digital/illustrations](https://hiawatha.digital/illustrations) -- 69 Harrison Fisher illustrations (1906), public domain
+- [Chart.js Performance Documentation](https://www.chartjs.org/docs/latest/general/performance.html)
+- [CSS-Tricks -- How SVG Line Animation Works](https://css-tricks.com/svg-line-animation-works/)
 
 ### Secondary (MEDIUM confidence)
-- [UNBOUND Gravel](https://unboundgravel.com), [SBT GRVL](https://sbtgrvl.com), [Cycle Oregon](https://cycleoregon.com/ride/gravel/) -- competitive feature analysis
-- [Neebin Studios Anishinaabe Floral Set](https://neebin.com/design/floral_set/) -- open-licensed Ojibwe floral SVG reference
-- [Heart Berry: Ojibwe Floral Beadwork as Covert Art](https://www.heartberry.com/blogs/news/17055207-anishinaabeg-use-ojibwe-floral-beadwork-as-covert-art) -- cultural significance
-- [Vincent Design: Indigenous Graphic Design Best Practices](https://vincentdesign.ca/2021/03/08/considerations-and-best-practices-in-indigenous-design/) -- cultural sensitivity framework
-- [Indigenous Protocols for the Visual Arts](https://www.indigenousprotocols.art/) -- cultural use guidelines
-- [USFS Hiawatha NF Tribal Relations](https://www.fs.usda.gov/r09/hiawatha/working-with-us/tribal-relations) -- land context
-- [Smashing Magazine: Magazine Layout with CSS Grid Areas](https://www.smashingmagazine.com/2023/02/build-magazine-layout-css-grid-areas/) -- editorial grid patterns
-- [Ben Nadel: Dialog as Fly-out Sidebar](https://www.bennadel.com/blog/4862-opening-the-dialog-element-as-a-fly-out-sidebar.htm) -- `<dialog>` panel pattern
-- [CSS-Tricks: Masonry Layout is Now grid-lanes](https://css-tricks.com/masonry-layout-is-now-grid-lanes/) -- spec history
+- [Alex Plescan -- Easy SVG Sparklines](https://alexplescan.com/posts/2023/07/08/easy-svg-sparklines/) -- build-time SVG sparkline technique
+- [Josh W. Comeau -- Color Shifting in CSS](https://www.joshwcomeau.com/animation/color-shifting/) -- `@property` gradient animation
+- [National Geographic Website Design Analysis](https://www.designrush.com/best-designs/websites/national-geographic-website-design)
+- [ImageX -- Best Nonprofit Website Designs](https://imagexmedia.com/blog/best-nonprofit-website-designs-drive-impact)
+- [The Brand Identity -- Museum Identities](https://the-brandidentity.com/resource/6-cultural-creative-and-charming-identities-for-museums-featuring-north-base-design-and-more)
+- [Communication Arts -- Decolonizing Native American Design](https://www.commarts.com/columns/decolonizing-native-american-design)
+- [Four Directions Teachings -- Ojibwe](https://fourdirectionsteachings.com/transcripts/ojibwe.html)
+- [Pope Tech -- Accessible Animation](https://blog.pope.tech/2025/12/08/design-accessible-animation-and-movement/)
+- [DC Rainmaker -- Strava External Links](https://www.dcrainmaker.com/2025/03/strava-backtracks-now-allows-external-links-again.html)
+- [Strava Community Hub -- Jan 2026 Embed Issue](https://communityhub.strava.com/developers-api-7/strava-widgets-embedded-on-website-stopped-working-since-20-jan-2026-12591) -- resolved Feb 19, 2026
+
+### Tertiary (LOW confidence)
+- [Wikimedia Commons -- Song of Hiawatha category](https://commons.wikimedia.org/wiki/Category:The_Song_of_Hiawatha) -- 45+ files, individually licensed
+- [Maximalism in Web Design (Grazitti)](https://www.grazitti.com/blog/maximalism-in-web-design-bold-beautiful-and-beyond-the-ordinary/)
+- [Native American Color Meanings](https://www.color-meanings.com/native-american-color-meanings/) -- general reference, needs cross-validation
 
 ---
 *Research completed: 2026-03-31*

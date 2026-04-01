@@ -1,737 +1,850 @@
-# Architecture Research: v1.1 Visual Redesign Integration
+# Architecture Research: v1.2 Cultural Maximalism Integration
 
-**Domain:** Visual redesign of existing Astro 6 static cycling route showcase
+**Domain:** Maximalist cultural design layer added to existing Astro 6 / Tailwind 4 static cycling showcase
 **Researched:** 2026-03-31
-**Confidence:** HIGH -- based on direct analysis of all existing source files, v1.0 architecture patterns, and Astro 6 / Tailwind 4 capabilities
+**Confidence:** HIGH -- based on direct analysis of all existing source files, v1.1 shipped architecture, and verified CSS/SVG animation capabilities
 
 ---
 
 ## Executive Summary
 
-The v1.1 visual redesign introduces 7 feature areas into an existing, well-structured Astro static site. The core architectural challenge is that the current `index.astro` is a monolithic page with inline content, a `max-w-4xl` centered layout, and components that assume this constrained width. The redesign needs full-width sections (hero, gallery), a new interactive panel (sector details), richer decorative elements (Ojibwe motifs), and new content sections -- all while preserving the working CustomEvent bus, lazy-loading patterns, and build pipeline.
+v1.2 "Cultural Maximalism" introduces 7 feature areas into the shipped v1.1 architecture. Unlike v1.1 (which required structural changes like removing BaseLayout width constraints and establishing the CustomEvent bus), v1.2 is almost entirely **additive** -- the foundational architecture is already in place. The features break into three integration tiers:
 
-**Key architectural insight:** Most changes are additive (new components, new CSS tokens, new content sections) rather than structural rewrites. The three components with complex client-side JavaScript (RouteMap, ElevationProfile, PhotoGallery) need targeted modifications, not replacements. The biggest structural change is in `BaseLayout.astro` (removing `max-w-4xl` constraint to enable full-width sections) and `index.astro` (reorganizing section layout).
+1. **Pure CSS/SVG additions** (animated dividers, shield motif system, color expansion) -- zero JavaScript, zero data flow changes, zero risk to existing interactive components
+2. **Data-layer extensions** (historical imagery, Strava links, per-sector elevation) -- small schema additions to existing JSON files and pipeline scripts, backward compatible
+3. **Component modifications** (content layout enrichment) -- targeted changes to HiawathaExplainer and RouteExplainer, preserving their existing data wiring
+
+The critical architectural insight: **nothing in v1.2 touches the CustomEvent bus, the lazy-loading patterns, or the three complex client-side components (RouteMap, ElevationProfile, PhotoGallery)**. This is a design and content milestone, not an interactivity milestone.
 
 ---
 
-## Current Architecture (v1.0 Baseline)
+## Current Architecture (v1.1 Shipped Baseline)
 
 ### System Diagram
 
 ```
 BaseLayout.astro
-  <main class="max-w-4xl mx-auto px-4 py-8">   <-- Constrains ALL content to 896px
-    <slot />                                       <-- Everything is inside this container
+  <main>                               <-- No width constraint (v1.1 change)
+    <slot />
   </main>
 
 index.astro
-  Badge hero section (centered, 300-420px badge)
-  DonateCallout
-  topo-divider
-  "The Route" narrative prose
-  RouteStats
-  GPX download link
-  topo-divider
-  RouteMap (60vh, lazy-loaded)
-  ElevationProfile (140-180px, lazy-loaded)
-  PhotoGallery (2-4 col grid, PhotoSwipe)
-  DonateCallout (repeated)
-  Footer
+  HeroSection         (full-width, 100svh, LCP-optimized hero photo + badge SVG + event date)
+  DonateCallout       (max-w-4xl centered)
+  FloralDivider       (max-w-4xl centered, inline SVG, Ojibwe woodland floral)
+  HiawathaExplainer   (max-w-4xl centered, editorial prose, no JS)
+  RouteExplainer      (full-width topo bg, max-w-4xl inner, CSS Grid segment cards + photos)
+  RouteStats          (max-w-4xl centered, content collection data)
+  GPX download link   (max-w-4xl centered)
+  FloralDivider       (max-w-4xl centered)
+  RouteMap            (max-w-4xl, 60vh, Leaflet lazy-loaded via IO + scroll)
+  ElevationProfile    (max-w-4xl, Chart.js lazy-loaded via IO)
+  PhotoGallery        (max-w-4xl, CSS columns masonry, PhotoSwipe)
+  DonateCallout       (max-w-4xl centered, repeated)
+  Footer              (max-w-4xl, cultural attribution)
 ```
 
-### Layout Constraint Problem
+### Existing Patterns (PRESERVE)
 
-The `max-w-4xl mx-auto px-4` on `<main>` in BaseLayout means EVERY section is constrained to 896px. This works for v1.0's document-style layout but blocks:
-- Full-width hero images (need viewport width)
-- Full-bleed map section
-- Masonry gallery that uses wider breakpoints
-- Ojibwe border decorations that span the viewport edge
+| Pattern | Implementation | v1.2 Impact |
+|---------|---------------|-------------|
+| CustomEvent bus | `elevation:hover`, `elevation:leave`, `map:photoClick` via `window.dispatchEvent` | NOT TOUCHED |
+| IntersectionObserver lazy loading | RouteMap (scroll + IO), ElevationProfile (IO only) | NOT TOUCHED |
+| `getCSSColor()` runtime reads | Inside `initMap()` and `initChart()` for CSS token propagation | NEW TOKENS AUTO-PROPAGATE |
+| Inline SVG with `var(--color-*)` | FloralDivider, badge in HeroSection | EXTEND to new motifs |
+| `@theme static` tokens | 12 color families in global.css, forced to `:root` for JS access | ADD new tokens |
+| Scoped `<style>` per component | All .astro components use Astro scoped styles | FOLLOW for new components |
+| Build pipeline (6 steps) | parse-gpx -> resolve-annotations -> generate-thumbnails -> copy-images -> match-photos -> copy-gpx | EXTEND resolve-annotations and match-photos |
+| Content collections | routeData, annotations, photos in content.config.ts | EXTEND schemas |
+
+### Key Architectural Constraints
+
+1. **SVG data URIs cannot use `var(--color-*)`** -- RouteExplainer's topo background hardcodes `%233d6b3d`. Any new SVG backgrounds must follow this pattern.
+2. **`@theme static` is required** (not `@theme`) because `getCSSColor()` in RouteMap and ElevationProfile calls `getComputedStyle()` at runtime, which requires tokens to be emitted as CSS custom properties on `:root`. Tailwind v4's `@theme` tree-shakes unused tokens; `@theme static` forces emission.
+3. **Photos-manifest.json is canonical** -- all photo metadata flows from `public/data/photos-manifest.json` through pipeline scripts to `public/data/photos.json`. Never edit `photos.json` directly.
+4. **Segment data is hardcoded in RouteExplainer.astro** -- the SEGMENTS array is defined inline in the component frontmatter, not sourced from a JSON file. This is by design (v1.1 decision: "keeping the content inline in the component is simpler").
 
 ---
 
-## v1.1 Integration Architecture
-
-### Structural Change: BaseLayout Width Strategy
-
-**Decision: Move width constraints from `<main>` to individual sections.**
-
-```
-BEFORE (v1.0):
-  BaseLayout.astro
-    <main class="max-w-4xl mx-auto px-4 py-8">  <-- one size fits all
-      <slot />
-    </main>
-
-AFTER (v1.1):
-  BaseLayout.astro
-    <main>                                         <-- no width constraint
-      <slot />
-    </main>
-
-  index.astro
-    <HeroSection />                                <-- full-width (self-contained)
-    <section class="max-w-4xl mx-auto px-4">      <-- constrained sections opt in
-      <NarrativeSection />
-    </section>
-    <section class="max-w-6xl mx-auto px-4">      <-- wider sections for gallery
-      <PhotoGallery />
-    </section>
-    <RouteMap />                                   <-- full-width map
-```
-
-**Rationale:** This is the standard Astro pattern for mixed-width layouts. Each section controls its own max-width rather than inheriting a global constraint. The change to BaseLayout is a one-line edit (removing classes from `<main>`) and then each section in index.astro adds its own container class.
-
-**Impact:** Minimal. The `py-8` and `px-4` currently on `<main>` need to be moved to individual sections. This is mechanical, not architectural.
-
----
-
-## Component Integration Map
+## v1.2 Integration Architecture
 
 ### Overview: New vs. Modified vs. Unchanged
 
 | Component | Status | Change Description |
 |-----------|--------|-------------------|
-| `BaseLayout.astro` | **MODIFY** | Remove `max-w-4xl mx-auto px-4 py-8` from `<main>`, add OG meta tags for hero image |
-| `index.astro` | **MODIFY** | Major restructure: new section ordering, per-section width containers, import new components |
-| `global.css` | **MODIFY** | Evolve `@theme` tokens (new colors, new spacing), add Ojibwe decorative patterns, new `@layer` rules |
-| `RouteMap.astro` | **MODIFY** | Add sector click handlers, dispatch `sector:click` events, add sector name labels |
-| `ElevationProfile.astro` | **MODIFY** | Add sector click handlers (clicking a sector band dispatches `sector:click`) |
-| `PhotoGallery.astro` | **REWRITE** | Replace uniform grid with masonry layout, add featured/hero image support |
-| `RouteStats.astro` | **MINOR MODIFY** | Style updates only (new color tokens), no structural change |
-| `DonateCallout.astro` | **MINOR MODIFY** | Style evolution to match new design language |
-| `HeroSection.astro` | **NEW** | Full-width hero with route photo, overlay text, event date |
-| `SectorDetailPanel.astro` | **NEW** | Slide-out panel showing sector info (name, difficulty, length, surface, mini-elevation) |
-| `NarrativeSection.astro` | **NEW** | Rewritten Hiawatha narrative with editorial layout, integrated photos |
-| `RouteExplainer.astro` | **NEW** | Photo-integrated route overview over topographic background |
-| `EventDate.astro` | **NEW** | Event date display component (June 6, 2026) |
-| `OjibweBorder.astro` | **NEW** | Reusable SVG decorative border/divider component (replaces topo-divider) |
-| `OjibweMotif.astro` | **NEW** | Standalone decorative SVG motif component (floral, beadwork patterns) |
+| `global.css` | **MODIFY** | Add 4 color tokens (turquoise, red, yellow, black) to `@theme static` |
+| `FloralDivider.astro` | **MODIFY or EXTEND** | Add CSS animation (draw-on-scroll), optionally create variant |
+| `HiawathaExplainer.astro` | **MODIFY** | Content layout enrichment: pull quotes, historical imagery, typography enhancements |
+| `RouteExplainer.astro` | **MODIFY** | Add per-sector elevation sparklines, Strava links, content enrichment |
+| `index.astro` | **MODIFY** | Import new components, add AnimatedDivider instances |
+| `content.config.ts` | **MODIFY** | Add optional fields to sector and photo schemas |
+| `resolve-annotations.js` | **MODIFY** | Add Strava segment IDs and elevation data slice to sector output |
+| `match-photos.js` | **MODIFY** | Add optional `category` field for historical vs route photos |
+| `photos-manifest.json` | **MODIFY** | Add historical image entries with `category: "historical"` |
+| `AnimatedDivider.astro` | **NEW** | Scroll-triggered animated SVG section divider |
+| `ShieldMotif.astro` | **NEW** | Reusable shield/arrowhead decorative SVG component |
+| `ElevationSparkline.astro` | **NEW** | Build-time SVG sparkline for per-sector elevation snippets |
+| `HistoricalFigure.astro` | **NEW** | Image + caption component for historical illustrations |
+
+### Components NOT Modified
+
+| Component | Reason |
+|-----------|--------|
+| `HeroSection.astro` | Hero is complete; v1.2 adds cultural elements below the fold |
+| `RouteMap.astro` | No new map interactions; Strava links are in RouteExplainer, not on map |
+| `ElevationProfile.astro` | Full chart untouched; sparklines are separate build-time SVGs |
+| `PhotoGallery.astro` | Gallery layout unchanged; historical images mix into existing flow |
+| `RouteStats.astro` | Stats content unchanged |
+| `DonateCallout.astro` | CTA unchanged |
+| `BaseLayout.astro` | Layout structure unchanged |
+| `pipeline.js` | Same 6 steps, same order |
+| `parse-gpx.js` | GPX parsing unchanged |
+| `generate-thumbnails.js` | Thumbnail spec unchanged (400px WebP 80%) |
+| `copy-images.js` | Image copy unchanged |
+| `copy-gpx.js` | GPX copy unchanged |
 
 ---
 
 ## Detailed Integration Analysis
 
-### 1. Full-Width Hero Section
+### 1. Animated Section Dividers
 
-**New component:** `src/components/HeroSection.astro`
+**Decision: Create new `AnimatedDivider.astro`, DO NOT modify `FloralDivider.astro`.**
 
-**Integration points:**
-- Consumes a hero image from `public/images/` (one of the existing route photos, selected editorially)
-- Overlays the badge SVG (moved from inline in index.astro to HeroSection)
-- Displays event date (June 6, 2026) as overlay text
-- Must break free of any parent container (full viewport width)
+**Rationale:** FloralDivider works correctly and is used in two places in index.astro. Retrofitting animation into it risks breaking the existing visual. Instead, create a new component that can be placed alongside or instead of FloralDivider instances at the orchestrator's discretion.
 
-**Architecture:**
+#### Component Architecture
+
 ```
-HeroSection.astro
-  <section class="relative w-full h-[80vh] min-h-[500px]">
-    <img> or CSS background-image (hero photo)
-    <div class="absolute inset-0 bg-gradient-to-b ...">  (overlay gradient)
-      Badge SVG (extracted from current index.astro inline SVG)
-      Event date text
-      Tagline
-    </div>
-  </section>
-```
+src/components/AnimatedDivider.astro
 
-**Key decisions:**
-- Use `<img>` with `object-fit: cover` rather than CSS `background-image` for better lazy-loading control and accessibility (alt text).
-- The badge SVG (currently 100+ lines of inline SVG in index.astro) should be extracted into this component. It does NOT need its own .astro file because it is only used in the hero.
-- Hero image selection: Use one of the existing route photos. The pipeline does NOT need modification -- just reference a specific image path.
-- The `py-[--spacing-section]` and centered layout currently wrapping the badge in index.astro gets replaced by the full-width absolute-positioned hero.
+Props:
+  variant: 'vine' | 'arrowhead' | 'shield'  (default: 'vine')
+  direction: 'ltr' | 'rtl'                   (default: 'ltr')
 
-**No new data dependencies.** Hero content is static markup.
-
-**Build order implication:** Can be built independently. No dependency on any other v1.1 feature.
-
----
-
-### 2. Masonry Photo Gallery
-
-**Modified component:** `src/components/PhotoGallery.astro` (rewrite)
-
-**Current state:**
-```html
-<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
-  {photos.map((photo) => (
-    <a ...><img class="w-full aspect-square object-cover" /></a>
-  ))}
-</div>
-```
-
-Uniform grid, all thumbnails are identical square crops, no editorial hierarchy.
-
-**v1.1 target:** Masonry layout with featured hero images at larger sizes, mixed aspect ratios, editorial spacing.
-
-**Architecture decision: CSS-only masonry vs. JavaScript masonry.**
-
-CSS `columns` is the recommended approach for this project because:
-- No additional dependencies needed
-- Works with SSR/static output (no hydration required)
-- Adequate for 54 photos (not a performance concern)
-- Tailwind 4 supports `columns-2 sm:columns-3 lg:columns-4` natively
-
-True CSS `masonry` layout (the `grid-template-rows: masonry` spec) is NOT production-ready as of March 2026 -- it remains behind flags in Firefox and has no Chrome/Safari implementation. Do not use it.
-
-**Integration approach:**
-```
-PhotoGallery.astro (rewritten)
-  <div id="photo-gallery" class="columns-2 sm:columns-3 lg:columns-4 gap-3">
-    {photos.map((photo, index) => {
-      const isFeatured = photo.featured || index < 2;
-      return (
-        <a class={`block mb-3 break-inside-avoid ${isFeatured ? 'col-span-full' : ''}`}>
-          <img class="w-full" />  <!-- NO aspect-square; natural aspect ratio -->
-        </a>
-      );
-    })}
+Template:
+  <div class="animated-divider" aria-hidden="true" role="presentation">
+    <svg viewBox="0 0 800 60" ...>
+      <!-- SVG paths with class="draw-path" for CSS animation targeting -->
+    </svg>
   </div>
-```
 
-**Data change required:** The `photos.json` schema needs a new optional `featured` boolean field to mark editorially-selected hero images. This is a schema addition (backward compatible).
+Script: (none -- pure CSS animations)
 
-```typescript
-// content.config.ts addition
-schema: z.object({
-  id: z.string(),
-  filename: z.string(),
-  thumb: z.string(),
-  mile: z.number(),
-  lat: z.number().optional(),
-  lon: z.number().optional(),
-  featured: z.boolean().optional(),  // NEW: editorial selection for gallery hero
-  aspectRatio: z.number().optional(), // NEW: natural w/h ratio for masonry sizing
-})
-```
-
-**PhotoSwipe integration preserved:** The PhotoSwipe `<script>` block is unchanged. It targets `#photo-gallery a` elements, which remain the same. The `data-pswp-width` and `data-pswp-height` attributes are still set per anchor. The `map:photoClick` event listener is unchanged.
-
-**Pipeline change:** The `generate-thumbnails.js` script needs to output thumbnails at natural aspect ratios (not square crops). Currently thumbnails are 400px wide WebP -- this just needs to preserve aspect ratio rather than forcing square. The `match-photos.js` script should write `aspectRatio` to photos.json by reading image dimensions from sharp metadata.
-
-**Build order implication:** Depends on minor pipeline update (aspect ratio extraction). But can be developed with placeholder aspect ratios first and pipeline updated after.
-
----
-
-### 3. Sector Detail Panel + Map Labels
-
-**New component:** `src/components/SectorDetailPanel.astro`
-**Modified component:** `src/components/RouteMap.astro`
-**Modified component:** `src/components/ElevationProfile.astro`
-
-This is the most architecturally complex v1.1 feature because it extends the CustomEvent bus and adds interactive behavior across three components.
-
-#### 3a. New CustomEvent Bus Extensions
-
-**Current events (v1.0):**
-| Event | Emitter | Listener | Payload |
-|-------|---------|----------|---------|
-| `elevation:hover` | ElevationProfile | RouteMap | `{ miles }` |
-| `elevation:leave` | ElevationProfile | RouteMap | (none) |
-| `map:photoClick` | RouteMap | PhotoGallery | `{ photoIndex }` |
-
-**New events (v1.1):**
-| Event | Emitter | Listener | Payload |
-|-------|---------|----------|---------|
-| `sector:click` | RouteMap OR ElevationProfile | SectorDetailPanel | `{ sectorId }` |
-| `sector:close` | SectorDetailPanel | RouteMap (optional: unhighlight) | (none) |
-| `sector:hover` | RouteMap | ElevationProfile (optional: highlight band) | `{ sectorId }` |
-| `sector:leave` | RouteMap | ElevationProfile (optional: unhighlight) | (none) |
-
-**Event payload design:** The `sector:click` event carries `sectorId` (e.g., `"sector-520"`). The SectorDetailPanel looks up full sector data from a pre-serialized JSON blob (inlined as `define:vars` or fetched from annotations.json). This avoids coupling the panel to the map or chart's internal state.
-
-#### 3b. RouteMap Modifications
-
-**Changes needed in RouteMap.astro:**
-
-1. **Sector labels on the map.** For each sector, place a Leaflet `L.divIcon` marker at the sector midpoint with the sector name and star difficulty rating. This is additive code in the `initMap()` function, after the sector polylines are drawn.
-
-2. **Sector click handlers.** Attach click handlers to sector polylines AND sector label markers. On click, dispatch `window.dispatchEvent(new CustomEvent('sector:click', { detail: { sectorId: sector.id } }))`.
-
-3. **Sector highlight on panel open.** Listen for `sector:close` to optionally de-emphasize the highlighted sector. (Nice to have, not critical.)
-
-**Estimated code change:** ~40 lines added to the existing `initMap()` function. No structural changes to the lazy-loading pattern, tile layer, or bike marker logic.
-
-#### 3c. ElevationProfile Modifications
-
-**Changes needed in ElevationProfile.astro:**
-
-1. **Sector band click handlers.** The sector bands are already rendered as `chartjs-plugin-annotation` box annotations. Add `click` event handling to the annotation plugin config. When a sector band is clicked, dispatch `sector:click` with the corresponding `sectorId`.
-
-2. **Implementation:** Chart.js annotation plugin supports `click` callbacks on individual annotations. Add `click: (ctx, event) => { ... }` to each sector annotation definition.
-
-**Estimated code change:** ~15 lines added to the sector annotation loop in `initChart()`.
-
-#### 3d. SectorDetailPanel Component
-
-**New file:** `src/components/SectorDetailPanel.astro`
-
-**Architecture:**
-```
-SectorDetailPanel.astro
-  <!-- Hidden by default, shown on sector:click -->
-  <aside id="sector-panel" class="fixed right-0 top-0 h-full w-80 ... translate-x-full transition-transform">
-    <button aria-label="Close panel">X</button>
-    <h3 id="sector-name"></h3>
-    <div id="sector-difficulty"></div>  <!-- star rating -->
-    <div id="sector-stats"></div>       <!-- miles, start mile, surface -->
-    <div id="sector-mini-elevation"></div>  <!-- optional: mini elevation slice -->
-  </aside>
-
-  <script>
-    // Sector data inlined at build time or fetched from annotations.json
-    const sectors = await fetch('/data/annotations.json')
-      .then(r => r.json())
-      .then(data => data.filter(a => a.type === 'sector'));
-
-    window.addEventListener('sector:click', (e) => {
-      const sector = sectors.find(s => s.id === e.detail.sectorId);
-      if (!sector) return;
-      // Populate panel DOM
-      // Remove translate-x-full to slide in
-    });
-
-    // Close button dispatches sector:close
-    document.getElementById('sector-close').addEventListener('click', () => {
-      // Add translate-x-full to slide out
-      window.dispatchEvent(new CustomEvent('sector:close'));
-    });
-  </script>
-```
-
-**Panel positioning:** Fixed right-side slide-out panel. On mobile (< 640px), the panel should be full-width bottom sheet instead of right-side. Use a responsive CSS approach:
-```css
-@media (max-width: 639px) {
-  #sector-panel {
-    width: 100%;
-    height: auto;
-    max-height: 60vh;
-    top: auto;
-    bottom: 0;
-    transform: translateY(100%);  /* slides up from bottom */
+Style (scoped):
+  .animated-divider svg { opacity: 0; }
+  .animated-divider.visible svg { opacity: 1; }
+  .draw-path {
+    stroke-dasharray: var(--path-length);
+    stroke-dashoffset: var(--path-length);
+    transition: stroke-dashoffset 1.5s ease-out;
   }
+  .animated-divider.visible .draw-path {
+    stroke-dashoffset: 0;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .draw-path { transition: none; stroke-dashoffset: 0; }
+    .animated-divider svg { opacity: 1; }
+  }
+```
+
+#### Animation Approach: CSS transitions + IntersectionObserver class toggle
+
+**Why NOT CSS `animation-timeline: view()`:** Browser support is Chrome 115+, Safari 18+, but Firefox is still behind a flag as of March 2026. This site should work across browsers. The established IntersectionObserver pattern already exists in the codebase (RouteMap, ElevationProfile).
+
+**Why NOT SMIL `<animate>`:** SMIL animations restart on every DOM reflow and cannot be easily triggered on scroll. CSS transitions with class toggling give precise control.
+
+**Why CSS transitions (not `@keyframes` animations):** The "draw-on" effect for SVG paths uses `stroke-dasharray` / `stroke-dashoffset` -- this is a single state change (from fully dashed to no offset), which maps cleanly to CSS `transition` rather than multi-step `@keyframes`. Simpler, fewer lines, better performance.
+
+#### Implementation detail: `stroke-dasharray` / `stroke-dashoffset` draw effect
+
+Each SVG `<path>` element needs a `--path-length` CSS custom property set to its total length. This can be computed at build time using `getTotalLength()` (but that requires a DOM), or estimated manually since the SVG paths are hand-authored and their lengths are known.
+
+**Practical approach:** Set `stroke-dasharray` and `stroke-dashoffset` to a generous overestimate (e.g., `1600` for an 800-unit-wide viewBox). If the value exceeds the actual path length, the effect still works -- the stroke simply finishes drawing before the transition ends, which is visually acceptable and avoids the need for runtime `getTotalLength()` calls.
+
+#### Script block (minimal)
+
+```html
+<script>
+  // IntersectionObserver to add .visible class -- same pattern as existing lazy loaders
+  document.querySelectorAll('.animated-divider').forEach(el => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          el.classList.add('visible');
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.3 }
+    );
+    observer.observe(el);
+  });
+</script>
+```
+
+This is ~12 lines of vanilla JS. No dependencies, no event bus extension, no interaction with existing components.
+
+#### Integration into index.astro
+
+AnimatedDivider replaces or supplements FloralDivider instances:
+
+```
+Option A: Replace both FloralDividers
+  <AnimatedDivider variant="vine" />        (was FloralDivider)
+  ...
+  <AnimatedDivider variant="arrowhead" />   (was FloralDivider)
+
+Option B: Add AnimatedDividers at new section boundaries, keep FloralDividers
+  <FloralDivider />
+  ...
+  <AnimatedDivider variant="shield" />      (new divider between new sections)
+  ...
+  <FloralDivider />
+```
+
+**Recommendation: Option A** -- replace FloralDividers. The `vine` variant can reproduce the existing floral design with animation added. No content is lost.
+
+#### Build order dependency: None. Can be built first or in parallel with any other v1.2 feature.
+
+---
+
+### 2. Shield/Arrowhead Motif System
+
+**New component:** `src/components/ShieldMotif.astro`
+
+#### Source Material Analysis
+
+The badge SVG in HeroSection.astro contains a shield shape (`<path d="M500 70 150 175.3v217.1C150 785 500 930 500 930s350-145 350-537.6V175.2L500 70Z" ...>`) and an arrowhead motif (`<path d="M20 2 L6 40 Q8 38 14 36 L18 50 L20 58 L22 50 L26 36 Q32 38 34 40 Z" ...>`). These are the geometric source for extracting reusable motifs.
+
+#### Component Architecture
+
+```
+src/components/ShieldMotif.astro
+
+Props:
+  size: 'sm' | 'md' | 'lg'    (default: 'md')
+  variant: 'shield' | 'arrowhead' | 'both'  (default: 'shield')
+  color: string                (default: 'var(--color-amber-500)')
+
+Template:
+  <span class={`motif motif-${size}`} aria-hidden="true" role="presentation">
+    <svg viewBox="0 0 40 50" ...>
+      <!-- Simplified shield or arrowhead path -->
+    </svg>
+  </span>
+
+Style (scoped):
+  .motif-sm svg { width: 16px; height: 20px; }
+  .motif-md svg { width: 24px; height: 30px; }
+  .motif-lg svg { width: 40px; height: 50px; }
+```
+
+#### Usage Patterns
+
+The motif component is decorative and used inline:
+- As bullet markers in content lists (replacing `<li>` bullet styling)
+- As section heading accents (placed before/after `<h2>` text)
+- As divider line endpoints (paired with `<hr>` elements)
+- As repeated pattern in AnimatedDivider SVG paths
+
+**This is NOT an interactive component.** No JavaScript, no events, no data flow. Pure presentational SVG.
+
+#### Integration points
+
+- **HiawathaExplainer.astro:** Shield motifs as decorative heading accents
+- **RouteExplainer.astro:** Arrowhead motifs as segment card visual markers
+- **AnimatedDivider.astro:** Shield/arrowhead shapes incorporated into divider SVG patterns
+- **index.astro:** Direct motif usage at section boundaries
+
+#### Build order dependency: None. Can be built in parallel. Optionally built before AnimatedDivider if divider variants use motif shapes.
+
+---
+
+### 3. Color Palette Expansion
+
+**Modified file:** `src/styles/global.css` -- `@theme static` block only
+
+#### Current State
+
+The `@theme static` block has 4 color families from v1.1:
+- **Berry** (3 tokens): berry-700, berry-600, berry-500
+- **Gold** (3 tokens): gold-600, gold-500, gold-400
+- **Lake** (4 tokens): lake-700, lake-600, lake-500, lake-400
+- **Moss** (2 tokens): moss-600, moss-500
+
+Plus the original v1.0 families: forest (5), amber (3), rust (2), cream (3).
+
+8 of the v1.1 tokens are orphaned (defined but unused). v1.2 may activate some of these.
+
+#### New Tokens for v1.2
+
+The "Cultural Maximalism" theme calls for bolder, more saturated colors inspired by Native American art traditions. The specific additions:
+
+```css
+@theme static {
+  /* v1.2: Bold cultural accent colors */
+
+  /* Turquoise family — Southwest/Great Lakes beadwork turquoise */
+  --color-turquoise-600: #1a8a7a;  /* deep turquoise for decorative fills */
+  --color-turquoise-500: #2db5a3;  /* primary turquoise accent */
+  --color-turquoise-400: #4ecdc4;  /* light turquoise for highlights */
+
+  /* Red family — ceremonial/medicine wheel red */
+  --color-red-700: #8b1a1a;        /* deep ceremonial red */
+  --color-red-600: #b22222;        /* primary red accent */
+  --color-red-500: #cd3333;        /* lighter red for text-safe uses */
+
+  /* Yellow family — sun/medicine wheel yellow */
+  --color-yellow-500: #d4a017;     /* NOTE: same as existing gold-500, may alias */
+  --color-yellow-400: #f0c040;     /* brighter yellow accent */
+
+  /* Black family — existing forest-950 serves; add explicit cultural alias */
+  --color-ink-900: #0d1a0d;        /* alias of forest-950 for cultural motif use */
 }
 ```
 
-**Data flow:** The panel fetches `annotations.json` at runtime (same file RouteMap and ElevationProfile already fetch). The additional sector fields needed for the detail panel (star rating, surface type description) require extending the annotation schema.
+#### WCAG Contrast Considerations
 
-**Schema extension for annotations.json:**
+New tokens MUST be annotated with their contrast ratios against the background (`forest-900: #1a2e1a`):
+
+| Token | Hex | Ratio vs forest-900 | Safe for |
+|-------|-----|---------------------|----------|
+| turquoise-500 | #2db5a3 | ~4.8:1 | AA normal text |
+| turquoise-400 | #4ecdc4 | ~6.2:1 | AA normal text |
+| red-600 | #b22222 | ~3.1:1 | Decorative/large text only |
+| red-500 | #cd3333 | ~3.9:1 | AA large text only |
+| yellow-400 | #f0c040 | ~6.5:1 | AA normal text |
+
+**Critical rule:** Red tokens fail AA for normal body text against dark backgrounds. Use ONLY for decorative elements, large headings, or SVG fills -- following the same pattern established for berry-700/600/500 in v1.1.
+
+#### Activation of Orphaned Tokens
+
+v1.2 should actively use some of the 8 orphaned v1.1 tokens:
+- `lake-500` / `lake-600` -- for historical content accents (water imagery in the Hiawatha story)
+- `berry-500` -- for bold pull quote styling
+- `moss-600` -- for secondary nature-themed decorative fills
+
+This reduces tech debt from the v1.1 audit while expanding the visual palette.
+
+#### Build order dependency: FIRST. All other v1.2 visual work depends on color tokens being available. This is a ~20-line addition to global.css with zero risk.
+
+---
+
+### 4. Historical Imagery
+
+**Decision: Add historical images to the existing photo pipeline with a `category` field, NOT a separate pipeline.**
+
+#### Data Model Extension
+
+Historical images (Longfellow portrait, Ojibwe beadwork examples, Hiawatha National Forest historical photos, etc.) are a new category of image that:
+- Do NOT have a `mile` value (they are not geolocated on the route)
+- Do NOT appear as map markers
+- ARE processed through the same thumbnail pipeline
+- ARE displayed in HiawathaExplainer and potentially the gallery
+
+**photos-manifest.json extension:**
+
+```json
+{
+  "filename": "longfellow-portrait.jpg",
+  "mile": null,
+  "category": "historical",
+  "caption": "Henry Wadsworth Longfellow, c. 1868"
+}
+```
+
+**Schema extension in content.config.ts:**
+
 ```typescript
-// Additional fields for sector annotations
-z.object({
-  // ... existing fields ...
-  difficulty: z.enum(['easy', 'moderate', 'hard']),
-  stars: z.number().min(1).max(5).optional(),      // NEW: 1-5 star difficulty rating
-  surface: z.string().optional(),                    // NEW: "rugged two-track", "FS gravel", etc.
-  description: z.string().optional(),                // NEW: editorial description for panel
-})
+const photos = defineCollection({
+  schema: z.object({
+    id: z.string(),
+    filename: z.string(),
+    thumb: z.string(),
+    mile: z.number().nullable(),           // CHANGED: nullable for historical images
+    lat: z.number().optional(),
+    lon: z.number().optional(),
+    featured: z.boolean().optional(),
+    category: z.enum(['route', 'historical']).optional().default('route'),  // NEW
+    caption: z.string().optional(),         // NEW: for historical image captions
+  }),
+});
 ```
 
-The data from `data.md` (star ratings, segment names) maps directly to these fields. The `resolve-annotations.js` script would be updated to include them.
+**Pipeline changes:**
 
-**Build order implication:** Depends on RouteMap and ElevationProfile being modified to emit `sector:click`. Best built after those modifications. Pipeline script update is a prerequisite.
-
----
-
-### 4. Ojibwe Design Elements
-
-**New components:**
-- `src/components/OjibweBorder.astro` -- Reusable SVG section divider
-- `src/components/OjibweMotif.astro` -- Standalone decorative SVG element
-
-**Modified file:** `src/styles/global.css`
-
-**Architecture approach:** Inline SVG components, not external SVG files. This keeps the decorative elements:
-- Part of the HTML (no extra HTTP requests)
-- Styleable via CSS custom properties (colors change with theme)
-- Accessible (decorative role, hidden from screen readers)
-
-**OjibweBorder replaces topo-divider:**
-```astro
----
-// OjibweBorder.astro
-interface Props {
-  variant?: 'floral' | 'geometric' | 'beadwork';
+**`match-photos.js` modification:**
+```javascript
+// For historical images (no mile), skip geo-snapping
+if (entry.mile === null || entry.mile === undefined) {
+  return {
+    id: entry.filename,
+    filename: entry.filename,
+    thumb: `/thumbs/${thumbName}`,
+    mile: null,
+    category: entry.category || 'historical',
+    ...(entry.caption ? { caption: entry.caption } : {}),
+    ...(entry.featured ? { featured: true } : {}),
+  };
 }
-const { variant = 'floral' } = Astro.props;
----
-<div class="ojibwe-border" role="presentation" aria-hidden="true">
-  {variant === 'floral' && (
-    <svg ...><!-- Woodland floral pattern --></svg>
-  )}
-  <!-- other variants -->
-</div>
+// Existing geo-snapping logic for route photos...
 ```
 
-**Current topo-divider uses a data URI SVG in CSS:**
-```css
-.topo-divider {
-  height: 60px;
-  background-image: url('data:image/svg+xml;utf8,...');
-}
+**`generate-thumbnails.js`:** No change needed. It already processes all `.jpg` files in `images/`. Historical images placed in `images/` are automatically thumbnailed.
+
+**`RouteMap.astro`:** No change needed. Photo markers filter on `photo.lat && photo.lon`, which historical images lack. They naturally exclude themselves.
+
+**`PhotoGallery.astro`:** Needs minor consideration. Currently it renders ALL photos. Options:
+
+- **Option A (recommended):** Historical images appear in the gallery alongside route photos, with an optional caption overlay. This is "maximalist" -- more content, richer gallery.
+- **Option B:** Filter historical images out of the gallery and only show them in HiawathaExplainer. This reduces gallery richness.
+
+#### New Component: `HistoricalFigure.astro`
+
+For inline historical imagery within HiawathaExplainer:
+
+```
+src/components/HistoricalFigure.astro
+
+Props:
+  src: string        (thumbnail path)
+  alt: string        (image description)
+  caption: string    (attribution / date)
+  float?: 'left' | 'right'  (default: 'right')
+
+Template:
+  <figure class={`historical-figure float-${float}`}>
+    <img src={src} alt={alt} loading="lazy" decoding="async" />
+    <figcaption>{caption}</figcaption>
+  </figure>
+
+Style (scoped):
+  .historical-figure { ... }
+  .float-right { float: right; margin-left: 1.5rem; margin-bottom: 1rem; }
+  .float-left { float: left; margin-right: 1.5rem; margin-bottom: 1rem; }
+  figcaption { font-size: var(--font-size-xs); color: var(--color-cream-200); }
 ```
 
-The Ojibwe border component replaces this inline -- the `.topo-divider` class in global.css either gets updated or deprecated in favor of the component.
-
-**Color token evolution in `@theme`:**
-
-The inspiration images show a direction toward warmer earth tones, birchbark textures, and more vibrant accent colors. The `@theme` block in global.css needs new color tokens while preserving the existing ones for backward compatibility.
-
-```css
-@theme {
-  /* Existing forest greens -- PRESERVED */
-  --color-forest-950: #0d1a0d;
-  --color-forest-900: #1a2e1a;
-  /* ... */
-
-  /* NEW: Warmer earth tones inspired by Ojibwe art */
-  --color-birch-100: #f5efe6;     /* warm birchbark light */
-  --color-birch-200: #e8dcc8;     /* birchbark medium */
-  --color-birch-300: #d4c4a8;     /* birchbark dark */
-
-  /* NEW: Ojibwe-inspired accent colors */
-  --color-berry-500: #8b2252;     /* berry/magenta from beadwork */
-  --color-sky-400: #5da9c7;       /* lake blue */
-  --color-earth-600: #7a5c3a;     /* warm brown earth */
-
-  /* Existing amber -- may shift warmer */
-  --color-amber-500: #c8973e;     /* keep or warm up slightly */
-
-  /* NEW: Decorative element colors */
-  --color-motif-primary: var(--color-amber-500);
-  --color-motif-secondary: var(--color-berry-500);
-  --color-motif-tertiary: var(--color-sky-400);
-}
-```
-
-**Build order implication:** Color tokens should be defined FIRST (they affect everything). Decorative components can be built independently of interactive features.
+#### Build order dependency: Pipeline changes (match-photos.js, content.config.ts) must come before HiawathaExplainer modifications that use historical images. But thumbnail generation is automatic. Sequence: manifest entries -> pipeline run -> component integration.
 
 ---
 
-### 5. Color Scheme Evolution
+### 5. Content Layout Enrichment
 
-**Modified file:** `src/styles/global.css` -- `@theme` block only
+**Modified components:** `HiawathaExplainer.astro` and `RouteExplainer.astro`
 
-This is purely a token update. The existing component CSS references tokens like `var(--color-amber-500)`, `var(--color-forest-900)`, etc. Changing the token values changes the entire site's appearance without touching any component code.
+This is the largest modification area but involves NO structural changes to data flow, event bus, or page architecture. It is purely presentational CSS and markup changes within existing components.
 
-**Strategy:** Additive tokens, not replacements. Add new semantic aliases that reference the new palette, keeping the original tokens as fallbacks during transition:
+#### HiawathaExplainer Enrichment
 
-```css
-@theme {
-  /* Semantic aliases -- components can adopt these gradually */
-  --color-bg-primary: var(--color-forest-900);     /* may change to birch-100 for light sections */
-  --color-bg-secondary: var(--color-forest-800);
-  --color-text-primary: var(--color-cream-100);
-  --color-text-heading: var(--color-amber-500);
-  --color-accent-primary: var(--color-amber-500);
-  --color-accent-secondary: var(--color-berry-500);
-  --color-divider: var(--color-forest-700);
-}
+Current state: 5 paragraphs of prose, 1 blockquote, 1 external link. Clean `max-w-prose` layout. No images, no visual hierarchy beyond text.
+
+**v1.2 additions:**
+
+1. **Historical imagery integration:** Use `HistoricalFigure` component for Longfellow portrait, beadwork illustration alongside relevant prose paragraphs. This requires importing the component and adding `<HistoricalFigure>` instances within the prose.
+
+2. **Pull quote styling:** Enhance the existing `<blockquote>` with bolder typography, shield motif decorations, and new color tokens (berry-500 border, turquoise-500 accents).
+
+3. **Typography hierarchy:** Add dropcap styling for first paragraph (`::first-letter` pseudo-element), section sub-headings within the narrative.
+
+4. **Shield motif accents:** Import and place `ShieldMotif` components as decorative accents near headings.
+
+**Modification scope:** Template changes (adding elements), style changes (enhancing existing CSS). NO frontmatter logic changes -- HiawathaExplainer has no frontmatter data dependencies.
+
+#### RouteExplainer Enrichment
+
+Current state: CSS Grid segment cards with photo + text, star ratings, topo SVG background. Frontmatter imports `photos.json` and defines SEGMENTS array.
+
+**v1.2 additions:**
+
+1. **Per-sector elevation sparklines:** Add a mini elevation profile SVG to each segment card (see section 6 below for detailed analysis).
+
+2. **Strava links:** Add Strava segment links to each segment card (see section 7 below).
+
+3. **Shield/arrowhead motif markers:** Replace or supplement the segment name heading with arrowhead motif accent.
+
+4. **Richer description text:** Expand segment descriptions with additional detail, surface type callouts, notable landmarks.
+
+5. **Color token activation:** Use turquoise-500 for difficulty-specific accents, red-600 for hardest segments (NF2266, Doe Lake).
+
+**Modification scope:**
+- **Frontmatter:** Add sparkline data computation (extracting elevation slices from route-data.json per segment mile range)
+- **Template:** Add sparkline SVG, Strava link anchor, motif decorations to each segment card
+- **Style:** Extend scoped CSS for new elements
+
+**Key constraint:** The SEGMENTS array is hardcoded. Adding Strava segment IDs and elevation sparkline data can either:
+- **Option A:** Extend the hardcoded SEGMENTS array with new fields (stravaId, elevationPoints)
+- **Option B:** Import route-data.json in frontmatter and compute elevation slices dynamically
+
+**Recommendation: Option B for elevation data, Option A for Strava IDs.** Route-data.json is already available at build time (RouteStats uses content collections to access it). Elevation data should be computed, not hardcoded, because it derives from the GPX data. Strava segment IDs are external identifiers that don't change and are best hardcoded alongside the existing segment definitions.
+
+#### Build order dependency: Both components depend on color tokens (section 3) and ShieldMotif (section 2). HiawathaExplainer additionally depends on HistoricalFigure component (section 4) and historical images in the pipeline. RouteExplainer depends on ElevationSparkline (section 6) and Strava ID decisions (section 7).
+
+---
+
+### 6. Per-Sector Elevation Snippets
+
+**Decision: Build-time SVG sparklines generated in Astro frontmatter, NOT Chart.js mini-instances.**
+
+#### Why NOT Chart.js mini-instances
+
+The existing ElevationProfile uses Chart.js with dynamic import (~200KB), IntersectionObserver lazy loading, and canvas rendering. Replicating this 7 times for segment cards would:
+- Add 7 canvas elements to the DOM
+- Require 7 lazy-loading observers (or eager loading, increasing bundle)
+- Impose Chart.js initialization overhead per sparkline
+- Introduce complex teardown/cleanup for canvases
+
+This is wildly disproportionate to the goal of showing a simple elevation squiggle.
+
+#### Why SVG sparklines generated at build time
+
+Astro's frontmatter runs at build time. We can:
+1. Import route-data.json (already available)
+2. Filter points by mile range per segment
+3. Convert to SVG `<polyline>` coordinates
+4. Emit static SVG markup -- zero JavaScript, zero runtime cost
+
+This follows the "Astro island" philosophy: compute everything possible at build time.
+
+#### New Component: `ElevationSparkline.astro`
+
+```
+src/components/ElevationSparkline.astro
+
+Props:
+  points: Array<{ miles: number; ele: number }>  (pre-filtered elevation points)
+  startMile: number
+  endMile: number
+  width?: number   (default: 200)
+  height?: number  (default: 40)
+  color?: string   (default: 'var(--color-amber-500)')
+
+Frontmatter:
+  // Normalize points to SVG coordinate space
+  const minEle = Math.min(...points.map(p => p.ele));
+  const maxEle = Math.max(...points.map(p => p.ele));
+  const eleRange = maxEle - minEle || 1;
+  const mileRange = endMile - startMile || 1;
+
+  const svgPoints = points.map(p => {
+    const x = ((p.miles - startMile) / mileRange) * width;
+    const y = height - ((p.ele - minEle) / eleRange) * (height - 4); // 4px padding
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  }).join(' ');
+
+Template:
+  <svg
+    viewBox={`0 0 ${width} ${height}`}
+    width={width}
+    height={height}
+    aria-hidden="true"
+    role="presentation"
+    class="elevation-sparkline"
+  >
+    <polyline
+      points={svgPoints}
+      fill="none"
+      stroke={color}
+      stroke-width="1.5"
+      stroke-linejoin="round"
+    />
+  </svg>
+
+Style (scoped):
+  .elevation-sparkline { display: block; opacity: 0.7; }
 ```
 
-**Build order implication:** Should be the FIRST thing done -- all other visual changes build on top of the evolved color system.
+#### Data Flow
 
----
-
-### 6. Editorial Narrative Sections
-
-**New component:** `src/components/NarrativeSection.astro`
-**New component:** `src/components/RouteExplainer.astro`
-
-These are purely presentational Astro components with no client-side JavaScript. They render static HTML at build time.
-
-**NarrativeSection.astro** replaces the current inline `<section>` in index.astro that contains the Hiawatha history paragraphs. The v1.1 version has:
-- Witty, editorial tone (rewritten copy)
-- Integrated photos (pulled from the photo manifest or editorially selected)
-- Pull quotes
-- Wider layout with editorial spacing
-
-**Architecture:**
-```astro
----
-// NarrativeSection.astro
-// Static component -- no client-side JS, no event bus
----
-<section class="max-w-prose mx-auto px-4 py-[--spacing-section]">
-  <h2>...</h2>
-  <div class="narrative-body">
-    <p>...</p>
-    <figure class="float-right ml-6 mb-4 w-48">
-      <img src="/thumbs/selected-photo.webp" alt="..." loading="lazy" />
-    </figure>
-    <blockquote>...</blockquote>
-    <p>...</p>
-  </div>
-</section>
+```
+route-data.json (456 points, each with { lat, lon, ele, miles })
+      |
+      v
+RouteExplainer.astro frontmatter
+      |
+      +-- Import route-data.json (or use content collection)
+      +-- For each SEGMENT, filter points where startMi <= miles < endMi
+      +-- Pass filtered points to <ElevationSparkline points={filteredPoints} />
+      |
+      v
+Static SVG in HTML output (zero JS)
 ```
 
-**RouteExplainer.astro** is a new content section showing the route overview with integrated photos against a topographic background. It is a visual section, not interactive.
+**RouteExplainer frontmatter changes:**
 
-**Data dependency:** Both components use static content (hardcoded in the Astro template). They do NOT need content collections or JSON data unless the narrative text is extracted to a Markdown file for easier editing. For v1.1, keeping the content inline in the component is simpler and recommended.
-
-**Build order implication:** Zero dependencies on other v1.1 features. Can be built at any time. Best done after color tokens are updated.
-
----
-
-### 7. Event Date Display
-
-**New component:** `src/components/EventDate.astro`
-
-The simplest new component. Displays "June 6, 2026" prominently.
-
-**Architecture options:**
-- **Option A:** Standalone component placed in hero section
-- **Option B:** Part of HeroSection.astro (inline, not a separate component)
-
-**Recommendation: Option B.** The event date is only displayed once (in the hero) and is a simple text element. Creating a separate component for a single date string is over-abstraction. Include it inline in HeroSection.astro.
-
-If the date needs to appear in multiple places (hero + a sidebar or footer), extract to a separate component at that point.
-
----
-
-## Data Flow Changes
-
-### annotations.json Schema Extension
-
-**Current fields (sectors):**
-```json
-{
-  "id": "sector-520",
-  "type": "sector",
-  "name": "520",
-  "startMile": 1.1,
-  "endMile": 2.4,
-  "lengthMiles": 1.3,
-  "startLat": 46.35686,
-  "startLon": -86.73175,
-  "endLat": 46.34027,
-  "endLon": -86.74124,
-  "startIdx": 5,
-  "endIdx": 14,
-  "difficulty": "hard"
-}
-```
-
-**New fields needed for sector detail panel:**
-```json
-{
-  "stars": 2,
-  "surface": "Rugged Two-Track",
-  "description": "A rough forest two-track with significant washboarding..."
-}
-```
-
-**Source:** The star ratings are already documented in `data.md`. The `resolve-annotations.js` script needs to be updated to include them in the output.
-
-**Schema update in content.config.ts:**
 ```typescript
-z.object({
-  // ... existing fields ...
-  difficulty: z.enum(['easy', 'moderate', 'hard']),
-  stars: z.number().min(1).max(5).optional(),
-  surface: z.string().optional(),
-  description: z.string().optional(),
-})
+// NEW: Import route data for sparkline generation
+import routeDataRaw from '../../public/data/route-data.json';
+
+const segmentsWithPhotosAndElevation = SEGMENTS.map(seg => ({
+  ...seg,
+  photos: (photosData as any[])
+    .filter((p: any) => p.mile >= seg.startMi && p.mile < seg.endMi)
+    .slice(0, 2),
+  // NEW: elevation points for sparkline
+  elevationPoints: routeDataRaw.points
+    .filter((p: any) => p.miles >= seg.startMi && p.miles < seg.endMi),
+}));
 ```
 
-**Backward compatibility:** All new fields are optional (`z.optional()`). Existing code that reads annotations.json ignores unknown fields. Zero breaking changes.
+**Estimated impact:** ~10 lines added to RouteExplainer frontmatter, ~30 lines for ElevationSparkline.astro. Zero JavaScript in the output.
 
-### photos.json Schema Extension
+#### Elevation data characteristics per segment
 
-**New optional fields:**
-```json
-{
-  "featured": true,
-  "aspectRatio": 0.75
+| Segment | Mile Range | Approx Points | Notes |
+|---------|-----------|---------------|-------|
+| 520 | 0 - 5.0 | ~25 | Short, low variance |
+| NF2266 | 5.0 - 18.0 | ~65 | HIGH variance -- the "crucible" |
+| Bass Lake Rd | 18.0 - 32.0 | ~70 | Rolling, moderate |
+| NF2217-2218 | 32.0 - 50.0 | ~90 | Long, gentle |
+| ND2225 | 50.0 - 70.0 | ~100 | Moderate |
+| Doe Lake | 70.0 - 92.0 | ~110 | Technical, punchy |
+| Rapid River | 92.0 - 110.0 | ~95 | Descending home stretch |
+
+All point counts are reasonable for SVG polyline rendering (no decimation needed for sparklines at 200px width).
+
+#### Build order dependency: Depends on no other v1.2 feature. Can be built in parallel. Integrates into RouteExplainer which is a later task.
+
+---
+
+### 7. Strava Links
+
+**Decision: Hardcode Strava segment/route IDs in the RouteExplainer SEGMENTS array, NOT in annotations.json.**
+
+#### Rationale
+
+Strava links are:
+- External identifiers that don't change
+- Only used in one component (RouteExplainer)
+- Not needed by RouteMap, ElevationProfile, or any other consumer of annotations.json
+- Purely presentational (anchor tags to strava.com)
+
+Adding them to annotations.json and the pipeline would:
+- Require modifying resolve-annotations.js
+- Extend the content.config.ts schema
+- Add fields that only one component uses
+- Over-engineer a simple feature
+
+**The SEGMENTS array already contains segment-specific data that only RouteExplainer uses** (descriptions, display names, formatted distances). Strava IDs belong here.
+
+#### Data Model
+
+```typescript
+interface Segment {
+  name: string;
+  startMi: number;
+  endMi: number;
+  distFromStart: string;
+  length: string;
+  difficulty: number;
+  description: string;
+  stravaUrl?: string;    // NEW: full Strava segment/route URL
 }
+
+const SEGMENTS: Segment[] = [
+  {
+    name: '520',
+    // ... existing fields ...
+    stravaUrl: 'https://www.strava.com/segments/12345678',
+  },
+  // ...
+];
 ```
 
-Used by the masonry gallery for editorial photo sizing. Backward compatible (optional fields).
+**Note:** Strava URLs may point to segments (`/segments/ID`) or routes (`/routes/ID`). Use the full URL rather than just an ID to support both.
 
-### No Changes to route-data.json
+#### Template Integration
 
-The route data schema is unchanged. No new points, no new metadata. The hero section and narrative use static content, not route data.
+```html
+{seg.stravaUrl && (
+  <a
+    href={seg.stravaUrl}
+    target="_blank"
+    rel="noopener noreferrer"
+    class="strava-link"
+    aria-label={`View ${seg.name} on Strava`}
+  >
+    View on Strava
+  </a>
+)}
+```
 
----
+#### Strava Embed Consideration
 
-## Modified File Analysis
+Strava offers iframe embeds (`<iframe src="https://www.strava.com/segments/ID/embed" ...>`). **Do NOT use iframe embeds** because:
+- They add HTTP requests per segment (7 iframes = 7 external requests)
+- They require JavaScript and break in static site caching
+- They add visual inconsistency (Strava's styling vs. the site's design)
+- They increase page weight significantly
+- A simple text link is maximalist in content, not in page weight
 
-### Files Requiring Modification (Ranked by Scope)
+**Recommendation:** Plain text links styled to match the site's design language (amber-400, font-display, uppercase). Consider adding a small Strava-branded SVG icon inline.
 
-| File | Scope | Risk | Notes |
-|------|-------|------|-------|
-| `src/pages/index.astro` | LARGE | LOW | Section reordering, new imports, per-section width classes. No logic changes. |
-| `src/styles/global.css` | LARGE | LOW | New `@theme` tokens, new/updated decorative patterns. Additive changes only. |
-| `src/components/PhotoGallery.astro` | LARGE | MEDIUM | Rewrite grid to masonry. PhotoSwipe script block preserved as-is. |
-| `src/components/RouteMap.astro` | MEDIUM | LOW | Add sector labels and click handlers to existing `initMap()`. All additions are at the end of the function. |
-| `src/components/ElevationProfile.astro` | SMALL | LOW | Add click callbacks to existing sector annotation definitions. ~15 lines. |
-| `src/layouts/BaseLayout.astro` | SMALL | LOW | Remove 4 CSS classes from `<main>` tag. One-line edit. |
-| `src/components/RouteStats.astro` | SMALL | LOW | Style-only updates for new color tokens. |
-| `src/components/DonateCallout.astro` | SMALL | LOW | Style-only updates for new color tokens. |
-| `src/content.config.ts` | SMALL | LOW | Add optional fields to sector and photo schemas. |
-| `scripts/resolve-annotations.js` | SMALL | LOW | Add star/surface/description fields from data.md source. |
-| `scripts/match-photos.js` | SMALL | LOW | Add aspectRatio computation from sharp metadata. |
-
-### Files NOT Requiring Modification
-
-| File | Reason |
-|------|--------|
-| `scripts/parse-gpx.js` | Route data unchanged |
-| `scripts/generate-thumbnails.js` | Thumbnail spec unchanged (400px WebP 80%) |
-| `scripts/copy-gpx.js` | GPX file unchanged |
-| `scripts/copy-images.js` | Image copy unchanged |
-| `scripts/pipeline.js` | Pipeline orchestration unchanged (same scripts, same order) |
-| `astro.config.ts` | No new integrations, fonts, or Vite plugins needed |
-| `package.json` | No new dependencies needed |
+#### Build order dependency: None. Just adding a field and a template element. Can be done when RouteExplainer is being modified for other v1.2 changes.
 
 ---
 
-## New Files to Create
+## Data Flow Changes Summary
 
-| File | Purpose | Complexity |
-|------|---------|------------|
-| `src/components/HeroSection.astro` | Full-width hero with photo, badge, event date | Medium (SVG extraction, responsive sizing) |
-| `src/components/SectorDetailPanel.astro` | Slide-out sector info panel | Medium (event bus integration, responsive panel) |
-| `src/components/NarrativeSection.astro` | Rewritten Hiawatha narrative | Low (static content, no JS) |
-| `src/components/RouteExplainer.astro` | Photo-integrated route overview | Low (static content, no JS) |
-| `src/components/OjibweBorder.astro` | Decorative SVG divider | Low (SVG markup, CSS-only) |
-| `src/components/OjibweMotif.astro` | Decorative SVG motif | Low (SVG markup, CSS-only) |
+### Pipeline Extensions
 
-**Total: 6 new files.** All are Astro components. No new pages, no new layouts, no new scripts, no new dependencies.
+| Script | Change | Backward Compatible |
+|--------|--------|-------------------|
+| `resolve-annotations.js` | No changes needed for v1.2 | N/A |
+| `match-photos.js` | Add `category` field pass-through, handle `mile: null` | Yes -- new optional field |
+| `generate-thumbnails.js` | No changes needed | N/A |
+| `pipeline.js` | No changes needed (same 6 steps) | N/A |
+
+### Schema Extensions
+
+**content.config.ts photos collection:**
+```typescript
+// ADD to existing schema
+mile: z.number().nullable(),             // CHANGED from z.number()
+category: z.enum(['route', 'historical']).optional(),  // NEW
+caption: z.string().optional(),          // NEW
+```
+
+**content.config.ts annotations collection:** No changes needed for v1.2.
+
+### JSON Format Changes
+
+**photos-manifest.json** -- adds optional fields:
+```json
+{ "filename": "...", "mile": null, "category": "historical", "caption": "..." }
+```
+
+**photos.json** (output) -- passes through new fields:
+```json
+{ "id": "...", "filename": "...", "thumb": "...", "mile": null, "category": "historical", "caption": "..." }
+```
+
+**annotations.json** -- unchanged.
+**route-data.json** -- unchanged.
 
 ---
 
 ## Build Order (Dependency Graph)
 
 ```
-Phase dependencies flow left to right:
+Color Tokens (global.css @theme static)           [NO DEPS]
+     |
+     +---> ShieldMotif.astro                       [DEPENDS: tokens]
+     |        |
+     +---> AnimatedDivider.astro                   [DEPENDS: tokens, optionally motifs]
+     |        |
+     +---> index.astro (replace FloralDividers)    [DEPENDS: AnimatedDivider]
+     |
+     +---> HistoricalFigure.astro                  [DEPENDS: tokens]
+     |
+     +---> ElevationSparkline.astro                [NO DEPS]
 
-  Color Tokens (global.css @theme)
+Pipeline: match-photos.js + content.config.ts     [NO DEPS]
      |
-     +---> Ojibwe Decorative Components (OjibweBorder, OjibweMotif)
-     |        |
-     |        +---> index.astro Restructure (uses new dividers)
-     |
-     +---> HeroSection (uses new tokens, replaces badge section)
-     |        |
-     |        +---> index.astro Restructure (imports HeroSection)
-     |
-     +---> NarrativeSection + RouteExplainer (static content, new tokens)
-     |        |
-     |        +---> index.astro Restructure (imports new sections)
-     |
-     +---> PhotoGallery Rewrite (masonry, uses new tokens)
-              |
-              +---> Pipeline Update (aspectRatio in match-photos.js)
+     +---> Historical images in manifest            [DEPENDS: pipeline changes]
 
-  Pipeline Update (annotations schema + stars/surface/description)
-     |
-     +---> RouteMap Sector Labels + Click Handlers
-     |        |
-     |        +---> SectorDetailPanel
-     |
-     +---> ElevationProfile Sector Click Handlers
-              |
-              +---> SectorDetailPanel
+HiawathaExplainer enrichment                       [DEPENDS: tokens, ShieldMotif,
+     |                                              HistoricalFigure, pipeline for images]
 
-  BaseLayout.astro Edit (one-line, prerequisite for full-width sections)
-     |
-     +---> Everything that uses full-width layout (Hero, Map section, Gallery)
+RouteExplainer enrichment                          [DEPENDS: tokens, ShieldMotif,
+                                                    ElevationSparkline, Strava IDs]
+
+index.astro final assembly                         [DEPENDS: all above]
 ```
 
 ### Recommended Phase Execution Order
 
-**Phase A: Foundation (no visible changes, enables everything)**
-1. Update `global.css` `@theme` with new color tokens and semantic aliases
-2. Edit `BaseLayout.astro` to remove `max-w-4xl` constraint from `<main>`
-3. Update `index.astro` to add per-section width containers (maintaining current appearance)
+**Phase A: Color Foundation (enables all visual work)**
+1. Add turquoise/red/yellow/ink tokens to `@theme static` in global.css
+2. Activate orphaned v1.1 tokens with usage in existing components
 
-**Phase B: Visual Identity (decorative, no interactivity)**
-4. Create `OjibweBorder.astro` and `OjibweMotif.astro` decorative components
-5. Create `HeroSection.astro` (extract badge SVG, add hero photo, event date)
-6. Replace badge section and topo-dividers in index.astro
+**Phase B: Decorative Components (independent, no data deps)**
+3. Create ShieldMotif.astro (reusable decorative SVG)
+4. Create AnimatedDivider.astro (scroll-triggered SVG with IO class toggle)
+5. Create ElevationSparkline.astro (build-time SVG sparkline)
 
-**Phase C: Content Sections (static, no interactivity)**
-7. Create `NarrativeSection.astro` with rewritten editorial narrative
-8. Create `RouteExplainer.astro` with photo-integrated route overview
-9. Integrate both into index.astro
+**Phase C: Data Pipeline (enables historical imagery)**
+6. Extend match-photos.js for `category` and `mile: null` handling
+7. Extend content.config.ts photos schema
+8. Add historical image entries to photos-manifest.json, place source images in `images/`
 
-**Phase D: Gallery Rework (client-side impact, contained)**
-10. Update `match-photos.js` to extract aspect ratios
-11. Update `content.config.ts` photo schema
-12. Rewrite `PhotoGallery.astro` as masonry layout
+**Phase D: Content Enrichment (depends on A, B, C)**
+9. Create HistoricalFigure.astro (image + caption component)
+10. Enrich HiawathaExplainer.astro (historical imagery, pull quotes, motifs, typography)
+11. Enrich RouteExplainer.astro (sparklines, Strava links, motifs, expanded descriptions)
 
-**Phase E: Sector Interactivity (most complex, broadest impact)**
-13. Update `resolve-annotations.js` to include stars/surface/description
-14. Update `content.config.ts` annotations schema
-15. Add sector labels and click handlers to `RouteMap.astro`
-16. Add sector band click handlers to `ElevationProfile.astro`
-17. Create `SectorDetailPanel.astro`
-18. Integrate panel into index.astro
-
-**Phase F: Polish**
-19. Responsive testing (hero, masonry, sector panel mobile bottom sheet)
-20. Color token refinement based on visual review
-21. Accessibility audit (new components, panel keyboard/focus management)
+**Phase E: Page Assembly (depends on D)**
+12. Update index.astro (swap FloralDividers for AnimatedDividers, wire new sections)
+13. Responsive testing across breakpoints
+14. Accessibility audit (animated elements respect prefers-reduced-motion, new images have alt text)
 
 ---
 
-## Architectural Patterns to Follow
+## Patterns to Follow
 
-### Pattern 1: Astro Component Scoping (Existing -- Preserve)
+### Pattern 1: Build-Time Computation (EXTEND)
 
-Every v1.0 component uses Astro's scoped `<style>` blocks. New components MUST follow this pattern. Do NOT add component-specific styles to `global.css` -- only `@theme` tokens and base/layer styles belong there.
+ElevationSparkline is the exemplar of this pattern. Astro frontmatter can import JSON, compute derived data, and emit static HTML/SVG. Use this for anything that doesn't require user interaction:
+- Sparkline SVG generation
+- Historical image filtering
+- Strava URL construction
 
-### Pattern 2: CustomEvent Bus (Existing -- Extend)
+### Pattern 2: Inline SVG with CSS Custom Properties (EXTEND)
 
-The v1.0 event bus pattern (window.dispatchEvent / window.addEventListener) works well for 3-4 events and should extend cleanly to 6-7. At this scale, there is no need for a state management library (Nano Stores, etc.).
+FloralDivider established this pattern in v1.1. All new SVG elements (ShieldMotif, AnimatedDivider) MUST use `fill="var(--color-*)"` and `stroke="var(--color-*)"` references so they respond to palette changes. The sole exception is SVG embedded in CSS `background-image` data URIs (RouteExplainer's topo texture), where hex must be hardcoded.
 
-**Event naming convention:** `namespace:action` (e.g., `sector:click`, `sector:close`). Follow the existing `elevation:hover`, `map:photoClick` pattern.
+### Pattern 3: IntersectionObserver for Scroll Effects (REUSE)
 
-**Critical rule to preserve:** Event listeners are registered at module scope (outside async init functions) with null guards. This ensures listeners are wired before the emitting component initializes. See the existing `window.addEventListener('elevation:hover', ...)` pattern in RouteMap.astro.
+AnimatedDivider uses the same IO pattern as RouteMap and ElevationProfile. Keep the established convention:
+- Observe the container element
+- Add a class (`.visible`) on intersection
+- Disconnect after first trigger (one-shot animation)
+- Respect `prefers-reduced-motion`
 
-### Pattern 3: Lazy Loading (Existing -- Extend to New Components)
+### Pattern 4: Scoped Styles (PRESERVE)
 
-The SectorDetailPanel does NOT need lazy loading -- it is hidden by default and has minimal JS. The panel's `<script>` block can run eagerly because it only registers event listeners (lightweight).
+All new components use Astro scoped `<style>` blocks. Global CSS additions are limited to `@theme static` tokens.
 
-The HeroSection does NOT need lazy loading -- it is above the fold.
+### Pattern 5: Progressive Enhancement for Animations (NEW)
 
-The NarrativeSection and RouteExplainer have no JS at all.
-
-Only RouteMap and ElevationProfile retain their existing IntersectionObserver lazy-loading.
-
-### Pattern 4: Semantic HTML + Accessibility (Extend)
-
-New interactive components need:
-- `SectorDetailPanel`: `role="dialog"` or `<aside>`, `aria-label`, focus trap when open, Escape key to close
-- Sector labels on map: `title` attribute for accessibility
-- Hero section: `<img alt="...">` for hero photo (not decorative)
-- Ojibwe decorative elements: `role="presentation" aria-hidden="true"`
+AnimatedDivider MUST degrade gracefully:
+- Without JavaScript: SVG is hidden (opacity: 0) -- acceptable for decorative element
+- With `prefers-reduced-motion`: SVG appears immediately without animation
+- Without CSS transitions: SVG appears immediately (transition property is non-critical)
 
 ---
 
 ## Anti-Patterns to Avoid
 
-### Anti-Pattern 1: Creating a Shared State Store for 6 Events
+### Anti-Pattern 1: Chart.js for Sparklines
 
-It would be tempting to introduce Nano Stores or a similar shared-state library to coordinate the growing number of cross-component interactions. **Do not do this.** The CustomEvent bus handles 6-7 events cleanly. A state store adds a dependency, a learning curve, and hydration concerns for what is essentially a static site with a few interactive sprinkles.
+Do NOT instantiate Chart.js for 7 inline sparklines. The existing ElevationProfile already dynamically imports Chart.js (~200KB). Adding 7 mini-instances would:
+- Multiply initialization overhead
+- Require lazy-loading logic per sparkline
+- Add canvas elements that compete with the full chart
+- Be absurdly heavy for a 200px-wide squiggle
 
-**When to reconsider:** If event count exceeds ~12 or if components need to read each other's current state (not just react to state changes), then a store becomes justified. v1.1 does not approach this threshold.
+Use build-time SVG generation instead. Zero JavaScript, zero runtime cost.
 
-### Anti-Pattern 2: Using a Masonry JS Library
+### Anti-Pattern 2: Strava iFrame Embeds
 
-Libraries like Masonry.js, Isotope, or react-masonry-css add JavaScript weight and hydration complexity for a layout that CSS `columns` handles natively. The only limitation of CSS columns is that items flow top-to-bottom-then-left-to-right rather than left-to-right-then-top-to-bottom. For a photo gallery, this is acceptable and arguably preferred (users scan vertically within columns).
+Do NOT use Strava's iframe embed for inline route/segment previews. Each iframe is an external HTTP request with its own JavaScript runtime. Seven embeds would dramatically increase page weight and load time for a static site optimized for performance.
 
-### Anti-Pattern 3: Breaking the Two-Phase Build Pipeline
+### Anti-Pattern 3: Separate Historical Image Pipeline
 
-The v1.1 data changes (new annotation fields, photo aspect ratios) are additions to existing pipeline scripts. Do NOT create new pipeline scripts for these small changes -- extend the existing `resolve-annotations.js` and `match-photos.js`.
+Do NOT create a new pipeline step for historical images. The existing `generate-thumbnails.js` already processes all `.jpg` files in `images/`. The existing `match-photos.js` already maps manifest entries to output JSON. Extend, do not duplicate.
 
-### Anti-Pattern 4: Over-Componentizing Static Content
+### Anti-Pattern 4: `animation-timeline: view()` Without Fallback
 
-The narrative and route explainer sections are each used exactly once. There is no reuse case. They should be components for code organization (keeping index.astro clean), but they should NOT be further decomposed into paragraph components, quote components, etc. One component per content section is the right granularity.
+Do NOT use CSS scroll-driven animation timelines without progressive enhancement. Firefox support is still behind a flag as of March 2026. The IntersectionObserver approach works in all browsers and is already proven in this codebase.
 
-### Anti-Pattern 5: Full-Width Sections via Negative Margins
+### Anti-Pattern 5: Modifying the CustomEvent Bus
 
-A common hack for full-width sections inside constrained containers is `margin-left: calc(-50vw + 50%); width: 100vw;`. **Do not do this.** It causes horizontal scrollbar issues and breaks on mobile with browser chrome. The correct approach (implemented above) is removing the constraint from `<main>` and letting each section opt into its own width.
+v1.2 has NO features that require cross-component communication. Do NOT add events. Do NOT import state management. Every v1.2 feature is either static (build-time) or self-contained (scoped animation).
+
+### Anti-Pattern 6: Moving Segment Data to annotations.json
+
+The SEGMENTS array in RouteExplainer contains display-specific data (formatted distance strings, editorial descriptions, star ratings as integers 1-5). This data is intentionally NOT in annotations.json, which contains geo-referenced data for map/chart rendering. Do NOT merge these concerns. Strava IDs belong with the display data, not the geo data.
 
 ---
 
@@ -739,24 +852,56 @@ A common hack for full-width sections inside constrained containers is `margin-l
 
 | Risk | Likelihood | Impact | Mitigation |
 |------|-----------|--------|------------|
-| BaseLayout width change breaks existing section spacing | HIGH | LOW | Mechanical fix: add `max-w-4xl mx-auto px-4` to each section wrapper in index.astro. Test all sections after the change. |
-| PhotoGallery rewrite breaks PhotoSwipe integration | MEDIUM | MEDIUM | The PhotoSwipe `<script>` block is decoupled from the HTML grid structure. As long as `#photo-gallery` contains `<a>` children with `data-pswp-*` attributes, PhotoSwipe works. Test lightbox after masonry change. |
-| Sector click event conflicts with existing map interactions | LOW | LOW | Sector polylines already exist on the map. Adding click handlers is additive. Use `L.DomEvent.stopPropagation` if clicks bleed through to the map. |
-| Ojibwe SVG decorative elements increase page weight | LOW | LOW | Inline SVGs are tiny (< 5KB each). The existing badge SVG is already ~30 lines of inline SVG. |
-| SectorDetailPanel z-index conflicts with Leaflet popups | MEDIUM | LOW | Set panel z-index to `z-50` (Tailwind). Leaflet popups are z-index 700 within their container but the panel is `position: fixed` so it sits above the document flow. Test on mobile where the panel is a bottom sheet. |
+| Animated SVG draw effect doesn't work with `stroke-dasharray` on complex paths | LOW | LOW | Test with simple paths first. The overestimate approach (dasharray: 1600) handles most cases. |
+| Historical images with `mile: null` break PhotoGallery map bridge | LOW | MEDIUM | PhotoGallery map bridge uses `photo.lat && photo.lon` guard. Historical images lack lat/lon, so they are naturally excluded from map interaction. Verify with test. |
+| New color tokens conflict with Tailwind utility generation | LOW | LOW | `@theme static` forces all tokens to `:root`. Tailwind generates utilities for all `@theme` values. No conflict possible. |
+| `route-data.json` import in RouteExplainer frontmatter increases build size | LOW | LOW | Route data is 456 points (~30KB JSON). Imported at build time only, not shipped to client. Astro tree-shakes frontmatter imports. |
+| `prefers-reduced-motion` not respected in AnimatedDivider | MEDIUM | MEDIUM | Must test explicitly. Include `@media (prefers-reduced-motion: reduce)` rule that removes transition and sets opacity: 1 / stroke-dashoffset: 0 immediately. |
+| Sparkline SVG looks wrong for segments with few points (e.g., 520 with ~25 points) | LOW | LOW | 25 points at 200px width = 1 point per 8px. This is adequate for a sparkline. If it looks jagged, reduce width or increase stroke-width. |
+
+---
+
+## Files Changed Summary
+
+### New Files (6)
+
+| File | Purpose | Complexity | Lines (est) |
+|------|---------|------------|-------------|
+| `src/components/AnimatedDivider.astro` | Scroll-triggered animated SVG section divider | Medium | 80-120 |
+| `src/components/ShieldMotif.astro` | Reusable shield/arrowhead decorative SVG | Low | 30-50 |
+| `src/components/ElevationSparkline.astro` | Build-time SVG elevation sparkline | Low | 30-40 |
+| `src/components/HistoricalFigure.astro` | Image + caption for historical illustrations | Low | 25-35 |
+| Historical image files in `images/` | Source images for pipeline | N/A | N/A |
+| Historical entries in `photos-manifest.json` | Manifest entries for new images | N/A | ~5-10 JSON entries |
+
+### Modified Files (6)
+
+| File | Scope | Risk | Changes |
+|------|-------|------|---------|
+| `src/styles/global.css` | Small | LOW | ~15 lines: new color tokens in `@theme static` |
+| `src/components/HiawathaExplainer.astro` | Medium | LOW | Template: add HistoricalFigure, ShieldMotif, enhanced blockquote. Style: typography enhancements. |
+| `src/components/RouteExplainer.astro` | Medium | LOW | Frontmatter: import route-data.json, add Strava URLs. Template: add sparkline, Strava link, motifs. Style: new element styling. |
+| `src/pages/index.astro` | Small | LOW | Import AnimatedDivider, replace FloralDivider instances |
+| `scripts/match-photos.js` | Small | LOW | ~10 lines: handle `mile: null`, pass-through `category` and `caption` |
+| `src/content.config.ts` | Small | LOW | ~3 lines: add `category`, `caption`, make `mile` nullable |
+
+### Unchanged Files (12)
+
+BaseLayout.astro, HeroSection.astro, RouteMap.astro, ElevationProfile.astro, PhotoGallery.astro, RouteStats.astro, DonateCallout.astro, FloralDivider.astro, pipeline.js, parse-gpx.js, generate-thumbnails.js, copy-gpx.js, copy-images.js
 
 ---
 
 ## Sources
 
-- Direct source code analysis of all files in `/Users/Sheppardjm/Repos/hiawathasRevenge/src/` -- HIGH confidence
-- v1.0 ARCHITECTURE.md research document -- HIGH confidence
-- Inspiration images in `images/inspiration/` -- HIGH confidence (first-party project artifacts)
-- `data.md` sector star ratings and history content -- HIGH confidence (first-party data)
-- CSS `columns` browser support: verified via MDN -- HIGH confidence (universally supported)
-- CSS Masonry (`grid-template-rows: masonry`) status: behind flags only, not production-ready as of March 2026 -- HIGH confidence (verified via web standards status)
-- Chart.js annotation plugin click callbacks: verified from chartjs-plugin-annotation docs -- HIGH confidence
+- Direct source code analysis of all 9 components, 6 pipeline scripts, global.css, content.config.ts, and astro.config.ts -- HIGH confidence
+- v1.1 shipped ROADMAP.md, REQUIREMENTS.md, and MILESTONE-AUDIT.md -- HIGH confidence
+- [CSS stroke-dasharray animation](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/animation-timeline) -- MDN documentation, HIGH confidence
+- [CSS scroll-driven animations browser support](https://caniuse.com/css-scroll-timeline) -- Can I Use, HIGH confidence (Chrome 115+, Safari 18+, Firefox behind flag)
+- [Chart.js sparkline configuration](https://www.ethangunderson.com/sparklines-in-chartjs/) -- confirms Chart.js sparklines are possible but heavy
+- [SVG sparkline zero-dependency approach](https://alexplescan.com/posts/2023/07/08/easy-svg-sparklines/) and [fnando/sparkline](https://github.com/fnando/sparkline) -- confirms pure SVG sparkline feasibility
+- [Strava embed format](https://partners.strava.com/resources/how-to-embed-a-strava-route) -- Strava Partners documentation, HIGH confidence
+- route-data.json analysis: 456 points, ~30KB, segments range from ~25-110 points -- HIGH confidence (direct measurement)
 
 ---
-*Architecture research for: Hiawatha's Revenge v1.1 Visual Redesign*
+*Architecture research for: Hiawatha's Revenge v1.2 Cultural Maximalism*
 *Researched: 2026-03-31*
