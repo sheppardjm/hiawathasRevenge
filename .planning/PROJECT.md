@@ -2,7 +2,7 @@
 
 ## What This Is
 
-An immersive showcase website for Hiawatha's Revenge, a 100-mile cycling ride through Michigan's Hiawatha National Forest that supports the Munising Bay Trail Network (MBTN). The site features an interactive Leaflet route map with gravel sector overlays and photo markers, a Chart.js elevation profile synced to the map via custom event bus, a PhotoSwipe photo gallery with build-time WebP thumbnails, and a U.S. Forest Service / National Park visual identity with badge h1, topographic patterns, and deep forest greens.
+An immersive editorial showcase website for Hiawatha's Revenge, a 100-mile cycling ride through Michigan's Hiawatha National Forest that supports the Munising Bay Trail Network (MBTN). The site combines interactive cartography (Leaflet route map with gravel sector overlays, Chart.js elevation profile synced via event bus) with rich visual storytelling — a dramatic full-viewport hero, witty editorial narrative on Longfellow's Hiawatha/Nanabozho conflation, photo-integrated route explainer, and masonry gallery. The design draws from Ojibwe woodland floral beadwork traditions with hand-authored SVG motifs and a warm berry/gold/lake/moss color palette.
 
 ## Core Value
 
@@ -27,16 +27,16 @@ Visitors experience the beauty and scale of the Hiawatha's Revenge route through
 - ✓ Lazy-loaded map and chart assets (IntersectionObserver pattern) — v1.0
 - ✓ Build pipeline: GPX parsing, photo matching, thumbnail generation (WebP), data JSON output — v1.0
 - ✓ Static site built via Astro 6 with Tailwind 4 styling, flat dist/ output — v1.0
+- ✓ Full-width hero section with dramatic route photo, badge overlay, and event date — v1.1
+- ✓ Masonry gallery with CSS columns, natural aspect ratios, and featured photo moments — v1.1
+- ✓ Witty editorial narrative on Longfellow's Hiawatha/Nanabozho conflation with data.md quotes — v1.1
+- ✓ Photo-integrated route explainer with segment data, star ratings, and topo background — v1.1
+- ✓ Event date (June 6, 2026) prominently featured in hero section — v1.1
+- ✓ Ojibwe woodland floral beadwork SVG motifs with cultural attribution — v1.1
+- ✓ Warmer Ojibwe-inspired color palette (berry/gold/lake/moss) with WCAG AA compliance — v1.1
 
 ### Active
 
-- [ ] Full-width hero section with dramatic route photo and overlay text
-- [ ] Redesigned photo gallery — masonry layout with featured hero images and editorial spacing
-- [ ] Rewritten Hiawatha narrative — witty, sophisticated New Yorker tone about Longfellow's Hiawatha/Nanabozho mix-up, quotes from data.md
-- [ ] Route explainer with integrated photos over topographic background
-- [ ] Event date (June 6, 2026) prominently featured on homepage
-- [ ] Ojibwe woodland floral beadwork motifs and birchbark patterns as decorative design elements
-- [ ] Evolved color scheme — warmer, more vibrant palette inspired by Ojibwe art while maintaining modern sophistication
 - [ ] Sector map labels with names and star difficulty ratings, clickable with slide-out detail panels
 
 ### Out of Scope
@@ -48,29 +48,15 @@ Visitors experience the beauty and scale of the Hiawatha's Revenge route through
 - OAuth / user accounts — no login needed
 - Mobile app — web only
 
-## Current Milestone: v1.1 Visual Redesign
-
-**Goal:** Elevate the site from functional showcase to immersive editorial experience with Ojibwe-inspired design, rewritten narrative, and richer visual storytelling.
-
-**Target features:**
-- Full-width hero with dramatic route photography
-- Masonry gallery with editorial photo sizing
-- Witty Hiawatha narrative rewrite (Longfellow's naming blunder)
-- Photo-integrated route explainer over topo background
-- Event date prominence (June 6, 2026)
-- Ojibwe woodland floral/beadwork design system
-- Warmer, more vibrant color palette
-- Interactive sector map labels with detail panels
-
 ## Context
 
-Shipped v1.0 with 2,223 LOC across Astro/TypeScript/JavaScript/CSS.
+Shipped v1.0 + v1.1 with 1,912 LOC across Astro/TypeScript/JavaScript/CSS.
 Tech stack: Astro 6, Tailwind 4, Vite 7, Leaflet, Chart.js, PhotoSwipe, sharp, gpxparser.
 Build pipeline: 6-step pipeline.js (parse-gpx → resolve-annotations → generate-thumbnails → copy-images → match-photos → copy-gpx).
-54 route photos with mileage-assigned manifest, 456 simplified route points (from 1,927 source), 2,258 ft elevation gain.
+51 route photos with mileage-assigned manifest (3 duplicates removed in v1.1), 456 simplified route points (from 1,927 source), 2,258 ft elevation gain.
+v1.1 added Ojibwe-inspired design system (12 color tokens), full-viewport hero, editorial narrative, route explainer, masonry gallery, and cultural attribution.
 Reference implementation: github.com/sheppardjm/mkUltraGravel — same architecture, different visual identity.
 MBTN (mbtn.org) is the beneficiary — donate CTA links to their site.
-Inspiration images in `images/inspiration/` — national park badges, Ojibwe motifs, bogcore, arrowhead geometry, Michigan fantasy map.
 Historical context in `data.md` — segment details with star ratings, Hiawatha history with Longfellow critique quote.
 
 ## Constraints
@@ -97,6 +83,15 @@ Historical context in `data.md` — segment details with star ratings, Hiawatha 
 | No KOM segments | Ride (not race) — no competitive elements | ✓ Good |
 | Donate CTA to MBTN | Ride supports trail network, not registration | ✓ Good |
 | Remove @astrojs/node for static build | Flat dist/ with no SSR | ✓ Good — deployable anywhere |
+| @theme static over @theme for Tailwind v4 tokens | Tree-shaking prevention; JS needs getComputedStyle access | ✓ Good — all tokens in :root |
+| getCSSColor() inside init functions | getComputedStyle requires document ready; module scope too early | ✓ Good — reliable runtime reads |
+| Forest creek as hero photo | User chose over POV, cyclists, lake options | ✓ Good — National Forest identity |
+| CSS Grid stacking for badge overlay | Absolute positioning failed with Astro scoped styles | ✓ Good — reliable overlay |
+| Inline SVG for FloralDivider | CSS data-URI cannot resolve var(--color-*) custom properties | ✓ Good — tokens in fill/stroke |
+| Hand-authored SVG paths (not Neebin Studios) | Licensing ambiguity with institutional design files | ✓ Good — clean provenance |
+| Specific Ojibwe/Anishinaabe attribution | Generic "Native American" insufficient per DSN-04 | ✓ Good — respectful specificity |
+| CSS columns for masonry gallery | Only CSS-only masonry approach; no JS dependency | ✓ Good — standard, performant |
+| Spread conditional for featured field | No featured: false noise in JSON | ✓ Good — clean data |
 
 ---
-*Last updated: 2026-03-31 after v1.1 milestone start*
+*Last updated: 2026-03-31 after v1.1 milestone completion*
