@@ -29,6 +29,16 @@
       fill="none"
       opacity="0.7"
     />
+    <!-- Vine shadow — berry-700 (orphan activation) -->
+    <path
+      d="M0 32 Q100 12 200 32 Q300 52 400 32 Q500 12 600 32 Q700 52 800 32"
+      stroke="var(--color-berry-700)"
+      stroke-width="1"
+      fill="none"
+      opacity="0.3"
+    />
+    <!-- New palette accent dots -->
+    <circle cx="400" cy="30" r="1.5" fill="var(--color-scarlet-400)" opacity="0.5" />
 
     <!--
       Opposing leaf pairs — teardrop ellipses at inflection points x=150, x=400, x=650.
@@ -37,16 +47,16 @@
     -->
 
     <!-- Leaf pair at x=150 (first vine peak, y≈18) -->
-    <ellipse cx="150" cy="18" rx="10" ry="4" fill="var(--color-moss-500)" transform="rotate(-25, 150, 18)" opacity="0.55" />
-    <ellipse cx="150" cy="18" rx="10" ry="4" fill="var(--color-moss-500)" transform="rotate(25, 150, 18)" opacity="0.55" />
+    <ellipse cx="150" cy="18" rx="10" ry="4" fill="var(--color-moss-500)" stroke="var(--color-lake-500)" stroke-width="0.5" transform="rotate(-25, 150, 18)" opacity="0.55" />
+    <ellipse cx="150" cy="18" rx="10" ry="4" fill="var(--color-moss-500)" stroke="var(--color-lake-600)" stroke-width="0.5" transform="rotate(25, 150, 18)" opacity="0.55" />
 
     <!-- Leaf pair at x=400 (vine midpoint, y=30) -->
-    <ellipse cx="400" cy="30" rx="10" ry="4" fill="var(--color-moss-500)" transform="rotate(-25, 400, 30)" opacity="0.55" />
-    <ellipse cx="400" cy="30" rx="10" ry="4" fill="var(--color-moss-500)" transform="rotate(25, 400, 30)" opacity="0.55" />
+    <ellipse cx="400" cy="30" rx="10" ry="4" fill="var(--color-moss-600)" transform="rotate(-25, 400, 30)" opacity="0.55" />
+    <ellipse cx="400" cy="30" rx="10" ry="4" fill="var(--color-moss-600)" transform="rotate(25, 400, 30)" opacity="0.55" />
 
     <!-- Leaf pair at x=650 (second vine peak, y≈18) -->
-    <ellipse cx="650" cy="18" rx="10" ry="4" fill="var(--color-moss-500)" transform="rotate(-25, 650, 18)" opacity="0.55" />
-    <ellipse cx="650" cy="18" rx="10" ry="4" fill="var(--color-moss-500)" transform="rotate(25, 650, 18)" opacity="0.55" />
+    <ellipse cx="650" cy="18" rx="10" ry="4" fill="var(--color-moss-500)" stroke="var(--color-turquoise-500)" stroke-width="0.5" transform="rotate(-25, 650, 18)" opacity="0.55" />
+    <ellipse cx="650" cy="18" rx="10" ry="4" fill="var(--color-moss-500)" stroke="var(--color-sun-500)" stroke-width="0.5" transform="rotate(25, 650, 18)" opacity="0.55" />
 
     <!--
       Five-petal blossoms — 5 small ellipses arranged radially at 72° intervals
@@ -60,7 +70,8 @@
     <ellipse cx="265" cy="49" rx="4" ry="2" fill="var(--color-gold-400)" transform="rotate(144, 270, 44)" opacity="0.6" />
     <ellipse cx="260" cy="43" rx="4" ry="2" fill="var(--color-gold-400)" transform="rotate(216, 270, 44)" opacity="0.6" />
     <ellipse cx="265" cy="38" rx="4" ry="2" fill="var(--color-gold-400)" transform="rotate(288, 270, 44)" opacity="0.6" />
-    <circle cx="270" cy="44" r="2" fill="var(--color-berry-600)" opacity="0.75" />
+    <circle cx="270" cy="44" r="3.5" fill="var(--color-lake-700)" opacity="0.4" />
+    <circle cx="270" cy="44" r="2" fill="var(--color-berry-500)" opacity="0.75" />
 
     <!-- Blossom at x=530, y=44 (second vine trough) -->
     <ellipse cx="530" cy="40" rx="4" ry="2" fill="var(--color-gold-400)" transform="rotate(0, 530, 44)" opacity="0.6" />
@@ -68,6 +79,7 @@
     <ellipse cx="525" cy="49" rx="4" ry="2" fill="var(--color-gold-400)" transform="rotate(144, 530, 44)" opacity="0.6" />
     <ellipse cx="520" cy="43" rx="4" ry="2" fill="var(--color-gold-400)" transform="rotate(216, 530, 44)" opacity="0.6" />
     <ellipse cx="525" cy="38" rx="4" ry="2" fill="var(--color-gold-400)" transform="rotate(288, 530, 44)" opacity="0.6" />
+    <circle cx="530" cy="44" r="3.5" fill="var(--color-lake-700)" opacity="0.4" />
     <circle cx="530" cy="44" r="2" fill="var(--color-berry-600)" opacity="0.75" />
 
     <!--
@@ -76,7 +88,7 @@
     -->
     <path
       d="M385 22 Q400 16 415 22"
-      stroke="var(--color-gold-500)"
+      stroke="var(--color-gold-600)"
       stroke-width="1"
       fill="none"
       opacity="0.5"
