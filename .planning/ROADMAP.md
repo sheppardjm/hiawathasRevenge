@@ -89,7 +89,9 @@ Plans:
   2. Photos with featured: true in photos.json render at larger, column-spanning sizes within the gallery flow
   3. Clicking any gallery photo opens the PhotoSwipe lightbox with full-screen viewing and left/right navigation between photos
   4. Gallery is responsive -- single column on mobile (375px), 2 columns on tablet (768px), 3 columns on desktop (1280px) with consistent gutter spacing
-**Plans**: TBD
+**Plans:** 1 plan
+Plans:
+- [ ] 16-01-PLAN.md — Masonry layout with CSS columns, featured photo pipeline, PhotoSwipe preservation
 
 ## Progress
 
