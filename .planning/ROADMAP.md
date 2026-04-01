@@ -34,7 +34,7 @@
 
 **Milestone Goal:** Transform the site into a maximalist cultural celebration -- bold colors, historical imagery, enriched segment content, animated section breaks, and shield motifs layered throughout, worthy of an award-winning non-profit heritage site.
 
-- [ ] **Phase 18: Color Foundation** - Expanded palette tokens and pipeline prep for historical imagery
+- [x] **Phase 18: Color Foundation** - Expanded palette tokens and pipeline prep for historical imagery (completed 2026-04-01)
 - [ ] **Phase 19: Decorative Component Library** - Animated dividers, shield motifs, and elevation sparklines
 - [ ] **Phase 20: Content & Route Enrichment** - Historical imagery, editorial restructure, and segment detail expansion
 - [ ] **Phase 21: Section Color Differentiation** - Per-section backgrounds and page assembly with animated dividers
@@ -54,8 +54,8 @@
 **Plans**: ~2 plans
 
 Plans:
-- [ ] 18-01: Palette expansion and contrast documentation
-- [ ] 18-02: Pipeline extension for historical image category
+- [x] 18-01: Palette expansion and contrast documentation
+- [x] 18-02: Pipeline extension for historical image category
 
 ### Phase 19: Decorative Component Library
 **Goal**: Three new reusable Astro components exist (AnimatedDivider, ShieldMotif, ElevationSparkline) that can be dropped into any section, establishing the animation accessibility pattern for the entire milestone
@@ -128,7 +128,7 @@ Phases execute in numeric order: 18 -> 19 -> 20 -> 21 -> 22
 |-------|-----------|----------------|--------|-----------|
 | 0-11 | v1.0 | 33/33 | Complete | 2026-03-31 |
 | 12-17 | v1.1 | 8/8 | Complete | 2026-03-31 |
-| 18. Color Foundation | v1.2 | 0/2 | Not started | - |
+| 18. Color Foundation | v1.2 | 2/2 | Complete | 2026-04-01 |
 | 19. Decorative Components | v1.2 | 0/3 | Not started | - |
 | 20. Content & Route Enrichment | v1.2 | 0/3 | Not started | - |
 | 21. Section Color Differentiation | v1.2 | 0/1 | Not started | - |

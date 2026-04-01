@@ -82,8 +82,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DES-01 | Phase 18 | Pending |
-| DES-02 | Phase 18 | Pending |
+| DES-01 | Phase 18 | Complete |
+| DES-02 | Phase 18 | Complete |
 | DES-03 | Phase 21 | Pending |
 | DES-04 | Phase 21 | Pending |
 | DEC-01 | Phase 19 | Pending |
