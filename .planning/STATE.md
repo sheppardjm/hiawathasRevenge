@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-03-31)
 ## Current Position
 
 Phase: 18 (1 of 5 in v1.2) -- Color Foundation
-Plan: 01 of ~2 in Phase 18
-Status: In progress
-Last activity: 2026-04-01 -- Completed 18-01-PLAN.md (color token expansion)
+Plan: 02 of 02 in Phase 18 -- Phase 18 COMPLETE
+Status: Phase complete
+Last activity: 2026-04-01 -- Completed 18-02-PLAN.md (historical image pipeline)
 
-Progress: [█░░░░░░░░░] 9% (1/11 v1.2 plans)
+Progress: [██░░░░░░░░] 18% (2/11 v1.2 plans)
 
 ## Performance Metrics
 
@@ -29,7 +29,7 @@ Progress: [█░░░░░░░░░] 9% (1/11 v1.2 plans)
 - Timeline: 1 day (2026-03-31)
 
 **v1.2 Summary:**
-- Total plans completed: 1
+- Total plans completed: 2 (18-01, 18-02)
 - Total phases: 5 (18-22)
 - Estimated plans: ~11
 
@@ -44,6 +44,9 @@ All v1.0 + v1.1 decisions logged in PROJECT.md Key Decisions table.
 | 18-01 | scarlet-600 (#dc2626) = large-text/decorative ONLY | 3.00:1 on forest-900, 3.71:1 on forest-950 — both fail WCAG AA normal text |
 | 18-01 | sun-yellow all 4 shades pass AA normal text | Safest of the 3 new families for body text use |
 | 18-01 | FloralDivider is canonical surface for orphaned/decorative tokens | Decorative aria-hidden component naturally accommodates expanded color vocabulary |
+| 18-02 | Standalone script per image category (not modifying generate-thumbnails.js) | Zero risk to existing 51-photo route photo pipeline; clean isolation |
+| 18-02 | process-historical inserted as step 5 of 7 (after copy-images, before match-photos) | Groups all image processing steps together in pipeline sequence |
+| 18-02 | Empty manifest writes [] and exits 0 (not an error) | Enables clean builds before Phase 20 populates historical images |
 
 ### Pending Todos
 
@@ -60,5 +63,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-04-01
-Stopped at: Completed 18-01-PLAN.md -- color token expansion and orphan activation
+Stopped at: Completed 18-02-PLAN.md -- historical image pipeline ready for Phase 20
 Resume file: None
