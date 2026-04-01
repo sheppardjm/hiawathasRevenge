@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-03-31)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive showcase that inspires them to ride it and support MBTN.
-**Current focus:** v1.1 Visual Redesign -- COMPLETE (all 5 phases done)
+**Current focus:** v1.1 Tech Debt Closure (Phase 17) -- COMPLETE
 
 ## Current Position
 
-Phase: 16 (Masonry Gallery) -- Complete
+Phase: 17 (Tech Debt and Photo Cleanup) -- Complete
 Plan: 1 of 1 complete
-Status: v1.1 COMPLETE
-Last activity: 2026-03-31 -- Completed 16-01-PLAN.md (Masonry Gallery)
+Status: Phase 17 complete — v1.1 fully closed
+Last activity: 2026-03-31 -- Completed 17-01-PLAN.md (Tech Debt and Photo Cleanup)
 
-Progress: [██████████] 100% (v1.1: 5/5 phases, Phase 16 done)
+Progress: [██████████] 100% (v1.1: 6/6 phases, Phase 17 done)
 
 ## Performance Metrics
 
@@ -24,8 +24,8 @@ Progress: [██████████] 100% (v1.1: 5/5 phases, Phase 16 done
 - Timeline: 2 days (2026-03-30 -> 2026-03-31)
 
 **v1.1:**
-- Plans executed: 7 (12-01, 12-02, 13-01, 14-01, 15-01, 15-02, 16-01)
-- Phases complete: 5 (Phase 12, Phase 13, Phase 14, Phase 15, Phase 16)
+- Plans executed: 8 (12-01, 12-02, 13-01, 14-01, 15-01, 15-02, 16-01, 17-01)
+- Phases complete: 6 (Phase 12, Phase 13, Phase 14, Phase 15, Phase 16, Phase 17)
 
 ## Accumulated Context
 
@@ -63,6 +63,10 @@ v1.1 decisions made:
 | data-cropped removed from PhotoGallery anchors | Previous grid used aspect-square object-cover crops so hint was accurate; masonry uses natural aspect ratios so hint is now inaccurate | 16-01 |
 | mb-3 on each item (not gap-y on container) | CSS columns gap-* only sets column-gap; row spacing in columns layout requires margin on individual items | 16-01 |
 
+| Dead .topo-divider rule removed entirely (not commented) | Never referenced in any component; commenting out dead code preserves confusion without benefit | 17-01 |
+| WCAG comments must specify ratio and text-size applicability | gold-600 was incorrectly described as AA normal text; actual ratio 4.45:1 only passes AA large text | 17-01 |
+| photos-manifest.json is canonical source; pipeline regenerates photos.json | Edit manifest, run pipeline — photos.json is never hand-edited | 17-01 |
+
 ### Pending Todos
 
 None.
@@ -76,5 +80,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-31
-Stopped at: Completed 16-01-PLAN.md (Masonry Gallery — v1.1 Visual Redesign complete)
+Stopped at: Completed 17-01-PLAN.md (Tech Debt and Photo Cleanup — v1.1 fully closed)
 Resume file: None
