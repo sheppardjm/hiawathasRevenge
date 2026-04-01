@@ -106,7 +106,7 @@ Plans:
   5. Build passes cleanly and site renders correctly
 **Plans:** 1 plan
 Plans:
-- [ ] 17-01-PLAN.md — Remove dead CSS, fix brace imbalance, fix WCAG comment, remove duplicate photos and regenerate pipeline
+- [x] 17-01-PLAN.md — Remove dead CSS, fix brace imbalance, fix WCAG comment, remove duplicate photos and regenerate pipeline
 
 ## Progress
 
@@ -120,7 +120,7 @@ Phases 12 through 16 execute in numeric order. Phase 17 executes after Phase 16 
 | 14. Ojibwe Design System | v1.1 | 1/1 | Complete | 2026-03-31 |
 | 15. Editorial Content | v1.1 | 2/2 | Complete | 2026-03-31 |
 | 16. Masonry Gallery | v1.1 | 1/1 | Complete | 2026-03-31 |
-| 17. Tech Debt & Photo Cleanup | v1.1 | 0/1 | Planned | — |
+| 17. Tech Debt & Photo Cleanup | v1.1 | 1/1 | Complete | 2026-03-31 |
 
 ---
 *Roadmap created: 2026-03-31*
