@@ -1,0 +1,162 @@
+---
+import photosData from '../../public/data/photos.json';
+
+interface Segment {
+  name: string;
+  startMi: number;
+  endMi: number;
+  distFromStart: string;
+  length: string;
+  difficulty: number;
+  description: string;
+}
+
+const SEGMENTS: Segment[] = [
+  { name: '520',                     startMi: 0,    endMi: 5.0,   distFromStart: '1.1mi', length: '1.3mi', difficulty: 2, description: 'A brief paved warm-up along County Road 520 east out of Munising — flat, fast, and deceptively civilized for what lies ahead.' },
+  { name: 'NF2266',                  startMi: 5.0,  endMi: 18.0,  distFromStart: '6.7mi', length: '3.2mi', difficulty: 5, description: "The route's crucible. Deep sand, washboard ruts, and relentless climbs through old-growth hardwoods on a barely maintained Forest Service road. This is where the ride earns its name." },
+  { name: 'Bass Lake Rd',            startMi: 18.0, endMi: 32.0,  distFromStart: '25.3mi', length: '4.8mi', difficulty: 2, description: 'Welcome relief after NF2266. A well-graded gravel road rolling past Bass Lake with broad sight lines and room to spin your legs back to life.' },
+  { name: 'NF2217-2218',             startMi: 32.0, endMi: 50.0,  distFromStart: '36.8mi', length: '6.6mi', difficulty: 2, description: 'A long, meditative stretch through the forest interior. Smooth gravel threading between Camp 7 Lake and the headwaters of the Indian River — good pavement for making up time.' },
+  { name: 'ND2225',                  startMi: 50.0, endMi: 70.0,  distFromStart: '55.7mi', length: '3.9mi', difficulty: 3, description: 'The route bends south and the surface degrades — loose gravel and intermittent sand demand attention. Quiet and remote, with no services for miles in either direction.' },
+  { name: 'Doe Lake',                startMi: 70.0, endMi: 92.0,  distFromStart: '84.8mi', length: '3.1mi', difficulty: 4, description: 'Technical and punishing. Sandy two-track weaves through dense forest near Doe Lake with short, sharp climbs that hit different at mile 85. The Midway General Store at mile 75.7 is your last chance to restock.' },
+  { name: 'Rapid River Truck Trail', startMi: 92.0, endMi: 110.0, distFromStart: '94.6mi', length: '6.3mi', difficulty: 2, description: "The home stretch. A well-maintained truck trail carries you north back toward Munising with long descents and the growing certainty that you're going to finish this thing." },
+];
+
+const segmentsWithPhotos = SEGMENTS.map(seg => ({
+  ...seg,
+  photos: (photosData as any[])
+    .filter((p: any) => p.mile >= seg.startMi && p.mile < seg.endMi)
+    .slice(0, 2),
+}));
+---
+
+<section class="route-explainer-section py-[--spacing-block]">
+  <div class="max-w-4xl mx-auto px-4">
+    <h2 class="text-3xl mb-[--spacing-element]">The Route, Segment by Segment</h2>
+    <p class="max-w-prose text-cream-200 mb-8">
+      100 miles of forest roads, two-track, and singletrack. Seven segments, each with its own character. Here's what to expect.
+    </p>
+    {segmentsWithPhotos.map((seg) => (
+      <article class={`segment-card${seg.photos.length === 0 ? ' no-photo' : ''}`}>
+        {seg.photos.length > 0 && (
+          <div class="segment-photo">
+            <img
+              src={seg.photos[0].thumb}
+              alt={`Route photo near mile ${seg.photos[0].mile.toFixed(1)}`}
+              loading="lazy"
+              decoding="async"
+              class="rounded"
+            />
+          </div>
+        )}
+        <div class="segment-content">
+          <h3 class="text-xl font-display text-amber-400">{seg.name}</h3>
+          <div class="flex items-center gap-3 text-sm text-cream-200 mt-1 mb-2">
+            <span>{seg.distFromStart} from start</span>
+            <span>·</span>
+            <span>{seg.length}</span>
+            <span>·</span>
+            <div
+              class="star-rating"
+              style={`--rating: ${seg.difficulty};`}
+              aria-label={`Difficulty: ${seg.difficulty} out of 5 stars`}
+              role="img"
+            ></div>
+          </div>
+          <p class="text-cream-100 leading-relaxed">{seg.description}</p>
+        </div>
+      </article>
+    ))}
+  </div>
+</section>
+
+<style>
+  .route-explainer-section {
+    background-color: var(--color-forest-950);
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="120"><path d="M0 20 Q50 8 100 20 Q150 32 200 20 Q250 8 300 20 Q350 32 400 20" stroke="%233d6b3d" stroke-width="1.5" fill="none"/><path d="M0 50 Q60 38 120 50 Q180 62 240 50 Q300 38 360 50 Q400 56 400 56" stroke="%233d6b3d" stroke-width="1" fill="none" opacity="0.6"/><path d="M0 85 Q80 73 160 85 Q240 97 320 85 Q380 77 400 85" stroke="%233d6b3d" stroke-width="0.75" fill="none" opacity="0.35"/></svg>');
+    background-repeat: repeat;
+    background-size: 400px 120px;
+    border-top: 1px solid var(--color-forest-700);
+    border-bottom: 1px solid var(--color-forest-700);
+  }
+
+  /* Segment card — mobile first: single column */
+  .segment-card {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "photo"
+      "content";
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--color-forest-700);
+  }
+
+  .segment-card.no-photo {
+    grid-template-areas: "content";
+    grid-template-columns: 1fr;
+  }
+
+  .segment-card:last-child {
+    border-bottom: none;
+  }
+
+  .segment-photo {
+    grid-area: photo;
+  }
+
+  .segment-content {
+    grid-area: content;
+  }
+
+  .segment-photo img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+
+  /* Star rating — clip gradient technique */
+  .star-rating {
+    --percent: calc(var(--rating) / 5 * 100%);
+    display: inline-block;
+    font-size: 1rem;
+    line-height: 1;
+    color: var(--color-amber-500);
+    background: linear-gradient(
+      to right,
+      var(--color-amber-500) var(--percent),
+      var(--color-forest-700) var(--percent)
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .star-rating::before {
+    content: "★★★★★";
+  }
+
+  /* Tablet and up: photo-text grid layout */
+  @media (min-width: 768px) {
+    .segment-card {
+      grid-template-columns: min(280px, 35%) 1fr;
+      grid-template-areas: "photo content";
+      align-items: start;
+    }
+
+    .segment-card:nth-child(even) {
+      grid-template-columns: 1fr min(280px, 35%);
+      grid-template-areas: "content photo";
+    }
+
+    .segment-card.no-photo {
+      grid-template-columns: 1fr;
+      grid-template-areas: "content";
+    }
+
+    .segment-card:nth-child(even).no-photo {
+      grid-template-columns: 1fr;
+      grid-template-areas: "content";
+    }
+  }
+</style>
