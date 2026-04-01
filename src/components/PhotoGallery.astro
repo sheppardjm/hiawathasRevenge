@@ -1,6 +1,6 @@
 ---
-// PhotoGallery.astro — Responsive photo grid with PhotoSwipe lightbox
-// Direct JSON import (not content collections) — simpler and handles the empty-array case cleanly
+// PhotoGallery.astro — Masonry photo gallery with PhotoSwipe lightbox
+// CSS columns layout with natural aspect ratios and featured full-width treatment
 // PhotoSwipe initialized in <script> block (not frontmatter) to avoid SSR "window is undefined" errors
 import photosData from '../../public/data/photos.json';
 
@@ -11,6 +11,7 @@ type PhotoEntry = {
   mile: number;
   lat?: number;
   lon?: number;
+  featured?: boolean;
 };
 
 const photos = photosData as PhotoEntry[];
@@ -26,7 +27,7 @@ function parseDims(filename: string): { w: number; h: number } {
 {photos.length === 0 ? (
   <p class="text-cream-200 text-sm italic">Photos coming soon.</p>
 ) : (
-  <div id="photo-gallery" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+  <div id="photo-gallery" class="columns-1 sm:columns-2 lg:columns-3 gap-3">
     {photos.map((photo) => {
       const dims = parseDims(photo.filename);
       return (
@@ -34,23 +35,38 @@ function parseDims(filename: string): { w: number; h: number } {
           href={`/images/${photo.filename}`}
           data-pswp-width={dims.w}
           data-pswp-height={dims.h}
-          data-cropped="true"
           target="_blank"
           rel="noopener"
-          class="block overflow-hidden"
+          class:list={[
+            "block mb-3 break-inside-avoid overflow-hidden rounded-sm",
+            photo.featured && "featured-photo"
+          ]}
         >
           <img
             src={photo.thumb}
             alt=""
             loading="lazy"
             decoding="async"
-            class="w-full aspect-square object-cover"
+            class="w-full h-auto block"
           />
         </a>
       );
     })}
   </div>
 )}
+
+<style>
+  .featured-photo {
+    column-span: all;
+    margin-bottom: 0.75rem;
+  }
+
+  .featured-photo img {
+    max-height: 60vh;
+    object-fit: cover;
+    width: 100%;
+  }
+</style>
 
 <script>
   // PhotoSwipe lightbox — imported in <script> block so Vite bundles it client-side only
