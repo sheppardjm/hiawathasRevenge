@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-03-31)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive showcase that inspires them to ride it and support MBTN.
-**Current focus:** v1.1 Visual Redesign -- Phase 15 complete
+**Current focus:** v1.1 Visual Redesign -- COMPLETE (all 5 phases done)
 
 ## Current Position
 
-Phase: 15 (Editorial Content) -- Complete
-Plan: 2 of 2 complete
-Status: Phase complete
-Last activity: 2026-03-31 -- Completed 15-02-PLAN.md (RouteExplainer component)
+Phase: 16 (Masonry Gallery) -- Complete
+Plan: 1 of 1 complete
+Status: v1.1 COMPLETE
+Last activity: 2026-03-31 -- Completed 16-01-PLAN.md (Masonry Gallery)
 
-Progress: [████████░░] 80% (v1.1: 4/5 phases, Phase 15 done)
+Progress: [██████████] 100% (v1.1: 5/5 phases, Phase 16 done)
 
 ## Performance Metrics
 
@@ -24,8 +24,8 @@ Progress: [████████░░] 80% (v1.1: 4/5 phases, Phase 15 done)
 - Timeline: 2 days (2026-03-30 -> 2026-03-31)
 
 **v1.1:**
-- Plans executed: 6 (12-01, 12-02, 13-01, 14-01, 15-01, 15-02)
-- Phases complete: 4 (Phase 12, Phase 13, Phase 14, Phase 15)
+- Plans executed: 7 (12-01, 12-02, 13-01, 14-01, 15-01, 15-02, 16-01)
+- Phases complete: 5 (Phase 12, Phase 13, Phase 14, Phase 15, Phase 16)
 
 ## Accumulated Context
 
@@ -57,6 +57,12 @@ v1.1 decisions made:
 | no-photo class overrides nth-child alternation at tablet+ | Without override, 520 segment (no photos) produces empty first column in 2-col grid | 15-02 |
 | Photos mapped to segments by mile range filter | p.mile >= startMi && p.mile < endMi; deterministic given photos are already geo-tagged | 15-02 |
 
+| CSS columns layout (not grid or flex) for masonry | Only masonry approach achievable in CSS without JavaScript; column-count + break-inside-avoid is standard | 16-01 |
+| max-height: 60vh on featured-photo img | Prevents landscape photos from dominating viewport vertically while filling full column-span width | 16-01 |
+| Spread conditional for featured field in match-photos.js | Keeps JSON clean — field absent on non-featured entries (no featured: false noise) | 16-01 |
+| data-cropped removed from PhotoGallery anchors | Previous grid used aspect-square object-cover crops so hint was accurate; masonry uses natural aspect ratios so hint is now inaccurate | 16-01 |
+| mb-3 on each item (not gap-y on container) | CSS columns gap-* only sets column-gap; row spacing in columns layout requires margin on individual items | 16-01 |
+
 ### Pending Todos
 
 None.
@@ -70,5 +76,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-31
-Stopped at: Completed 15-02-PLAN.md (RouteExplainer component + index.astro wiring — Phase 15 complete)
+Stopped at: Completed 16-01-PLAN.md (Masonry Gallery — v1.1 Visual Redesign complete)
 Resume file: None
