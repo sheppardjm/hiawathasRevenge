@@ -37,7 +37,13 @@ Visitors experience the beauty and scale of the Hiawatha's Revenge route through
 
 ### Active
 
-- [ ] Sector map labels with names and star difficulty ratings, clickable with slide-out detail panels
+- [ ] Content sections broken up with landscape photos, cultural design elements, whitespace, secondary/tertiary headings, and multi-color section differentiation
+- [ ] Segment section subheads in National Park typeface with Strava links, detailed terrain descriptions, per-sector elevation snippets, and landmarks/POI
+- [ ] Shield/arrowhead motif repeated throughout site as backgrounds, section icons, and decorative elements — maximalist cultural layering
+- [ ] Bold color palette expansion — turquoise, red, yellow, black alongside existing Ojibwe tones, applied consistently across typography, backgrounds, and design elements
+- [ ] Animated multicolored section dividers — award-winning non-profit aesthetic
+- [ ] Historical Hiawatha imagery sourced from public domain (poem illustrations, theatrical productions, musicals) integrated throughout content
+- [ ] Sector map labels with names and star difficulty ratings, clickable with slide-out detail panels (deferred to v1.3)
 
 ### Out of Scope
 
@@ -47,6 +53,18 @@ Visitors experience the beauty and scale of the Hiawatha's Revenge route through
 - Real-time features — purely static showcase
 - OAuth / user accounts — no login needed
 - Mobile app — web only
+
+## Current Milestone: v1.2 Cultural Maximalism
+
+**Goal:** Transform the site into a maximalist cultural celebration — leaning into Longfellow's cultural mashup with exuberant design, bold colors, historical imagery, enriched segment content, and animated section breaks worthy of an award-winning non-profit site.
+
+**Target features:**
+- Content layout overhaul with photos, design elements, whitespace, and multi-color headings
+- Segment enrichment with National Park subheads, Strava links, terrain details, elevation snippets
+- Shield/arrowhead motif system repeated throughout as backgrounds, icons, decorative elements
+- Bold palette expansion (turquoise, red, yellow, black) alongside existing Ojibwe tones
+- Animated multicolored section dividers
+- Historical Hiawatha imagery (public domain illustrations, theatrical photos, musical imagery)
 
 ## Context
 
@@ -94,4 +112,4 @@ Historical context in `data.md` — segment details with star ratings, Hiawatha 
 | Spread conditional for featured field | No featured: false noise in JSON | ✓ Good — clean data |
 
 ---
-*Last updated: 2026-03-31 after v1.1 milestone completion*
+*Last updated: 2026-03-31 after v1.2 milestone start*

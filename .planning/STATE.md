@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-03-31)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive, visually stunning showcase that inspires them to ride it and support MBTN.
-**Current focus:** Planning next milestone
+**Current focus:** v1.2 Cultural Maximalism — defining requirements
 
 ## Current Position
 
-Phase: 18+ (next milestone)
-Plan: Not started
-Status: Ready to plan
-Last activity: 2026-03-31 — v1.1 milestone complete
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-03-31 — Milestone v1.2 started
 
-Progress: [██████████████████████████████] 100% (v1.0: 12/12 phases, v1.1: 6/6 phases)
+Progress: [░░░░░░░░░░] 0%
 
 ## Performance Metrics
 
@@ -42,9 +42,11 @@ None.
 
 - Ojibwe community consultation recommended for Phase 14 (cultural sensitivity review)
 - Project requires Node >=22.12.0 (Astro 6 requirement) — use Volta (`/Users/Sheppardjm/.volta/bin/node`) or PATH="/Users/Sheppardjm/.volta/bin:$PATH" npm run build
+- User will create Strava segments and provide links during implementation
+- Historical Hiawatha imagery must be sourced from public domain (poem illustrations, theatrical productions, musicals)
 
 ## Session Continuity
 
 Last session: 2026-03-31
-Stopped at: v1.1 milestone archived
+Stopped at: v1.2 milestone started — defining requirements
 Resume file: None
