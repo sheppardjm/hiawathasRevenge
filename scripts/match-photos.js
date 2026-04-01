@@ -91,6 +91,7 @@ const photos = manifest.map((entry) => {
     mile: snap.miles,
     lat: snap.lat,
     lon: snap.lon,
+    ...(entry.featured ? { featured: true } : {}),
   };
 });
 
