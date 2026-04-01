@@ -19,6 +19,7 @@ const steps = [
   { name: 'resolve-annotations', script: 'scripts/resolve-annotations.js' },
   { name: 'generate-thumbnails', script: 'scripts/generate-thumbnails.js' },
   { name: 'copy-images', script: 'scripts/copy-images.js' },
+  { name: 'process-historical', script: 'scripts/process-historical.js' },
   { name: 'match-photos', script: 'scripts/match-photos.js' },
   { name: 'copy-gpx', script: 'scripts/copy-gpx.js' },
 ];
