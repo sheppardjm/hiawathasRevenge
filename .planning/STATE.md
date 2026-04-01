@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-03-31)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive, visually stunning showcase that inspires them to ride it and support MBTN.
-**Current focus:** v1.2 Cultural Maximalism — defining requirements
+**Current focus:** v1.2 Cultural Maximalism -- Phase 18 Color Foundation
 
 ## Current Position
 
-Phase: Not started (defining requirements)
-Plan: —
-Status: Defining requirements
-Last activity: 2026-03-31 — Milestone v1.2 started
+Phase: 18 (1 of 5 in v1.2) -- Color Foundation
+Plan: Not started
+Status: Ready to plan
+Last activity: 2026-03-31 -- v1.2 roadmap created
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [░░░░░░░░░░] 0% (0/11 v1.2 plans)
 
 ## Performance Metrics
 
@@ -28,6 +28,11 @@ Progress: [░░░░░░░░░░] 0%
 - Total phases: 6 (12-17)
 - Timeline: 1 day (2026-03-31)
 
+**v1.2 Summary:**
+- Total plans completed: 0
+- Total phases: 5 (18-22)
+- Estimated plans: ~11
+
 ## Accumulated Context
 
 ### Decisions
@@ -40,13 +45,14 @@ None.
 
 ### Blockers/Concerns
 
-- Ojibwe community consultation recommended for Phase 14 (cultural sensitivity review)
-- Project requires Node >=22.12.0 (Astro 6 requirement) — use Volta (`/Users/Sheppardjm/.volta/bin/node`) or PATH="/Users/Sheppardjm/.volta/bin:$PATH" npm run build
-- User will create Strava segments and provide links during implementation
-- Historical Hiawatha imagery must be sourced from public domain (poem illustrations, theatrical productions, musicals)
+- Ojibwe community consultation recommended (cultural sensitivity review)
+- Project requires Node >=22.12.0 -- use Volta (`/Users/Sheppardjm/.volta/bin/node`)
+- User will create Strava segments and provide IDs during Phase 20 implementation
+- Historical imagery must be public domain (Harrison Fisher 1906, Frederic Remington 1891 via Met Open Access / Internet Archive)
+- scarlet-600 (#dc2626) at 3.71:1 fails WCAG AA normal text -- designate large-text/decorative ONLY
 
 ## Session Continuity
 
 Last session: 2026-03-31
-Stopped at: v1.2 milestone started — defining requirements
+Stopped at: v1.2 roadmap created -- ready to plan Phase 18
 Resume file: None

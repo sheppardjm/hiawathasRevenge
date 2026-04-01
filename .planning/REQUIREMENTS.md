@@ -82,35 +82,35 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DES-01 | Pending | Pending |
-| DES-02 | Pending | Pending |
-| DES-03 | Pending | Pending |
-| DES-04 | Pending | Pending |
-| DEC-01 | Pending | Pending |
-| DEC-02 | Pending | Pending |
-| DEC-03 | Pending | Pending |
-| DEC-04 | Pending | Pending |
-| DEC-05 | Pending | Pending |
-| CON-01 | Pending | Pending |
-| CON-02 | Pending | Pending |
-| CON-03 | Pending | Pending |
-| CON-04 | Pending | Pending |
-| CON-05 | Pending | Pending |
-| RTE-01 | Pending | Pending |
-| RTE-02 | Pending | Pending |
-| RTE-03 | Pending | Pending |
-| RTE-04 | Pending | Pending |
-| RTE-05 | Pending | Pending |
-| ANI-01 | Pending | Pending |
-| ANI-02 | Pending | Pending |
-| ANI-03 | Pending | Pending |
-| ANI-04 | Pending | Pending |
+| DES-01 | Phase 18 | Pending |
+| DES-02 | Phase 18 | Pending |
+| DES-03 | Phase 21 | Pending |
+| DES-04 | Phase 21 | Pending |
+| DEC-01 | Phase 19 | Pending |
+| DEC-02 | Phase 19 | Pending |
+| DEC-03 | Phase 19 | Pending |
+| DEC-04 | Phase 19 | Pending |
+| DEC-05 | Phase 19 | Pending |
+| CON-01 | Phase 20 | Pending |
+| CON-02 | Phase 20 | Pending |
+| CON-03 | Phase 20 | Pending |
+| CON-04 | Phase 20 | Pending |
+| CON-05 | Phase 20 | Pending |
+| RTE-01 | Phase 20 | Pending |
+| RTE-02 | Phase 19 | Pending |
+| RTE-03 | Phase 20 | Pending |
+| RTE-04 | Phase 20 | Pending |
+| RTE-05 | Phase 19 | Pending |
+| ANI-01 | Phase 22 | Pending |
+| ANI-02 | Phase 22 | Pending |
+| ANI-03 | Phase 22 | Pending |
+| ANI-04 | Phase 22 | Pending |
 
 **Coverage:**
 - v1.2 requirements: 23 total
-- Mapped to phases: 0
-- Unmapped: 23
+- Mapped to phases: 23
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-31*
-*Last updated: 2026-03-31 after initial definition*
+*Last updated: 2026-03-31 after roadmap creation*
