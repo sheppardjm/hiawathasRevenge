@@ -104,7 +104,7 @@ Phases 12 through 16 execute in numeric order. Phase 15 and Phase 16 may execute
 | 13. Hero & Event Date | v1.1 | 1/1 | Complete | 2026-03-31 |
 | 14. Ojibwe Design System | v1.1 | 1/1 | Complete | 2026-03-31 |
 | 15. Editorial Content | v1.1 | 2/2 | Complete | 2026-03-31 |
-| 16. Masonry Gallery | v1.1 | 0/TBD | Not started | - |
+| 16. Masonry Gallery | v1.1 | 0/1 | Not started | - |
 
 ---
 *Roadmap created: 2026-03-31*
