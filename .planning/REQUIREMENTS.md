@@ -24,11 +24,11 @@ Requirements for visual redesign milestone. Each maps to roadmap phases.
 
 ### Content & Narrative
 
-- [ ] **NARR-01**: Hiawatha explainer text is rewritten in a witty, sophisticated New Yorker tone that highlights Longfellow's conflation of Hiawatha (Haudenosaunee peacemaker) with Nanabozho (Ojibwe trickster)
-- [ ] **NARR-02**: Narrative incorporates direct quotes from data.md historical content about Hiawatha and the Longfellow critique
-- [ ] **NARR-03**: Route explainer section presents the ride segment-by-segment with integrated route photos and historical context over a topographic background
-- [ ] **NARR-04**: Route explainer uses segment data from data.md (names, distances, star difficulty ratings) to structure the narrative
-- [ ] **NARR-05**: Content sections use editorial layout with photos integrated alongside text (not separated into distinct photo/text blocks)
+- [x] **NARR-01**: Hiawatha explainer text is rewritten in a witty, sophisticated New Yorker tone that highlights Longfellow's conflation of Hiawatha (Haudenosaunee peacemaker) with Nanabozho (Ojibwe trickster)
+- [x] **NARR-02**: Narrative incorporates direct quotes from data.md historical content about Hiawatha and the Longfellow critique
+- [x] **NARR-03**: Route explainer section presents the ride segment-by-segment with integrated route photos and historical context over a topographic background
+- [x] **NARR-04**: Route explainer uses segment data from data.md (names, distances, star difficulty ratings) to structure the narrative
+- [x] **NARR-05**: Content sections use editorial layout with photos integrated alongside text (not separated into distinct photo/text blocks)
 
 ### Gallery
 
@@ -76,11 +76,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | HERO-02 | Phase 13: Hero & Event Date | Complete |
 | HERO-03 | Phase 13: Hero & Event Date | Complete |
 | HERO-04 | Phase 13: Hero & Event Date | Complete |
-| NARR-01 | Phase 15: Editorial Content | Pending |
-| NARR-02 | Phase 15: Editorial Content | Pending |
-| NARR-03 | Phase 15: Editorial Content | Pending |
-| NARR-04 | Phase 15: Editorial Content | Pending |
-| NARR-05 | Phase 15: Editorial Content | Pending |
+| NARR-01 | Phase 15: Editorial Content | Complete |
+| NARR-02 | Phase 15: Editorial Content | Complete |
+| NARR-03 | Phase 15: Editorial Content | Complete |
+| NARR-04 | Phase 15: Editorial Content | Complete |
+| NARR-05 | Phase 15: Editorial Content | Complete |
 | GAL-01 | Phase 16: Masonry Gallery | Pending |
 | GAL-02 | Phase 16: Masonry Gallery | Pending |
 | GAL-03 | Phase 16: Masonry Gallery | Pending |
@@ -94,4 +94,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-03-31*
-*Last updated: 2026-03-31 after Phase 14 completion*
+*Last updated: 2026-03-31 after Phase 15 completion*

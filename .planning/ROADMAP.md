@@ -22,7 +22,7 @@
 - [x] **Phase 12: Design Foundation** - Color tokens, hex tokenization, and layout restructure that unblock all visual work
 - [x] **Phase 13: Hero & Event Date** - Full-width hero section with dramatic route photo and prominent event date
 - [x] **Phase 14: Ojibwe Design System** - Woodland floral beadwork-inspired decorative elements with cultural attribution
-- [ ] **Phase 15: Editorial Content** - Rewritten Hiawatha narrative and photo-integrated route explainer
+- [x] **Phase 15: Editorial Content** - Rewritten Hiawatha narrative and photo-integrated route explainer
 - [ ] **Phase 16: Masonry Gallery** - Redesigned photo gallery with editorial sizing and featured photos
 
 ## Phase Details
@@ -77,8 +77,8 @@ Plans:
   5. Editorial layouts are responsive -- readable single-column flow on mobile (375px), photo-text layouts on tablet (768px) and desktop (1280px)
 **Plans:** 2 plans
 Plans:
-- [ ] 15-01-PLAN.md — Create HiawathaExplainer.astro with editorial narrative, wire into index.astro
-- [ ] 15-02-PLAN.md — Create RouteExplainer.astro with segments, photos, star ratings, topo background, wire into index.astro
+- [x] 15-01-PLAN.md — Create HiawathaExplainer.astro with editorial narrative, wire into index.astro
+- [x] 15-02-PLAN.md — Create RouteExplainer.astro with segments, photos, star ratings, topo background, wire into index.astro
 
 ### Phase 16: Masonry Gallery
 **Goal**: Photo gallery showcases route photography with editorial sizing, featured hero images, and natural aspect ratios instead of uniform square crops
@@ -101,7 +101,7 @@ Phases 12 through 16 execute in numeric order. Phase 15 and Phase 16 may execute
 | 12. Design Foundation | v1.1 | 2/2 | Complete | 2026-03-31 |
 | 13. Hero & Event Date | v1.1 | 1/1 | Complete | 2026-03-31 |
 | 14. Ojibwe Design System | v1.1 | 1/1 | Complete | 2026-03-31 |
-| 15. Editorial Content | v1.1 | 0/TBD | Not started | - |
+| 15. Editorial Content | v1.1 | 2/2 | Complete | 2026-03-31 |
 | 16. Masonry Gallery | v1.1 | 0/TBD | Not started | - |
 
 ---
