@@ -77,10 +77,10 @@ Plans:
 4. Labels appear at zoom ≥ 12 and hide at lower zoom levels to prevent collision with CyclOSM tile text
 5. The `<dialog id="sector-panel">` element exists in the DOM with full CSS for desktop right-panel and mobile bottom-sheet, styled to spec — but no open/close logic yet
 
-**Plans:** TBD
+**Plans:** 1 plan
 
 Plans:
-- [ ] 24-01: Sector labels at midpoints with zoom gating and panel DOM scaffold
+- [ ] 24-01-PLAN.md — Sector label markers with zoom gating and panel DOM scaffold
 
 ---
 
