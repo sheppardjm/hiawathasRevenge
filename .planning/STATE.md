@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-04-02)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive, visually stunning showcase that inspires them to ride it and support MBTN.
-**Current focus:** Phase 24 — Sector Labels on Map
+**Current focus:** Phase 25 — Sector Panel Interactivity
 
 ## Current Position
 
 Phase: 24 of 26 (Sector Labels on Map)
-Plan: 0 of TBD in current phase
-Status: Ready to plan
-Last activity: 2026-04-02 — Phase 23 verified and complete (4/4 must-haves passed)
+Plan: 1 of 1 in current phase
+Status: Phase complete
+Last activity: 2026-04-02 — Completed 24-01-PLAN.md (sector labels + panel scaffold)
 
-Progress: [█████████████░░░░░░░] v1.0 ✅ | v1.1 ✅ | v1.2 ✅ | v1.3 Phase 23 ✅ | Phase 24 next
+Progress: [██████████████░░░░░░] v1.0 ✅ | v1.1 ✅ | v1.2 ✅ | v1.3 Phase 23 ✅ | Phase 24 ✅ | Phase 25 next
 
 ## Performance Metrics
 
@@ -23,6 +23,7 @@ Progress: [█████████████░░░░░░░] v1.0 �
 **v1.2 Summary:** 17 plans, 5 phases + gaps, 2 days
 
 **v1.3 Phase 23:** 2 plans, 5 commits, ~8 min
+**v1.3 Phase 24:** 1 plan, 2 task commits, ~2 min
 *v1.3 metrics tracked as plans complete*
 
 ## Accumulated Context
@@ -38,6 +39,9 @@ Recent decisions relevant to v1.3:
 - Panel as sibling of `#map` inside `.route-map` wrapper — avoids Leaflet z-index stacking context
 - stars field is additive in annotations.json — difficulty string preserved unchanged to avoid breaking existing components
 - Coordinate matching (5-decimal rounding Map) is the correct strategy for route-data.json -> hiawathasRevenge.json lookup (456/456 match rate)
+- Phase 24: LABEL_COLORS reuses amber500 module-scope const for moderate — avoids duplicate getCSSColor call
+- Phase 24: zIndexOffset 250 for labels — above polylines, below restock (500), photo (750), bike (1000)
+- Phase 24: Panel hidden via absence of open attribute (not CSS display:none) — uses native dialog semantics; Phase 25 adds/removes open
 
 ### Pending Todos
 
@@ -60,5 +64,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-04-02
-Stopped at: Phase 23 verified complete, ready for Phase 24 planning
+Stopped at: Completed 24-01-PLAN.md (sector labels + panel scaffold), ready for Phase 25 planning
 Resume file: None
