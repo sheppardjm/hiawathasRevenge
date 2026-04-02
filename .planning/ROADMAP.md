@@ -67,7 +67,7 @@ Plans:
   3. Shield/arrowhead motif renders at multiple sizes (icon 16-24px, watermark 400-600px) using SVG `<symbol>` + `<use>` with zero additional HTTP requests and color inherited from parent Tailwind classes
   4. Per-sector elevation sparklines render as static SVG polylines showing each segment's elevation profile, generated at build time with zero client-side JavaScript
   5. Pipeline computes per-segment elevation data from route-data.json and makes it available for sparkline generation
-**Plans**: ~3 plans
+**Plans**: 3 plans
 
 Plans:
 - [ ] 19-01: AnimatedDivider component with variants and reduced-motion support
