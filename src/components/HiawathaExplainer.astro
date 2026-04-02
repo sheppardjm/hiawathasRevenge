@@ -3,11 +3,14 @@
 // Rewritten Hiawatha narrative — witty New Yorker editorial tone
 // Covers Longfellow's 1855 publication, the Haudenosaunee/Ojibwe conflation,
 // the 1931 National Forest naming, and MBTN's role organizing the ride.
+import historicalPhotos from '../../public/data/historical-photos.json';
 ---
 
 <section class="max-w-4xl mx-auto px-4 py-[--spacing-block]">
   <h2 class="text-3xl mb-[--spacing-element]">The Poem, the Forest, the Ride</h2>
   <div class="max-w-prose space-y-4 text-cream-100 leading-relaxed">
+
+    <h3 class="text-2xl font-display text-amber-500 mt-0 mb-4 tracking-wide">The Poem</h3>
 
     <p>
       In 1855, Henry Wadsworth Longfellow committed one of American literature's
@@ -20,6 +23,8 @@
       testament to the perils of desk-bound scholarship — named his hero after
       someone else entirely.
     </p>
+
+    <h3 class="text-2xl font-display text-turquoise-400 mt-[6rem] mb-4 tracking-wide">The Confusion</h3>
 
     <p>
       Hiawatha was a real historical figure, but he had nothing to do with the
@@ -49,6 +54,23 @@
       of the past inevitably making way for Euro-American expansion.
     </blockquote>
 
+    {historicalPhotos.length > 0 && (
+      <figure class="historical-break">
+        <img
+          src={historicalPhotos[0].thumb}
+          alt={`${historicalPhotos[0].title} by ${historicalPhotos[0].artist}, ${historicalPhotos[0].year}`}
+          class="historical-img"
+          loading="lazy"
+          decoding="async"
+        />
+        <figcaption class="historical-caption">
+          <em>{historicalPhotos[0].title}</em> — {historicalPhotos[0].artist}, {historicalPhotos[0].year}. {historicalPhotos[0].source}
+        </figcaption>
+      </figure>
+    )}
+
+    <h3 class="text-2xl font-display text-sun-400 mt-[6rem] mb-4 tracking-wide">The Forest</h3>
+
     <p>
       None of this diminished the poem's popularity. <em>The Song of Hiawatha</em>
       became one of the best-selling poetry collections of the nineteenth century,
@@ -62,6 +84,23 @@
       glacial lake that has changed little since Schoolcraft paddled through taking
       notes.
     </p>
+
+    {historicalPhotos.length > 1 && (
+      <figure class="historical-break">
+        <img
+          src={historicalPhotos[1].thumb}
+          alt={`${historicalPhotos[1].title} by ${historicalPhotos[1].artist}, ${historicalPhotos[1].year}`}
+          class="historical-img"
+          loading="lazy"
+          decoding="async"
+        />
+        <figcaption class="historical-caption">
+          <em>{historicalPhotos[1].title}</em> — {historicalPhotos[1].artist}, {historicalPhotos[1].year}. {historicalPhotos[1].source}
+        </figcaption>
+      </figure>
+    )}
+
+    <h3 class="text-2xl font-display text-scarlet-400 mt-[6rem] mb-4 tracking-wide">The Ride</h3>
 
     <p>
       Into this magnificent, improbably-named landscape, the
@@ -78,3 +117,27 @@
 
   </div>
 </section>
+
+<style>
+  .historical-break {
+    margin: 6rem auto;
+    text-align: center;
+    max-width: 640px;
+  }
+
+  .historical-img {
+    filter: sepia(80%) saturate(30%) brightness(0.9);
+    width: 100%;
+    max-width: 640px;
+    margin: 0 auto;
+    display: block;
+    border-radius: 0.25rem;
+  }
+
+  .historical-caption {
+    font-size: var(--font-size-sm);
+    color: var(--color-cream-200);
+    margin-top: 0.75rem;
+    font-style: italic;
+  }
+</style>
