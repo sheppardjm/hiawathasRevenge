@@ -116,7 +116,7 @@
      ============================================================ */
 
   --spacing-section: 4rem;   /* space between major page sections */
-  --spacing-block: 2rem;     /* space between content blocks within a section */
+  --spacing-block: 4rem;     /* space between content blocks within a section */
   --spacing-element: 1rem;   /* space between elements within a block */
 
   /* ============================================================

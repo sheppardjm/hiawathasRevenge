@@ -152,6 +152,20 @@ import ScrollReveal from '../components/ScrollReveal.astro';
     color: var(--color-forest-900);
   }
 
+  /* VIS-05: Route stats legibility — override amber-section span color on stat cards */
+  .amber-section :global(.stat-value) {
+    color: var(--color-amber-500);
+  }
+  .amber-section :global(.stat-label) {
+    color: var(--color-cream-200);
+  }
+  .amber-section :global(.surface-name) {
+    color: var(--color-forest-950);
+  }
+  .amber-section :global(.surface-miles) {
+    color: var(--color-forest-900);
+  }
+
   /* Teal section — turquoise-700 bg, cream text, sun-400 headings */
   .teal-section {
     background-color: var(--color-turquoise-700);
