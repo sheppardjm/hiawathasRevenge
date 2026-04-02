@@ -1,6 +1,6 @@
 ---
 // ElevationSparkline.astro
-// Renders a static SVG polyline showing a sector's elevation profile.
+// Renders a static SVG mini-chart showing a sector's elevation profile.
 // All data resolved at build time via content collection — zero client-side JavaScript.
 import { getCollection } from 'astro:content';
 
@@ -14,7 +14,13 @@ const allSectors = await getCollection('sectorElevations');
 const sector = allSectors.find(s => s.id === sectorId);
 
 let polylinePoints = '';
+let areaPoints = '';
 let strokeColor = 'var(--color-gold-500)';
+let startX = 0, startY = 0, endX = 0, endY = 0;
+
+const W = 100;
+const H = 50;
+const padding = 4;
 
 if (sector) {
   const points = sector.data.elevationPoints;
@@ -25,16 +31,32 @@ if (sector) {
   const eleRange = eleMax - eleMin;
   const milesRange = miles[miles.length - 1] - miles[0];
 
-  const W = 100, H = 30;
-  polylinePoints = points.map((p, i) => {
+  const drawH = H - 2 * padding; // drawable height range
+
+  const computed = points.map((p, i) => {
     const x = milesRange > 0
       ? (p.miles - miles[0]) / milesRange * W
       : i / Math.max(points.length - 1, 1) * W;
     const y = eleRange > 0
-      ? H - ((p.ele - eleMin) / eleRange * H)
+      ? (H - padding) - ((p.ele - eleMin) / eleRange * drawH)
       : H / 2;
-    return `${x.toFixed(1)},${y.toFixed(1)}`;
-  }).join(' ');
+    return { x: parseFloat(x.toFixed(1)), y: parseFloat(y.toFixed(1)) };
+  });
+
+  polylinePoints = computed.map(pt => `${pt.x},${pt.y}`).join(' ');
+
+  // Area fill: trace the elevation line then close to bottom
+  areaPoints = [
+    ...computed.map(pt => `${pt.x},${pt.y}`),
+    `${computed[computed.length - 1].x},${H}`,
+    `0,${H}`,
+  ].join(' ');
+
+  // Endpoint markers
+  startX = computed[0].x;
+  startY = computed[0].y;
+  endX = computed[computed.length - 1].x;
+  endY = computed[computed.length - 1].y;
 
   const DIFFICULTY_COLORS: Record<string, string> = {
     easy:     'var(--color-moss-500)',
@@ -47,21 +69,47 @@ if (sector) {
 
 {polylinePoints && (
   <svg
-    viewBox="0 0 100 30"
+    viewBox={`0 0 ${W} ${H}`}
     width="100%"
-    height="30"
+    height={H}
     class={className}
     aria-hidden="true"
     role="presentation"
     focusable="false"
   >
+    <defs>
+      <linearGradient id={`elev-fill-${sectorId}`} x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color={strokeColor} stop-opacity="0.35" />
+        <stop offset="100%" stop-color={strokeColor} stop-opacity="0.05" />
+      </linearGradient>
+    </defs>
+
+    <!-- Background rect -->
+    <rect x="0" y="0" width={W} height={H} rx="3" fill="var(--color-forest-900)" opacity="0.6" />
+
+    <!-- Horizontal grid lines at 25%, 50%, 75% of height -->
+    <line x1="0" y1={H * 0.25} x2={W} y2={H * 0.25} stroke="var(--color-forest-700)" stroke-width="0.5" opacity="0.4" />
+    <line x1="0" y1={H * 0.5}  x2={W} y2={H * 0.5}  stroke="var(--color-forest-700)" stroke-width="0.5" opacity="0.4" />
+    <line x1="0" y1={H * 0.75} x2={W} y2={H * 0.75} stroke="var(--color-forest-700)" stroke-width="0.5" opacity="0.4" />
+
+    <!-- Area fill under elevation line -->
+    <polygon
+      points={areaPoints}
+      fill={`url(#elev-fill-${sectorId})`}
+    />
+
+    <!-- Elevation polyline -->
     <polyline
       points={polylinePoints}
       stroke={strokeColor}
-      stroke-width="1.5"
+      stroke-width="2.5"
       fill="none"
       stroke-linejoin="round"
       stroke-linecap="round"
     />
+
+    <!-- Start and end point markers -->
+    <circle cx={startX} cy={startY} r="2" fill={strokeColor} />
+    <circle cx={endX}   cy={endY}   r="2" fill={strokeColor} />
   </svg>
 )}
