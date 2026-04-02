@@ -5,6 +5,7 @@
 - ✅ **v1.0 MVP** -- Phases 0-11 (shipped 2026-03-31)
 - ✅ **v1.1 Visual Redesign** -- Phases 12-17 (shipped 2026-03-31)
 - ✅ **v1.2 Cultural Maximalism** -- Phases 18-22 (shipped 2026-04-02)
+- 🔧 **v1.2 UAT Gap Closure** -- 4 plans (in progress)
 - 📋 **v1.3 Map Interactivity** -- Planned (SECT-01, SECT-02, SECT-03)
 
 ## Phases
@@ -39,6 +40,18 @@
 - [x] **Phase 20: Content & Route Enrichment** - Historical imagery, editorial restructure, and segment detail expansion (completed 2026-04-01)
 - [x] **Phase 21: Section Color Differentiation** - Per-section backgrounds and page assembly with animated dividers (completed 2026-04-01)
 - [x] **Phase 22: Animation & Polish** - Scroll-driven reveals, accessibility audit, and performance validation (completed 2026-04-02)
+
+### 🔧 v1.2 UAT Gap Closure
+
+**Goal:** Address 9 diagnosed visual quality gaps from v1.2 UAT across dividers, editorial layout, segment cards, sparklines, and section colors.
+**Depends on:** v1.2 complete (Phases 18-22)
+**Plans:** 4 plans in 2 waves
+
+Plans:
+- [ ] v1.2-gaps-01-PLAN.md -- Geometric divider redesign (FloralDivider + AnimatedDivider)
+- [ ] v1.2-gaps-02-PLAN.md -- HiawathaExplainer magazine editorial layout
+- [ ] v1.2-gaps-03-PLAN.md -- Segment card photo-hero redesign + sparkline enhancement
+- [ ] v1.2-gaps-04-PLAN.md -- Section color variety + visual verification checkpoint
 
 ## Phase Details
 
@@ -124,7 +137,7 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 18 -> 19 -> 20 -> 21 -> 22
+Phases execute in numeric order: 18 -> 19 -> 20 -> 21 -> 22, then v1.2-gaps
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
@@ -135,8 +148,10 @@ Phases execute in numeric order: 18 -> 19 -> 20 -> 21 -> 22
 | 20. Content & Route Enrichment | v1.2 | 3/3 | Complete | 2026-04-01 |
 | 21. Section Color Differentiation | v1.2 | 1/1 | Complete | 2026-04-01 |
 | 22. Animation & Polish | v1.2 | 2/2 | Complete | 2026-04-02 |
+| v1.2 UAT Gap Closure | v1.2 | 0/4 | In Progress | -- |
 
 ---
 *Roadmap created: 2026-03-31*
 *v1.1 archived: 2026-03-31*
 *v1.2 roadmap added: 2026-03-31*
+*v1.2 gap closure planned: 2026-04-02*
