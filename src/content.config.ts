@@ -74,6 +74,33 @@ const annotations = defineCollection({
 });
 
 // ---------------------------------------------------------------------------
+// Sector elevations collection
+// ---------------------------------------------------------------------------
+// sector-elevations.json is an array of per-sector elevation data objects
+// produced by compute-sector-elevations.js in the pipeline.
+
+const sectorElevations = defineCollection({
+  loader: file('public/data/sector-elevations.json'),
+  schema: z.object({
+    id: z.string(),
+    name: z.string(),
+    difficulty: z.enum(['easy', 'moderate', 'hard']),
+    startMile: z.number(),
+    endMile: z.number(),
+    elevationPoints: z.array(
+      z.object({
+        miles: z.number(),
+        ele: z.number(),
+      })
+    ),
+    eleMin: z.number(),
+    eleMax: z.number(),
+    eleGainMeters: z.number(),
+    eleLossMeters: z.number(),
+  }),
+});
+
+// ---------------------------------------------------------------------------
 // Photos collection (stub for Phase 7)
 // ---------------------------------------------------------------------------
 // photos.json does not exist yet — the parser falls back to an empty array
@@ -99,4 +126,4 @@ const photos = defineCollection({
   }),
 });
 
-export const collections = { routeData, annotations, photos };
+export const collections = { routeData, annotations, sectorElevations, photos };
