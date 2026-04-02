@@ -9,8 +9,8 @@ Requirements for v1.3 Interactive Map & Editorial Polish. Each maps to roadmap p
 
 ### Map Interactivity
 
-- [ ] **MAP-01**: Sector name and star difficulty badges visible on map at polyline midpoints using L.divIcon markers
-- [ ] **MAP-02**: Sector labels styled with National Park aesthetic — shield motif, difficulty color coding
+- [x] **MAP-01**: Sector name and star difficulty badges visible on map at polyline midpoints using L.divIcon markers
+- [x] **MAP-02**: Sector labels styled with National Park aesthetic — shield motif, difficulty color coding
 - [ ] **MAP-03**: Clicking a sector polyline opens a slide-out detail panel
 - [ ] **MAP-04**: Ghost hit layers (20px) on sector polylines for reliable mobile touch targets
 - [ ] **MAP-05**: Desktop hover state changes sector polyline weight/opacity
@@ -83,8 +83,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DATA-01 | Phase 23 | Complete |
 | DATA-02 | Phase 23 | Complete |
 | DATA-03 | Phase 23 | Complete |
-| MAP-01 | Phase 24 | Pending |
-| MAP-02 | Phase 24 | Pending |
+| MAP-01 | Phase 24 | Complete |
+| MAP-02 | Phase 24 | Complete |
 | MAP-03 | Phase 25 | Pending |
 | MAP-04 | Phase 25 | Pending |
 | MAP-05 | Phase 25 | Pending |

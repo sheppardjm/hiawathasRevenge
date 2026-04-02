@@ -77,10 +77,10 @@ Plans:
 4. Labels appear at zoom ≥ 12 and hide at lower zoom levels to prevent collision with CyclOSM tile text
 5. The `<dialog id="sector-panel">` element exists in the DOM with full CSS for desktop right-panel and mobile bottom-sheet, styled to spec — but no open/close logic yet
 
-**Plans:** 1 plan
+**Plans:** 1 plan (complete)
 
 Plans:
-- [ ] 24-01-PLAN.md — Sector label markers with zoom gating and panel DOM scaffold
+- [x] 24-01-PLAN.md — Sector label markers with zoom gating and panel DOM scaffold
 
 ---
 
@@ -140,6 +140,6 @@ Plans:
 | 12–17. Visual redesign | v1.1 | 8/8 | Complete | 2026-03-31 |
 | 18–22. Cultural maximalism | v1.2 | 17/17 | Complete | 2026-04-02 |
 | 23. Data reconciliation | v1.3 | 2/2 | Complete | 2026-04-02 |
-| 24. Sector labels | v1.3 | 0/TBD | Not started | — |
+| 24. Sector labels | v1.3 | 1/1 | Complete | 2026-04-02 |
 | 25. Click handlers + surface track | v1.3 | 0/TBD | Not started | — |
 | 26. Editorial polish | v1.3 | 0/TBD | Not started | — |
