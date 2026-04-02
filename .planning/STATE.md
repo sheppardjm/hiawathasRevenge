@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-03-31)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive, visually stunning showcase that inspires them to ride it and support MBTN.
-**Current focus:** v1.2 Cultural Maximalism -- Phase 19 Decorative Component Library
+**Current focus:** v1.2 Cultural Maximalism -- Phase 19 complete, ready for Phase 20
 
 ## Current Position
 
-Phase: 19 (2 of 5 in v1.2) -- Decorative Component Library
-Plan: 02 of 3 in phase -- In progress
-Status: Plan 19-02 complete
-Last activity: 2026-04-02 -- Completed 19-02-PLAN.md (ShieldMotif component)
+Phase: 19 (2 of 5 in v1.2) -- Decorative Component Library -- COMPLETE
+Plan: 03 of 3 in phase -- Complete
+Status: Phase 19 complete
+Last activity: 2026-04-02 -- Completed 19-03-PLAN.md (ElevationSparkline component)
 
-Progress: [████░░░░░░] 36% (4/11 v1.2 plans)
+Progress: [█████░░░░░] 45% (5/11 v1.2 plans)
 
 ## Performance Metrics
 
@@ -29,7 +29,7 @@ Progress: [████░░░░░░] 36% (4/11 v1.2 plans)
 - Timeline: 1 day (2026-03-31)
 
 **v1.2 Summary:**
-- Total plans completed: 4 (18-01, 18-02, 19-01, 19-02)
+- Total plans completed: 5 (18-01, 18-02, 19-01, 19-02, 19-03)
 - Total phases: 5 (18-22)
 - Estimated plans: ~11
 
@@ -52,6 +52,9 @@ All v1.0 + v1.1 decisions logged in PROJECT.md Key Decisions table.
 | 19-02 | SVG symbol placed immediately after <body> tag (not in <head>) | SVG symbols must be in document body to be valid <use href> targets |
 | 19-02 | height = size * 2 always (1:2 aspect ratio for 28x56 viewBox) | Callers control width via size prop; component maintains correct proportions automatically |
 | 19-02 | Decorative by default (no label = aria-hidden + role=presentation) | Majority use case is decorative ornamentation; accessible usage is opt-in via label prop |
+| 19-03 | compute-sector-elevations inserted as step 3 of 8 in pipeline | Depends on annotations.json (startIdx/endIdx), runs before generate-thumbnails |
+| 19-03 | ElevationSparkline uses getCollection() not direct JSON import | Respects Astro content layer type safety and caching |
+| 19-03 | viewBox "0 0 100 30" coordinate space for sparklines | W=100 maps to miles range, H=30 inverted for elevation; optimized for inline sparkline aspect ratio |
 
 ### Pending Todos
 
@@ -68,5 +71,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-04-02
-Stopped at: Completed 19-02-PLAN.md -- ShieldMotif component created (BaseLayout symbol + use-wrapper component)
+Stopped at: Completed 19-03-PLAN.md -- ElevationSparkline component + sectorElevations content collection + compute-sector-elevations pipeline script
 Resume file: None
