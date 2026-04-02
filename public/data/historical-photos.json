@@ -1,1 +1,22 @@
-[]
+[
+  {
+    "filename": "remington-hiawatha-departure-1891.jpg",
+    "category": "historical",
+    "thumb": "/thumbs/historical/remington-hiawatha-departure-1891.webp",
+    "title": "Hiawatha's Departure",
+    "artist": "Frederic Remington",
+    "year": "1891",
+    "source": "Metropolitan Museum of Art / Wikimedia Commons / Public Domain (CC0)",
+    "license": "Public Domain"
+  },
+  {
+    "filename": "remington-hiawatha-fasting-1891.jpg",
+    "category": "historical",
+    "thumb": "/thumbs/historical/remington-hiawatha-fasting-1891.webp",
+    "title": "Hiawatha's Fasting",
+    "artist": "Frederic Remington",
+    "year": "1891",
+    "source": "Metropolitan Museum of Art / Wikimedia Commons / Public Domain (CC0)",
+    "license": "Public Domain"
+  }
+]
