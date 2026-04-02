@@ -46,7 +46,7 @@
 
   /* Sector detail panel — desktop right-panel, mobile bottom-sheet */
   .sector-panel {
-    position: absolute;
+    position: fixed;
     margin: 0;
     padding: 0;
     border: none;
@@ -130,9 +130,54 @@
     padding: 16px 20px;
   }
 
-  /* Panel backdrop — native dialog ::backdrop */
+  /* Panel backdrop — native dialog ::backdrop (only renders with showModal(), dead code with show()) */
   .sector-panel::backdrop {
     background: rgba(0, 0, 0, 0.3);
+  }
+
+  /* Panel body content styles — populated by openPanel() */
+  .panel-stars {
+    font-size: 1.1rem;
+    letter-spacing: 2px;
+    color: var(--color-amber-500);
+    margin-bottom: 4px;
+  }
+
+  .panel-meta {
+    font-size: 0.85rem;
+    color: var(--color-cream-200);
+    margin-bottom: 12px;
+  }
+
+  .panel-description {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--color-cream-100);
+    margin-bottom: 16px;
+  }
+
+  .panel-strava-link {
+    display: inline-block;
+    color: #FC5200;
+    font-size: 0.85rem;
+    text-decoration: none;
+    margin-bottom: 8px;
+  }
+
+  .panel-strava-link:hover {
+    text-decoration: underline;
+  }
+
+  .panel-jump-link {
+    display: block;
+    color: var(--color-lake-400);
+    font-size: 0.85rem;
+    text-decoration: none;
+    margin-top: 4px;
+  }
+
+  .panel-jump-link:hover {
+    text-decoration: underline;
   }
 </style>
 
@@ -362,6 +407,75 @@
         openPanel({ sector, details, elevData });
       });
     }
+
+    // ---- Panel open/close logic ----
+    const panel = document.getElementById('sector-panel');
+
+    function openPanel({ sector, details, elevData }) {
+      previousFocus = document.activeElement;
+
+      // Set panel title
+      panel.querySelector('.sector-panel__title').textContent = details?.name || sector.name;
+
+      // Build panel body — minimal content; Plan 25-02 adds full buildPanelBody() with sparkline
+      const stars = '\u2605'.repeat(sector.stars) + '\u2606'.repeat(5 - sector.stars);
+      const milesRange = details ? `${details.startMile}\u2013${details.endMile} mi` : '';
+      const surface = details?.surface || '';
+      const description = details?.description || '';
+      const stravaHtml = details?.stravaLink
+        ? `<a href="${details.stravaLink}" target="_blank" rel="noopener noreferrer" class="panel-strava-link">View on Strava \u2197</a>`
+        : '';
+      const jumpHtml = details?.id
+        ? `<a href="#${details.id}" class="panel-jump-link">View in route guide \u2193</a>`
+        : '';
+
+      panel.querySelector('.sector-panel__body').innerHTML = `
+        <div class="panel-stars" aria-label="Difficulty: ${sector.stars} of 5 stars">${stars}</div>
+        <div class="panel-meta">${milesRange} \u00b7 ${surface}</div>
+        <p class="panel-description">${description}</p>
+        ${stravaHtml}
+        ${jumpHtml}
+      `;
+
+      // Wire jump link to close panel on click (user scrolls to section)
+      const jumpLink = panel.querySelector('.panel-jump-link');
+      if (jumpLink) jumpLink.addEventListener('click', () => closePanel(), { once: true });
+
+      // Open dialog (non-modal — map stays interactive while panel is open)
+      if (!panel.open) panel.show();
+
+      // Focus close button for keyboard accessibility
+      panel.querySelector('.sector-panel__close').focus();
+    }
+
+    function closePanel() {
+      panel.close();
+    }
+
+    // Wire panel 'close' event — handles state reset for all close mechanisms
+    panel.addEventListener('close', () => {
+      if (activeSector) {
+        activeSector.visiblePoly.setStyle(activeSector.defaultStyle);
+        activeSector = null;
+      }
+      previousFocus?.focus();
+    });
+
+    // X button close affordance
+    panel.querySelector('.sector-panel__close').addEventListener('click', closePanel);
+
+    // Escape key close affordance — manual because dialog.show() (non-modal) doesn't auto-handle Escape
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && panel.open) {
+        e.preventDefault();
+        closePanel();
+      }
+    });
+
+    // Click outside panel content — e.target === panel means click landed on dialog background
+    panel.addEventListener('click', (e) => {
+      if (e.target === panel) closePanel();
+    });
 
     // Sector label markers — pill-shaped divIcon labels at each sector's geographic midpoint
     const sectorLabels = [];
