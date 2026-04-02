@@ -9,6 +9,9 @@ import DonateCallout from '../components/DonateCallout.astro';
 import FloralDivider from '../components/FloralDivider.astro';
 import AnimatedDivider from '../components/AnimatedDivider.astro';
 import ShieldMotif from '../components/ShieldMotif.astro';
+import OjibweBorderPattern from '../components/OjibweBorderPattern.astro';
+import WaterWavePattern from '../components/WaterWavePattern.astro';
+import TurtleMotif from '../components/TurtleMotif.astro';
 import HiawathaExplainer from '../components/HiawathaExplainer.astro';
 import RouteExplainer from '../components/RouteExplainer.astro';
 import ScrollReveal from '../components/ScrollReveal.astro';
@@ -54,6 +57,8 @@ import ScrollReveal from '../components/ScrollReveal.astro';
 
   <AnimatedDivider variant="berry" />
 
+  <OjibweBorderPattern class="px-4 py-3" />
+
   <section data-reveal id="route" class="w-full py-[--spacing-block]">
     <div class="max-w-4xl mx-auto px-4">
       <h2 class="text-3xl mb-[--spacing-element]">Explore the Route</h2>
@@ -67,6 +72,8 @@ import ScrollReveal from '../components/ScrollReveal.astro';
       <ElevationProfile />
     </div>
   </section>
+
+  <WaterWavePattern class="my-4 opacity-60" />
 
   <section data-reveal class="w-full py-[--spacing-block]">
     <div class="max-w-4xl mx-auto px-4">
@@ -86,7 +93,8 @@ import ScrollReveal from '../components/ScrollReveal.astro';
 
   <section data-reveal class="bg-forest-950 w-full py-[--spacing-block] pb-8 border-t border-forest-700 mt-[--spacing-section]">
     <div class="max-w-4xl mx-auto px-4">
-      <ShieldMotif size={16} class="text-amber-500 mb-3 opacity-60" />
+      <ShieldMotif size={16} class="text-amber-500 mb-3 opacity-60 inline-block" />
+      <TurtleMotif size={16} class="text-turquoise-400 mb-3 opacity-50 inline-block ml-3" />
       <p class="text-sm text-cream-200">
         A project supporting <a href="https://mbtn.org" class="underline hover:text-amber-300">MBTN</a>.
       </p>

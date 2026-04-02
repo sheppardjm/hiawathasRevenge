@@ -1,0 +1,32 @@
+---
+// OjibweBorderPattern.astro
+// Horizontal decorative border inspired by woodland Ojibwe beadwork sash patterns.
+// Repeating diamond/dot geometric motif using --color-* palette tokens.
+// Decorative only — hidden from screen readers.
+interface Props {
+  class?: string;
+}
+const { class: className = '' } = Astro.props;
+---
+
+<div class:list={["ojibwe-border max-w-4xl mx-auto", className]} aria-hidden="true" role="presentation">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 40" width="100%" height="40" aria-hidden="true" role="presentation" focusable="false">
+    <!-- Top/bottom rail lines -->
+    <line x1="0" y1="4" x2="800" y2="4" stroke="var(--color-forest-700)" stroke-width="1.5" />
+    <line x1="0" y1="36" x2="800" y2="36" stroke="var(--color-forest-700)" stroke-width="1.5" />
+
+    <!-- Repeating diamond pattern — 16 diamonds across 800px (50px each) -->
+    {Array.from({ length: 16 }).map((_, i) => {
+      const cx = 25 + i * 50;
+      const colors = ['var(--color-turquoise-500)', 'var(--color-scarlet-400)', 'var(--color-sun-400)', 'var(--color-berry-500)'];
+      const color = colors[i % 4];
+      return (
+        <g>
+          <polygon points={`${cx},8 ${cx+12},20 ${cx},32 ${cx-12},20`} fill={color} opacity="0.7" />
+          <polygon points={`${cx},12 ${cx+6},20 ${cx},28 ${cx-6},20`} fill="var(--color-forest-950)" />
+          <circle cx={cx} cy="20" r="2" fill={color} />
+        </g>
+      );
+    })}
+  </svg>
+</div>

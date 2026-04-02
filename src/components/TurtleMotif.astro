@@ -1,0 +1,43 @@
+---
+// TurtleMotif.astro
+// Geometric turtle motif — Turtle Island is a foundational creation narrative
+// shared by Anishinaabe and many Great Lakes Indigenous peoples.
+// Stylized geometric form (not realistic rendering) — safe cultural territory.
+// Color inherits from parent via currentColor. Size via props.
+interface Props {
+  size?: number;
+  class?: string;
+}
+const { size = 48, class: className = '' } = Astro.props;
+---
+
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 48 48"
+  width={size}
+  height={size}
+  class={className}
+  aria-hidden="true"
+  role="presentation"
+  focusable="false"
+>
+  <!-- Shell (hexagonal/rounded) -->
+  <ellipse cx="24" cy="24" rx="14" ry="12" fill="currentColor" opacity="0.15" />
+  <ellipse cx="24" cy="24" rx="14" ry="12" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.6" />
+
+  <!-- Shell pattern — concentric lines suggesting growth rings -->
+  <ellipse cx="24" cy="24" rx="10" ry="8" fill="none" stroke="currentColor" stroke-width="0.8" opacity="0.3" />
+  <ellipse cx="24" cy="24" rx="6" ry="4.5" fill="none" stroke="currentColor" stroke-width="0.8" opacity="0.3" />
+
+  <!-- Head -->
+  <circle cx="24" cy="10" r="3" fill="currentColor" opacity="0.5" />
+
+  <!-- Tail -->
+  <line x1="24" y1="36" x2="24" y2="40" stroke="currentColor" stroke-width="1.5" opacity="0.4" stroke-linecap="round" />
+
+  <!-- Four legs -->
+  <line x1="12" y1="18" x2="7" y2="14" stroke="currentColor" stroke-width="1.5" opacity="0.4" stroke-linecap="round" />
+  <line x1="36" y1="18" x2="41" y2="14" stroke="currentColor" stroke-width="1.5" opacity="0.4" stroke-linecap="round" />
+  <line x1="12" y1="30" x2="7" y2="34" stroke="currentColor" stroke-width="1.5" opacity="0.4" stroke-linecap="round" />
+  <line x1="36" y1="30" x2="41" y2="34" stroke="currentColor" stroke-width="1.5" opacity="0.4" stroke-linecap="round" />
+</svg>
