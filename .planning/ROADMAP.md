@@ -124,11 +124,11 @@ Plans:
 5. Photo grid images show a skeleton loader (shimmer or fade-in placeholder) while loading — no layout shift visible during page load
 6. At least three additional Native American design elements (patterns, symbols, or cultural motifs) appear in section backgrounds, dividers, or decorative roles throughout the page
 
-**Plans:** TBD
+**Plans:** 2 plans
 
 Plans:
-- [ ] 26-01: Section spacing, stats legibility, and photo loading skeletons
-- [ ] 26-02: Pull quote redesign, parallax backgrounds, and additional cultural motifs
+- [ ] 26-01-PLAN.md — Section spacing, route stats legibility fix, and photo gallery skeleton loaders
+- [ ] 26-02-PLAN.md — EB Garamond drop-cap typography, parallax background fades, and three cultural motif components
 
 ---
 
@@ -142,4 +142,4 @@ Plans:
 | 23. Data reconciliation | v1.3 | 2/2 | Complete | 2026-04-02 |
 | 24. Sector labels | v1.3 | 1/1 | Complete | 2026-04-02 |
 | 25. Click handlers + surface track | v1.3 | 2/2 | Complete | 2026-04-02 |
-| 26. Editorial polish | v1.3 | 0/TBD | Not started | — |
+| 26. Editorial polish | v1.3 | 0/2 | Not started | — |
