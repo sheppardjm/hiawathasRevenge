@@ -118,8 +118,8 @@ Plans:
 **Plans**: ~2 plans
 
 Plans:
-- [ ] 22-01: Scroll-driven section reveals and staggered card animations
-- [ ] 22-02: Accessibility audit and performance validation
+- [ ] 22-01: ScrollReveal component, data-reveal wiring, and segment card stagger CSS
+- [ ] 22-02: Reduced-motion audit, above-fold guard verification, and human visual approval
 
 ## Progress
 
