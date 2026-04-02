@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-04-02)
 ## Current Position
 
 Phase: 26 of 26 (Editorial Polish / iOS Safari Testing)
-Plan: 1 of 2 in current phase
-Status: In progress
-Last activity: 2026-04-02 — Completed 26-01-PLAN.md (section spacing, stats legibility, photo skeleton loaders)
+Plan: 2 of 2 in current phase
+Status: Phase complete
+Last activity: 2026-04-02 — Completed 26-02-PLAN.md (EB Garamond typography, cultural motifs, background fade)
 
-Progress: [█████████████████░░░] v1.0 ✅ | v1.1 ✅ | v1.2 ✅ | v1.3 Phase 23 ✅ | Phase 24 ✅ | Phase 25 ✅ | Phase 26 Plan 1 ✅
+Progress: [████████████████████] v1.0 ✅ | v1.1 ✅ | v1.2 ✅ | v1.3 Phase 23 ✅ | Phase 24 ✅ | Phase 25 ✅ | Phase 26 ✅ | v1.3 COMPLETE
 
 ## Performance Metrics
 
@@ -52,6 +52,10 @@ Recent decisions relevant to v1.3:
 - Phase 26-01: Cascade fix (not component relocation) for stat legibility — specific :global() overrides after broad span rule; no !important
 - Phase 26-01: Skeleton on `<a>` wrapper (not `<img>`) — wrapper fills column space; .loaded removes shimmer cleanly
 - Phase 26-01: parseDims() width/height attrs on `<img>` — zero-cost CLS prevention using data already extracted for PhotoSwipe
+- Phase 26-02: Background image uses full JPG (no thumbnails directory) at 6% opacity — plan anticipated this substitution
+- Phase 26-02: Bidirectional IntersectionObserver (classList.toggle) not one-shot for background fade in/out on scroll
+- Phase 26-02: prefers-reduced-motion: static 4% opacity (not zero) — subtle atmospheric quality preserved for all users
+- Phase 26-02: TurtleMotif uses currentColor for Tailwind text-* theming (same as ShieldMotif pattern)
 
 ### Pending Todos
 
@@ -73,6 +77,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-02T21:26:34Z
-Stopped at: Completed 26-01-PLAN.md (section spacing, stats legibility, photo skeleton loaders)
+Last session: 2026-04-02T21:34:23Z
+Stopped at: Completed 26-02-PLAN.md (EB Garamond typography, cultural motifs, background fade) — v1.3 COMPLETE
 Resume file: None
