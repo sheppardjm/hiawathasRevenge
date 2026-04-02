@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-03-31)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive, visually stunning showcase that inspires them to ride it and support MBTN.
-**Current focus:** v1.2-gaps UAT Gap Closure -- photo-hero segment cards and sparkline enhancement complete (v1.2-gaps-03 done)
+**Current focus:** v1.2 complete -- all UAT gaps closed (v1.2-gaps-04 done, all 4/4 gap closure plans complete)
 
 ## Current Position
 
-Phase: v1.2-gaps (3 of 4 gap closure plans complete)
-Plan: 03 of 4 in phase -- Complete
-Status: v1.2-gaps-03 complete (photo-hero segment cards, enhanced sparklines with background/grid/area-fill)
-Last activity: 2026-04-02 -- Completed v1.2-gaps-03-PLAN.md
+Phase: v1.2-gaps (4 of 4 gap closure plans complete -- PHASE COMPLETE)
+Plan: 04 of 4 in phase -- Complete
+Status: v1.2-gaps-04 complete (bold section colors: sun-500 gold, amber-500 orange, turquoise-700 teal)
+Last activity: 2026-04-02 -- Completed v1.2-gaps-04-PLAN.md
 
-Progress: [██████████] v1.2 base: 100% (13/13) | gap closure: 3/4 complete
+Progress: [██████████] v1.2 base: 100% (13/13) | gap closure: 4/4 complete -- ALL v1.2 UAT GAPS CLOSED
 
 ## Performance Metrics
 
@@ -81,6 +81,8 @@ All v1.0 + v1.1 decisions logged in PROJECT.md Key Decisions table.
 | v1.2-gaps-02 | max-w-4xl upgraded to max-w-5xl for HiawathaExplainer | Gives breakout tracks visible room at desktop widths; prose column still constrained to 65ch |
 | v1.2-gaps-03 | linearGradient IDs scoped by sectorId (elev-fill-{sectorId}) | Prevents duplicate-ID collisions when all 7 sparklines render on same page |
 | v1.2-gaps-03 | H=50, padding=4 for ElevationSparkline (drawH=42) | 4px margin top/bottom keeps extreme elevation peaks from clipping at viewBox edges |
+| v1.2-gaps-04 | sun-500 gold, amber-500 orange, turquoise-700 teal for 3 section backgrounds | Delivers user's "yellow and orange and teal" request; all pass WCAG AA contrast |
+| v1.2-gaps-04 | :global() required for Astro scoped child component style overrides | DonateCallout uses Astro hash-scoped styles; parent page must use .section :global(.child-class) pattern |
 
 ### Pending Todos
 
@@ -96,6 +98,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-02T15:23:45Z
-Stopped at: Completed v1.2-gaps-03-PLAN.md -- photo-hero segment cards, enhanced sparklines with background/grid/area-fill/endpoint markers
+Last session: 2026-04-02T16:00:00Z
+Stopped at: Completed v1.2-gaps-04-PLAN.md -- bold section colors (gold/amber/teal), all v1.2 UAT gaps closed, user-approved
 Resume file: None
