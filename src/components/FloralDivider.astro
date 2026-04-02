@@ -1,105 +1,169 @@
 ---
 // FloralDivider.astro
-// Section divider inspired by Ojibwe woodland floral beadwork — curvilinear vine of life
-// with opposing leaf pairs, five-petal blossoms, and double-curve accents.
-// All fills reference Phase 12 color tokens via CSS custom properties.
+// Section divider inspired by Great Lakes Indigenous textile and beadwork traditions.
+// Bold geometric pattern band with bilateral symmetry: diamond center, flanking chevrons,
+// arrowhead accents, and rhythm-marker dots. All fills at full opacity.
 // Decorative only — hidden from screen readers via aria-hidden.
 ---
 
 <div class="floral-divider max-w-4xl mx-auto" aria-hidden="true" role="presentation">
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 800 60"
+    viewBox="0 0 800 80"
     width="100%"
-    height="60"
+    height="80"
     aria-hidden="true"
     role="presentation"
     focusable="false"
   >
 
-    <!--
-      Central vine ("vine of life") — continuous curvilinear S-curve running the full width.
-      Visual reference: the vine-of-life compositional anchor in Anishinaabe floral art,
-      which provides the organic spine from which all other motifs grow.
-    -->
-    <path
-      d="M0 30 Q100 10 200 30 Q300 50 400 30 Q500 10 600 30 Q700 50 800 30"
+    <!-- ============================================================
+         RAIL LINES — Three horizontal parallel lines top and bottom
+         acting as structural "rails" that ground the pattern.
+         forest-700, full width, static.
+         ============================================================ -->
+    <!-- Top rail band (y=8, 11, 14) -->
+    <line x1="0" y1="8"  x2="800" y2="8"  stroke="var(--color-forest-700)" stroke-width="2" />
+    <line x1="0" y1="12" x2="800" y2="12" stroke="var(--color-forest-700)" stroke-width="1.5" />
+    <line x1="0" y1="16" x2="800" y2="16" stroke="var(--color-forest-700)" stroke-width="2" />
+
+    <!-- Bottom rail band (y=64, 68, 72) -->
+    <line x1="0" y1="64" x2="800" y2="64" stroke="var(--color-forest-700)" stroke-width="2" />
+    <line x1="0" y1="68" x2="800" y2="68" stroke="var(--color-forest-700)" stroke-width="1.5" />
+    <line x1="0" y1="72" x2="800" y2="72" stroke="var(--color-forest-700)" stroke-width="2" />
+
+    <!-- ============================================================
+         CENTER DIAMOND — Large filled diamond in gold-500.
+         Bilateral axis: x=400, vertically centered y=40.
+         Points: top(400,24), right(420,40), bottom(400,56), left(380,40)
+         ============================================================ -->
+    <polygon
+      points="400,24 420,40 400,56 380,40"
+      fill="var(--color-gold-500)"
+    />
+    <!-- Center diamond inner accent — smaller nested diamond in gold-400 -->
+    <polygon
+      points="400,30 410,40 400,50 390,40"
+      fill="var(--color-gold-400)"
+    />
+
+    <!-- ============================================================
+         ARROWHEAD ACCENTS — Filled arrowheads at x=200 and x=600
+         (bilateral mirrors). Pointing outward from center.
+         Left arrowhead (x=200) points LEFT. Right (x=600) points RIGHT.
+         ============================================================ -->
+    <!-- Left arrowhead at x=200, pointing left -->
+    <polygon
+      points="182,40 202,28 202,52"
+      fill="var(--color-amber-500)"
+    />
+    <!-- Left arrowhead inner lighter fill -->
+    <polygon
+      points="186,40 200,31 200,49"
+      fill="var(--color-amber-400)"
+    />
+
+    <!-- Right arrowhead at x=600, pointing right (mirror of left) -->
+    <polygon
+      points="618,40 598,28 598,52"
+      fill="var(--color-amber-500)"
+    />
+    <!-- Right arrowhead inner lighter fill -->
+    <polygon
+      points="614,40 600,31 600,49"
+      fill="var(--color-amber-400)"
+    />
+
+    <!-- ============================================================
+         CHEVRON LINES — Nested V-shapes flanking center diamond,
+         pointing outward (opening toward edges).
+         Four chevron pairs total: at x≈280/520, x≈320/480, x≈340/460, x≈360/440.
+         stroke in amber-500, stroke-width 3px.
+         ============================================================ -->
+
+    <!-- Chevron pair A: x=280 / x=520 (outermost flanking chevrons) -->
+    <!-- Left chevron (opens left) -->
+    <polyline
+      points="295,28 278,40 295,52"
+      fill="none"
+      stroke="var(--color-amber-500)"
+      stroke-width="3"
+      stroke-linejoin="miter"
+    />
+    <!-- Right chevron (opens right) -->
+    <polyline
+      points="505,28 522,40 505,52"
+      fill="none"
+      stroke="var(--color-amber-500)"
+      stroke-width="3"
+      stroke-linejoin="miter"
+    />
+
+    <!-- Chevron pair B: x=315 / x=485 -->
+    <!-- Left chevron -->
+    <polyline
+      points="328,31 315,40 328,49"
+      fill="none"
+      stroke="var(--color-amber-500)"
+      stroke-width="2.5"
+      stroke-linejoin="miter"
+    />
+    <!-- Right chevron -->
+    <polyline
+      points="472,31 485,40 472,49"
+      fill="none"
+      stroke="var(--color-amber-500)"
+      stroke-width="2.5"
+      stroke-linejoin="miter"
+    />
+
+    <!-- Chevron pair C: x=340 / x=460 (innermost chevrons, tightest) -->
+    <polyline
+      points="350,33 340,40 350,47"
+      fill="none"
       stroke="var(--color-gold-500)"
-      stroke-width="1.5"
-      fill="none"
-      opacity="0.7"
+      stroke-width="2.5"
+      stroke-linejoin="miter"
     />
-    <!-- Vine shadow — berry-700 (orphan activation) -->
-    <path
-      d="M0 32 Q100 12 200 32 Q300 52 400 32 Q500 12 600 32 Q700 52 800 32"
-      stroke="var(--color-berry-700)"
-      stroke-width="1"
+    <polyline
+      points="450,33 460,40 450,47"
       fill="none"
-      opacity="0.3"
-    />
-    <!-- New palette accent dots -->
-    <circle cx="400" cy="30" r="1.5" fill="var(--color-scarlet-400)" opacity="0.5" />
-
-    <!--
-      Opposing leaf pairs — teardrop ellipses at inflection points x=150, x=400, x=650.
-      Each pair uses one leaf rotated -25° and one +25° to oppose each other,
-      echoing the bilaterally symmetric botanical forms of Ojibwe beadwork.
-    -->
-
-    <!-- Leaf pair at x=150 (first vine peak, y≈18) -->
-    <ellipse cx="150" cy="18" rx="10" ry="4" fill="var(--color-moss-500)" stroke="var(--color-lake-500)" stroke-width="0.5" transform="rotate(-25, 150, 18)" opacity="0.55" />
-    <ellipse cx="150" cy="18" rx="10" ry="4" fill="var(--color-moss-500)" stroke="var(--color-lake-600)" stroke-width="0.5" transform="rotate(25, 150, 18)" opacity="0.55" />
-
-    <!-- Leaf pair at x=400 (vine midpoint, y=30) -->
-    <ellipse cx="400" cy="30" rx="10" ry="4" fill="var(--color-moss-600)" transform="rotate(-25, 400, 30)" opacity="0.55" />
-    <ellipse cx="400" cy="30" rx="10" ry="4" fill="var(--color-moss-600)" transform="rotate(25, 400, 30)" opacity="0.55" />
-
-    <!-- Leaf pair at x=650 (second vine peak, y≈18) -->
-    <ellipse cx="650" cy="18" rx="10" ry="4" fill="var(--color-moss-500)" stroke="var(--color-turquoise-500)" stroke-width="0.5" transform="rotate(-25, 650, 18)" opacity="0.55" />
-    <ellipse cx="650" cy="18" rx="10" ry="4" fill="var(--color-moss-500)" stroke="var(--color-sun-500)" stroke-width="0.5" transform="rotate(25, 650, 18)" opacity="0.55" />
-
-    <!--
-      Five-petal blossoms — 5 small ellipses arranged radially at 72° intervals
-      around a center point, with a berry-colored center dot.
-      Visual reference: the five-petal flower form ubiquitous in Ojibwe beadwork panels.
-    -->
-
-    <!-- Blossom at x=270, y=44 (first vine trough) -->
-    <ellipse cx="270" cy="40" rx="4" ry="2" fill="var(--color-gold-400)" transform="rotate(0, 270, 44)" opacity="0.6" />
-    <ellipse cx="274" cy="46" rx="4" ry="2" fill="var(--color-gold-400)" transform="rotate(72, 270, 44)" opacity="0.6" />
-    <ellipse cx="265" cy="49" rx="4" ry="2" fill="var(--color-gold-400)" transform="rotate(144, 270, 44)" opacity="0.6" />
-    <ellipse cx="260" cy="43" rx="4" ry="2" fill="var(--color-gold-400)" transform="rotate(216, 270, 44)" opacity="0.6" />
-    <ellipse cx="265" cy="38" rx="4" ry="2" fill="var(--color-gold-400)" transform="rotate(288, 270, 44)" opacity="0.6" />
-    <circle cx="270" cy="44" r="3.5" fill="var(--color-lake-700)" opacity="0.4" />
-    <circle cx="270" cy="44" r="2" fill="var(--color-berry-500)" opacity="0.75" />
-
-    <!-- Blossom at x=530, y=44 (second vine trough) -->
-    <ellipse cx="530" cy="40" rx="4" ry="2" fill="var(--color-gold-400)" transform="rotate(0, 530, 44)" opacity="0.6" />
-    <ellipse cx="534" cy="46" rx="4" ry="2" fill="var(--color-gold-400)" transform="rotate(72, 530, 44)" opacity="0.6" />
-    <ellipse cx="525" cy="49" rx="4" ry="2" fill="var(--color-gold-400)" transform="rotate(144, 530, 44)" opacity="0.6" />
-    <ellipse cx="520" cy="43" rx="4" ry="2" fill="var(--color-gold-400)" transform="rotate(216, 530, 44)" opacity="0.6" />
-    <ellipse cx="525" cy="38" rx="4" ry="2" fill="var(--color-gold-400)" transform="rotate(288, 530, 44)" opacity="0.6" />
-    <circle cx="530" cy="44" r="3.5" fill="var(--color-lake-700)" opacity="0.4" />
-    <circle cx="530" cy="44" r="2" fill="var(--color-berry-600)" opacity="0.75" />
-
-    <!--
-      Double-curve accents at x≈400 center — two opposing arcs meeting at a point,
-      characteristic of the Ojibwe double-curve motif found in beadwork and birchbark biting art.
-    -->
-    <path
-      d="M385 22 Q400 16 415 22"
-      stroke="var(--color-gold-600)"
-      stroke-width="1"
-      fill="none"
-      opacity="0.5"
-    />
-    <path
-      d="M385 38 Q400 44 415 38"
       stroke="var(--color-gold-500)"
-      stroke-width="1"
-      fill="none"
-      opacity="0.5"
+      stroke-width="2.5"
+      stroke-linejoin="miter"
     />
+
+    <!-- ============================================================
+         SMALL FILLED DIAMONDS — Bilateral rhythm markers between
+         the chevrons and the arrowheads.
+         Positions: x=240/560, x=160/640 (pairs mirrored at x=400)
+         Fill: gold-400 at x=240/560, turquoise-500 at x=160/640
+         ============================================================ -->
+    <!-- Diamond pair at x=240 / x=560 -->
+    <polygon points="240,35 248,40 240,45 232,40" fill="var(--color-gold-400)" />
+    <polygon points="560,35 568,40 560,45 552,40" fill="var(--color-gold-400)" />
+
+    <!-- Diamond pair at x=160 / x=640 -->
+    <polygon points="160,35 168,40 160,45 152,40" fill="var(--color-turquoise-500)" />
+    <polygon points="640,35 648,40 640,45 632,40" fill="var(--color-turquoise-500)" />
+
+    <!-- ============================================================
+         RHYTHM DOTS — Small filled circles (r=4) in gold-400
+         as punctuation between major motifs.
+         Bilateral pairs at x=100/700, x=60/740, x=30/770.
+         ============================================================ -->
+    <circle cx="100" cy="40" r="4" fill="var(--color-gold-400)" />
+    <circle cx="700" cy="40" r="4" fill="var(--color-gold-400)" />
+
+    <circle cx="60"  cy="40" r="3" fill="var(--color-amber-500)" />
+    <circle cx="740" cy="40" r="3" fill="var(--color-amber-500)" />
+
+    <circle cx="28"  cy="40" r="2.5" fill="var(--color-gold-500)" />
+    <circle cx="772" cy="40" r="2.5" fill="var(--color-gold-500)" />
+
+    <!-- Secondary rhythm dots above and below center diamond -->
+    <circle cx="400" cy="20" r="3" fill="var(--color-gold-400)" />
+    <circle cx="400" cy="60" r="3" fill="var(--color-gold-400)" />
 
   </svg>
 </div>
