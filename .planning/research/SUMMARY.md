@@ -1,193 +1,213 @@
 # Project Research Summary
 
-**Project:** Hiawatha's Revenge v1.2 Cultural Maximalism
-**Domain:** Maximalist cultural design layer for a static cycling showcase site (Astro 6 / Tailwind 4)
-**Researched:** 2026-03-31
+**Project:** Hiawatha's Revenge — v1.3 Map Interactivity
+**Domain:** Interactive cycling route map — sector labels, clickable polylines, responsive detail panels
+**Researched:** 2026-04-02
 **Confidence:** HIGH
+
+---
 
 ## Executive Summary
 
-Hiawatha's Revenge v1.2 transforms a well-designed cycling showcase into something that feels like an award-winning cultural heritage site. The research converges on a key structural insight: **v1.2 is almost entirely additive**. The v1.1 architecture -- Astro 6 components, Tailwind 4 `@theme static` tokens, inline SVG dividers, IntersectionObserver patterns, CustomEvent bus for map/chart sync -- remains untouched. None of the seven feature areas (animated SVG dividers, bold palette expansion, historical imagery, shield motifs, content layout enrichment, per-sector sparklines, Strava links) touch the existing client-side interactive components (RouteMap, ElevationProfile, PhotoGallery) or their data flow. This is a design and content milestone, not an interactivity milestone, which dramatically reduces technical risk.
+v1.3 adds three tightly coupled capabilities to the existing Leaflet map: permanent sector name + difficulty labels at each sector's geographic midpoint, click handlers on the 7 sector polylines that open a detail panel, and a responsive panel that slides in from the right on desktop and slides up as a bottom sheet on mobile. All three features can be delivered with zero new npm dependencies using Leaflet 1.9.4 (already installed), the native HTML `<dialog>` element, and CSS `translate` transitions. The implementation is additive — no existing components change behavior, no new Astro components are needed, and the existing event bus is extended only with a new `map:sectorClick` dispatch for future use.
 
-The recommended approach is CSS/SVG-first with zero new npm dependencies. Animated section dividers use `stroke-dashoffset` line drawing and CSS `@property` gradient cycling (96%+ browser support with graceful fallbacks). Per-sector elevation sparklines are build-time SVG polylines generated in Astro frontmatter -- zero JavaScript, zero runtime cost, 1.4KB total for all seven segments versus 30KB+ per Chart.js instance. The bold palette adds three new color families (turquoise, scarlet, sun) to `@theme static`, all WCAG AA-verified against the dark forest backgrounds. Historical imagery comes from verified public domain sources (Harrison Fisher 1906 illustrations, Frederic Remington 1891 paintings via Met Open Access and Internet Archive). The one external dependency is Strava's embed script for a single route embed, with per-segment Strava links as simple anchor tags.
+The central architectural challenge is getting build-time editorial content (sector descriptions, star ratings, surface types, Strava IDs) into a client-side panel assembled at runtime inside `initMap()`. The correct solution is a new build-time script (`generate-sector-details.js`) that outputs `public/data/sector-details.json`, fetched at runtime alongside the existing `annotations.json`. This follows the established pipeline pattern and eliminates duplicate sources of truth. The elevation sparkline for each sector panel is replicated as a ~20-line `buildSparklineSVG()` JS helper ported directly from `ElevationSparkline.astro` math — no additional fetch or Astro component involvement needed.
 
-The primary risks are not technical but compositional: maintaining WCAG AA contrast compliance with an expanded palette (Pitfall 2), respecting `prefers-reduced-motion` across all new animations (Pitfall 1), and preserving the site's cultural critique framing as maximalist visuals are layered on (Pitfall 3). The palette expansion phase must land first with documented contrast ratios, the first animated component must establish the `prefers-reduced-motion` pattern, and historical imagery must be framed as "Longfellow's fiction" not celebration. All four researchers independently converged on these three constraints.
+The highest-risk issues are not architectural: they are data inconsistency and mobile touch targets. The `annotations.json` difficulty tiers (`easy/moderate/hard`) and `data.md` star ratings (2–5 stars) use incompatible classification systems and disagree on multiple specific sectors — this contradiction has been invisible until now but becomes directly user-visible the moment a panel shows both a colored polyline and a star rating. This must be reconciled before panel UI is built. Additionally, 5px polyline stroke widths are below reliable touch target size on mobile — a transparent ghost polyline at 20–30px weight carrying all click events is required from the start, not as a retrofit. Both issues are well-understood and fully preventable with the correct build order.
+
+---
 
 ## Key Findings
 
 ### Recommended Stack
 
-The v1.2 stack requires zero new npm packages. The existing Astro 6 / Tailwind 4 / Vite 7 / Chart.js / Leaflet / PhotoSwipe / sharp stack handles everything. New capabilities come from native CSS and SVG features, not libraries.
+All v1.3 features are implementable with the existing stack at Leaflet 1.9.4 + Astro 6 + Vite 7. The HTML `<dialog>` element (Baseline Widely Available since March 2022) replaces any need for a custom modal library — `showModal()` provides focus trapping, Escape-key close, and `::backdrop` for free. CSS `translate` transitions (hardware-accelerated, compositor-thread) replace any JS animation library. Do not upgrade to Leaflet 2.0-alpha: it is pre-release, has breaking ESM API changes, and `leaflet.markercluster` and `leaflet-gesture-handling` have not published compatible versions.
 
-**New stack elements (all zero-dependency):**
-- **CSS `@property`**: Enables smooth gradient color animation by registering custom properties as `<color>` type -- 96% browser support, static gradient fallback
-- **CSS `stroke-dashoffset`**: SVG path "draw-on-scroll" animation -- 99%+ support, the standard technique for vine/floral line drawing
-- **SVG `<symbol>` + `<use>`**: Reusable shield/arrowhead motif system with zero HTTP requests and `currentColor` inheritance from Tailwind classes
-- **Build-time SVG sparklines**: Astro frontmatter generates `<polyline>` elements from route-data.json at build time -- zero JavaScript shipped to client
-- **Strava embed script**: Single external `<script>` for one route embed; per-segment links are plain `<a>` tags
+**Core technologies:**
+- **Leaflet 1.9.4:** Sector labels via `L.marker` + `L.divIcon` at computed midpoint; polyline click/hover via `.on('click'|'mouseover'|'mouseout')`; event propagation controlled with `bubblingMouseEvents: false` — already installed, all APIs confirmed in official docs
+- **HTML `<dialog>` (native):** Slide-out panel container with `showModal()` for modal semantics, focus trapping, Escape-key dismiss, and `::backdrop` — no library needed, zero JS overhead beyond open/close calls
+- **CSS `translate` + `@media`:** Hardware-accelerated slide-in from right (desktop) and slide-up from bottom (mobile) via a single `<dialog>` element with media-query layout switching — no viewport-detection JS needed
+- **CSS `@starting-style` (progressive enhancement):** Entry animation on panel open; ~86% browser support (Chrome 117+, Firefox 129+, Safari 17.5+); non-supporting browsers get instant panel appearance with no functional loss
 
-**Explicitly rejected:**
-- GSAP/GreenSock (23KB+ for what CSS handles), Lottie (50KB+ player), Chart.js for sparklines (7 instances = memory bloat), Strava API (requires OAuth/server), Strava iframe embeds (7 external requests), any icon library (3-5 custom motifs do not justify a dependency)
+**Optional dependency — add only if touch testing shows need:**
+- `leaflet-highlightable-layers` — transparent 20px hit-area overlay on sector polylines; the ghost-polyline pattern achieves the same outcome without a new package and is preferred
 
 ### Expected Features
 
-**Must have (table stakes):**
-- Section color differentiation -- alternating backgrounds using expanded palette; the most visible change for least effort
-- Content layout enrichment -- inline historical photos, pull quotes, generous whitespace, subheadings in HiawathaExplainer
-- Segment/route enrichment -- Strava links, elevation sparklines, terrain detail expansion in RouteExplainer
-- Bold palette expansion -- turquoise, scarlet, sun families added to `@theme static` with WCAG AA documentation
-- Historical Hiawatha imagery -- 2-4 Harrison Fisher color illustrations from 1906 public domain edition
+**Must have (table stakes) — all 5 required for the feature to feel complete:**
+- Sector name labels on map at geographic midpoints — users expect named overlays; anonymous color-coded lines without labels feel incomplete (confirmed across AllTrails, Komoot, Ride with GPS, Trailforks)
+- Difficulty star ratings on labels — color alone is insufficient for accessibility and scanning; every major cycling app surfaces difficulty alongside segment names
+- Click sector polyline → open detail panel — the fundamental "clickable map" contract; overlays that do nothing on click feel broken
+- Responsive panel: right slide-out on desktop (width ~400px), bottom sheet at `max-width: 768px` (height ~60dvh) — industry-standard pattern (Google Maps, AllTrails, Komoot); mobile needs vertical space use, not horizontal
+- Panel close: X button, Escape key, backdrop click — non-negotiable for accessibility; NN/g identifies missing close affordances as a top failure mode for bottom sheets
 
-**Should have (differentiators):**
-- Animated multicolored section dividers -- vine drawing on scroll, blossom color cycling, section-specific color theming
-- Shield/arrowhead motif system -- extracted from hero badge, repeated as heading icons, background watermarks, blockquote ornaments
-- Dramatic pull quote treatment -- oversized quotation marks, background shift, National Park typeface, arrowhead ornament
-- CSS scroll-driven section reveals -- fade/slide-in on scroll using IntersectionObserver (CSS `animation-timeline: view()` has only 83% support; use IO as primary)
+**Should have (low-complexity differentiators — include in v1.3 MVP):**
+- Hover state on polylines: `mouseover` → `setStyle({weight: 7, opacity: 1})` — required for discoverability on desktop; LOW complexity
+- Active sector highlight: opened sector stays visually distinct (thicker stroke) while panel is open — wayfinding feedback; LOW complexity
+- National Park design treatment for panel: dark `forest-900` background, National Park typeface heading, difficulty-color accent — maintains site visual identity; LOW complexity (pure CSS)
+- "Read full segment guide" smooth-scroll link from panel to RouteExplainer card — bridges map and editorial content; LOW complexity (one `scrollIntoView` call + stable IDs on segment cards)
 
-**Defer (v1.3+):**
-- Scroll-driven reveals via CSS `animation-timeline: view()` as primary (Firefox still behind flag)
-- Parallax scrolling (performance issues on mobile Safari, motion sickness risk)
-- Dark/light mode toggle (dark forest palette IS the brand identity)
-- Video content (no assets exist, autoplay destroys Core Web Vitals)
-- AI-generated cultural imagery (contradicts the site's cultural critique narrative)
-- Scroll-jacking/snap scrolling (breaks natural scroll behavior)
+**Defer post-v1.3:**
+- Elevation chart highlight synced to sector click — MEDIUM complexity (requires Chart.js annotation plugin or CSS overlay coordinated with ElevationProfile component); high value but not essential for v1.3 ship; the `map:sectorClick` event dispatch leaves the wire in place
+
+**Anti-features to deliberately avoid:**
+- Drag-to-snap multi-point bottom sheet — ~200 lines of custom touch JS or a React library for a read-only panel; 2-state model is sufficient
+- Leaflet `bindPopup` for sector detail — renders inside map stacking context, cannot be bottom-sheet, conflicts with restock popups, limited CSS control
+- `bindTooltip({permanent: true})` on polylines — documented-broken positioning on polylines (Leaflet issue #5758, closed without fix); anchors to first coordinate, not geometric midpoint
+- Auto-pan map to center on sector click — disorienting for a 100-mile linear route; Komoot also does not do this
 
 ### Architecture Approach
 
-v1.2 features break into three integration tiers: (1) pure CSS/SVG additions with zero JavaScript and zero data flow changes (animated dividers, shield motifs, color expansion), (2) data-layer extensions with small backward-compatible schema additions (historical imagery categories, Strava links), and (3) component modifications that are purely presentational template/style changes within existing components (HiawathaExplainer and RouteExplainer enrichment). Nothing touches the CustomEvent bus, lazy-loading patterns, or the three complex client-side components.
+The feature lives entirely within `RouteMap.astro`: the `<dialog>` panel HTML goes in the component template as a sibling to `<div id="map">` (not inside it), the panel CSS in the `<style>` block, and the panel + click handler JS inside `initMap()` where Leaflet is in scope. A new build script (`generate-sector-details.js`) joins the existing pipeline to produce `public/data/sector-details.json`, fetched at runtime. No new Astro components, no SSR changes, no new CustomEvent listeners — only a new `map:sectorClick` dispatch for future consumers.
 
-**New components (4):**
-1. `AnimatedDivider.astro` -- Scroll-triggered animated SVG divider with vine/arrowhead/shield variants; replaces FloralDivider instances
-2. `ShieldMotif.astro` -- Reusable decorative SVG (sm/md/lg) for headings, bullets, watermarks
-3. `ElevationSparkline.astro` -- Build-time SVG polyline sparkline for per-sector elevation profiles
-4. `HistoricalFigure.astro` -- Image + figcaption component for historical illustrations with float positioning
+**Major components and their responsibilities:**
 
-**Modified components (6):**
-- `global.css` -- Add color tokens to `@theme static` (~15 lines)
-- `HiawathaExplainer.astro` -- Historical imagery, pull quotes, typography, motif accents
-- `RouteExplainer.astro` -- Sparklines, Strava links, motif markers, expanded descriptions
-- `index.astro` -- Import AnimatedDivider, replace FloralDivider instances
-- `match-photos.js` -- Handle `mile: null` and `category` field for historical images
-- `content.config.ts` -- Add `category`, `caption`, make `mile` nullable
-
-**Unchanged (12):** BaseLayout, HeroSection, RouteMap, ElevationProfile, PhotoGallery, RouteStats, DonateCallout, FloralDivider (preserved, not modified), pipeline.js, parse-gpx.js, generate-thumbnails.js, copy-gpx.js
+1. **`scripts/generate-sector-details.js` (new build script)** — reads canonical sector content (descriptions, surface types, Strava IDs) and writes `public/data/sector-details.json` at build time; resolves the SEGMENTS-in-RouteExplainer vs. panel content duplication problem
+2. **`RouteMap.astro` — panel HTML/CSS block** — `<dialog id="sector-panel">` as sibling to `#map` inside the existing relative-positioned `.route-map` wrapper; CSS handles both layout variants and the `prefers-reduced-motion` override
+3. **`RouteMap.astro` — `initMap()` extensions** — fetch `sector-details.json` + `sector-elevations.json`, build `sectorDetailsMap` and `sectorElevMap` module-scope Maps, register non-interactive `L.marker` labels at midpoints with zoom visibility gating, register ghost + visible polyline pairs with click/hover handlers, implement `openSectorPanel()` and `closeSectorPanel()`
+4. **`buildSparklineSVG()` helper (inline in initMap)** — 20-line port of `ElevationSparkline.astro` math; renders inline SVG from `sectorElevMap` at panel-open time without a separate fetch or Astro component invocation
+5. **`pipeline.js` (modified)** — adds `generate-sector-details` as a pipeline step before `astro build`
 
 ### Critical Pitfalls
 
-1. **Animated SVGs ignore `prefers-reduced-motion`** -- All animations MUST default to static; animation is progressive enhancement, not baseline. Build the `prefers-reduced-motion` pattern into the FIRST animated component so all subsequent animations copy it. Test by enabling "Reduce Motion" in macOS Accessibility settings -- all animation should STOP, not slow down.
+1. **5px polyline touch targets are too narrow on mobile** — implement a transparent ghost polyline at 20–30px weight on top of each visible polyline (which is set `interactive: false`); the ghost carries all click handlers. Leaflet's SVG renderer uses visual stroke width as the hit area — there is no built-in `touchTolerance` for SVG paths (confirmed Leaflet GitHub issue #1264, open since 2013). Build the ghost-layer pattern into the sector creation loop from the start. Recovery cost if missed: MEDIUM (refactor all 7 sector polyline constructions + iOS/Android retest).
 
-2. **New palette fails WCAG AA contrast** -- Red on dark green fails AA normal text (3.2:1). Every new token needs documented contrast ratios against both forest-950 and forest-900. Designate each as "text-safe" (4.5:1+), "large-text-only" (3:1+), or "decorative-only". The STACK research pre-computed all ratios: scarlet-600 (#dc2626) at 3.71:1 fails AA normal text and is large-text/decorative ONLY.
+2. **`bubblingMouseEvents` causes panel to flash open and instantly close** — if `map.on('click', closePanel)` exists alongside polyline click handlers, the sector click fires both. Set `bubblingMouseEvents: false` on all interactive polylines AND call `L.DomEvent.stopPropagation(e)` inside the handler (belt-and-suspenders). Establish this in the click handler phase from the start. Recovery cost: LOW to fix, HIGH to diagnose if not known.
 
-3. **Cultural sensitivity regression** -- Maximalist historical imagery (Longfellow-era illustrations) risks celebrating the romanticization the site's text explicitly critiques. Prevention: frame historical images with sepia/halftone treatment as "historical artifacts", pair every illustration with contextual captioning, keep Ojibwe-inspired design elements (floral motifs) visually distinct from Longfellow-era imagery. Recovery cost if framing is wrong: HIGH.
+3. **Difficulty data inconsistency between `annotations.json` and `data.md`** — the two sources use incompatible systems (3-tier vs. 5-star) and disagree on multiple sectors specifically: Rapid River Truck Trail is `hard` in annotations but 2-star in data.md; Doe Lake is `easy` in annotations but 4-star in data.md. This must be reconciled before panel UI is built. Recommended fix: add a `stars` field to `annotations.json` and treat it as the canonical source. Recovery cost if discovered late: MEDIUM (pipeline changes + re-testing all sector visual states).
 
-4. **LCP regression from above-fold additions** -- No new images or animated SVGs in the first viewport. Gate all animations with IntersectionObserver. Keep the hero image as the sole above-fold resource. Test with Lighthouse mobile after every visual phase.
+4. **`bindTooltip({permanent:true})` on polylines positions labels at the wrong point** — anchors to the first coordinate of the polyline, not a midpoint; the position drifts after `fitBounds` in lazy-init flows. Use `L.marker` + `L.divIcon` at `latlngs[Math.floor((startIdx+endIdx)/2)]` instead. This approach is guaranteed on-road and fully bypasses Leaflet's tooltip positioning (Leaflet issue #5758, closed without fix). Recovery cost if wrong approach used: MEDIUM (replace positioning logic + retest all 7 labels).
 
-5. **Chart.js memory bloat from sparklines** -- Solved by architecture decision: use build-time SVG sparklines, not Chart.js. This is a settled question; the STACK, ARCHITECTURE, and PITFALLS researchers all independently converged on SVG sparklines as the correct approach.
+5. **Panel placed inside `#map` breaks z-index layering** — Leaflet creates its own stacking context inside `#map`; elements inside it cannot escape z-index 1001 (Leaflet controls). The panel must be a sibling of `#map` inside the relative-positioned `.route-map` wrapper. Establish this DOM structure before writing any open/close JS. Recovery cost: MEDIUM (restructure HTML + update CSS selectors + update JS DOM queries).
+
+**Additional pitfalls to address in implementation:**
+- Sector labels at overview zoom collide with CyclOSM tile text — implement `zoomend` visibility gate (show labels only at zoom ≥ 12); use opaque dark pill background for contrast at any zoom
+- `openSectorPanel()` does not dispatch `elevation:leave` — bikeMarker stays frozen on map; add `window.dispatchEvent(new CustomEvent('elevation:leave'))` at the top of `openSectorPanel()`
+- Default `L.divIcon` renders a white box unless `className` is explicitly overridden — follow existing photo-marker pattern (`className: 'sector-label'` + `:global(.sector-label) { background: transparent !important; border: none !important; }`)
+- `map.invalidateSize()` required after slide-out opens if panel pushes the map container width; use overlay positioning to avoid this requirement
+- iOS Safari gesture conflicts — `leaflet-gesture-handling` has documented issues on iOS (#98, #99); when bottom sheet is in a drag state, call `map.dragging.disable()` and re-enable on settle
+
+---
 
 ## Implications for Roadmap
 
-Based on dependency analysis across all four research files, the features form a clear five-phase structure with a strict ordering rationale.
+v1.3 delivers in 3 phases. The build order is dictated by hard data and DOM dependencies: data reconciliation must precede panel UI, and panel DOM structure must precede click handler wiring.
 
-### Phase 1: Color Foundation and Pipeline Prep
-**Rationale:** Every visual feature downstream consumes the new color tokens. The palette must be defined, WCAG-verified, and documented BEFORE any component uses it. Pipeline prep for historical images is independent work that can happen here without blocking anything.
-**Delivers:** 8 new color tokens in `@theme static` with contrast documentation; `match-photos.js` and `content.config.ts` updated for historical image category; activation of orphaned v1.1 tokens (lake-500, berry-500, moss-600)
-**Addresses:** Table Stakes #4 (Bold Palette Expansion), prerequisite for all visual features
-**Avoids:** Pitfall 2 (WCAG contrast failures) by documenting ratios at definition time; Pitfall 11 (visual incoherence) by defining color roles before use; Pitfall 12 (pipeline conflicts) by updating the pipeline before adding images
+### Phase 23: Data Reconciliation + Sector Details Pipeline
 
-### Phase 2: Decorative Component Library
-**Rationale:** AnimatedDivider, ShieldMotif, and ElevationSparkline are independent components with no cross-dependencies. Building them before content enrichment means the enrichment phases can simply import and place them. Critically, AnimatedDivider establishes the `prefers-reduced-motion` pattern that all subsequent animations must follow.
-**Delivers:** Three new Astro components ready for integration; the animation accessibility pattern established and tested
-**Addresses:** Differentiator #1 (Animated Dividers), Differentiator #2 (Shield Motif System), per-sector sparkline infrastructure
-**Avoids:** Pitfall 1 (motion accessibility) by establishing the pattern in the first animated component; Pitfall 5 (Chart.js bloat) by using build-time SVG; Pitfall 6 (motif visual fatigue) by defining the motif vocabulary and variation levels upfront
+**Rationale:** Two issues block everything downstream. The difficulty discrepancy between `annotations.json` and `data.md` will produce contradictory UI (red "hard" polyline + "2-star" panel for Rapid River) if not fixed before panel UI is built. And the panel needs `sector-details.json` to exist before any panel logic can be written or tested. This phase has no visual deliverable but eliminates the highest recovery-cost problems.
 
-### Phase 3: Historical Imagery and Content Enrichment
-**Rationale:** With palette tokens, decorative components, and pipeline prep all in place, this phase does the editorial work: sourcing/processing historical illustrations, restructuring HiawathaExplainer with inline photos and pull quotes, and enriching RouteExplainer with sparklines, Strava links, and expanded descriptions. This is the largest phase by content effort.
-**Delivers:** HiawathaExplainer transformed with historical imagery, dramatic pull quotes, typography hierarchy; RouteExplainer enriched with sparklines, Strava links, motif accents; 2-4 processed historical illustrations in the pipeline
-**Addresses:** Table Stakes #2 (Content Layout Enrichment), Table Stakes #3 (Segment/Route Enrichment), Table Stakes #5 (Historical Imagery), Differentiator #4 (Pull Quote Treatment)
-**Avoids:** Pitfall 3 (cultural sensitivity) by framing historical images as artifacts with contextual captions; Pitfall 7 (responsive breakage) by adding elements INSIDE existing grid areas; Pitfall 8 (dead Strava links) by making them supplementary with proper UX patterns; Pitfall 9 (copyright) by using only verified public domain sources
+**Delivers:** Reconciled difficulty classification in `annotations.json` (with `stars` field added and all 7 sectors verified); `scripts/generate-sector-details.js` producing `public/data/sector-details.json`; `pipeline.js` updated; verified JSON output confirming shape matches Architecture Pattern 1
 
-### Phase 4: Section Color Differentiation and Page Assembly
-**Rationale:** Section-specific backgrounds need the animated dividers to transition between them, and they need the content enrichment to be complete so colors are applied to final content. This is the phase that makes the page feel like a "journey through distinct moments" rather than "one long page."
-**Delivers:** Section-specific background colors; AnimatedDividers placed between sections in index.astro replacing FloralDividers; the full maximalist visual composition assembled
-**Addresses:** Table Stakes #1 (Section Color Differentiation), final page assembly
-**Avoids:** Pitfall 4 (LCP regression) by keeping all new content below the fold; Pitfall 10 (page weight) by running Lighthouse audit after assembly
+**Addresses:** FEATURES table-stakes data integrity; PITFALLS 8 (difficulty inconsistency) and Debt Pattern B (SEGMENTS hardcoded in RouteExplainer.astro)
 
-### Phase 5: Polish, Accessibility Audit, and Performance Validation
-**Rationale:** All content is in place. This phase adds scroll-driven section reveals (if the animation budget allows), runs comprehensive accessibility and performance audits, and tests across breakpoints. Scroll reveals are explicitly last because they animate the completed page -- doing them earlier means re-tuning every time content changes.
-**Delivers:** Optional scroll-driven reveals via IntersectionObserver; verified WCAG AA compliance; verified performance budget (<3MB transfer, LCP <2.5s); responsive testing across 5 breakpoints
-**Addresses:** Differentiator #3 (Scroll-Driven Reveals), cross-cutting quality gates
-**Avoids:** All pitfalls via comprehensive audit; specifically Pitfall 1 (final `prefers-reduced-motion` verification), Pitfall 2 (final contrast audit), Pitfall 4 (final Lighthouse check), Pitfall 10 (final page weight check)
+**Avoids:** Late-discovery data contradiction visible in the panel; content duplication across two files
+
+**Research flag:** Standard patterns — pipeline extension mirrors `resolve-annotations.js` exactly. Data reconciliation is an editorial decision, not a technical research question.
+
+---
+
+### Phase 24: Sector Labels on Map
+
+**Rationale:** Labels are the prerequisite for click interaction — users need visual affordance before they discover sectors are clickable. This phase also establishes the `L.marker` + `L.divIcon` non-interactive label pattern, the zoom-threshold visibility gate, and the `<dialog>` panel DOM structure (as static HTML with CSS, no JS logic yet). Scaffolding the panel here gives Phase 25 a wired target.
+
+**Delivers:** Sector name + difficulty star labels at geographic midpoints, visible at zoom ≥ 12, with opaque pill styling using existing design token palette; `<dialog id="sector-panel">` in DOM (hidden, no open/close logic); full panel CSS for desktop right-panel and mobile bottom-sheet variants including `@starting-style` animation and `prefers-reduced-motion` override
+
+**Uses:** Leaflet `L.marker` + `L.divIcon` at `latlngs[Math.floor((startIdx+endIdx)/2)]`; CSS `translate`; `@starting-style` as progressive enhancement; `@media (max-width: 768px)` for bottom-sheet variant
+
+**Implements:** Architecture Pattern 2 (midpoint label markers) + Pattern 4 (panel HTML in RouteMap.astro template)
+
+**Avoids:** PITFALLS 5 (tooltip positioning), 7 (tile background interference), 9 (default white divIcon box), 11 (bounding-box centroid off-road)
+
+**Research flag:** Standard patterns — well-documented Leaflet marker and CSS dialog patterns, no unknowns.
+
+---
+
+### Phase 25: Click Handlers, Panel Logic, and Responsive Behavior
+
+**Rationale:** With data available (Phase 23) and DOM structure in place (Phase 24), all remaining features land in one phase: polyline click handlers with ghost hit layers, panel open/close logic, panel content rendering, accessibility wiring, hover/active states, and the low-complexity differentiators. Grouping these together avoids a fourth phase of overhead — hover state, active highlight, jump link, and design treatment are all LOW complexity and tightly coupled to the click/panel logic. Mobile touch behavior on iOS is the highest-risk area and requires explicit device test steps.
+
+**Delivers:** Clickable sector polylines with transparent ghost polylines at 20–30px weight; `openSectorPanel()` / `closeSectorPanel()` wired to all 7 sectors; panel content populated (name, stars, sparkline SVG, distance/mile-range, surface type, terrain description, Strava link, jump link); hover state (weight increase on `mouseover`); active-sector highlight (thicker stroke while panel open); National Park design treatment; `map:sectorClick` CustomEvent dispatch; `elevation:leave` dispatch on panel open; `ResetControl` extended to call `closeSectorPanel()`; full keyboard accessibility (Escape close, focus trap, focus return); `map.invalidateSize()` on `transitionend`; iOS gesture conflict prevention (`map.dragging.disable()` during sheet transition, `overscroll-behavior: none`, `touch-action: none` on drag handle)
+
+**Uses:** `<dialog>.showModal()`; `bubblingMouseEvents: false`; `L.DomEvent.stopPropagation`; `buildSparklineSVG()` helper ported from ElevationSparkline.astro; `sectorDetailsMap` + `sectorElevMap` module-scope Maps; `window.matchMedia` (or pure CSS) for breakpoint detection
+
+**Implements:** Architecture Patterns 3–7 (click handlers, panel overlay, CSS transitions, sparkline rendering, module-scope data maps) + Event Bus extension (map:sectorClick)
+
+**Avoids:** PITFALLS 1 (touch targets via ghost polyline), 2 (event bubbling via bubblingMouseEvents:false), 3 (elevation:hover frozen via explicit elevation:leave dispatch), 4 (z-index stacking via sibling DOM placement), 6 (iOS gesture conflicts via map.dragging coordination), 10 (invalidateSize on transitionend); Gotchas 1–3
+
+**Research flag:** iOS touch behavior requires explicit device testing — `leaflet-gesture-handling` iOS issues (#98, #99) cannot be reproduced in Chrome DevTools. Phase plan must include iOS Safari test steps for: (a) tap sector polyline, (b) partially-open bottom sheet + attempt map pan, (c) gesture hint overlay not appearing during panel interactions.
+
+---
 
 ### Phase Ordering Rationale
 
-- **Color tokens first** because every feature consumes them -- this is the unanimous recommendation from FEATURES, ARCHITECTURE, and PITFALLS researchers
-- **Components before content** because content enrichment imports the components; building them in isolation enables parallel testing
-- **Content enrichment before section colors** because section backgrounds wrap completed content; applying colors to half-finished content means re-testing
-- **Scroll reveals absolutely last** because they animate the final composition; any content change after reveals means re-tuning animation timing
-- **Historical imagery sourcing runs in parallel** with component development (manual download/processing task with no code dependencies)
+- **Data before UI:** Pitfall 8 (difficulty inconsistency) cannot be patched retroactively once panel UI is built without rewriting content logic. Phase 23 closes this risk first.
+- **DOM structure before JS:** The panel must exist in the DOM before `initMap()` wires click handlers into it. Phase 24 scaffolds the static HTML; Phase 25 activates it. This also allows CSS panel behavior to be verified independently of JS logic.
+- **Labels before clicks:** Users need visual affordance to discover sectors are interactive. Labels also establish the midpoint calculation and the `L.marker` non-interactive pattern reused by the ghost hit layer in Phase 25.
+- **All differentiators in Phase 25:** Hover state, active highlight, jump link, and design treatment are LOW complexity and deeply coupled to the click/panel logic. Isolating them into a fourth phase adds overhead without benefit.
+- **Elevation chart sync deferred post-v1.3:** Requires Chart.js annotation plugin evaluation and ElevationProfile coordination — medium complexity for a showcase differentiator. The `map:sectorClick` dispatch in Phase 25 leaves the wire in place.
 
 ### Research Flags
 
-Phases likely needing deeper research during planning:
-- **Phase 3 (Content Enrichment):** Editorial judgment calls -- where to break text with photos, which historical illustrations to select, how to frame the cultural critique visually. This is design/editorial work, not technical research, but it will require iteration.
-- **Phase 3 (Strava Integration):** Strava segment IDs must be created manually on Strava. This is a prerequisite task, not a research gap, but it blocks the Strava links feature.
+**Needs attention during phase planning:**
+- **Phase 25 — iOS touch behavior:** `leaflet-gesture-handling` has documented iOS issues (GitHub #98, #99 reported July–September 2024). The interaction between the gesture plugin, bottom sheet drag, and Leaflet map pan gesture requires explicit test steps and a clear `map.dragging.disable()` / `map.dragging.enable()` strategy. Device testing required — Chrome DevTools mobile emulation does not reproduce iOS touch event routing.
+- **Phase 25 — `@starting-style` fallback:** ~14% of browsers will get instant panel appearance without slide animation. Verify this is visually acceptable. Should be — the panel content still appears correctly — but worth a QA note.
 
-Phases with standard patterns (skip research-phase):
-- **Phase 1 (Color Foundation):** Adding tokens to `@theme static` is a proven 20-line CSS change. Contrast checking is mechanical.
-- **Phase 2 (Decorative Components):** SVG animation with `stroke-dashoffset`, `<symbol>` + `<use>`, and build-time SVG generation are all thoroughly documented with code examples in the STACK and ARCHITECTURE research files.
-- **Phase 4 (Section Colors):** Applying background classes to `<section>` elements is trivial CSS.
-- **Phase 5 (Polish):** Standard Lighthouse/axe audit workflow.
+**Standard patterns (skip `/gsd:research-phase`):**
+- **Phase 23:** Pipeline extension is a direct copy of the `resolve-annotations.js` pattern. Data schema migration is a content decision, not a technical research question.
+- **Phase 24:** `L.marker` + `L.divIcon` at computed midpoint, CSS `<dialog>` slide-out, and zoom visibility gating are all thoroughly documented with verified implementation patterns in the research files.
+- **Phase 25 (except iOS touch):** `<dialog>.showModal()`, `bubblingMouseEvents: false`, CSS class-toggle transitions, `buildSparklineSVG()` port — all well-documented with code-level examples in STACK.md and ARCHITECTURE.md.
+
+---
 
 ## Confidence Assessment
 
 | Area | Confidence | Notes |
 |------|------------|-------|
-| Stack | HIGH | Zero new dependencies. All CSS/SVG techniques verified against MDN and Can I Use with specific browser support percentages. Contrast ratios pre-computed. |
-| Features | MEDIUM-HIGH | Feature patterns verified across 10+ award-winning sites (charity: water, National Geographic, UNBOUND Gravel, WWF, museum brands). Cultural color research cross-referenced across multiple Ojibwe sources. Minor gap: exact Strava segment IDs not yet created. |
-| Architecture | HIGH | Based on direct source code analysis of all existing components, pipeline scripts, and data schemas. Every modification path tested against existing patterns. Build dependency graph fully mapped. |
-| Pitfalls | HIGH | 12 pitfalls identified with specific detection methods, prevention steps, and recovery costs. Critical pitfalls (accessibility, contrast, cultural sensitivity) have actionable prevention checklists. |
+| Stack | HIGH | All recommendations verified against official Leaflet 1.9.4 docs and MDN. Zero new dependencies for baseline implementation. Ghost-polyline and `leaflet-highlightable-layers` both validated as touch-target solutions. |
+| Features | HIGH | Patterns verified against AllTrails, Komoot, Ride with GPS, Trailforks, Google Maps competitive analysis. NN/g bottom sheet research cited. Feature scope is unambiguous. |
+| Architecture | HIGH | Based on direct source analysis of RouteMap.astro, ElevationSparkline.astro, ElevationProfile.astro, annotations.json, sector-elevations.json, and pipeline.js. All integration points verified against actual file contents. |
+| Pitfalls | HIGH (Leaflet-specific), MEDIUM (iOS touch) | Leaflet pitfalls verified against official docs and confirmed GitHub issues. iOS Safari gesture conflicts are platform-specific — documented behavior but real-device variance is possible and cannot be fully characterized without device testing. |
 
 **Overall confidence:** HIGH
 
 ### Gaps to Address
 
-- **Strava segment IDs**: Must be created on Strava before per-segment links can be added. This is a manual task (ride the route or create segments from GPX data). Not a research gap but a prerequisite with no workaround.
-- **Harrison Fisher illustration selection**: 69 illustrations are available; selecting 2-4 and determining placement within HiawathaExplainer is an editorial judgment call that cannot be resolved by research alone. Download the full set during Phase 1 pipeline prep, make selections during Phase 3 implementation.
-- **Animation timing and organic feel**: The FEATURES researcher flagged that making SVG floral animations feel "organic, not mechanical" is a design tuning challenge. CSS animation durations (8-12s vine sway, 20-30s color cycling) are suggested ranges but will require visual iteration.
-- **Orphaned v1.1 color tokens**: 8 tokens defined but unused from v1.1. Phase 1 should activate some (lake-500, berry-500, moss-600) but decisions on which to activate and where depend on section color design decisions in Phase 4.
-- **CSS `animation-timeline: view()` support**: Firefox support still behind a flag (March 2026). The IntersectionObserver fallback is battle-tested in this codebase, so this gap has zero impact on functionality. Consider revisiting for v1.3 if Firefox ships support.
+- **Difficulty data reconciliation decision:** The specific mapping between `annotations.json` difficulty tiers and `data.md` star ratings requires an editorial decision before Phase 23 can produce `sector-details.json`. Research documents the discrepancies (7 mismatches). Recommended resolution: treat `data.md` star ratings as canonical (more granular), reclassify `annotations.json` to match, and add a `stars` integer field.
+- **Ghost polyline vs. `leaflet-highlightable-layers`:** Research recommends the ghost-polyline pattern (zero dependencies), but documents the library as a validated alternative. The phase plan should commit to one approach at the start of Phase 25 rather than leaving it open.
+- **Panel width on narrow desktop viewports:** At `min(400px, 90vw)` panel width, an 900px desktop screen leaves 500px for the map. Acceptable but worth a QA note in Phase 25 — not a blocker.
+- **Elevation chart highlight (deferred):** Post-v1.3 implementation will need to evaluate Chart.js annotation plugin vs. CSS overlay approach. The `map:sectorClick` event dispatch in Phase 25 is the wire; the listener lives in a future milestone.
+
+---
 
 ## Sources
 
-### Primary (HIGH confidence)
-- Direct source code analysis of all 21 project files (9 components, 6 pipeline scripts, global.css, content.config.ts, astro.config.ts, route-data.json, photos-manifest.json)
-- [Can I Use -- CSS @property](https://caniuse.com/mdn-css_at-rules_property) -- 96.02% global support
-- [MDN -- CSS stroke-dasharray animation](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/animation-timeline)
-- [WebAIM Contrast Checker](https://webaim.org/resources/contrastchecker/) -- WCAG AA ratio calculations
-- [Strava Partners -- Route Embed Documentation](https://partners.strava.com/resources/how-to-embed-a-strava-route)
-- [Internet Archive -- Song of Hiawatha 1908 Edition](https://archive.org/details/songhiawatha00wyetgoog) -- "NOT_IN_COPYRIGHT"
-- [Metropolitan Museum of Art -- Remington Hiawatha](https://www.metmuseum.org/art/collection/search/11864) -- Open Access
-- [hiawatha.digital/illustrations](https://hiawatha.digital/illustrations) -- 69 Harrison Fisher illustrations (1906), public domain
-- [Chart.js Performance Documentation](https://www.chartjs.org/docs/latest/general/performance.html)
-- [CSS-Tricks -- How SVG Line Animation Works](https://css-tricks.com/svg-line-animation-works/)
+### Primary (HIGH confidence — official docs or direct codebase analysis)
 
-### Secondary (MEDIUM confidence)
-- [Alex Plescan -- Easy SVG Sparklines](https://alexplescan.com/posts/2023/07/08/easy-svg-sparklines/) -- build-time SVG sparkline technique
-- [Josh W. Comeau -- Color Shifting in CSS](https://www.joshwcomeau.com/animation/color-shifting/) -- `@property` gradient animation
-- [National Geographic Website Design Analysis](https://www.designrush.com/best-designs/websites/national-geographic-website-design)
-- [ImageX -- Best Nonprofit Website Designs](https://imagexmedia.com/blog/best-nonprofit-website-designs-drive-impact)
-- [The Brand Identity -- Museum Identities](https://the-brandidentity.com/resource/6-cultural-creative-and-charming-identities-for-museums-featuring-north-base-design-and-more)
-- [Communication Arts -- Decolonizing Native American Design](https://www.commarts.com/columns/decolonizing-native-american-design)
-- [Four Directions Teachings -- Ojibwe](https://fourdirectionsteachings.com/transcripts/ojibwe.html)
-- [Pope Tech -- Accessible Animation](https://blog.pope.tech/2025/12/08/design-accessible-animation-and-movement/)
-- [DC Rainmaker -- Strava External Links](https://www.dcrainmaker.com/2025/03/strava-backtracks-now-allows-external-links-again.html)
-- [Strava Community Hub -- Jan 2026 Embed Issue](https://communityhub.strava.com/developers-api-7/strava-widgets-embedded-on-website-stopped-working-since-20-jan-2026-12591) -- resolved Feb 19, 2026
+- [Leaflet 1.9.4 Reference](https://leafletjs.com/reference.html) — `bindTooltip`, `L.marker`, `L.divIcon`, `bubblingMouseEvents`, `polyline.on()`, `setStyle()`, `interactive` option, `L.DomEvent`
+- [Leaflet GitHub Releases](https://github.com/leaflet/leaflet/releases) — 1.9.4 confirmed current stable; 2.0.0-alpha.1 confirmed pre-release with plugin incompatibilities
+- [MDN — `<dialog>` element](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog) — `showModal()`, `close()`, `::backdrop`, focus trapping; Baseline Widely Available March 2022
+- [MDN — `@starting-style`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@starting-style) — Baseline Newly Available August 2024; ~86% support
+- Direct source analysis: `RouteMap.astro`, `ElevationSparkline.astro`, `ElevationProfile.astro`, `PhotoGallery.astro`, `annotations.json`, `sector-elevations.json`, `pipeline.js`, `data.md`
+- [W3C ARIA APG — Keyboard Interface](https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/) — focus trap, Escape key, focus return patterns
 
-### Tertiary (LOW confidence)
-- [Wikimedia Commons -- Song of Hiawatha category](https://commons.wikimedia.org/wiki/Category:The_Song_of_Hiawatha) -- 45+ files, individually licensed
-- [Maximalism in Web Design (Grazitti)](https://www.grazitti.com/blog/maximalism-in-web-design-bold-beautiful-and-beyond-the-ordinary/)
-- [Native American Color Meanings](https://www.color-meanings.com/native-american-color-meanings/) -- general reference, needs cross-validation
+### Secondary (MEDIUM confidence — community sources, cross-referenced)
+
+- [Leaflet issue #5758](https://github.com/Leaflet/Leaflet/issues/5758) — permanent tooltip positioning on polylines confirmed broken; closed without fix
+- [Leaflet issue #1264](https://github.com/Leaflet/Leaflet/issues/1264) — SVG hit area limited to visual stroke width; Canvas backend fix only; SVG unresolved
+- [leaflet-gesture-handling GitHub issues #98, #99](https://github.com/elmarquis/Leaflet.GestureHandling/issues) — iOS marker click interference; reported July–September 2024
+- [Ben Nadel — Dialog as Fly-out Sidebar](https://www.bennadel.com/blog/4862-opening-the-dialog-element-as-a-fly-out-sidebar.htm) — `inset: 0 0 0 auto` + `margin: 0` pattern for right-panel dialog
+- [Simon Willison TIL — Full-height Dialog](https://til.simonwillison.net/css/dialog-full-height) — `height: 100dvh` / `max-height: 100dvh` for no-gap right panel
+- [Frontend Masters — Dialog Entry Animations](https://frontendmasters.com/blog/the-dialog-element-with-entry-and-exit-animations/) — `@starting-style` + `translate` pattern
+- [NN/g Bottom Sheet Research](https://www.nngroup.com/articles/bottom-sheet/) — 2-state vs. multi-snap; missing close button as top failure mode
+- [leaflet-highlightable-layers](https://github.com/FacilMap/Leaflet.HighlightableLayers) — transparent hit-area overlay pattern; Leaflet 1.x compatible; alternative to ghost-polyline approach
+
+### Tertiary (MEDIUM confidence — product/feature survey)
+
+- AllTrails, Komoot, Ride with GPS, Trailforks, Google Maps, Strava Route — competitive feature analysis for label patterns, panel placement, bottom sheet behavior, difficulty display (direct product inspection)
+- [NN/g / LogRocket — Bottom Sheet Design Patterns](https://blog.logrocket.com/ux-design/bottom-sheets-optimized-ux/) — snap point complexity vs. 2-state model
 
 ---
-*Research completed: 2026-03-31*
+
+*Research completed: 2026-04-02*
 *Ready for roadmap: yes*
