@@ -100,11 +100,11 @@ Plans:
 5. The full route polyline is re-rendered as surface-type segments, each colored distinctly (paved/dirt/gravel/sand) using data from the pipeline
 6. The active (clicked) sector polyline shows a thicker, brighter highlight while its panel is open; desktop hover changes polyline weight/opacity
 
-**Plans:** TBD
+**Plans:** 2 plans
 
 Plans:
-- [ ] 25-01: Ghost polylines, click handlers, and openSectorPanel/closeSectorPanel logic
-- [ ] 25-02: Panel content rendering, sparkline helper, accessibility, and surface-colored track
+- [ ] 25-01-PLAN.md — Surface-colored track, ghost polylines, click/hover handlers, and panel open/close logic
+- [ ] 25-02-PLAN.md — SVG sparkline generator, enhanced panel content, and RouteExplainer jump link IDs
 
 ---
 
