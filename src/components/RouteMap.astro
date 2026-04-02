@@ -146,6 +146,8 @@
   let bikeMarker = null;
   let routePoints = null;
   let leafletMap = null;
+  let activeSector = null;
+  let previousFocus = null;
 
   // snapByMiles — O(n) nearest-distance search over route points
   // Uses miles field (distance-along-route) — NOT array index — for accurate sync with elevation chart
@@ -225,6 +227,8 @@
     }).addTo(map);
 
     // Custom reset control — appears below zoom buttons (top-left)
+    // Note: initialBounds referenced in click handler is computed after Promise.all below;
+    // the closure captures the variable binding, so declaration order is fine in JS.
     const ResetControl = L.Control.extend({
       options: { position: 'topleft' },
       onAdd() {
@@ -247,19 +251,53 @@
     });
     new ResetControl().addTo(map);
 
-    // Fetch route data and render polyline
-    const routeData = await fetch('/data/route-data.json').then(r => r.json());
+    // Fetch all data in parallel — consolidates sequential awaits for faster startup
+    const [routeData, annotations, sectorDetails, sectorElevations, surfacePoints, photosData] =
+      await Promise.all([
+        fetch('/data/route-data.json').then(r => r.json()),
+        fetch('/data/annotations.json').then(r => r.json()),
+        fetch('/data/sector-details.json').then(r => r.json()),
+        fetch('/data/sector-elevations.json').then(r => r.json()),
+        fetch('/data/surface-points.json').then(r => r.json()),
+        fetch('/data/photos.json').then(r => r.json()),
+      ]);
+
     const latlngs = routeData.points.map((pt) => [pt.lat, pt.lon]);
 
     // Assign module-scope reference for use by snapByMiles in window event listeners
     routePoints = routeData.points;
 
-    const routeLine = L.polyline(latlngs, {
-      color: getCSSColor('--color-forest-900'),
-      weight: 4,
-      opacity: 0.9,
-      smoothFactor: 1
-    }).addTo(map);
+    // initialBounds — computed here for use in ResetControl click handler and fitBounds below
+    const initialBounds = L.latLngBounds(latlngs);
+
+    // Surface color palette — distinct from sector overlay colors (moss-500, amber-500, rust-500)
+    const SURFACE_COLORS = {
+      paved:   lake400,
+      gravel:  amber400,
+      dirt:    getCSSColor('--color-rust-600'),
+      unknown: getCSSColor('--color-forest-700'),
+    };
+
+    // Render surface-colored polylines using run-flush algorithm
+    // Groups consecutive same-surface points into runs; borrows one point from next run
+    // to handle 13 single-point segments (L.polyline needs >= 2 points to render)
+    let prevSurface = null;
+    let runStart = 0;
+    function flushRun(endIdx) {
+      if (prevSurface === null) return;
+      const pts = latlngs.slice(runStart, endIdx + 1);
+      if (pts.length >= 2) {
+        L.polyline(pts, {
+          color: SURFACE_COLORS[prevSurface] || SURFACE_COLORS.unknown,
+          weight: 4, opacity: 0.9, smoothFactor: 1, interactive: false,
+        }).addTo(map);
+      }
+    }
+    for (let i = 0; i < surfacePoints.length; i++) {
+      const s = surfacePoints[i].surface;
+      if (s !== prevSurface) { flushRun(i); runStart = i; prevSurface = s; }
+    }
+    flushRun(surfacePoints.length - 1);
 
     // Bike dot marker — circle dot that moves along the route on elevation chart hover
     // className: '' REQUIRED — removes default leaflet-div-icon white background/border
@@ -280,20 +318,49 @@
       zIndexOffset: 1000
     });
 
-    // Fetch annotations and draw gravel sector overlays
-    // Sectors added AFTER routeLine so they render on top of the base dark green polyline
-    const annotations = await fetch('/data/annotations.json').then(r => r.json());
+    // Sector overlays — rendered AFTER surface polylines so they appear on top
+    // Ghost+visible pattern: ghost handles events (20px hit target), visible handles styling
     const sectors = annotations.filter(a => a.type === 'sector');
+    const sectorLayers = [];
 
     for (const sector of sectors) {
       // slice(startIdx, endIdx + 1) — JavaScript slice excludes end index; +1 prevents off-by-one gap
       const sectorPts = latlngs.slice(sector.startIdx, sector.endIdx + 1);
       const colors = SECTOR_COLORS[sector.difficulty] || SECTOR_COLORS.moderate;
-      L.polyline(sectorPts, {
-        color: colors.line,
-        weight: 5,
-        opacity: 0.85
+      const defaultStyle = { color: colors.line, weight: 5, opacity: 0.85 };
+
+      const visiblePoly = L.polyline(sectorPts, { ...defaultStyle, interactive: false }).addTo(map);
+      const ghostPoly = L.polyline(sectorPts, {
+        color: colors.line, weight: 20, opacity: 0, interactive: true,
       }).addTo(map);
+
+      const entry = { sectorId: sector.id, visiblePoly, ghostPoly, defaultStyle };
+      sectorLayers.push(entry);
+
+      // Desktop hover — skip if this sector is currently active (preserves active highlight)
+      ghostPoly.on('mouseover', () => {
+        if (activeSector?.sectorId !== sector.id) {
+          visiblePoly.setStyle({ weight: 7, opacity: 1.0 });
+        }
+      });
+      ghostPoly.on('mouseout', () => {
+        if (activeSector?.sectorId !== sector.id) {
+          visiblePoly.setStyle(defaultStyle);
+        }
+      });
+
+      // Click — open panel with sector details
+      ghostPoly.on('click', () => {
+        if (activeSector && activeSector.sectorId !== sector.id) {
+          activeSector.visiblePoly.setStyle(activeSector.defaultStyle);
+        }
+        activeSector = entry;
+        visiblePoly.setStyle({ weight: 8, opacity: 1.0 });
+        visiblePoly.bringToFront();
+        const details = sectorDetails.find(d => d.id === sector.id);
+        const elevData = sectorElevations.find(e => e.id === sector.id);
+        openPanel({ sector, details, elevData });
+      });
     }
 
     // Sector label markers — pill-shaped divIcon labels at each sector's geographic midpoint
@@ -384,8 +451,7 @@
     window.L = L;
     await import('leaflet.markercluster/dist/leaflet.markercluster-src.js');
 
-    // Fetch photo data — may be empty array until manifest is saved and pipeline runs
-    const photosData = await fetch('/data/photos.json').then(r => r.json());
+    // photosData already loaded via Promise.all at the top of initMap()
 
     if (photosData.length > 0) {
       const clusterGroup = L.markerClusterGroup({
@@ -421,10 +487,8 @@
     }
 
     // Auto-fit map to the full route bounds
-    map.fitBounds(routeLine.getBounds(), { padding: [20, 20], animate: !prefersReducedMotion });
-
-    // Capture initial bounds for reset — must be stored after fitBounds
-    const initialBounds = routeLine.getBounds();
+    // initialBounds computed above from latlngs (routeLine removed)
+    map.fitBounds(initialBounds, { padding: [20, 20], animate: !prefersReducedMotion });
   } // end initMap
 
   // Defer Leaflet/map loading until the user begins scrolling toward the map section.
