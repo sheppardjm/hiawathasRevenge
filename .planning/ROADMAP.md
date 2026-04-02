@@ -4,7 +4,7 @@
 
 - ✅ **v1.0 MVP** -- Phases 0-11 (shipped 2026-03-31)
 - ✅ **v1.1 Visual Redesign** -- Phases 12-17 (shipped 2026-03-31)
-- 🚧 **v1.2 Cultural Maximalism** -- Phases 18-22 (in progress)
+- ✅ **v1.2 Cultural Maximalism** -- Phases 18-22 (shipped 2026-04-02)
 - 📋 **v1.3 Map Interactivity** -- Planned (SECT-01, SECT-02, SECT-03)
 
 ## Phases
@@ -30,7 +30,7 @@
 
 </details>
 
-### 🚧 v1.2 Cultural Maximalism (In Progress)
+### ✅ v1.2 Cultural Maximalism (Shipped 2026-04-02)
 
 **Milestone Goal:** Transform the site into a maximalist cultural celebration -- bold colors, historical imagery, enriched segment content, animated section breaks, and shield motifs layered throughout, worthy of an award-winning non-profit heritage site.
 
@@ -38,7 +38,7 @@
 - [x] **Phase 19: Decorative Component Library** - Animated dividers, shield motifs, and elevation sparklines (completed 2026-04-01)
 - [x] **Phase 20: Content & Route Enrichment** - Historical imagery, editorial restructure, and segment detail expansion (completed 2026-04-01)
 - [x] **Phase 21: Section Color Differentiation** - Per-section backgrounds and page assembly with animated dividers (completed 2026-04-01)
-- [ ] **Phase 22: Animation & Polish** - Scroll-driven reveals, accessibility audit, and performance validation
+- [x] **Phase 22: Animation & Polish** - Scroll-driven reveals, accessibility audit, and performance validation (completed 2026-04-02)
 
 ## Phase Details
 
@@ -118,8 +118,8 @@ Plans:
 **Plans**: ~2 plans
 
 Plans:
-- [ ] 22-01: ScrollReveal component, data-reveal wiring, and segment card stagger CSS
-- [ ] 22-02: Reduced-motion audit, above-fold guard verification, and human visual approval
+- [x] 22-01: ScrollReveal component, data-reveal wiring, and segment card stagger CSS
+- [x] 22-02: Reduced-motion audit, above-fold guard verification, and human visual approval
 
 ## Progress
 
@@ -134,7 +134,7 @@ Phases execute in numeric order: 18 -> 19 -> 20 -> 21 -> 22
 | 19. Decorative Components | v1.2 | 5/5 | Complete | 2026-04-01 |
 | 20. Content & Route Enrichment | v1.2 | 3/3 | Complete | 2026-04-01 |
 | 21. Section Color Differentiation | v1.2 | 1/1 | Complete | 2026-04-01 |
-| 22. Animation & Polish | v1.2 | 0/2 | Not started | - |
+| 22. Animation & Polish | v1.2 | 2/2 | Complete | 2026-04-02 |
 
 ---
 *Roadmap created: 2026-03-31*

@@ -9,18 +9,18 @@ Requirements for Cultural Maximalism milestone. Each maps to roadmap phases.
 
 ### Design System
 
-- [ ] **DES-01**: Color palette expands with turquoise, vermillion/scarlet, and sun-yellow token families added to `@theme static`, each with WCAG AA contrast ratios documented against forest-900/950 backgrounds
-- [ ] **DES-02**: Orphaned v1.1 color tokens (lake-500, berry-500, moss-600, etc.) are activated and assigned purpose in the design system
+- [x] **DES-01**: Color palette expands with turquoise, vermillion/scarlet, and sun-yellow token families added to `@theme static`, each with WCAG AA contrast ratios documented against forest-900/950 backgrounds
+- [x] **DES-02**: Orphaned v1.1 color tokens (lake-500, berry-500, moss-600, etc.) are activated and assigned purpose in the design system
 - [x] **DES-03**: Each major page section has a distinct background color drawn from the expanded palette, creating visual rhythm and "journey through distinct moments" rather than monochromatic scroll
 - [x] **DES-04**: 60-30-10 color distribution rule applied: forest-900/950 dominant backgrounds (60%), existing berry/gold/lake/moss accents (30%), new bold colors as pop accents (10%)
 
 ### Decorative System
 
-- [ ] **DEC-01**: Animated multicolored section dividers replace static FloralDividers with vine drawing on scroll (CSS `stroke-dashoffset`), blossom color cycling (CSS `@property`), and section-specific color theming via `variant` prop
-- [ ] **DEC-02**: 2-3 divider variants exist (full floral vine, berry cluster, minimal double-curve) for major vs. minor section breaks
-- [ ] **DEC-03**: All divider animations respect `prefers-reduced-motion` — static beautifully-colored fallback shown when motion is reduced
-- [ ] **DEC-04**: Shield/arrowhead motif extracted from hero badge SVG into reusable component, appearing as heading icons (16-24px), background watermarks (400-600px at 3-5% opacity), pull quote ornaments, and footer mark
-- [ ] **DEC-05**: Shield motif uses SVG `<symbol>` + `<use>` for zero-HTTP-request reuse with `currentColor` inheritance from Tailwind classes
+- [x] **DEC-01**: Animated multicolored section dividers replace static FloralDividers with vine drawing on scroll (CSS `stroke-dashoffset`), blossom color cycling (CSS `@property`), and section-specific color theming via `variant` prop
+- [x] **DEC-02**: 2-3 divider variants exist (full floral vine, berry cluster, minimal double-curve) for major vs. minor section breaks
+- [x] **DEC-03**: All divider animations respect `prefers-reduced-motion` — static beautifully-colored fallback shown when motion is reduced
+- [x] **DEC-04**: Shield/arrowhead motif extracted from hero badge SVG into reusable component, appearing as heading icons (16-24px), background watermarks (400-600px at 3-5% opacity), pull quote ornaments, and footer mark
+- [x] **DEC-05**: Shield motif uses SVG `<symbol>` + `<use>` for zero-HTTP-request reuse with `currentColor` inheritance from Tailwind classes
 
 ### Content Enrichment
 
@@ -33,17 +33,17 @@ Requirements for Cultural Maximalism milestone. Each maps to roadmap phases.
 ### Route Enrichment
 
 - [x] **RTE-01**: Segment subheadings set in National Park typeface at larger size with difficulty-coded color (green/amber/rust) and shield/arrowhead icon prefix
-- [ ] **RTE-02**: Per-sector elevation sparkline displayed as build-time SVG polyline (zero JavaScript) showing elevation gain/loss for that segment
+- [x] **RTE-02**: Per-sector elevation sparkline displayed as build-time SVG polyline (zero JavaScript) showing elevation gain/loss for that segment
 - [x] **RTE-03**: Strava segment link per sector (outbound `<a>` tag to `strava.com/segments/[ID]`) with Strava icon — user provides segment IDs during implementation
 - [x] **RTE-04**: Expanded terrain descriptions including surface type, key landmarks, and seasonal notes for each segment
-- [ ] **RTE-05**: Pipeline extended to compute per-segment elevation data from route-data.json for sparkline generation
+- [x] **RTE-05**: Pipeline extended to compute per-segment elevation data from route-data.json for sparkline generation
 
 ### Animation & Polish
 
-- [ ] **ANI-01**: CSS scroll-driven section reveals — each major `<section>` fades in and slides up 20-30px as it enters the viewport via IntersectionObserver
-- [ ] **ANI-02**: Staggered child reveals within route explainer — segment cards reveal sequentially with 100ms stagger
-- [ ] **ANI-03**: All scroll-driven animations respect `prefers-reduced-motion` — content shown statically when motion is reduced
-- [ ] **ANI-04**: Performance budget maintained: page transfer <3MB, LCP <2.5s on simulated 4G, no above-fold animations
+- [x] **ANI-01**: CSS scroll-driven section reveals — each major `<section>` fades in and slides up 20-30px as it enters the viewport via IntersectionObserver
+- [x] **ANI-02**: Staggered child reveals within route explainer — segment cards reveal sequentially with 100ms stagger
+- [x] **ANI-03**: All scroll-driven animations respect `prefers-reduced-motion` — content shown statically when motion is reduced
+- [x] **ANI-04**: Performance budget maintained: page transfer <3MB, LCP <2.5s on simulated 4G, no above-fold animations
 
 ## v1.3 Requirements
 
@@ -91,20 +91,20 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DEC-03 | Phase 19 | Complete |
 | DEC-04 | Phase 19 | Complete |
 | DEC-05 | Phase 19 | Complete |
-| CON-01 | Phase 20 | Pending |
-| CON-02 | Phase 20 | Pending |
-| CON-03 | Phase 20 | Pending |
-| CON-04 | Phase 20 | Pending |
-| CON-05 | Phase 20 | Pending |
-| RTE-01 | Phase 20 | Pending |
+| CON-01 | Phase 20 | Complete |
+| CON-02 | Phase 20 | Complete |
+| CON-03 | Phase 20 | Complete |
+| CON-04 | Phase 20 | Complete |
+| CON-05 | Phase 20 | Complete |
+| RTE-01 | Phase 20 | Complete |
 | RTE-02 | Phase 19 | Complete |
-| RTE-03 | Phase 20 | Pending |
-| RTE-04 | Phase 20 | Pending |
+| RTE-03 | Phase 20 | Complete |
+| RTE-04 | Phase 20 | Complete |
 | RTE-05 | Phase 19 | Complete |
-| ANI-01 | Phase 22 | Pending |
-| ANI-02 | Phase 22 | Pending |
-| ANI-03 | Phase 22 | Pending |
-| ANI-04 | Phase 22 | Pending |
+| ANI-01 | Phase 22 | Complete |
+| ANI-02 | Phase 22 | Complete |
+| ANI-03 | Phase 22 | Complete |
+| ANI-04 | Phase 22 | Complete |
 
 **Coverage:**
 - v1.2 requirements: 23 total
@@ -113,4 +113,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-03-31*
-*Last updated: 2026-03-31 after roadmap creation*
+*Last updated: 2026-04-02 after v1.2 milestone completion*
