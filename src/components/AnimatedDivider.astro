@@ -1,8 +1,8 @@
 ---
 // AnimatedDivider.astro
 // Animated section divider with scroll-triggered draw-on animation via IntersectionObserver.
-// Inherits visual language from FloralDivider (Ojibwe woodland floral beadwork tradition).
-// Three visual variants: 'floral' (full vine), 'minimal' (double-curve), 'berry' (vine + clusters).
+// Geometric patterns inspired by Great Lakes Indigenous textile and beadwork traditions.
+// Three visual variants: 'floral' (richest band), 'minimal' (single chevron), 'berry' (stepped zigzag).
 // Animation: stroke-dashoffset with pathLength="1" (no getTotalLength needed).
 // Accessibility: aria-hidden + role="presentation"; prefers-reduced-motion shows static fallback.
 
@@ -17,138 +17,66 @@ const { variant = 'floral' } = Astro.props;
   {variant === 'floral' && (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 800 60"
+      viewBox="0 0 800 80"
       width="100%"
-      height="60"
+      height="80"
       aria-hidden="true"
       role="presentation"
       focusable="false"
     >
       <!--
-        Central vine ("vine of life") — animated draw-on via stroke-dashoffset.
-        pathLength="1" normalizes the dash calculation without getTotalLength().
+        RAIL LINES — Static horizontal rails grounding the pattern.
+        Top band at y=8/12/16, bottom band at y=64/68/72. forest-700.
       -->
-      <path
-        d="M0 30 Q100 10 200 30 Q300 50 400 30 Q500 10 600 30 Q700 50 800 30"
+      <line x1="0" y1="8"  x2="800" y2="8"  stroke="var(--color-forest-700)" stroke-width="2" />
+      <line x1="0" y1="12" x2="800" y2="12" stroke="var(--color-forest-700)" stroke-width="1.5" />
+      <line x1="0" y1="16" x2="800" y2="16" stroke="var(--color-forest-700)" stroke-width="2" />
+      <line x1="0" y1="64" x2="800" y2="64" stroke="var(--color-forest-700)" stroke-width="2" />
+      <line x1="0" y1="68" x2="800" y2="68" stroke="var(--color-forest-700)" stroke-width="1.5" />
+      <line x1="0" y1="72" x2="800" y2="72" stroke="var(--color-forest-700)" stroke-width="2" />
+
+      <!--
+        ANIMATED CHEVRON BAND — A continuous zigzag polyline running the full 800px width.
+        Draws on via stroke-dashoffset when scrolled into view.
+        pathLength="1" normalizes the dash calculation.
+        Points create a symmetric chevron wave mirrored at x=400.
+      -->
+      <polyline
+        points="0,40 50,24 100,40 150,24 200,40 250,24 300,40 350,24 400,40 450,56 500,40 550,56 600,40 650,56 700,40 750,56 800,40"
         pathLength="1"
         stroke="var(--color-gold-500)"
-        stroke-width="1.5"
+        stroke-width="3"
         fill="none"
-        opacity="0.7"
-        class="vine-path"
-      />
-      <!-- Vine shadow — berry-700 offset, animated in tandem -->
-      <path
-        d="M0 32 Q100 12 200 32 Q300 52 400 32 Q500 12 600 32 Q700 52 800 32"
-        pathLength="1"
-        stroke="var(--color-berry-700)"
-        stroke-width="1"
-        fill="none"
-        opacity="0.3"
         class="vine-path"
       />
 
-      <!-- Accent dot at center — static, appears immediately -->
-      <circle cx="400" cy="30" r="1.5" fill="var(--color-scarlet-400)" opacity="0.5" />
-
       <!--
-        Opposing leaf pairs — static decorative elements (no vine-path class).
-        Teardrop ellipses at inflection points x=150, x=400, x=650.
-        Bilateral symmetry echoes Ojibwe beadwork botanical forms.
+        STATIC DECORATIVE ELEMENTS — arrowheads and diamonds.
+        No vine-path class; appear immediately at full opacity.
       -->
 
-      <!-- Leaf pair at x=150 (first vine peak, y≈18) -->
-      <ellipse cx="150" cy="18" rx="10" ry="4" fill="var(--color-moss-500)" stroke="var(--color-lake-500)" stroke-width="0.5" transform="rotate(-25, 150, 18)" opacity="0.55" />
-      <ellipse cx="150" cy="18" rx="10" ry="4" fill="var(--color-moss-500)" stroke="var(--color-lake-600)" stroke-width="0.5" transform="rotate(25, 150, 18)" opacity="0.55" />
+      <!-- Center diamond at x=400 -->
+      <polygon points="400,26 418,40 400,54 382,40" fill="var(--color-amber-500)" />
+      <polygon points="400,32 410,40 400,48 390,40" fill="var(--color-amber-400)" />
 
-      <!-- Leaf pair at x=400 (vine midpoint, y=30) -->
-      <ellipse cx="400" cy="30" rx="10" ry="4" fill="var(--color-moss-600)" transform="rotate(-25, 400, 30)" opacity="0.55" />
-      <ellipse cx="400" cy="30" rx="10" ry="4" fill="var(--color-moss-600)" transform="rotate(25, 400, 30)" opacity="0.55" />
+      <!-- Arrowhead at x=200 (pointing left) -->
+      <polygon points="184,40 202,30 202,50" fill="var(--color-gold-500)" />
 
-      <!-- Leaf pair at x=650 (second vine peak, y≈18) -->
-      <ellipse cx="650" cy="18" rx="10" ry="4" fill="var(--color-moss-500)" stroke="var(--color-turquoise-500)" stroke-width="0.5" transform="rotate(-25, 650, 18)" opacity="0.55" />
-      <ellipse cx="650" cy="18" rx="10" ry="4" fill="var(--color-moss-500)" stroke="var(--color-sun-500)" stroke-width="0.5" transform="rotate(25, 650, 18)" opacity="0.55" />
+      <!-- Arrowhead at x=600 (pointing right, mirror of x=200) -->
+      <polygon points="616,40 598,30 598,50" fill="var(--color-gold-500)" />
 
-      <!--
-        Five-petal blossoms — static decorative elements (no vine-path class).
-        5 ellipses arranged radially at 72° intervals around a center point.
-        Visual reference: the five-petal flower form ubiquitous in Ojibwe beadwork.
-      -->
+      <!-- Small diamonds at x=100 / x=700 (symmetric) -->
+      <polygon points="100,35 108,40 100,45 92,40" fill="var(--color-turquoise-500)" />
+      <polygon points="700,35 708,40 700,45 692,40" fill="var(--color-turquoise-500)" />
 
-      <!-- Blossom at x=270, y≈44 (first vine trough) -->
-      <ellipse cx="270" cy="40" rx="4" ry="2" fill="var(--color-gold-400)" transform="rotate(0, 270, 44)" opacity="0.6" class="blossom-cycle" />
-      <ellipse cx="274" cy="46" rx="4" ry="2" fill="var(--color-gold-400)" transform="rotate(72, 270, 44)" opacity="0.6" class="blossom-cycle" />
-      <ellipse cx="265" cy="49" rx="4" ry="2" fill="var(--color-gold-400)" transform="rotate(144, 270, 44)" opacity="0.6" class="blossom-cycle" />
-      <ellipse cx="260" cy="43" rx="4" ry="2" fill="var(--color-gold-400)" transform="rotate(216, 270, 44)" opacity="0.6" class="blossom-cycle" />
-      <ellipse cx="265" cy="38" rx="4" ry="2" fill="var(--color-gold-400)" transform="rotate(288, 270, 44)" opacity="0.6" class="blossom-cycle" />
-      <circle cx="270" cy="44" r="3.5" fill="var(--color-lake-700)" opacity="0.4" />
-      <circle cx="270" cy="44" r="2" fill="var(--color-berry-500)" opacity="0.75" />
+      <!-- Small diamonds at x=300 / x=500 (symmetric) -->
+      <polygon points="300,35 308,40 300,45 292,40" fill="var(--color-gold-400)" />
+      <polygon points="500,35 508,40 500,45 492,40" fill="var(--color-gold-400)" />
 
-      <!-- Blossom at x=530, y≈44 (second vine trough) -->
-      <ellipse cx="530" cy="40" rx="4" ry="2" fill="var(--color-gold-400)" transform="rotate(0, 530, 44)" opacity="0.6" class="blossom-cycle" />
-      <ellipse cx="534" cy="46" rx="4" ry="2" fill="var(--color-gold-400)" transform="rotate(72, 530, 44)" opacity="0.6" class="blossom-cycle" />
-      <ellipse cx="525" cy="49" rx="4" ry="2" fill="var(--color-gold-400)" transform="rotate(144, 530, 44)" opacity="0.6" class="blossom-cycle" />
-      <ellipse cx="520" cy="43" rx="4" ry="2" fill="var(--color-gold-400)" transform="rotate(216, 530, 44)" opacity="0.6" class="blossom-cycle" />
-      <ellipse cx="525" cy="38" rx="4" ry="2" fill="var(--color-gold-400)" transform="rotate(288, 530, 44)" opacity="0.6" class="blossom-cycle" />
-      <circle cx="530" cy="44" r="3.5" fill="var(--color-lake-700)" opacity="0.4" />
-      <circle cx="530" cy="44" r="2" fill="var(--color-berry-600)" opacity="0.75" />
-
-      <!--
-        Double-curve accents at center (x≈400) — static decorative elements (no vine-path class).
-        Two opposing arcs: characteristic Ojibwe double-curve motif from beadwork/birchbark biting art.
-      -->
-      <path
-        d="M385 22 Q400 16 415 22"
-        stroke="var(--color-gold-600)"
-        stroke-width="1"
-        fill="none"
-        opacity="0.5"
-      />
-      <path
-        d="M385 38 Q400 44 415 38"
-        stroke="var(--color-gold-500)"
-        stroke-width="1"
-        fill="none"
-        opacity="0.5"
-      />
     </svg>
   )}
 
   {variant === 'minimal' && (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 800 30"
-      width="100%"
-      height="30"
-      aria-hidden="true"
-      role="presentation"
-      focusable="false"
-    >
-      <!--
-        Minimal double-curve — lightweight divider for minor section breaks.
-        Both curves animate via stroke-dashoffset draw-on.
-      -->
-      <path
-        d="M200 15 Q400 5 600 15"
-        pathLength="1"
-        stroke="var(--color-gold-600)"
-        stroke-width="1"
-        fill="none"
-        class="vine-path"
-      />
-      <path
-        d="M200 15 Q400 25 600 15"
-        pathLength="1"
-        stroke="var(--color-gold-500)"
-        stroke-width="1"
-        fill="none"
-        opacity="0.5"
-        class="vine-path"
-      />
-    </svg>
-  )}
-
-  {variant === 'berry' && (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 800 40"
@@ -159,37 +87,96 @@ const { variant = 'floral' } = Astro.props;
       focusable="false"
     >
       <!--
-        Berry vine — animated draw-on path.
-        Intermediate complexity between minimal and floral.
+        RAIL LINES — Static horizontal rules at top and bottom. forest-700.
       -->
-      <path
-        d="M100 20 Q250 8 400 20 Q550 32 700 20"
+      <line x1="0" y1="5"  x2="800" y2="5"  stroke="var(--color-forest-700)" stroke-width="2" />
+      <line x1="0" y1="35" x2="800" y2="35" stroke="var(--color-forest-700)" stroke-width="2" />
+
+      <!--
+        ANIMATED CHEVRON LINE — A single V-shaped chevron running the center 400px.
+        Draws on via stroke-dashoffset. pathLength="1" normalizes length.
+        Center at x=400 (400,10 -> 400,30 midpoint = 400,20).
+      -->
+      <polyline
+        points="200,30 400,10 600,30"
         pathLength="1"
-        stroke="var(--color-berry-500)"
-        stroke-width="1.5"
+        stroke="var(--color-gold-500)"
+        stroke-width="3"
         fill="none"
         class="vine-path"
       />
 
       <!--
-        Berry clusters — static decorative elements (no vine-path class).
-        Groups of 3 small circles at x=250, x=400, x=550.
+        STATIC DECORATIVE ELEMENTS — Two flanking diamonds + center dot.
+        No vine-path class; appear immediately.
       -->
 
-      <!-- Berry cluster at x=250 -->
-      <circle cx="248" cy="14" r="3" fill="var(--color-berry-500)" opacity="0.8" class="berry-cycle" />
-      <circle cx="255" cy="11" r="2" fill="var(--color-berry-600)" opacity="0.7" class="berry-cycle" />
-      <circle cx="242" cy="11" r="2.5" fill="var(--color-berry-700)" opacity="0.6" class="berry-cycle" />
+      <!-- Flanking diamonds at x=160 / x=640 (symmetric) -->
+      <polygon points="160,16 168,20 160,24 152,20" fill="var(--color-amber-500)" />
+      <polygon points="640,16 648,20 640,24 632,20" fill="var(--color-amber-500)" />
 
-      <!-- Berry cluster at x=400 -->
-      <circle cx="398" cy="26" r="3" fill="var(--color-berry-500)" opacity="0.8" class="berry-cycle" />
-      <circle cx="405" cy="23" r="2" fill="var(--color-berry-600)" opacity="0.7" class="berry-cycle" />
-      <circle cx="392" cy="23" r="2.5" fill="var(--color-berry-700)" opacity="0.6" class="berry-cycle" />
+      <!-- Center apex dot -->
+      <circle cx="400" cy="10" r="4" fill="var(--color-gold-400)" />
 
-      <!-- Berry cluster at x=550 -->
-      <circle cx="548" cy="14" r="3" fill="var(--color-berry-500)" opacity="0.8" class="berry-cycle" />
-      <circle cx="555" cy="11" r="2" fill="var(--color-berry-600)" opacity="0.7" class="berry-cycle" />
-      <circle cx="542" cy="11" r="2.5" fill="var(--color-berry-700)" opacity="0.6" class="berry-cycle" />
+    </svg>
+  )}
+
+  {variant === 'berry' && (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 800 60"
+      width="100%"
+      height="60"
+      aria-hidden="true"
+      role="presentation"
+      focusable="false"
+    >
+      <!--
+        RAIL LINES — Static horizontal rules at y=5 and y=55. forest-700.
+      -->
+      <line x1="0" y1="5"  x2="800" y2="5"  stroke="var(--color-forest-700)" stroke-width="2" />
+      <line x1="0" y1="55" x2="800" y2="55" stroke="var(--color-forest-700)" stroke-width="2" />
+
+      <!--
+        ANIMATED STEPPED ZIGZAG — A terraced/staircase path running full width,
+        like a topographic contour stepped pattern.
+        Bilateral symmetry around x=400. Draws on via stroke-dashoffset.
+        pathLength="1" normalizes the length.
+      -->
+      <polyline
+        points="0,42 100,42 100,30 200,30 200,18 300,18 300,30 400,30 400,18 500,18 500,30 600,30 600,42 700,42 700,30 800,30"
+        pathLength="1"
+        stroke="var(--color-turquoise-500)"
+        stroke-width="2.5"
+        fill="none"
+        class="vine-path"
+      />
+
+      <!--
+        STATIC DECORATIVE ELEMENTS — filled arrowheads and circles.
+        No vine-path class; appear immediately at full opacity.
+      -->
+
+      <!-- Filled arrow/chevron at x=200 (pointing up) -->
+      <polygon points="200,10 212,22 188,22" fill="var(--color-gold-500)" />
+
+      <!-- Filled arrow/chevron at x=400 (pointing up, center) -->
+      <polygon points="400,10 412,22 388,22" fill="var(--color-gold-500)" />
+
+      <!-- Filled arrow/chevron at x=600 (pointing up, mirror of x=200) -->
+      <polygon points="600,10 612,22 588,22" fill="var(--color-gold-500)" />
+
+      <!-- Small filled circles at step peaks — scarlet-400 -->
+      <circle cx="200" cy="18" r="3" fill="var(--color-scarlet-400)" />
+      <circle cx="300" cy="18" r="3" fill="var(--color-scarlet-400)" />
+      <circle cx="400" cy="18" r="3" fill="var(--color-scarlet-400)" />
+      <circle cx="500" cy="18" r="3" fill="var(--color-scarlet-400)" />
+      <circle cx="600" cy="18" r="3" fill="var(--color-scarlet-400)" />
+
+      <!-- Small filled diamonds at x=100 / x=700 (flanking, symmetric) -->
+      <polygon points="100,27 108,30 100,33 92,30" fill="var(--color-turquoise-500)" />
+      <polygon points="700,27 708,30 700,33 692,30" fill="var(--color-turquoise-500)" />
+
     </svg>
   )}
 
@@ -211,38 +198,10 @@ const { variant = 'floral' } = Astro.props;
     stroke-dashoffset: 0;
   }
 
-  /* Blossom petal color cycling — gold -> berry -> turquoise -> sun -> gold */
-  @keyframes cycle-blossom {
-    0%, 100% { fill: var(--color-gold-400); }
-    25%      { fill: var(--color-berry-500); }
-    50%      { fill: var(--color-turquoise-400); }
-    75%      { fill: var(--color-sun-400); }
-  }
-
-  /* Berry circle color cycling — berry-500 -> berry-600 -> scarlet-400 -> berry-700 -> berry-500 */
-  @keyframes cycle-berry {
-    0%, 100% { fill: var(--color-berry-500); }
-    25%      { fill: var(--color-berry-600); }
-    50%      { fill: var(--color-scarlet-400); }
-    75%      { fill: var(--color-berry-700); }
-  }
-
-  .blossom-cycle {
-    animation: cycle-blossom 8s ease-in-out infinite;
-  }
-
-  .berry-cycle {
-    animation: cycle-berry 6s ease-in-out infinite;
-  }
-
   @media (prefers-reduced-motion: reduce) {
     .vine-path {
       stroke-dashoffset: 0;
       transition: none;
-    }
-    .blossom-cycle,
-    .berry-cycle {
-      animation: none;
     }
   }
 </style>
