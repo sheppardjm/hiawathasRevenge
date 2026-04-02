@@ -20,13 +20,13 @@ const ROOT = resolve(__dirname, '..');
 // ---------------------------------------------------------------------------
 
 const GRAVEL_SECTORS = [
-  { id: 'sector-520',         name: '520',                     startMile: 1.1,  lengthMiles: 1.3, difficulty: 'moderate' },
-  { id: 'sector-nf2266',      name: 'NF2266',                  startMile: 6.7,  lengthMiles: 3.2, difficulty: 'moderate' },
-  { id: 'sector-bass-lake',   name: 'Bass Lake Rd',            startMile: 25.3, lengthMiles: 4.8, difficulty: 'easy' },
-  { id: 'sector-nf2217',      name: 'NF2217',                  startMile: 36.8, lengthMiles: 6.6, difficulty: 'moderate' },
-  { id: 'sector-nd2225',      name: 'ND2225',                  startMile: 55.7, lengthMiles: 3.9, difficulty: 'moderate' },
-  { id: 'sector-doe-lake',    name: 'Doe Lake',                startMile: 84.8, lengthMiles: 3.1, difficulty: 'easy' },
-  { id: 'sector-rapid-river', name: 'Rapid River Truck Trail', startMile: 94.6, lengthMiles: 6.3, difficulty: 'hard' },
+  { id: 'sector-520',         name: '520',                     startMile: 1.1,  lengthMiles: 1.3, difficulty: 'moderate', stars: 2 },
+  { id: 'sector-nf2266',      name: 'NF2266',                  startMile: 6.7,  lengthMiles: 3.2, difficulty: 'moderate', stars: 5 },
+  { id: 'sector-bass-lake',   name: 'Bass Lake Rd',            startMile: 25.3, lengthMiles: 4.8, difficulty: 'easy',     stars: 2 },
+  { id: 'sector-nf2217',      name: 'NF2217',                  startMile: 36.8, lengthMiles: 6.6, difficulty: 'moderate', stars: 2 },
+  { id: 'sector-nd2225',      name: 'ND2225',                  startMile: 55.7, lengthMiles: 3.9, difficulty: 'moderate', stars: 3 },
+  { id: 'sector-doe-lake',    name: 'Doe Lake',                startMile: 84.8, lengthMiles: 3.1, difficulty: 'easy',     stars: 4 },
+  { id: 'sector-rapid-river', name: 'Rapid River Truck Trail', startMile: 94.6, lengthMiles: 6.3, difficulty: 'hard',     stars: 2 },
 ];
 
 const RESTOCK_POINTS = [
@@ -112,6 +112,7 @@ const snappedSectors = GRAVEL_SECTORS.map((sector) => {
     startIdx: startSnap.snapIdx,
     endIdx,
     difficulty: sector.difficulty,
+    stars: sector.stars,
   };
 });
 

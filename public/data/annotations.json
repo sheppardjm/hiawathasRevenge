@@ -12,7 +12,8 @@
     "endLon": -86.74124,
     "startIdx": 5,
     "endIdx": 14,
-    "difficulty": "moderate"
+    "difficulty": "moderate",
+    "stars": 2
   },
   {
     "id": "sector-nf2266",
@@ -27,7 +28,8 @@
     "endLon": -86.67161,
     "startIdx": 23,
     "endIdx": 33,
-    "difficulty": "moderate"
+    "difficulty": "moderate",
+    "stars": 5
   },
   {
     "id": "sector-bass-lake",
@@ -42,7 +44,8 @@
     "endLon": -86.43604,
     "startIdx": 110,
     "endIdx": 132,
-    "difficulty": "easy"
+    "difficulty": "easy",
+    "stars": 2
   },
   {
     "id": "sector-nf2217",
@@ -57,7 +60,8 @@
     "endLon": -86.54383,
     "startIdx": 157,
     "endIdx": 180,
-    "difficulty": "moderate"
+    "difficulty": "moderate",
+    "stars": 2
   },
   {
     "id": "sector-nd2225",
@@ -72,7 +76,8 @@
     "endLon": -86.54052,
     "startIdx": 222,
     "endIdx": 250,
-    "difficulty": "moderate"
+    "difficulty": "moderate",
+    "stars": 3
   },
   {
     "id": "sector-doe-lake",
@@ -87,7 +92,8 @@
     "endLon": -86.74495,
     "startIdx": 379,
     "endIdx": 389,
-    "difficulty": "easy"
+    "difficulty": "easy",
+    "stars": 4
   },
   {
     "id": "sector-rapid-river",
@@ -102,7 +108,8 @@
     "endLon": -86.73322,
     "startIdx": 414,
     "endIdx": 449,
-    "difficulty": "hard"
+    "difficulty": "hard",
+    "stars": 2
   },
   {
     "id": "restock-camp7",

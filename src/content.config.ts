@@ -59,6 +59,7 @@ const annotations = defineCollection({
       startIdx: z.number(),
       endIdx: z.number(),
       difficulty: z.enum(['easy', 'moderate', 'hard']),
+      stars: z.number().int().min(1).max(5),
     }),
     z.object({
       id: z.string(),
