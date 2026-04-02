@@ -5,7 +5,7 @@
 - ✅ **v1.0 MVP** — Phases 0–11 (shipped 2026-03-31)
 - ✅ **v1.1 Visual Redesign** — Phases 12–17 (shipped 2026-03-31)
 - ✅ **v1.2 Cultural Maximalism** — Phases 18–22 (shipped 2026-04-02)
-- 🚧 **v1.3 Interactive Map & Editorial Polish** — Phases 23–26 (in progress)
+- 🚧 **v1.3 Interactive Map & Editorial Polish** — Phases 23–27 (in progress)
 
 ---
 
@@ -133,6 +133,28 @@ Plans:
 
 ---
 
+### Phase 27: Audit Gap Closure
+
+**Goal:** Close the two requirement gaps found by the v1.3 milestone audit — EB Garamond font not loading (VIS-02) and panel backdrop close affordance (MAP-08) — plus clean up associated tech debt in RouteMap.astro.
+
+**Depends on:** Phase 26 (editorial polish complete), Phase 25 (panel logic complete)
+
+**Requirements:** VIS-02, MAP-08
+
+**Gap Closure:** Closes gaps from v1.3-MILESTONE-AUDIT.md
+
+**Success Criteria** (what must be TRUE):
+1. EB Garamond font is loaded via `<Font>` tag in BaseLayout.astro and drop-cap `::first-letter` elements render in EB Garamond (not system serif)
+2. Clicking the map area outside the open panel closes the panel — OR a documented decision exists that this affordance is intentionally omitted in favor of map interactivity
+3. Stale comment at RouteMap.astro line 482 is removed, dead `::backdrop` CSS is removed, and NF2217 display name is consistent between panel and segment card
+
+**Plans:** 0 plans (not yet planned)
+
+Plans:
+- [ ] 27-01-PLAN.md — (pending `/gsd:plan-phase 27`)
+
+---
+
 ## Progress
 
 | Phase | Milestone | Plans Complete | Status | Completed |
@@ -144,3 +166,4 @@ Plans:
 | 24. Sector labels | v1.3 | 1/1 | Complete | 2026-04-02 |
 | 25. Click handlers + surface track | v1.3 | 2/2 | Complete | 2026-04-02 |
 | 26. Editorial polish | v1.3 | 3/3 | Complete | 2026-04-02 |
+| 27. Audit gap closure | v1.3 | 0/0 | Not started | — |
