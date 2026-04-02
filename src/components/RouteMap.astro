@@ -130,11 +130,6 @@
     padding: 16px 20px;
   }
 
-  /* Panel backdrop — native dialog ::backdrop (only renders with showModal(), dead code with show()) */
-  .sector-panel::backdrop {
-    background: rgba(0, 0, 0, 0.3);
-  }
-
   /* Panel body content styles — populated by openPanel() */
   .panel-stars {
     font-size: 1.1rem;
@@ -479,7 +474,7 @@
       // Set panel title
       panel.querySelector('.sector-panel__title').textContent = details?.name || sector.name;
 
-      // Build panel body — minimal content; Plan 25-02 adds full buildPanelBody() with sparkline
+      // Build panel body — stars, meta, sparkline, description, strava link, jump link
       const stars = '\u2605'.repeat(sector.stars) + '\u2606'.repeat(5 - sector.stars);
       const milesRange = details ? `${details.startMile}\u2013${details.endMile} mi` : '';
       const surface = details?.surface || '';
@@ -541,7 +536,11 @@
       }
     });
 
-    // Click outside panel to close — dialog.show() has no backdrop, so listen on document
+    // Click outside panel to close — dialog.show() (non-modal) has no native backdrop.
+    // Excludes .leaflet-interactive clicks intentionally: map stays fully interactive
+    // while panel is open. This is a deliberate trade-off for choosing show() over
+    // showModal(). Non-map clicks outside the panel (page header, sections) close it.
+    // Panel also closes via X button and Escape key.
     document.addEventListener('click', (e) => {
       if (panel.open && !panel.contains(e.target) && !e.target.closest('.leaflet-interactive')) {
         closePanel();
