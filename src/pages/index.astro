@@ -18,7 +18,7 @@ import ScrollReveal from '../components/ScrollReveal.astro';
 
   <HeroSection />
 
-  <section class="w-full py-[--spacing-block]">
+  <section class="gold-section w-full py-[--spacing-block]">
     <div class="max-w-4xl mx-auto px-4 flex justify-center">
       <DonateCallout />
     </div>
@@ -32,7 +32,7 @@ import ScrollReveal from '../components/ScrollReveal.astro';
 
   <AnimatedDivider variant="minimal" />
 
-  <section data-reveal class="bg-forest-800 w-full py-[--spacing-block]">
+  <section data-reveal class="amber-section w-full py-[--spacing-block]">
     <div class="max-w-4xl mx-auto px-4">
       <h2 class="text-3xl mb-[--spacing-element]">Route Stats</h2>
       <RouteStats />
@@ -77,7 +77,7 @@ import ScrollReveal from '../components/ScrollReveal.astro';
 
   <AnimatedDivider variant="floral" />
 
-  <section data-reveal class="bg-forest-800 w-full py-[--spacing-block]">
+  <section data-reveal class="teal-section w-full py-[--spacing-block]">
     <div class="max-w-4xl mx-auto px-4">
       <h2 class="text-3xl mb-[--spacing-element]">Support the Trail</h2>
       <DonateCallout />
@@ -104,6 +104,72 @@ import ScrollReveal from '../components/ScrollReveal.astro';
 </BaseLayout>
 
 <style>
+
+  /* ============================================================
+     Section background color overrides — "yellow, orange, teal"
+     UAT gap closure: Test 12 (section color variety)
+     :global() required to pierce Astro scoped styles in DonateCallout
+     ============================================================ */
+
+  /* Gold/yellow section — sun-500 bg, dark text (forest-950) */
+  .gold-section {
+    background-color: var(--color-sun-500);
+    color: var(--color-forest-950);
+  }
+  .gold-section :global(h2),
+  .gold-section :global(h3) {
+    color: var(--color-forest-950);
+    text-shadow: none;
+  }
+  .gold-section :global(.donate-message) {
+    color: var(--color-forest-900);
+  }
+  .gold-section :global(.donate-button) {
+    color: var(--color-forest-950);
+    border-color: var(--color-forest-900);
+    box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.2);
+  }
+  .gold-section :global(.donate-button:hover) {
+    background-color: var(--color-forest-950);
+    color: var(--color-sun-300);
+  }
+  .gold-section :global(a) {
+    color: var(--color-forest-800);
+  }
+
+  /* Amber/orange section — amber-500 bg, dark text (forest-950) */
+  .amber-section {
+    background-color: var(--color-amber-500);
+    color: var(--color-forest-950);
+  }
+  .amber-section :global(h2),
+  .amber-section :global(h3) {
+    color: var(--color-forest-950);
+    text-shadow: none;
+  }
+  .amber-section :global(p),
+  .amber-section :global(span) {
+    color: var(--color-forest-900);
+  }
+
+  /* Teal section — turquoise-700 bg, cream text, sun-400 headings */
+  .teal-section {
+    background-color: var(--color-turquoise-700);
+  }
+  .teal-section :global(h2) {
+    color: var(--color-sun-400);
+  }
+  .teal-section :global(.donate-message) {
+    color: var(--color-cream-100);
+  }
+  .teal-section :global(.donate-button) {
+    border-color: var(--color-cream-100);
+    color: var(--color-cream-100);
+  }
+  .teal-section :global(.donate-button:hover) {
+    background-color: var(--color-cream-100);
+    color: var(--color-turquoise-700);
+  }
 
   .gpx-download {
     display: inline-flex;
