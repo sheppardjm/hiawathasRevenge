@@ -26,22 +26,22 @@ Requirements for v1.3 Interactive Map & Editorial Polish. Each maps to roadmap p
 
 ### Visual Polish
 
-- [ ] **VIS-01**: More vertical padding at top and bottom of each content section for breathing room
-- [ ] **VIS-02**: Pull quote starts with capital drop letter in classic American typeface (Caslon or Garamond)
-- [ ] **VIS-03**: Pull quote set in larger font size than body text to draw reader attention
-- [ ] **VIS-04**: Sticky fixed-position background images in poem/forest/ride sections with scroll fade-in/out effect
-- [ ] **VIS-05**: Route stats section reverted to higher contrast color scheme for text legibility
-- [ ] **VIS-06**: Additional Native American design elements and motifs interspersed throughout site (patterns, symbols, earthy tones)
+- [x] **VIS-01**: More vertical padding at top and bottom of each content section for breathing room
+- [x] **VIS-02**: Pull quote starts with capital drop letter in classic American typeface (Caslon or Garamond)
+- [x] **VIS-03**: Pull quote set in larger font size than body text to draw reader attention
+- [x] **VIS-04**: Sticky fixed-position background images in poem/forest/ride sections with scroll fade-in/out effect
+- [x] **VIS-05**: Route stats section reverted to higher contrast color scheme for text legibility
+- [x] **VIS-06**: Additional Native American design elements and motifs interspersed throughout site (patterns, symbols, earthy tones)
 
 ### Performance
 
-- [ ] **PERF-01**: Photo loading skeletons prevent layout shifts while images load
+- [x] **PERF-01**: Photo loading skeletons prevent layout shifts while images load
 
 ### Data Pipeline
 
-- [ ] **DATA-01**: Difficulty ratings reconciled between annotations.json and data.md to a single canonical source
-- [ ] **DATA-02**: New sector-details.json consolidating all panel content (name, description, surface, stars, Strava link) at build time
-- [ ] **DATA-03**: RidewithGPS JSON processed into per-point surface type data for track coloring pipeline step
+- [x] **DATA-01**: Difficulty ratings reconciled between annotations.json and data.md to a single canonical source
+- [x] **DATA-02**: New sector-details.json consolidating all panel content (name, description, surface, stars, Strava link) at build time
+- [x] **DATA-03**: RidewithGPS JSON processed into per-point surface type data for track coloring pipeline step
 
 ## Future Requirements
 
@@ -97,13 +97,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 | MAP-12 | Phase 25 | Complete |
 | MAP-13 | Phase 25 | Complete |
 | MAP-14 | Phase 25 | Complete |
-| VIS-01 | Phase 26 | Pending |
-| VIS-02 | Phase 26 | Pending |
-| VIS-03 | Phase 26 | Pending |
-| VIS-04 | Phase 26 | Pending |
-| VIS-05 | Phase 26 | Pending |
-| VIS-06 | Phase 26 | Pending |
-| PERF-01 | Phase 26 | Pending |
+| VIS-01 | Phase 26 | Complete |
+| VIS-02 | Phase 26 | Complete |
+| VIS-03 | Phase 26 | Complete |
+| VIS-04 | Phase 26 | Complete |
+| VIS-05 | Phase 26 | Complete |
+| VIS-06 | Phase 26 | Complete |
+| PERF-01 | Phase 26 | Complete |
 
 **Coverage:**
 - v1.3 requirements: 24 total
@@ -112,4 +112,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-04-02*
-*Last updated: 2026-04-02 after Phase 25 completion*
+*Last updated: 2026-04-02 after Phase 26 completion*
