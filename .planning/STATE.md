@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-03-31)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive, visually stunning showcase that inspires them to ride it and support MBTN.
-**Current focus:** v1.2 Cultural Maximalism -- Phase 22 Animation Polish in progress (22-01 complete)
+**Current focus:** v1.2 Cultural Maximalism -- Phase 22 Animation Polish complete (22-02 verified)
 
 ## Current Position
 
-Phase: 22 (5 of 5 in v1.2) -- Animation Polish -- In progress
-Plan: 01 of 2 in phase -- Complete
-Status: 22-01 complete (ScrollReveal system, data-reveal wiring, segment card stagger)
-Last activity: 2026-04-02 -- Completed 22-01-PLAN.md
+Phase: 22 (5 of 5 in v1.2) -- Animation Polish -- Complete
+Plan: 02 of 2 in phase -- Complete
+Status: 22-02 complete (reduced-motion audit passed, human visual approval)
+Last activity: 2026-04-02 -- Completed 22-02-PLAN.md
 
-Progress: [██████████] 96% (12/13 v1.2 plans)
+Progress: [██████████] 100% (13/13 v1.2 plans)
 
 ## Performance Metrics
 
@@ -29,9 +29,9 @@ Progress: [██████████] 96% (12/13 v1.2 plans)
 - Timeline: 1 day (2026-03-31)
 
 **v1.2 Summary:**
-- Total plans completed: 11 (18-01, 18-02, 19-01, 19-02, 19-03, 19-04, 19-05, 20-01, 20-02, 20-03, 21-01)
+- Total plans completed: 13 (18-01, 18-02, 19-01, 19-02, 19-03, 19-04, 19-05, 20-01, 20-02, 20-03, 21-01, 22-01, 22-02)
 - Total phases: 5 (18-22)
-- Estimated plans: ~12
+- Estimated plans: 13 (COMPLETE)
 
 ## Accumulated Context
 
@@ -73,6 +73,7 @@ All v1.0 + v1.1 decisions logged in PROJECT.md Key Decisions table.
 | 22-01 | threshold 0.15 (not 0.3) for section reveals | Tall sections on mobile may never reach 30% visible; 15% triggers reliably |
 | 22-01 | AnimatedDividers excluded from data-reveal | They manage their own IntersectionObserver per instance — adding data-reveal would conflict |
 | 22-01 | data-reveal added inside component files (not wrapping in index.astro) | Keeps observer targeting the actual section element, not a wrapper |
+| 22-02 | No source changes needed — 22-01 passed all ANI-03/ANI-04 audits | reduced-motion CSS guards, JS matchMedia skip, above-fold exclusions, and 614KB transfer all compliant |
 
 ### Pending Todos
 
@@ -89,5 +90,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-04-02
-Stopped at: Completed 22-01-PLAN.md -- scroll reveal system, 9 sections wired, segment card stagger
+Stopped at: Completed 22-02-PLAN.md -- reduced-motion audit passed, human visual verification approved
 Resume file: None
