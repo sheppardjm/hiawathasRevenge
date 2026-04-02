@@ -4,6 +4,7 @@
 // Covers Longfellow's 1855 publication, the Haudenosaunee/Ojibwe conflation,
 // the 1931 National Forest naming, and MBTN's role organizing the ride.
 import historicalPhotos from '../../public/data/historical-photos.json';
+import ShieldMotif from './ShieldMotif.astro';
 ---
 
 <section class="max-w-4xl mx-auto px-4 py-[--spacing-block]">
@@ -48,10 +49,11 @@ import historicalPhotos from '../../public/data/historical-photos.json';
       ultimately became
     </p>
 
-    <blockquote class="border-l-2 border-gold-500 pl-4 italic text-cream-200 text-sm">
-      "a romanticized conflation of disparate Indian tribes, their traditions, and
+    <blockquote class="pull-quote">
+      <p>"a romanticized conflation of disparate Indian tribes, their traditions, and
       their legends" — one that presented Native American culture as doomed, a relic
-      of the past inevitably making way for Euro-American expansion.
+      of the past inevitably making way for Euro-American expansion.</p>
+      <ShieldMotif size={12} class="pull-quote-ornament" />
     </blockquote>
 
     {historicalPhotos.length > 0 && (
@@ -139,5 +141,59 @@ import historicalPhotos from '../../public/data/historical-photos.json';
     color: var(--color-cream-200);
     margin-top: 0.75rem;
     font-style: italic;
+  }
+
+  .pull-quote {
+    background-color: var(--color-forest-950);
+    border-left: none;
+    border: none;
+    padding: 2.5rem 3rem 2.5rem 4.5rem;
+    margin: 4rem 0;
+    position: relative;
+    font-family: var(--font-display);
+    font-size: var(--font-size-xl);
+    font-style: normal;
+    color: var(--color-cream-50);
+    line-height: 1.6;
+    max-width: 48rem;
+    width: 100%;
+    border-radius: 0.25rem;
+  }
+
+  .pull-quote::before {
+    content: '\201C';
+    font-size: 5rem;
+    color: var(--color-gold-500);
+    position: absolute;
+    top: 1.5rem;
+    left: 0.75rem;
+    line-height: 1;
+    opacity: 0.7;
+    font-family: var(--font-display);
+  }
+
+  .pull-quote p {
+    margin: 0;
+    position: relative;
+  }
+
+  .pull-quote-ornament {
+    color: var(--color-gold-500);
+    opacity: 0.4;
+    margin-top: 1rem;
+    display: block;
+  }
+
+  @media (max-width: 640px) {
+    .pull-quote {
+      padding: 2rem 1.5rem 2rem 3rem;
+      font-size: var(--font-size-lg);
+    }
+
+    .pull-quote::before {
+      font-size: 3.5rem;
+      left: 0.5rem;
+      top: 1rem;
+    }
   }
 </style>
