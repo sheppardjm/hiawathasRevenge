@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-04-02)
 ## Current Position
 
 Phase: 23 of 26 (Data Reconciliation + Sector Details Pipeline)
-Plan: 0 of TBD in current phase
-Status: Ready to plan
-Last activity: 2026-04-02 — v1.3 roadmap created, ready for Phase 23 planning
+Plan: 1 of TBD in current phase
+Status: In progress
+Last activity: 2026-04-02 — Completed 23-01-PLAN.md (DATA-01 + DATA-03)
 
-Progress: [████████████░░░░░░░░] v1.0 ✅ | v1.1 ✅ | v1.2 ✅ | v1.3 Phase 23 next
+Progress: [████████████░░░░░░░░] v1.0 ✅ | v1.1 ✅ | v1.2 ✅ | v1.3 Phase 23 in progress (1 plan complete)
 
 ## Performance Metrics
 
@@ -35,6 +35,8 @@ Recent decisions relevant to v1.3:
 - Ghost polyline pattern (not `leaflet-highlightable-layers`) — zero new dependencies
 - HTML `<dialog>` + CSS translate — no JS animation library needed
 - Panel as sibling of `#map` inside `.route-map` wrapper — avoids Leaflet z-index stacking context
+- stars field is additive in annotations.json — difficulty string preserved unchanged to avoid breaking existing components
+- Coordinate matching (5-decimal rounding Map) is the correct strategy for route-data.json -> hiawathasRevenge.json lookup (456/456 match rate)
 
 ### Pending Todos
 
@@ -50,10 +52,12 @@ None.
 ### Tech Debt (carried forward)
 
 - Hero image 640KB JPEG — no WebP fallback, no srcset, no preload hint
-- DATA-01 (difficulty data inconsistency) is Phase 23's first task
+- DATA-01 resolved (23-01): stars integer added to annotations.json
+- DATA-03 resolved (23-01): surface-points.json produced with 456 entries
+- DATA-02 pending (23-02): generate-sector-details.js not yet created
 
 ## Session Continuity
 
-Last session: 2026-04-02
-Stopped at: v1.3 roadmap written, ready to plan Phase 23
+Last session: 2026-04-02T17:07:37Z
+Stopped at: Completed 23-01-PLAN.md (DATA-01 + DATA-03 data reconciliation)
 Resume file: None
