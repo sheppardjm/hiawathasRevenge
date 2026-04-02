@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-03-31)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive, visually stunning showcase that inspires them to ride it and support MBTN.
-**Current focus:** v1.2-gaps UAT Gap Closure -- divider geometric redesign complete (v1.2-gaps-01 verified)
+**Current focus:** v1.2-gaps UAT Gap Closure -- editorial layout redesign complete (v1.2-gaps-02 done)
 
 ## Current Position
 
-Phase: v1.2-gaps (1 of 4 gap closure plans complete)
-Plan: 01 of 4 in phase -- Complete
-Status: v1.2-gaps-01 complete (build passes, vine-path animation preserved, bold geometric patterns)
-Last activity: 2026-04-02 -- Completed v1.2-gaps-01-PLAN.md
+Phase: v1.2-gaps (2 of 4 gap closure plans complete)
+Plan: 02 of 4 in phase -- Complete
+Status: v1.2-gaps-02 complete (CSS Grid editorial layout, museum-plate images, pull quote redesign, drop caps)
+Last activity: 2026-04-02 -- Completed v1.2-gaps-02-PLAN.md
 
-Progress: [██████████] v1.2 base: 100% (13/13) | gap closure: 1/4 complete
+Progress: [██████████] v1.2 base: 100% (13/13) | gap closure: 2/4 complete
 
 ## Performance Metrics
 
@@ -76,6 +76,9 @@ All v1.0 + v1.1 decisions logged in PROJECT.md Key Decisions table.
 | 22-02 | No source changes needed — 22-01 passed all ANI-03/ANI-04 audits | reduced-motion CSS guards, JS matchMedia skip, above-fold exclusions, and 614KB transfer all compliant |
 | v1.2-gaps-01 | Polyline used for animated zigzag/chevron paths (vs path) | Simpler coordinate syntax for geometric shapes; bilateral symmetry enforced by mirroring at x=400 |
 | v1.2-gaps-01 | cycle-blossom/cycle-berry @keyframes fully removed | No SVG elements reference them after floral content replaced; leaving dead CSS would be misleading |
+| v1.2-gaps-02 | Named CSS Grid tracks (full/breakout/prose) for editorial layout | .editorial-grid > * defaults to prose; .breakout spans breakout; enables magazine-style breakout elements without JS |
+| v1.2-gaps-02 | Pull quote ::first-letter via .pull-quote p::first-letter selector (not class) | Keeps blockquote HTML semantic; CSS selector targets the p inside without adding extra classes |
+| v1.2-gaps-02 | max-w-4xl upgraded to max-w-5xl for HiawathaExplainer | Gives breakout tracks visible room at desktop widths; prose column still constrained to 65ch |
 
 ### Pending Todos
 
@@ -91,6 +94,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-02
-Stopped at: Completed v1.2-gaps-01-PLAN.md -- geometric divider redesign, build clean, animation infrastructure preserved
+Last session: 2026-04-02T15:07:41Z
+Stopped at: Completed v1.2-gaps-02-PLAN.md -- magazine editorial grid, museum-plate images, pull quote redesign with attribution, 5 drop caps
 Resume file: None
