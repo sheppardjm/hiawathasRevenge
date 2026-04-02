@@ -38,7 +38,7 @@ function parseDims(filename: string): { w: number; h: number } {
           target="_blank"
           rel="noopener"
           class:list={[
-            "block mb-3 break-inside-avoid overflow-hidden rounded-sm",
+            "block mb-3 break-inside-avoid overflow-hidden rounded-sm img-skeleton",
             photo.featured && "featured-photo"
           ]}
         >
@@ -47,6 +47,8 @@ function parseDims(filename: string): { w: number; h: number } {
             alt=""
             loading="lazy"
             decoding="async"
+            width={dims.w}
+            height={dims.h}
             class="w-full h-auto block"
           />
         </a>
@@ -66,9 +68,50 @@ function parseDims(filename: string): { w: number; h: number } {
     object-fit: cover;
     width: 100%;
   }
+
+  /* PERF-01: Skeleton shimmer — shown until image loads, then .loaded removes animation */
+  .img-skeleton {
+    background: linear-gradient(
+      90deg,
+      var(--color-forest-800) 25%,
+      var(--color-forest-700) 50%,
+      var(--color-forest-800) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s ease-in-out infinite;
+  }
+
+  .img-skeleton.loaded {
+    background: none;
+    animation: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .img-skeleton {
+      animation: none;
+      background: var(--color-forest-800);
+    }
+  }
 </style>
 
 <script>
+  // PERF-01: Remove skeleton shimmer once each image loads
+  document.querySelectorAll('.img-skeleton').forEach(wrapper => {
+    const img = wrapper.querySelector('img');
+    if (!img) return;
+
+    function markLoaded() {
+      wrapper.classList.add('loaded');
+    }
+
+    if (img.complete) {
+      markLoaded();
+    } else {
+      img.addEventListener('load', markLoaded, { once: true });
+      img.addEventListener('error', markLoaded, { once: true }); // Remove shimmer even on error
+    }
+  });
+
   // PhotoSwipe lightbox — imported in <script> block so Vite bundles it client-side only
   // pswpModule uses dynamic import to defer the 30KB core until the user clicks a thumbnail
   import PhotoSwipeLightbox from 'photoswipe/lightbox';
