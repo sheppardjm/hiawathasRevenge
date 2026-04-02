@@ -57,25 +57,37 @@ const segmentsWithPhotos = SEGMENTS.map(seg => ({
       100 miles of forest roads, two-track, and singletrack. Seven segments, each with its own character. Here's what to expect.
     </p>
     {segmentsWithPhotos.map((seg) => (
-      <article class={`segment-card${seg.photos.length === 0 ? ' no-photo' : ''}`}>
-        {seg.photos.length > 0 && (
-          <div class="segment-photo">
+      <article class="segment-card-container">
+        {seg.photos.length > 0 ? (
+          <div class="segment-hero">
             <img
               src={seg.photos[0].thumb}
               alt={`Route photo near mile ${seg.photos[0].mile.toFixed(1)}`}
               loading="lazy"
               decoding="async"
-              class="rounded"
             />
+            <div class="segment-hero-overlay">
+              <div class="flex items-center gap-2">
+                <ShieldMotif size={10} class={DIFFICULTY_COLORS[seg.difficulty] ?? 'text-amber-500'} />
+                <h3 class={`text-xl font-display ${DIFFICULTY_COLORS[seg.difficulty] ?? 'text-amber-500'}`}>
+                  {seg.name}
+                </h3>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div class="segment-hero segment-hero-fallback">
+            <div class="segment-hero-overlay">
+              <div class="flex items-center gap-2">
+                <ShieldMotif size={10} class={DIFFICULTY_COLORS[seg.difficulty] ?? 'text-amber-500'} />
+                <h3 class={`text-xl font-display ${DIFFICULTY_COLORS[seg.difficulty] ?? 'text-amber-500'}`}>
+                  {seg.name}
+                </h3>
+              </div>
+            </div>
           </div>
         )}
-        <div class="segment-content">
-          <div class="flex items-center gap-2">
-            <ShieldMotif size={10} class={DIFFICULTY_COLORS[seg.difficulty] ?? 'text-amber-500'} />
-            <h3 class={`text-xl font-display ${DIFFICULTY_COLORS[seg.difficulty] ?? 'text-amber-500'}`}>
-              {seg.name}
-            </h3>
-          </div>
+        <div class="segment-body">
           <div class="flex items-center gap-3 text-sm text-cream-200 mt-1 mb-2">
             <span>{seg.distFromStart} from start</span>
             <span>·</span>
@@ -103,9 +115,7 @@ const segmentsWithPhotos = SEGMENTS.map(seg => ({
           )}
           <p class="text-cream-100 leading-relaxed">{seg.description}</p>
           {SECTOR_IDS[seg.name] && (
-            <div class="mt-3">
-              <ElevationSparkline sectorId={SECTOR_IDS[seg.name]} class="opacity-60" />
-            </div>
+            <ElevationSparkline sectorId={SECTOR_IDS[seg.name]} class="mt-3" />
           )}
         </div>
       </article>
@@ -123,44 +133,18 @@ const segmentsWithPhotos = SEGMENTS.map(seg => ({
     border-bottom: 1px solid var(--color-forest-700);
   }
 
-  /* Segment card — mobile first: single column */
-  .segment-card {
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-areas:
-      "photo"
-      "content";
-    gap: 1.5rem;
+  /* Card container — magazine-style with visible bg, border, shadow */
+  .segment-card-container {
+    background: var(--color-forest-800);
+    border: 1px solid var(--color-forest-700);
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
     margin-bottom: 2rem;
-    padding-bottom: 2rem;
-    border-bottom: 1px solid var(--color-forest-700);
-  }
-
-  .segment-card.no-photo {
-    grid-template-areas: "content";
-    grid-template-columns: 1fr;
-  }
-
-  .segment-card:last-child {
-    border-bottom: none;
-  }
-
-  .segment-photo {
-    grid-area: photo;
-  }
-
-  .segment-content {
-    grid-area: content;
-  }
-
-  .segment-photo img {
-    width: 100%;
-    height: auto;
-    object-fit: cover;
+    overflow: hidden;
   }
 
   /* Stagger: cards hidden by default, revealed when parent section is visible */
-  .segment-card {
+  .segment-card-container {
     opacity: 0;
     transform: translateY(24px);
     transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
@@ -168,28 +152,70 @@ const segmentsWithPhotos = SEGMENTS.map(seg => ({
   }
 
   /* nth-child stagger — 100ms per card, 7 cards = 600ms max */
-  .segment-card:nth-child(1) { transition-delay: 0ms; }
-  .segment-card:nth-child(2) { transition-delay: 100ms; }
-  .segment-card:nth-child(3) { transition-delay: 200ms; }
-  .segment-card:nth-child(4) { transition-delay: 300ms; }
-  .segment-card:nth-child(5) { transition-delay: 400ms; }
-  .segment-card:nth-child(6) { transition-delay: 500ms; }
-  .segment-card:nth-child(7) { transition-delay: 600ms; }
+  .segment-card-container:nth-child(1) { transition-delay: 0ms; }
+  .segment-card-container:nth-child(2) { transition-delay: 100ms; }
+  .segment-card-container:nth-child(3) { transition-delay: 200ms; }
+  .segment-card-container:nth-child(4) { transition-delay: 300ms; }
+  .segment-card-container:nth-child(5) { transition-delay: 400ms; }
+  .segment-card-container:nth-child(6) { transition-delay: 500ms; }
+  .segment-card-container:nth-child(7) { transition-delay: 600ms; }
 
   /* Cards become visible when parent section is revealed */
-  .route-explainer-section.is-visible .segment-card {
+  .route-explainer-section.is-visible .segment-card-container {
     opacity: 1;
     transform: translateY(0);
   }
 
   /* Reduced motion: cards always visible, no stagger */
   @media (prefers-reduced-motion: reduce) {
-    .segment-card {
+    .segment-card-container {
       opacity: 1;
       transform: none;
       transition: none;
       transition-delay: 0ms;
     }
+  }
+
+  /* Photo hero — full-width image with gradient overlay */
+  .segment-hero {
+    position: relative;
+    width: 100%;
+    height: 220px;
+    overflow: hidden;
+    border-radius: 0.5rem 0.5rem 0 0;
+  }
+
+  .segment-hero img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .segment-hero-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1rem 1.25rem;
+    background: linear-gradient(transparent, rgba(13, 26, 13, 0.85));
+  }
+
+  /* Fallback hero for segments with no photos */
+  .segment-hero-fallback {
+    background: linear-gradient(135deg, var(--color-forest-800), var(--color-forest-700));
+    display: flex;
+    align-items: flex-end;
+  }
+
+  /* Card body — padded content area */
+  .segment-body {
+    padding: 1.25rem;
+  }
+
+  /* Responsive: shorter hero on mobile */
+  @media (max-width: 640px) {
+    .segment-hero { height: 180px; }
   }
 
   /* Star rating — clip gradient technique */
@@ -211,30 +237,6 @@ const segmentsWithPhotos = SEGMENTS.map(seg => ({
 
   .star-rating::before {
     content: "★★★★★";
-  }
-
-  /* Tablet and up: photo-text grid layout */
-  @media (min-width: 768px) {
-    .segment-card {
-      grid-template-columns: min(280px, 35%) 1fr;
-      grid-template-areas: "photo content";
-      align-items: start;
-    }
-
-    .segment-card:nth-child(even) {
-      grid-template-columns: 1fr min(280px, 35%);
-      grid-template-areas: "content photo";
-    }
-
-    .segment-card.no-photo {
-      grid-template-columns: 1fr;
-      grid-template-areas: "content";
-    }
-
-    .segment-card:nth-child(even).no-photo {
-      grid-template-columns: 1fr;
-      grid-template-areas: "content";
-    }
   }
 
   .strava-link {
