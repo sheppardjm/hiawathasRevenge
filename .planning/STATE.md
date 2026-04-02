@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-04-02)
 
 ## Current Position
 
-Phase: 25 of 26 (Click Handlers, Panel Logic, Surface Track)
-Plan: 2 of 2 in current phase
-Status: Phase complete
-Last activity: 2026-04-02 — Completed 25-02-PLAN.md (sparkline generator, full panel body, RouteExplainer IDs)
+Phase: 26 of 26 (Editorial Polish / iOS Safari Testing)
+Plan: 1 of 2 in current phase
+Status: In progress
+Last activity: 2026-04-02 — Completed 26-01-PLAN.md (section spacing, stats legibility, photo skeleton loaders)
 
-Progress: [████████████████░░░░] v1.0 ✅ | v1.1 ✅ | v1.2 ✅ | v1.3 Phase 23 ✅ | Phase 24 ✅ | Phase 25 ✅
+Progress: [█████████████████░░░] v1.0 ✅ | v1.1 ✅ | v1.2 ✅ | v1.3 Phase 23 ✅ | Phase 24 ✅ | Phase 25 ✅ | Phase 26 Plan 1 ✅
 
 ## Performance Metrics
 
@@ -49,6 +49,9 @@ Recent decisions relevant to v1.3:
 - Phase 25-01: flushRun borrows endIdx+1 point — handles 13 single-point surface runs
 - Phase 25-02: Hardcoded hex colors in generateSparklineSvg (#7d9448, #c8973e, #f87171) — CSS vars can't be read from innerHTML-injected SVG without getComputedStyle(); hex matches resolved design tokens
 - Phase 25-02: elevData.eleMin/eleMax used directly for ft range — avoids re-computing Math.min/max, values pre-computed in sector-elevations.json
+- Phase 26-01: Cascade fix (not component relocation) for stat legibility — specific :global() overrides after broad span rule; no !important
+- Phase 26-01: Skeleton on `<a>` wrapper (not `<img>`) — wrapper fills column space; .loaded removes shimmer cleanly
+- Phase 26-01: parseDims() width/height attrs on `<img>` — zero-cost CLS prevention using data already extracted for PhotoSwipe
 
 ### Pending Todos
 
@@ -70,6 +73,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-02
-Stopped at: Completed 25-02-PLAN.md (sparkline generator, full panel body, RouteExplainer IDs)
+Last session: 2026-04-02T21:26:34Z
+Stopped at: Completed 26-01-PLAN.md (section spacing, stats legibility, photo skeleton loaders)
 Resume file: None
