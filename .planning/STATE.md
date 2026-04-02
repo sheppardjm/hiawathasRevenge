@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-04-02)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive, visually stunning showcase that inspires them to ride it and support MBTN.
-**Current focus:** Phase 26 — Final Polish / iOS Safari Testing
+**Current focus:** Phase 27 — Audit Gap Closure (v1.3 final)
 
 ## Current Position
 
-Phase: 26 of 26 (Editorial Polish / iOS Safari Testing)
-Plan: 3 of 3 in current phase
+Phase: 27 of 27 (Audit Gap Closure)
+Plan: 1 of 1 in current phase
 Status: Phase complete
-Last activity: 2026-04-02 — Completed 26-03-PLAN.md (Three sub-section parallax backgrounds, VIS-04 gap closure)
+Last activity: 2026-04-02 — Completed 27-01-PLAN.md (VIS-02 font fix, MAP-08 documentation, NF2217-2218 name, RouteMap cleanup)
 
-Progress: [████████████████████] v1.0 ✅ | v1.1 ✅ | v1.2 ✅ | v1.3 Phase 23 ✅ | Phase 24 ✅ | Phase 25 ✅ | Phase 26 ✅ | v1.3 COMPLETE
+Progress: [████████████████████] v1.0 ✅ | v1.1 ✅ | v1.2 ✅ | v1.3 Phase 23 ✅ | Phase 24 ✅ | Phase 25 ✅ | Phase 26 ✅ | Phase 27 ✅ | v1.3 AUDIT COMPLETE
 
 ## Performance Metrics
 
@@ -59,6 +59,9 @@ Recent decisions relevant to v1.3:
 - Phase 26-03: overflow:hidden removed from .hiawatha-section — required for background-attachment:fixed to work on descendant ::before elements
 - Phase 26-03: subsection-bg wrapper replicates editorial-grid column tracks (grid-column:full + grid-template-columns) enabling ::before parallax without overflow:hidden
 - Phase 26-03: querySelectorAll + sections.forEach(observe) — single IntersectionObserver instance observes all three sub-sections independently (threshold 0.15)
+- Phase 27-01: No preload on EB Garamond Font tag — drop-cap use is below-fold only; preloading would add unnecessary critical-path weight
+- Phase 27-01: MAP-08 documented as deliberate trade-off: show() (non-modal) keeps map interactive while panel is open; no native backdrop is expected behavior
+- Phase 27-01: NF2217-2218 is canonical name — matches RouteExplainer.astro SEGMENTS const and jump-link key; sector-details.json was the outlier
 
 ### Pending Todos
 
@@ -80,6 +83,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-02T21:57:07Z
-Stopped at: Completed 26-03-PLAN.md (Three sub-section parallax backgrounds, VIS-04 gap closure) — v1.3 COMPLETE
+Last session: 2026-04-02T22:52:21Z
+Stopped at: Completed 27-01-PLAN.md (Audit gap closure — VIS-02, MAP-08, NF2217-2218, RouteMap cleanup) — v1.3 AUDIT COMPLETE
 Resume file: None
