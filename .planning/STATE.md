@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-04-02)
 
 ## Current Position
 
-Phase: 24 of 26 (Sector Labels on Map)
-Plan: 1 of 1 in current phase
-Status: Phase complete
-Last activity: 2026-04-02 — Completed 24-01-PLAN.md (sector labels + panel scaffold)
+Phase: 25 of 26 (Click Handlers, Panel Logic, Surface Track)
+Plan: 1 of 2 in current phase
+Status: In progress
+Last activity: 2026-04-02 — Completed 25-01-PLAN.md (surface track, ghost polylines, panel open/close)
 
-Progress: [██████████████░░░░░░] v1.0 ✅ | v1.1 ✅ | v1.2 ✅ | v1.3 Phase 23 ✅ | Phase 24 ✅ | Phase 25 next
+Progress: [███████████████░░░░░] v1.0 ✅ | v1.1 ✅ | v1.2 ✅ | v1.3 Phase 23 ✅ | Phase 24 ✅ | Phase 25 Plan 01 ✅
 
 ## Performance Metrics
 
@@ -42,6 +42,11 @@ Recent decisions relevant to v1.3:
 - Phase 24: LABEL_COLORS reuses amber500 module-scope const for moderate — avoids duplicate getCSSColor call
 - Phase 24: zIndexOffset 250 for labels — above polylines, below restock (500), photo (750), bike (1000)
 - Phase 24: Panel hidden via absence of open attribute (not CSS display:none) — uses native dialog semantics; Phase 25 adds/removes open
+- Phase 25-01: dialog.show() (not showModal()) — map stays interactive while panel is open
+- Phase 25-01: position: fixed on .sector-panel — viewport-anchored during scroll (absolute scrolls away)
+- Phase 25-01: if (!panel.open) panel.show() guard — prevents double-show error in Safari 16
+- Phase 25-01: activeSector guard in hover handlers — prevents hover from overwriting active highlight
+- Phase 25-01: flushRun borrows endIdx+1 point — handles 13 single-point surface runs
 
 ### Pending Todos
 
@@ -64,5 +69,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-04-02
-Stopped at: Completed 24-01-PLAN.md (sector labels + panel scaffold), ready for Phase 25 planning
+Stopped at: Completed 25-01-PLAN.md (surface track, ghost polylines, openPanel/closePanel)
 Resume file: None
