@@ -4,7 +4,16 @@
 // Leaflet CSS is imported via global.css in @layer leaflet (not here)
 ---
 
-<div id="map" class="route-map"></div>
+<div class="route-map">
+  <div id="map" class="route-map__map"></div>
+  <dialog id="sector-panel" class="sector-panel">
+    <div class="sector-panel__header">
+      <h2 class="sector-panel__title"></h2>
+      <button class="sector-panel__close" aria-label="Close sector details">&times;</button>
+    </div>
+    <div class="sector-panel__body"></div>
+  </dialog>
+</div>
 
 <style>
   .route-map {
@@ -13,6 +22,11 @@
     min-height: 400px;
     position: relative;
     z-index: 0;
+  }
+
+  .route-map__map {
+    width: 100%;
+    height: 100%;
   }
 
   :global(.restock-marker) {
@@ -28,6 +42,97 @@
   :global(.sector-label) {
     background: transparent !important;
     border: none !important;
+  }
+
+  /* Sector detail panel — desktop right-panel, mobile bottom-sheet */
+  .sector-panel {
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    border: none;
+    z-index: 1000;
+    background: var(--color-forest-900);
+    color: var(--color-cream-100);
+    font-family: var(--font-body);
+    overflow-y: auto;
+    /* CSS translate transitions — Phase 25 will toggle open attribute */
+    transition: transform 0.3s ease;
+  }
+
+  /* Desktop: right-panel slide-in */
+  @media (min-width: 769px) {
+    .sector-panel {
+      top: 0;
+      right: 0;
+      width: 350px;
+      height: 100%;
+      transform: translateX(100%);
+    }
+    .sector-panel[open] {
+      transform: translateX(0);
+    }
+  }
+
+  /* Mobile: bottom-sheet slide-up */
+  @media (max-width: 768px) {
+    .sector-panel {
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      max-height: 50vh;
+      border-radius: 12px 12px 0 0;
+      transform: translateY(100%);
+    }
+    .sector-panel[open] {
+      transform: translateY(0);
+    }
+  }
+
+  /* Respect reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .sector-panel {
+      transition: none;
+    }
+  }
+
+  .sector-panel__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  }
+
+  .sector-panel__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-cream-100);
+  }
+
+  .sector-panel__close {
+    background: none;
+    border: none;
+    color: var(--color-cream-100);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 4px 8px;
+    line-height: 1;
+    opacity: 0.7;
+  }
+
+  .sector-panel__close:hover {
+    opacity: 1;
+  }
+
+  .sector-panel__body {
+    padding: 16px 20px;
+  }
+
+  /* Panel backdrop — native dialog ::backdrop */
+  .sector-panel::backdrop {
+    background: rgba(0, 0, 0, 0.3);
   }
 </style>
 
