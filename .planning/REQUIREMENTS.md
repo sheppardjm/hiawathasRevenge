@@ -1,0 +1,115 @@
+# Requirements: Hiawatha's Revenge
+
+**Defined:** 2026-04-02
+**Core Value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive, visually stunning showcase that inspires them to ride it and support MBTN.
+
+## v1.3 Requirements
+
+Requirements for v1.3 Interactive Map & Editorial Polish. Each maps to roadmap phases.
+
+### Map Interactivity
+
+- [ ] **MAP-01**: Sector name and star difficulty badges visible on map at polyline midpoints using L.divIcon markers
+- [ ] **MAP-02**: Sector labels styled with National Park aesthetic — shield motif, difficulty color coding
+- [ ] **MAP-03**: Clicking a sector polyline opens a slide-out detail panel
+- [ ] **MAP-04**: Ghost hit layers (20px) on sector polylines for reliable mobile touch targets
+- [ ] **MAP-05**: Desktop hover state changes sector polyline weight/opacity
+- [ ] **MAP-06**: Clicked sector gets active highlight (thicker/brighter polyline)
+- [ ] **MAP-07**: Panel displays sector name, difficulty stars, terrain description, surface type, elevation sparkline, and Strava link
+- [ ] **MAP-08**: Panel closes via X button, Escape key, or click outside
+- [ ] **MAP-09**: Panel open/close animation respects prefers-reduced-motion
+- [ ] **MAP-10**: Panel styled to match National Park design system
+- [ ] **MAP-11**: Panel includes jump link to scroll to corresponding page section
+- [ ] **MAP-12**: Desktop layout: right slide-out panel (~350px wide)
+- [ ] **MAP-13**: Mobile layout: bottom sheet (~50vh, simple two-state open/close)
+- [ ] **MAP-14**: Route polyline colored by surface type (paved/dirt/gravel/sand) using RidewithGPS hiawathasRevenge.json data
+
+### Visual Polish
+
+- [ ] **VIS-01**: More vertical padding at top and bottom of each content section for breathing room
+- [ ] **VIS-02**: Pull quote starts with capital drop letter in classic American typeface (Caslon or Garamond)
+- [ ] **VIS-03**: Pull quote set in larger font size than body text to draw reader attention
+- [ ] **VIS-04**: Sticky fixed-position background images in poem/forest/ride sections with scroll fade-in/out effect
+- [ ] **VIS-05**: Route stats section reverted to higher contrast color scheme for text legibility
+- [ ] **VIS-06**: Additional Native American design elements and motifs interspersed throughout site (patterns, symbols, earthy tones)
+
+### Performance
+
+- [ ] **PERF-01**: Photo loading skeletons prevent layout shifts while images load
+
+### Data Pipeline
+
+- [ ] **DATA-01**: Difficulty ratings reconciled between annotations.json and data.md to a single canonical source
+- [ ] **DATA-02**: New sector-details.json consolidating all panel content (name, description, surface, stars, Strava link) at build time
+- [ ] **DATA-03**: RidewithGPS JSON processed into per-point surface type data for track coloring pipeline step
+
+## Future Requirements
+
+Deferred to later milestones. Tracked but not in current roadmap.
+
+### Map Enhancements
+
+- **MAP-F01**: Elevation chart highlights corresponding sector band when sector panel is open
+- **MAP-F02**: Zoom-gated label visibility (show/hide labels based on zoom level to prevent overlap)
+- **MAP-F03**: Drag-to-snap bottom sheet with multiple stop positions
+
+### Visual Enhancements
+
+- **VIS-F01**: Dark/light mode toggle
+- **VIS-F02**: Video content integration
+- **VIS-F03**: Parallax scrolling with depth layers
+
+## Out of Scope
+
+Explicitly excluded. Documented to prevent scope creep.
+
+| Feature | Reason |
+|---------|--------|
+| Leaflet 2.0 upgrade | Alpha — markercluster and gesture-handling plugins incompatible |
+| Race registration / BikeReg | Ride showcase, not a race |
+| Real-time features | Purely static showcase |
+| User accounts / OAuth | No login needed |
+| Mobile app | Web only |
+| AI-generated cultural imagery | Contradicts site's cultural critique narrative |
+| Chart.js sparklines in panel | Build-time SVG sparklines avoid memory bloat |
+| GSAP/Lottie for animations | CSS handles everything needed; no new dependencies |
+
+## Traceability
+
+Which phases cover which requirements. Updated during roadmap creation.
+
+| Requirement | Phase | Status |
+|-------------|-------|--------|
+| MAP-01 | — | Pending |
+| MAP-02 | — | Pending |
+| MAP-03 | — | Pending |
+| MAP-04 | — | Pending |
+| MAP-05 | — | Pending |
+| MAP-06 | — | Pending |
+| MAP-07 | — | Pending |
+| MAP-08 | — | Pending |
+| MAP-09 | — | Pending |
+| MAP-10 | — | Pending |
+| MAP-11 | — | Pending |
+| MAP-12 | — | Pending |
+| MAP-13 | — | Pending |
+| MAP-14 | — | Pending |
+| VIS-01 | — | Pending |
+| VIS-02 | — | Pending |
+| VIS-03 | — | Pending |
+| VIS-04 | — | Pending |
+| VIS-05 | — | Pending |
+| VIS-06 | — | Pending |
+| PERF-01 | — | Pending |
+| DATA-01 | — | Pending |
+| DATA-02 | — | Pending |
+| DATA-03 | — | Pending |
+
+**Coverage:**
+- v1.3 requirements: 24 total
+- Mapped to phases: 0
+- Unmapped: 24 ⚠️
+
+---
+*Requirements defined: 2026-04-02*
+*Last updated: 2026-04-02 after initial definition*

@@ -43,7 +43,9 @@ Visitors experience the beauty and scale of the Hiawatha's Revenge route through
 
 ### Active
 
-- [ ] Sector map labels with names and star difficulty ratings, clickable with slide-out detail panels (deferred to v1.3)
+- [ ] Interactive map sector labels, clickable detail panels, surface-colored track
+- [ ] Editorial polish: pull quote redesign, parallax images, section whitespace, stats legibility
+- [ ] Photo loading skeletons, additional Native American design elements
 
 ### Out of Scope
 
@@ -54,14 +56,18 @@ Visitors experience the beauty and scale of the Hiawatha's Revenge route through
 - OAuth / user accounts — no login needed
 - Mobile app — web only
 
-## Current Milestone: v1.3 Map Interactivity
+## Current Milestone: v1.3 Interactive Map & Editorial Polish
 
-**Goal:** Make the route map a first-class interactive experience — sector labels with names and difficulty ratings visible on the map, clickable sectors that open slide-out detail panels with descriptions, surface types, and elevation snippets.
+**Goal:** Make the route map a first-class interactive experience with sector labels, clickable detail panels, and surface-colored track — while polishing the editorial layout with better whitespace, redesigned pull quotes, parallax imagery, and additional cultural design elements.
 
 **Target features:**
-- Gravel sectors labeled on map with names and star difficulty ratings
-- Clicking a sector opens a slide-out detail panel with description, surface type, and elevation snippet
-- Detail panel is responsive — right slide-out on desktop, bottom sheet on mobile
+- Sector labels on map with names and star difficulty ratings (NP-styled)
+- Clickable sectors with slide-out detail panels (desktop) / bottom sheet (mobile)
+- Route polyline colored by surface type (paved/dirt/gravel/sand) using RidewithGPS data
+- Pull quote redesign with drop cap and classic American typeface
+- Sticky parallax background images in editorial sections
+- More section padding/whitespace, route stats legibility fix
+- Photo loading skeletons, additional Native American design elements
 
 ## Context
 
