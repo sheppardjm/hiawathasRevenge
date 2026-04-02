@@ -11,18 +11,18 @@ Requirements for v1.3 Interactive Map & Editorial Polish. Each maps to roadmap p
 
 - [x] **MAP-01**: Sector name and star difficulty badges visible on map at polyline midpoints using L.divIcon markers
 - [x] **MAP-02**: Sector labels styled with National Park aesthetic — shield motif, difficulty color coding
-- [ ] **MAP-03**: Clicking a sector polyline opens a slide-out detail panel
-- [ ] **MAP-04**: Ghost hit layers (20px) on sector polylines for reliable mobile touch targets
-- [ ] **MAP-05**: Desktop hover state changes sector polyline weight/opacity
-- [ ] **MAP-06**: Clicked sector gets active highlight (thicker/brighter polyline)
-- [ ] **MAP-07**: Panel displays sector name, difficulty stars, terrain description, surface type, elevation sparkline, and Strava link
-- [ ] **MAP-08**: Panel closes via X button, Escape key, or click outside
-- [ ] **MAP-09**: Panel open/close animation respects prefers-reduced-motion
-- [ ] **MAP-10**: Panel styled to match National Park design system
-- [ ] **MAP-11**: Panel includes jump link to scroll to corresponding page section
-- [ ] **MAP-12**: Desktop layout: right slide-out panel (~350px wide)
-- [ ] **MAP-13**: Mobile layout: bottom sheet (~50vh, simple two-state open/close)
-- [ ] **MAP-14**: Route polyline colored by surface type (paved/dirt/gravel/sand) using RidewithGPS hiawathasRevenge.json data
+- [x] **MAP-03**: Clicking a sector polyline opens a slide-out detail panel
+- [x] **MAP-04**: Ghost hit layers (20px) on sector polylines for reliable mobile touch targets
+- [x] **MAP-05**: Desktop hover state changes sector polyline weight/opacity
+- [x] **MAP-06**: Clicked sector gets active highlight (thicker/brighter polyline)
+- [x] **MAP-07**: Panel displays sector name, difficulty stars, terrain description, surface type, elevation sparkline, and Strava link
+- [x] **MAP-08**: Panel closes via X button, Escape key, or click outside
+- [x] **MAP-09**: Panel open/close animation respects prefers-reduced-motion
+- [x] **MAP-10**: Panel styled to match National Park design system
+- [x] **MAP-11**: Panel includes jump link to scroll to corresponding page section
+- [x] **MAP-12**: Desktop layout: right slide-out panel (~350px wide)
+- [x] **MAP-13**: Mobile layout: bottom sheet (~50vh, simple two-state open/close)
+- [x] **MAP-14**: Route polyline colored by surface type (paved/dirt/gravel/sand) using RidewithGPS hiawathasRevenge.json data
 
 ### Visual Polish
 
@@ -85,18 +85,18 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DATA-03 | Phase 23 | Complete |
 | MAP-01 | Phase 24 | Complete |
 | MAP-02 | Phase 24 | Complete |
-| MAP-03 | Phase 25 | Pending |
-| MAP-04 | Phase 25 | Pending |
-| MAP-05 | Phase 25 | Pending |
-| MAP-06 | Phase 25 | Pending |
-| MAP-07 | Phase 25 | Pending |
-| MAP-08 | Phase 25 | Pending |
-| MAP-09 | Phase 25 | Pending |
-| MAP-10 | Phase 25 | Pending |
-| MAP-11 | Phase 25 | Pending |
-| MAP-12 | Phase 25 | Pending |
-| MAP-13 | Phase 25 | Pending |
-| MAP-14 | Phase 25 | Pending |
+| MAP-03 | Phase 25 | Complete |
+| MAP-04 | Phase 25 | Complete |
+| MAP-05 | Phase 25 | Complete |
+| MAP-06 | Phase 25 | Complete |
+| MAP-07 | Phase 25 | Complete |
+| MAP-08 | Phase 25 | Complete |
+| MAP-09 | Phase 25 | Complete |
+| MAP-10 | Phase 25 | Complete |
+| MAP-11 | Phase 25 | Complete |
+| MAP-12 | Phase 25 | Complete |
+| MAP-13 | Phase 25 | Complete |
+| MAP-14 | Phase 25 | Complete |
 | VIS-01 | Phase 26 | Pending |
 | VIS-02 | Phase 26 | Pending |
 | VIS-03 | Phase 26 | Pending |
@@ -112,4 +112,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-04-02*
-*Last updated: 2026-04-02 after v1.3 roadmap creation*
+*Last updated: 2026-04-02 after Phase 25 completion*

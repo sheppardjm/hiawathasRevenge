@@ -100,11 +100,11 @@ Plans:
 5. The full route polyline is re-rendered as surface-type segments, each colored distinctly (paved/dirt/gravel/sand) using data from the pipeline
 6. The active (clicked) sector polyline shows a thicker, brighter highlight while its panel is open; desktop hover changes polyline weight/opacity
 
-**Plans:** 2 plans
+**Plans:** 2 plans (complete)
 
 Plans:
-- [ ] 25-01-PLAN.md — Surface-colored track, ghost polylines, click/hover handlers, and panel open/close logic
-- [ ] 25-02-PLAN.md — SVG sparkline generator, enhanced panel content, and RouteExplainer jump link IDs
+- [x] 25-01-PLAN.md — Surface-colored track, ghost polylines, click/hover handlers, and panel open/close logic
+- [x] 25-02-PLAN.md — SVG sparkline generator, enhanced panel content, and RouteExplainer jump link IDs
 
 ---
 
@@ -141,5 +141,5 @@ Plans:
 | 18–22. Cultural maximalism | v1.2 | 17/17 | Complete | 2026-04-02 |
 | 23. Data reconciliation | v1.3 | 2/2 | Complete | 2026-04-02 |
 | 24. Sector labels | v1.3 | 1/1 | Complete | 2026-04-02 |
-| 25. Click handlers + surface track | v1.3 | 0/TBD | Not started | — |
+| 25. Click handlers + surface track | v1.3 | 2/2 | Complete | 2026-04-02 |
 | 26. Editorial polish | v1.3 | 0/TBD | Not started | — |
