@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-03-31)
 ## Current Position
 
 Phase: 19 (2 of 5 in v1.2) -- Decorative Component Library
-Plan: 01 of 3 in phase -- In progress
-Status: Plan 19-01 complete
-Last activity: 2026-04-02 -- Completed 19-01-PLAN.md (AnimatedDivider component)
+Plan: 02 of 3 in phase -- In progress
+Status: Plan 19-02 complete
+Last activity: 2026-04-02 -- Completed 19-02-PLAN.md (ShieldMotif component)
 
-Progress: [███░░░░░░░] 27% (3/11 v1.2 plans)
+Progress: [████░░░░░░] 36% (4/11 v1.2 plans)
 
 ## Performance Metrics
 
@@ -29,7 +29,7 @@ Progress: [███░░░░░░░] 27% (3/11 v1.2 plans)
 - Timeline: 1 day (2026-03-31)
 
 **v1.2 Summary:**
-- Total plans completed: 2 (18-01, 18-02)
+- Total plans completed: 4 (18-01, 18-02, 19-01, 19-02)
 - Total phases: 5 (18-22)
 - Estimated plans: ~11
 
@@ -49,6 +49,9 @@ All v1.0 + v1.1 decisions logged in PROJECT.md Key Decisions table.
 | 18-02 | Empty manifest writes [] and exits 0 (not an error) | Enables clean builds before Phase 20 populates historical images |
 | 19-01 | pathLength=1 + stroke-dashoffset pattern established as v1.2 animation standard | Normalizes animated path length without getTotalLength(); works in all browsers |
 | 19-01 | Static decorative elements (leaves, blossoms, clusters) do NOT animate — only vine strokes draw on | Preserves full visual richness immediately; only structural vine animates on scroll |
+| 19-02 | SVG symbol placed immediately after <body> tag (not in <head>) | SVG symbols must be in document body to be valid <use href> targets |
+| 19-02 | height = size * 2 always (1:2 aspect ratio for 28x56 viewBox) | Callers control width via size prop; component maintains correct proportions automatically |
+| 19-02 | Decorative by default (no label = aria-hidden + role=presentation) | Majority use case is decorative ornamentation; accessible usage is opt-in via label prop |
 
 ### Pending Todos
 
@@ -65,5 +68,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-04-02
-Stopped at: Completed 19-01-PLAN.md -- AnimatedDivider component created and committed
+Stopped at: Completed 19-02-PLAN.md -- ShieldMotif component created (BaseLayout symbol + use-wrapper component)
 Resume file: None
