@@ -1,5 +1,6 @@
 ---
 import photosData from '../../public/data/photos.json';
+import ElevationSparkline from './ElevationSparkline.astro';
 
 interface Segment {
   name: string;
@@ -20,6 +21,16 @@ const SEGMENTS: Segment[] = [
   { name: 'Doe Lake',                startMi: 70.0, endMi: 92.0,  distFromStart: '84.8mi', length: '3.1mi', difficulty: 4, description: 'Technical and punishing. Sandy two-track weaves through dense forest near Doe Lake with short, sharp climbs that hit different at mile 85. The Midway General Store at mile 75.7 is your last chance to restock.' },
   { name: 'Rapid River Truck Trail', startMi: 92.0, endMi: 110.0, distFromStart: '94.6mi', length: '6.3mi', difficulty: 2, description: "The home stretch. A well-maintained truck trail carries you north back toward Munising with long descents and the growing certainty that you're going to finish this thing." },
 ];
+
+const SECTOR_IDS: Record<string, string> = {
+  '520': 'sector-520',
+  'NF2266': 'sector-nf2266',
+  'Bass Lake Rd': 'sector-bass-lake',
+  'NF2217-2218': 'sector-nf2217',
+  'ND2225': 'sector-nd2225',
+  'Doe Lake': 'sector-doe-lake',
+  'Rapid River Truck Trail': 'sector-rapid-river',
+};
 
 const segmentsWithPhotos = SEGMENTS.map(seg => ({
   ...seg,
@@ -63,6 +74,11 @@ const segmentsWithPhotos = SEGMENTS.map(seg => ({
             ></div>
           </div>
           <p class="text-cream-100 leading-relaxed">{seg.description}</p>
+          {SECTOR_IDS[seg.name] && (
+            <div class="mt-3">
+              <ElevationSparkline sectorId={SECTOR_IDS[seg.name]} class="opacity-60" />
+            </div>
+          )}
         </div>
       </article>
     ))}
