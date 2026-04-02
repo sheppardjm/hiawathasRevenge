@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-03-31)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive, visually stunning showcase that inspires them to ride it and support MBTN.
-**Current focus:** v1.2 Cultural Maximalism -- Phase 22 Animation Polish complete (22-02 verified)
+**Current focus:** v1.2-gaps UAT Gap Closure -- divider geometric redesign complete (v1.2-gaps-01 verified)
 
 ## Current Position
 
-Phase: 22 (5 of 5 in v1.2) -- Animation Polish -- Complete
-Plan: 02 of 2 in phase -- Complete
-Status: 22-02 complete (reduced-motion audit passed, human visual approval)
-Last activity: 2026-04-02 -- Completed 22-02-PLAN.md
+Phase: v1.2-gaps (1 of 4 gap closure plans complete)
+Plan: 01 of 4 in phase -- Complete
+Status: v1.2-gaps-01 complete (build passes, vine-path animation preserved, bold geometric patterns)
+Last activity: 2026-04-02 -- Completed v1.2-gaps-01-PLAN.md
 
-Progress: [██████████] 100% (13/13 v1.2 plans)
+Progress: [██████████] v1.2 base: 100% (13/13) | gap closure: 1/4 complete
 
 ## Performance Metrics
 
@@ -74,6 +74,8 @@ All v1.0 + v1.1 decisions logged in PROJECT.md Key Decisions table.
 | 22-01 | AnimatedDividers excluded from data-reveal | They manage their own IntersectionObserver per instance — adding data-reveal would conflict |
 | 22-01 | data-reveal added inside component files (not wrapping in index.astro) | Keeps observer targeting the actual section element, not a wrapper |
 | 22-02 | No source changes needed — 22-01 passed all ANI-03/ANI-04 audits | reduced-motion CSS guards, JS matchMedia skip, above-fold exclusions, and 614KB transfer all compliant |
+| v1.2-gaps-01 | Polyline used for animated zigzag/chevron paths (vs path) | Simpler coordinate syntax for geometric shapes; bilateral symmetry enforced by mirroring at x=400 |
+| v1.2-gaps-01 | cycle-blossom/cycle-berry @keyframes fully removed | No SVG elements reference them after floral content replaced; leaving dead CSS would be misleading |
 
 ### Pending Todos
 
@@ -90,5 +92,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-04-02
-Stopped at: Completed 22-02-PLAN.md -- reduced-motion audit passed, human visual verification approved
+Stopped at: Completed v1.2-gaps-01-PLAN.md -- geometric divider redesign, build clean, animation infrastructure preserved
 Resume file: None
