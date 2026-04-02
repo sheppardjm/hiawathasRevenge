@@ -80,9 +80,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DATA-01 | Phase 23 | Pending |
-| DATA-02 | Phase 23 | Pending |
-| DATA-03 | Phase 23 | Pending |
+| DATA-01 | Phase 23 | Complete |
+| DATA-02 | Phase 23 | Complete |
+| DATA-03 | Phase 23 | Complete |
 | MAP-01 | Phase 24 | Pending |
 | MAP-02 | Phase 24 | Pending |
 | MAP-03 | Phase 25 | Pending |

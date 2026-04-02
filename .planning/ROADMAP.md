@@ -57,8 +57,8 @@ Expanded color palette (13 new tokens), animated geometric dividers, shield moti
 **Plans:** 2 plans
 
 Plans:
-- [ ] 23-01-PLAN.md — Reconcile difficulty stars + surface-points pipeline step (DATA-01, DATA-03)
-- [ ] 23-02-PLAN.md — Sector details pipeline step + full build verification (DATA-02)
+- [x] 23-01-PLAN.md — Reconcile difficulty stars + surface-points pipeline step (DATA-01, DATA-03)
+- [x] 23-02-PLAN.md — Sector details pipeline step + full build verification (DATA-02)
 
 ---
 
@@ -139,7 +139,7 @@ Plans:
 | 0–11. MVP foundations | v1.0 | 33/33 | Complete | 2026-03-31 |
 | 12–17. Visual redesign | v1.1 | 8/8 | Complete | 2026-03-31 |
 | 18–22. Cultural maximalism | v1.2 | 17/17 | Complete | 2026-04-02 |
-| 23. Data reconciliation | v1.3 | 0/2 | Not started | — |
+| 23. Data reconciliation | v1.3 | 2/2 | Complete | 2026-04-02 |
 | 24. Sector labels | v1.3 | 0/TBD | Not started | — |
 | 25. Click handlers + surface track | v1.3 | 0/TBD | Not started | — |
 | 26. Editorial polish | v1.3 | 0/TBD | Not started | — |
