@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-03-31)
 
 ## Current Position
 
-Phase: 19 (2 of 5 in v1.2) -- Decorative Component Library -- VERIFIED COMPLETE
-Plan: 05 of 5 in phase -- Complete
-Status: Phase 19 verified (5/5 must-haves passed, both gaps closed)
-Last activity: 2026-04-01 -- Phase 19 verification passed after gap closure plans 19-04 and 19-05
+Phase: 20 (3 of 5 in v1.2) -- Content & Route Enrichment -- In progress
+Plan: 01 of 3 in phase -- Complete
+Status: Plan 20-01 complete (2/2 tasks, build passes, historical images live)
+Last activity: 2026-04-01 -- Completed 20-01-PLAN.md (historical images + HiawathaExplainer restructure)
 
-Progress: [███████░░░] 58% (7/12 v1.2 plans)
+Progress: [████████░░] 67% (8/12 v1.2 plans)
 
 ## Performance Metrics
 
@@ -29,7 +29,7 @@ Progress: [███████░░░] 58% (7/12 v1.2 plans)
 - Timeline: 1 day (2026-03-31)
 
 **v1.2 Summary:**
-- Total plans completed: 7 (18-01, 18-02, 19-01, 19-02, 19-03, 19-04, 19-05)
+- Total plans completed: 8 (18-01, 18-02, 19-01, 19-02, 19-03, 19-04, 19-05, 20-01)
 - Total phases: 5 (18-22)
 - Estimated plans: ~12
 
@@ -59,6 +59,10 @@ All v1.0 + v1.1 decisions logged in PROJECT.md Key Decisions table.
 | 19-04 | scarlet-400 used in berry cycling (not scarlet-600) | scarlet-600 is large-text/decorative-only per 18-01; scarlet-400 is safe for decorative SVG fills |
 | 19-05 | AnimatedDivider replaces second FloralDivider (not first) | Preserves contrast between static and animated dividers coexisting on same page |
 | 19-05 | SECTOR_IDS Record map as bridge from segment names to content collection IDs | Explicit, readable, zero runtime cost — decouples display names from data IDs |
+| 20-01 | MET Open Access / Wikimedia CC0 for Remington illustrations | DP-12259-001 and DP-12259-002 from 1891 Houghton Mifflin edition — cleanest possible public domain (CC0 not merely PD) |
+| 20-01 | sepia(80%) saturate(30%) brightness(0.9) as canonical historical artifact filter | Visually distinct from full-color route photography; established as reusable pattern |
+| 20-01 | mt-0 on first editorial h3, mt-[6rem] on subsequent three | First h3 follows h2 which already provides separation; subsequent sections need full 6rem gap |
+| 20-01 | Conditional rendering guards on historicalPhotos.length for graceful degradation | Build passes cleanly even if historical-photos.json is empty |
 
 ### Pending Todos
 
@@ -75,5 +79,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-04-01
-Stopped at: Phase 19 verified complete -- gap closure plans executed and all 5/5 must-haves verified
+Stopped at: Completed 20-01-PLAN.md -- historical images sourced and HiawathaExplainer restructured
 Resume file: None
