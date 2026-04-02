@@ -24,18 +24,18 @@ Requirements for Cultural Maximalism milestone. Each maps to roadmap phases.
 
 ### Content Enrichment
 
-- [ ] **CON-01**: HiawathaExplainer sections broken up with secondary/tertiary headings in National Park typeface ("The Poem," "The Confusion," "The Forest," "The Ride" or similar), using 3+ colors to differentiate sections
-- [ ] **CON-02**: 1-2 full-width historical illustration breaks inserted between narrative paragraphs with generous whitespace (6-8rem between major sections)
-- [ ] **CON-03**: Dramatic pull quote treatment for the Longfellow critique blockquote — breakout-width, oversized quotation marks (60-80px), background color shift, National Park typeface, arrowhead ornament
-- [ ] **CON-04**: 2-4 public domain historical Hiawatha illustrations (Harrison Fisher 1906, Frederic Remington 1891, or similar) sourced, processed through sharp pipeline as WebP, with `<figcaption>` attribution and "historical artifact" framing (sepia/desaturated treatment)
-- [ ] **CON-05**: Historical illustrations distinguished visually from route photography — sepia/desaturated treatment for historical vs. full-color for route photos
+- [x] **CON-01**: HiawathaExplainer sections broken up with secondary/tertiary headings in National Park typeface ("The Poem," "The Confusion," "The Forest," "The Ride" or similar), using 3+ colors to differentiate sections
+- [x] **CON-02**: 1-2 full-width historical illustration breaks inserted between narrative paragraphs with generous whitespace (6-8rem between major sections)
+- [x] **CON-03**: Dramatic pull quote treatment for the Longfellow critique blockquote — breakout-width, oversized quotation marks (60-80px), background color shift, National Park typeface, arrowhead ornament
+- [x] **CON-04**: 2-4 public domain historical Hiawatha illustrations (Harrison Fisher 1906, Frederic Remington 1891, or similar) sourced, processed through sharp pipeline as WebP, with `<figcaption>` attribution and "historical artifact" framing (sepia/desaturated treatment)
+- [x] **CON-05**: Historical illustrations distinguished visually from route photography — sepia/desaturated treatment for historical vs. full-color for route photos
 
 ### Route Enrichment
 
-- [ ] **RTE-01**: Segment subheadings set in National Park typeface at larger size with difficulty-coded color (green/amber/rust) and shield/arrowhead icon prefix
+- [x] **RTE-01**: Segment subheadings set in National Park typeface at larger size with difficulty-coded color (green/amber/rust) and shield/arrowhead icon prefix
 - [ ] **RTE-02**: Per-sector elevation sparkline displayed as build-time SVG polyline (zero JavaScript) showing elevation gain/loss for that segment
-- [ ] **RTE-03**: Strava segment link per sector (outbound `<a>` tag to `strava.com/segments/[ID]`) with Strava icon — user provides segment IDs during implementation
-- [ ] **RTE-04**: Expanded terrain descriptions including surface type, key landmarks, and seasonal notes for each segment
+- [x] **RTE-03**: Strava segment link per sector (outbound `<a>` tag to `strava.com/segments/[ID]`) with Strava icon — user provides segment IDs during implementation
+- [x] **RTE-04**: Expanded terrain descriptions including surface type, key landmarks, and seasonal notes for each segment
 - [ ] **RTE-05**: Pipeline extended to compute per-segment elevation data from route-data.json for sparkline generation
 
 ### Animation & Polish

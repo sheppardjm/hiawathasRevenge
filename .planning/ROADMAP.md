@@ -36,7 +36,7 @@
 
 - [x] **Phase 18: Color Foundation** - Expanded palette tokens and pipeline prep for historical imagery (completed 2026-04-01)
 - [x] **Phase 19: Decorative Component Library** - Animated dividers, shield motifs, and elevation sparklines (completed 2026-04-01)
-- [ ] **Phase 20: Content & Route Enrichment** - Historical imagery, editorial restructure, and segment detail expansion
+- [x] **Phase 20: Content & Route Enrichment** - Historical imagery, editorial restructure, and segment detail expansion (completed 2026-04-01)
 - [ ] **Phase 21: Section Color Differentiation** - Per-section backgrounds and page assembly with animated dividers
 - [ ] **Phase 22: Animation & Polish** - Scroll-driven reveals, accessibility audit, and performance validation
 
@@ -89,9 +89,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 20-01: Historical image sourcing and HiawathaExplainer editorial restructure with subheadings
-- [ ] 20-02: Dramatic pull quote treatment with ShieldMotif ornament
-- [ ] 20-03: RouteExplainer enrichment with difficulty-coded shields, Strava links, and expanded terrain descriptions
+- [x] 20-01: Historical image sourcing and HiawathaExplainer editorial restructure with subheadings
+- [x] 20-02: Dramatic pull quote treatment with ShieldMotif ornament
+- [x] 20-03: RouteExplainer enrichment with difficulty-coded shields, Strava links, and expanded terrain descriptions
 
 ### Phase 21: Section Color Differentiation
 **Goal**: Scrolling the page feels like a journey through distinct visual moments -- each major section has its own background color, animated dividers transition between them, and the 60-30-10 color rule creates visual rhythm without chaos
@@ -132,7 +132,7 @@ Phases execute in numeric order: 18 -> 19 -> 20 -> 21 -> 22
 | 12-17 | v1.1 | 8/8 | Complete | 2026-03-31 |
 | 18. Color Foundation | v1.2 | 2/2 | Complete | 2026-04-01 |
 | 19. Decorative Components | v1.2 | 5/5 | Complete | 2026-04-01 |
-| 20. Content & Route Enrichment | v1.2 | 0/3 | Not started | - |
+| 20. Content & Route Enrichment | v1.2 | 3/3 | Complete | 2026-04-01 |
 | 21. Section Color Differentiation | v1.2 | 0/1 | Not started | - |
 | 22. Animation & Polish | v1.2 | 0/2 | Not started | - |
 

@@ -5,14 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-03-31)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive, visually stunning showcase that inspires them to ride it and support MBTN.
-**Current focus:** v1.2 Cultural Maximalism -- Phase 20 in progress
+**Current focus:** v1.2 Cultural Maximalism -- Phase 20 verified complete, ready for Phase 21
 
 ## Current Position
 
-Phase: 20 (3 of 5 in v1.2) -- Content & Route Enrichment -- In progress
-Plan: 02 of 3 in phase -- Complete (wave 2 done)
-Status: Plans 20-01, 20-02, and 20-03 complete; phase 20 fully complete
-Last activity: 2026-04-02 -- Completed 20-02-PLAN.md (Longfellow pull quote with forest-950 bg, 5rem quotation mark, ShieldMotif ornament)
+Phase: 20 (3 of 5 in v1.2) -- Content & Route Enrichment -- VERIFIED COMPLETE
+Plan: 03 of 3 in phase -- Complete
+Status: Phase 20 verified (5/5 must-haves passed, Strava IDs populated for 6/7 segments)
+Last activity: 2026-04-01 -- Phase 20 verification passed after adding Strava segment IDs
 
 Progress: [█████████░] 83% (10/12 v1.2 plans)
 
@@ -66,6 +66,7 @@ All v1.0 + v1.1 decisions logged in PROJECT.md Key Decisions table.
 | 20-03 | DIFFICULTY_COLORS uses sun-400/amber-500/scarlet-400 (not scarlet-600) | All three pass WCAG AA normal text on forest-950 per 18-01 constraints |
 | 20-03 | Strava #FC5200 hardcoded, not a design token | Third-party brand color should not pollute the design system |
 | 20-03 | stravaId fields omitted from SEGMENTS (user provides IDs later) | Conditional {seg.stravaId && ...} prevents broken links until IDs are ready |
+| 20 | 6/7 Strava segment IDs populated; Rapid River Truck Trail deferred | User provided IDs for 520, NF2266, Bass Lake Rd, NF2217-2218, ND2225, Doe Lake |
 
 ### Pending Todos
 
@@ -75,12 +76,12 @@ None.
 
 - Ojibwe community consultation recommended (cultural sensitivity review)
 - Project requires Node >=22.12.0 -- use Volta (`/Users/Sheppardjm/.volta/bin/node`)
-- User will create Strava segments and provide IDs during Phase 20 implementation
-- Historical imagery must be public domain (Harrison Fisher 1906, Frederic Remington 1891 via Met Open Access / Internet Archive)
+- Strava IDs populated for 6/7 segments (Rapid River Truck Trail pending — user hasn't created that segment yet)
+- Historical imagery sourced: Frederic Remington 1891 via Met Open Access CC0 (RESOLVED)
 - scarlet-600 (#dc2626) documented as large-text/decorative ONLY in 18-01 (RESOLVED)
 
 ## Session Continuity
 
-Last session: 2026-04-02
-Stopped at: Completed 20-02-PLAN.md -- Longfellow critique blockquote transformed into editorial pull quote
+Last session: 2026-04-01
+Stopped at: Phase 20 verified complete -- all 3 plans executed, Strava IDs populated, verification passed
 Resume file: None
