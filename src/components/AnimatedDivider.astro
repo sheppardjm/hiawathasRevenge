@@ -76,20 +76,20 @@ const { variant = 'floral' } = Astro.props;
       -->
 
       <!-- Blossom at x=270, y≈44 (first vine trough) -->
-      <ellipse cx="270" cy="40" rx="4" ry="2" fill="var(--color-gold-400)" transform="rotate(0, 270, 44)" opacity="0.6" />
-      <ellipse cx="274" cy="46" rx="4" ry="2" fill="var(--color-gold-400)" transform="rotate(72, 270, 44)" opacity="0.6" />
-      <ellipse cx="265" cy="49" rx="4" ry="2" fill="var(--color-gold-400)" transform="rotate(144, 270, 44)" opacity="0.6" />
-      <ellipse cx="260" cy="43" rx="4" ry="2" fill="var(--color-gold-400)" transform="rotate(216, 270, 44)" opacity="0.6" />
-      <ellipse cx="265" cy="38" rx="4" ry="2" fill="var(--color-gold-400)" transform="rotate(288, 270, 44)" opacity="0.6" />
+      <ellipse cx="270" cy="40" rx="4" ry="2" fill="var(--color-gold-400)" transform="rotate(0, 270, 44)" opacity="0.6" class="blossom-cycle" />
+      <ellipse cx="274" cy="46" rx="4" ry="2" fill="var(--color-gold-400)" transform="rotate(72, 270, 44)" opacity="0.6" class="blossom-cycle" />
+      <ellipse cx="265" cy="49" rx="4" ry="2" fill="var(--color-gold-400)" transform="rotate(144, 270, 44)" opacity="0.6" class="blossom-cycle" />
+      <ellipse cx="260" cy="43" rx="4" ry="2" fill="var(--color-gold-400)" transform="rotate(216, 270, 44)" opacity="0.6" class="blossom-cycle" />
+      <ellipse cx="265" cy="38" rx="4" ry="2" fill="var(--color-gold-400)" transform="rotate(288, 270, 44)" opacity="0.6" class="blossom-cycle" />
       <circle cx="270" cy="44" r="3.5" fill="var(--color-lake-700)" opacity="0.4" />
       <circle cx="270" cy="44" r="2" fill="var(--color-berry-500)" opacity="0.75" />
 
       <!-- Blossom at x=530, y≈44 (second vine trough) -->
-      <ellipse cx="530" cy="40" rx="4" ry="2" fill="var(--color-gold-400)" transform="rotate(0, 530, 44)" opacity="0.6" />
-      <ellipse cx="534" cy="46" rx="4" ry="2" fill="var(--color-gold-400)" transform="rotate(72, 530, 44)" opacity="0.6" />
-      <ellipse cx="525" cy="49" rx="4" ry="2" fill="var(--color-gold-400)" transform="rotate(144, 530, 44)" opacity="0.6" />
-      <ellipse cx="520" cy="43" rx="4" ry="2" fill="var(--color-gold-400)" transform="rotate(216, 530, 44)" opacity="0.6" />
-      <ellipse cx="525" cy="38" rx="4" ry="2" fill="var(--color-gold-400)" transform="rotate(288, 530, 44)" opacity="0.6" />
+      <ellipse cx="530" cy="40" rx="4" ry="2" fill="var(--color-gold-400)" transform="rotate(0, 530, 44)" opacity="0.6" class="blossom-cycle" />
+      <ellipse cx="534" cy="46" rx="4" ry="2" fill="var(--color-gold-400)" transform="rotate(72, 530, 44)" opacity="0.6" class="blossom-cycle" />
+      <ellipse cx="525" cy="49" rx="4" ry="2" fill="var(--color-gold-400)" transform="rotate(144, 530, 44)" opacity="0.6" class="blossom-cycle" />
+      <ellipse cx="520" cy="43" rx="4" ry="2" fill="var(--color-gold-400)" transform="rotate(216, 530, 44)" opacity="0.6" class="blossom-cycle" />
+      <ellipse cx="525" cy="38" rx="4" ry="2" fill="var(--color-gold-400)" transform="rotate(288, 530, 44)" opacity="0.6" class="blossom-cycle" />
       <circle cx="530" cy="44" r="3.5" fill="var(--color-lake-700)" opacity="0.4" />
       <circle cx="530" cy="44" r="2" fill="var(--color-berry-600)" opacity="0.75" />
 
@@ -177,19 +177,19 @@ const { variant = 'floral' } = Astro.props;
       -->
 
       <!-- Berry cluster at x=250 -->
-      <circle cx="248" cy="14" r="3" fill="var(--color-berry-500)" opacity="0.8" />
-      <circle cx="255" cy="11" r="2" fill="var(--color-berry-600)" opacity="0.7" />
-      <circle cx="242" cy="11" r="2.5" fill="var(--color-berry-700)" opacity="0.6" />
+      <circle cx="248" cy="14" r="3" fill="var(--color-berry-500)" opacity="0.8" class="berry-cycle" />
+      <circle cx="255" cy="11" r="2" fill="var(--color-berry-600)" opacity="0.7" class="berry-cycle" />
+      <circle cx="242" cy="11" r="2.5" fill="var(--color-berry-700)" opacity="0.6" class="berry-cycle" />
 
       <!-- Berry cluster at x=400 -->
-      <circle cx="398" cy="26" r="3" fill="var(--color-berry-500)" opacity="0.8" />
-      <circle cx="405" cy="23" r="2" fill="var(--color-berry-600)" opacity="0.7" />
-      <circle cx="392" cy="23" r="2.5" fill="var(--color-berry-700)" opacity="0.6" />
+      <circle cx="398" cy="26" r="3" fill="var(--color-berry-500)" opacity="0.8" class="berry-cycle" />
+      <circle cx="405" cy="23" r="2" fill="var(--color-berry-600)" opacity="0.7" class="berry-cycle" />
+      <circle cx="392" cy="23" r="2.5" fill="var(--color-berry-700)" opacity="0.6" class="berry-cycle" />
 
       <!-- Berry cluster at x=550 -->
-      <circle cx="548" cy="14" r="3" fill="var(--color-berry-500)" opacity="0.8" />
-      <circle cx="555" cy="11" r="2" fill="var(--color-berry-600)" opacity="0.7" />
-      <circle cx="542" cy="11" r="2.5" fill="var(--color-berry-700)" opacity="0.6" />
+      <circle cx="548" cy="14" r="3" fill="var(--color-berry-500)" opacity="0.8" class="berry-cycle" />
+      <circle cx="555" cy="11" r="2" fill="var(--color-berry-600)" opacity="0.7" class="berry-cycle" />
+      <circle cx="542" cy="11" r="2.5" fill="var(--color-berry-700)" opacity="0.6" class="berry-cycle" />
     </svg>
   )}
 
@@ -211,10 +211,38 @@ const { variant = 'floral' } = Astro.props;
     stroke-dashoffset: 0;
   }
 
+  /* Blossom petal color cycling — gold -> berry -> turquoise -> sun -> gold */
+  @keyframes cycle-blossom {
+    0%, 100% { fill: var(--color-gold-400); }
+    25%      { fill: var(--color-berry-500); }
+    50%      { fill: var(--color-turquoise-400); }
+    75%      { fill: var(--color-sun-400); }
+  }
+
+  /* Berry circle color cycling — berry-500 -> berry-600 -> scarlet-400 -> berry-700 -> berry-500 */
+  @keyframes cycle-berry {
+    0%, 100% { fill: var(--color-berry-500); }
+    25%      { fill: var(--color-berry-600); }
+    50%      { fill: var(--color-scarlet-400); }
+    75%      { fill: var(--color-berry-700); }
+  }
+
+  .blossom-cycle {
+    animation: cycle-blossom 8s ease-in-out infinite;
+  }
+
+  .berry-cycle {
+    animation: cycle-berry 6s ease-in-out infinite;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .vine-path {
       stroke-dashoffset: 0;
       transition: none;
+    }
+    .blossom-cycle,
+    .berry-cycle {
+      animation: none;
     }
   }
 </style>
