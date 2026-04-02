@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-04-02)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive, visually stunning showcase that inspires them to ride it and support MBTN.
-**Current focus:** Phase 25 — Sector Panel Interactivity
+**Current focus:** Phase 26 — Final Polish / iOS Safari Testing
 
 ## Current Position
 
 Phase: 25 of 26 (Click Handlers, Panel Logic, Surface Track)
-Plan: 1 of 2 in current phase
-Status: In progress
-Last activity: 2026-04-02 — Completed 25-01-PLAN.md (surface track, ghost polylines, panel open/close)
+Plan: 2 of 2 in current phase
+Status: Phase complete
+Last activity: 2026-04-02 — Completed 25-02-PLAN.md (sparkline generator, full panel body, RouteExplainer IDs)
 
-Progress: [███████████████░░░░░] v1.0 ✅ | v1.1 ✅ | v1.2 ✅ | v1.3 Phase 23 ✅ | Phase 24 ✅ | Phase 25 Plan 01 ✅
+Progress: [████████████████░░░░] v1.0 ✅ | v1.1 ✅ | v1.2 ✅ | v1.3 Phase 23 ✅ | Phase 24 ✅ | Phase 25 ✅
 
 ## Performance Metrics
 
@@ -47,6 +47,8 @@ Recent decisions relevant to v1.3:
 - Phase 25-01: if (!panel.open) panel.show() guard — prevents double-show error in Safari 16
 - Phase 25-01: activeSector guard in hover handlers — prevents hover from overwriting active highlight
 - Phase 25-01: flushRun borrows endIdx+1 point — handles 13 single-point surface runs
+- Phase 25-02: Hardcoded hex colors in generateSparklineSvg (#7d9448, #c8973e, #f87171) — CSS vars can't be read from innerHTML-injected SVG without getComputedStyle(); hex matches resolved design tokens
+- Phase 25-02: elevData.eleMin/eleMax used directly for ft range — avoids re-computing Math.min/max, values pre-computed in sector-elevations.json
 
 ### Pending Todos
 
@@ -69,5 +71,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-04-02
-Stopped at: Completed 25-01-PLAN.md (surface track, ghost polylines, openPanel/closePanel)
+Stopped at: Completed 25-02-PLAN.md (sparkline generator, full panel body, RouteExplainer IDs)
 Resume file: None
