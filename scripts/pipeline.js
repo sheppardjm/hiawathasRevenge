@@ -18,6 +18,7 @@ const steps = [
   { name: 'parse-gpx', script: 'scripts/parse-gpx.js' },
   { name: 'generate-surface-points', script: 'scripts/generate-surface-points.js' },
   { name: 'resolve-annotations', script: 'scripts/resolve-annotations.js' },
+  { name: 'generate-sector-details', script: 'scripts/generate-sector-details.js' },
   { name: 'compute-sector-elevations', script: 'scripts/compute-sector-elevations.js' },
   { name: 'generate-thumbnails', script: 'scripts/generate-thumbnails.js' },
   { name: 'copy-images', script: 'scripts/copy-images.js' },
