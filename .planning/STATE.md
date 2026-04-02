@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-03-31)
 ## Current Position
 
 Phase: 20 (3 of 5 in v1.2) -- Content & Route Enrichment -- In progress
-Plan: 01 of 3 in phase -- Complete
-Status: Plan 20-01 complete (2/2 tasks, build passes, historical images live)
-Last activity: 2026-04-01 -- Completed 20-01-PLAN.md (historical images + HiawathaExplainer restructure)
+Plan: 03 of 3 in phase -- Complete
+Status: Plan 20-03 complete (2/2 tasks, build passes, segment cards enriched)
+Last activity: 2026-04-02 -- Completed 20-03-PLAN.md (ShieldMotif icons, difficulty colors, Strava links, expanded descriptions)
 
-Progress: [████████░░] 67% (8/12 v1.2 plans)
+Progress: [█████████░] 83% (10/12 v1.2 plans)
 
 ## Performance Metrics
 
@@ -29,7 +29,7 @@ Progress: [████████░░] 67% (8/12 v1.2 plans)
 - Timeline: 1 day (2026-03-31)
 
 **v1.2 Summary:**
-- Total plans completed: 8 (18-01, 18-02, 19-01, 19-02, 19-03, 19-04, 19-05, 20-01)
+- Total plans completed: 10 (18-01, 18-02, 19-01, 19-02, 19-03, 19-04, 19-05, 20-01, 20-02, 20-03)
 - Total phases: 5 (18-22)
 - Estimated plans: ~12
 
@@ -63,6 +63,9 @@ All v1.0 + v1.1 decisions logged in PROJECT.md Key Decisions table.
 | 20-01 | sepia(80%) saturate(30%) brightness(0.9) as canonical historical artifact filter | Visually distinct from full-color route photography; established as reusable pattern |
 | 20-01 | mt-0 on first editorial h3, mt-[6rem] on subsequent three | First h3 follows h2 which already provides separation; subsequent sections need full 6rem gap |
 | 20-01 | Conditional rendering guards on historicalPhotos.length for graceful degradation | Build passes cleanly even if historical-photos.json is empty |
+| 20-03 | DIFFICULTY_COLORS uses sun-400/amber-500/scarlet-400 (not scarlet-600) | All three pass WCAG AA normal text on forest-950 per 18-01 constraints |
+| 20-03 | Strava #FC5200 hardcoded, not a design token | Third-party brand color should not pollute the design system |
+| 20-03 | stravaId fields omitted from SEGMENTS (user provides IDs later) | Conditional {seg.stravaId && ...} prevents broken links until IDs are ready |
 
 ### Pending Todos
 
@@ -78,6 +81,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-01
-Stopped at: Completed 20-01-PLAN.md -- historical images sourced and HiawathaExplainer restructured
+Last session: 2026-04-02
+Stopped at: Completed 20-03-PLAN.md -- segment cards enriched with ShieldMotif icons, difficulty colors, Strava links, expanded descriptions
 Resume file: None
