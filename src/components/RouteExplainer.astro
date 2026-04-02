@@ -57,7 +57,7 @@ const segmentsWithPhotos = SEGMENTS.map(seg => ({
       100 miles of forest roads, two-track, and singletrack. Seven segments, each with its own character. Here's what to expect.
     </p>
     {segmentsWithPhotos.map((seg) => (
-      <article class="segment-card-container">
+      <article id={SECTOR_IDS[seg.name] ?? ''} class="segment-card-container">
         {seg.photos.length > 0 ? (
           <div class="segment-hero">
             <img
