@@ -541,9 +541,11 @@
       }
     });
 
-    // Click outside panel content — e.target === panel means click landed on dialog background
-    panel.addEventListener('click', (e) => {
-      if (e.target === panel) closePanel();
+    // Click outside panel to close — dialog.show() has no backdrop, so listen on document
+    document.addEventListener('click', (e) => {
+      if (panel.open && !panel.contains(e.target) && !e.target.closest('.leaflet-interactive')) {
+        closePanel();
+      }
     });
 
     // Sector label markers — pill-shaped divIcon labels at each sector's geographic midpoint
