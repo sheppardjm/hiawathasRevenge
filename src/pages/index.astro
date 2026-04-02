@@ -17,9 +17,10 @@ import RouteExplainer from '../components/RouteExplainer.astro';
 
   <HeroSection />
 
-
-  <section class="max-w-4xl mx-auto px-4 py-[--spacing-block] flex justify-center">
-    <DonateCallout />
+  <section class="w-full py-[--spacing-block]">
+    <div class="max-w-4xl mx-auto px-4 flex justify-center">
+      <DonateCallout />
+    </div>
   </section>
 
   <FloralDivider />
@@ -28,55 +29,73 @@ import RouteExplainer from '../components/RouteExplainer.astro';
 
   <RouteExplainer />
 
-  <section class="max-w-4xl mx-auto px-4 py-[--spacing-block]">
-    <h2 class="text-3xl mb-[--spacing-element]">Route Stats</h2>
-    <RouteStats />
+  <AnimatedDivider variant="minimal" />
+
+  <section class="bg-forest-800 w-full py-[--spacing-block]">
+    <div class="max-w-4xl mx-auto px-4">
+      <h2 class="text-3xl mb-[--spacing-element]">Route Stats</h2>
+      <RouteStats />
+    </div>
   </section>
 
-  <section class="max-w-4xl mx-auto px-4 py-[--spacing-block] flex flex-col items-center gap-2">
-    <a
-      href="/Munising_Hiawatha_s_Revenge.gpx"
-      download="HiawathasRevenge.gpx"
-      class="gpx-download"
-    >
-      Download GPX File
-    </a>
-    <span class="text-xs text-cream-200">Load this route onto your GPS device</span>
+  <section class="bg-forest-800 w-full py-[--spacing-block]">
+    <div class="max-w-4xl mx-auto px-4 flex flex-col items-center gap-2">
+      <a
+        href="/Munising_Hiawatha_s_Revenge.gpx"
+        download="HiawathasRevenge.gpx"
+        class="gpx-download"
+      >
+        Download GPX File
+      </a>
+      <span class="text-xs text-cream-200">Load this route onto your GPS device</span>
+    </div>
   </section>
 
   <AnimatedDivider variant="berry" />
 
-  <section id="route" class="max-w-4xl mx-auto px-4 py-[--spacing-block]">
-    <h2 class="text-3xl mb-[--spacing-element]">Explore the Route</h2>
-    <RouteMap />
+  <section id="route" class="w-full py-[--spacing-block]">
+    <div class="max-w-4xl mx-auto px-4">
+      <h2 class="text-3xl mb-[--spacing-element]">Explore the Route</h2>
+      <RouteMap />
+    </div>
   </section>
 
-  <section class="max-w-4xl mx-auto px-4 py-[--spacing-block]">
-    <h2 class="text-3xl mb-[--spacing-element]">Elevation Profile</h2>
-    <ElevationProfile />
+  <section class="bg-forest-950 w-full py-[--spacing-block]">
+    <div class="max-w-4xl mx-auto px-4">
+      <h2 class="text-3xl mb-[--spacing-element]">Elevation Profile</h2>
+      <ElevationProfile />
+    </div>
   </section>
 
-  <section class="max-w-4xl mx-auto px-4 py-[--spacing-block]">
-    <h2 class="text-3xl mb-[--spacing-element]">Photos</h2>
-    <PhotoGallery />
+  <section class="w-full py-[--spacing-block]">
+    <div class="max-w-4xl mx-auto px-4">
+      <h2 class="text-3xl mb-[--spacing-element]">Photos</h2>
+      <PhotoGallery />
+    </div>
   </section>
 
-  <section class="max-w-4xl mx-auto px-4 py-[--spacing-block]">
-    <h2 class="text-3xl mb-[--spacing-element]">Support the Trail</h2>
-    <DonateCallout />
+  <AnimatedDivider variant="floral" />
+
+  <section class="bg-forest-800 w-full py-[--spacing-block]">
+    <div class="max-w-4xl mx-auto px-4">
+      <h2 class="text-3xl mb-[--spacing-element]">Support the Trail</h2>
+      <DonateCallout />
+    </div>
   </section>
 
-  <section class="max-w-4xl mx-auto px-4 py-[--spacing-block] pb-8 border-t border-forest-700 mt-[--spacing-section]">
-    <ShieldMotif size={16} class="text-amber-500 mb-3 opacity-60" />
-    <p class="text-sm text-cream-200">
-      A project supporting <a href="https://mbtn.org" class="underline hover:text-amber-300">MBTN</a>.
-    </p>
-    <p class="text-xs text-cream-200 mt-3 max-w-prose leading-relaxed">
-      Decorative elements on this site are inspired by the woodland floral beadwork
-      tradition of the Ojibwe (Anishinaabe) people, the original stewards of the
-      Hiawatha National Forest region and surrounding Great Lakes homeland.
-      The Ojibwe remain a living, contemporary culture.
-    </p>
+  <section class="bg-forest-950 w-full py-[--spacing-block] pb-8 border-t border-forest-700 mt-[--spacing-section]">
+    <div class="max-w-4xl mx-auto px-4">
+      <ShieldMotif size={16} class="text-amber-500 mb-3 opacity-60" />
+      <p class="text-sm text-cream-200">
+        A project supporting <a href="https://mbtn.org" class="underline hover:text-amber-300">MBTN</a>.
+      </p>
+      <p class="text-xs text-cream-200 mt-3 max-w-prose leading-relaxed">
+        Decorative elements on this site are inspired by the woodland floral beadwork
+        tradition of the Ojibwe (Anishinaabe) people, the original stewards of the
+        Hiawatha National Forest region and surrounding Great Lakes homeland.
+        The Ojibwe remain a living, contemporary culture.
+      </p>
+    </div>
   </section>
 
 </BaseLayout>
