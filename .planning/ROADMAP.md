@@ -5,7 +5,7 @@
 - ✅ **v1.0 MVP** — Phases 0–11 (shipped 2026-03-31)
 - ✅ **v1.1 Visual Redesign** — Phases 12–17 (shipped 2026-03-31)
 - ✅ **v1.2 Cultural Maximalism** — Phases 18–22 (shipped 2026-04-02)
-- 🚧 **v1.3 Interactive Map & Editorial Polish** — Phases 23–27 (in progress)
+- ✅ **v1.3 Interactive Map & Editorial Polish** — Phases 23–27 (shipped 2026-04-02)
 
 ---
 
@@ -32,7 +32,7 @@ Expanded color palette (13 new tokens), animated geometric dividers, shield moti
 
 ---
 
-### 🚧 v1.3 Interactive Map & Editorial Polish (In Progress)
+### ✅ v1.3 Interactive Map & Editorial Polish (Shipped 2026-04-02)
 
 **Milestone Goal:** Make the route map a first-class interactive experience with sector labels, clickable detail panels, and surface-colored track — while polishing the editorial layout with better whitespace, redesigned pull quotes, parallax imagery, and additional cultural design elements.
 
@@ -151,7 +151,7 @@ Plans:
 **Plans:** 1 plan
 
 Plans:
-- [ ] 27-01-PLAN.md — VIS-02 font fix, MAP-08 trade-off documentation, NF2217 name consistency, and RouteMap.astro tech debt cleanup
+- [x] 27-01-PLAN.md — VIS-02 font fix, MAP-08 trade-off documentation, NF2217 name consistency, and RouteMap.astro tech debt cleanup
 
 ---
 
@@ -166,4 +166,4 @@ Plans:
 | 24. Sector labels | v1.3 | 1/1 | Complete | 2026-04-02 |
 | 25. Click handlers + surface track | v1.3 | 2/2 | Complete | 2026-04-02 |
 | 26. Editorial polish | v1.3 | 3/3 | Complete | 2026-04-02 |
-| 27. Audit gap closure | v1.3 | 0/0 | Not started | — |
+| 27. Audit gap closure | v1.3 | 1/1 | Complete | 2026-04-02 |
