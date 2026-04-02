@@ -1,6 +1,7 @@
 ---
 import photosData from '../../public/data/photos.json';
 import ElevationSparkline from './ElevationSparkline.astro';
+import ShieldMotif from './ShieldMotif.astro';
 
 interface Segment {
   name: string;
@@ -10,6 +11,7 @@ interface Segment {
   length: string;
   difficulty: number;
   description: string;
+  stravaId?: string;
 }
 
 const SEGMENTS: Segment[] = [
@@ -21,6 +23,14 @@ const SEGMENTS: Segment[] = [
   { name: 'Doe Lake',                startMi: 70.0, endMi: 92.0,  distFromStart: '84.8mi', length: '3.1mi', difficulty: 4, description: 'Technical and punishing. Sandy two-track weaves through dense forest near Doe Lake with short, sharp climbs that hit different at mile 85. The Midway General Store at mile 75.7 is your last chance to restock.' },
   { name: 'Rapid River Truck Trail', startMi: 92.0, endMi: 110.0, distFromStart: '94.6mi', length: '6.3mi', difficulty: 2, description: "The home stretch. A well-maintained truck trail carries you north back toward Munising with long descents and the growing certainty that you're going to finish this thing." },
 ];
+
+const DIFFICULTY_COLORS: Record<number, string> = {
+  1: 'text-sun-400',      // easy — sun-yellow 9.46:1 contrast, text-safe
+  2: 'text-sun-400',      // easy
+  3: 'text-amber-500',    // moderate — amber primary accent
+  4: 'text-scarlet-400',  // hard — scarlet-400 5.24:1 contrast, text-safe
+  5: 'text-scarlet-400',  // hard
+};
 
 const SECTOR_IDS: Record<string, string> = {
   '520': 'sector-520',
@@ -60,7 +70,12 @@ const segmentsWithPhotos = SEGMENTS.map(seg => ({
           </div>
         )}
         <div class="segment-content">
-          <h3 class="text-xl font-display text-amber-400">{seg.name}</h3>
+          <div class="flex items-center gap-2">
+            <ShieldMotif size={10} class={DIFFICULTY_COLORS[seg.difficulty] ?? 'text-amber-500'} />
+            <h3 class={`text-xl font-display ${DIFFICULTY_COLORS[seg.difficulty] ?? 'text-amber-500'}`}>
+              {seg.name}
+            </h3>
+          </div>
           <div class="flex items-center gap-3 text-sm text-cream-200 mt-1 mb-2">
             <span>{seg.distFromStart} from start</span>
             <span>·</span>
@@ -73,6 +88,19 @@ const segmentsWithPhotos = SEGMENTS.map(seg => ({
               role="img"
             ></div>
           </div>
+          {seg.stravaId && (
+            <a
+              href={`https://www.strava.com/segments/${seg.stravaId}`}
+              class="strava-link"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              View on Strava
+              <svg class="strava-icon" viewBox="0 0 16 16" width="12" height="12" aria-hidden="true" focusable="false">
+                <path fill="currentColor" d="M3 1.5L1.5 3 11.09 3l-8.59 8.59L3.91 13 12.5 4.41 12.5 14 14.5 14 14.5 1.5z" />
+              </svg>
+            </a>
+          )}
           <p class="text-cream-100 leading-relaxed">{seg.description}</p>
           {SECTOR_IDS[seg.name] && (
             <div class="mt-3">
@@ -173,6 +201,32 @@ const segmentsWithPhotos = SEGMENTS.map(seg => ({
     .segment-card:nth-child(even).no-photo {
       grid-template-columns: 1fr;
       grid-template-areas: "content";
+    }
+  }
+
+  .strava-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: var(--font-size-sm);
+    color: #FC5200;
+    text-decoration: none;
+    margin-top: 0.5rem;
+    transition: opacity 0.2s;
+  }
+
+  .strava-link:hover {
+    opacity: 0.8;
+    text-decoration: underline;
+  }
+
+  .strava-icon {
+    flex-shrink: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .strava-link {
+      transition: none;
     }
   }
 </style>
