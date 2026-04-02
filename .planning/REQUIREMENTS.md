@@ -80,36 +80,36 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| MAP-01 | — | Pending |
-| MAP-02 | — | Pending |
-| MAP-03 | — | Pending |
-| MAP-04 | — | Pending |
-| MAP-05 | — | Pending |
-| MAP-06 | — | Pending |
-| MAP-07 | — | Pending |
-| MAP-08 | — | Pending |
-| MAP-09 | — | Pending |
-| MAP-10 | — | Pending |
-| MAP-11 | — | Pending |
-| MAP-12 | — | Pending |
-| MAP-13 | — | Pending |
-| MAP-14 | — | Pending |
-| VIS-01 | — | Pending |
-| VIS-02 | — | Pending |
-| VIS-03 | — | Pending |
-| VIS-04 | — | Pending |
-| VIS-05 | — | Pending |
-| VIS-06 | — | Pending |
-| PERF-01 | — | Pending |
-| DATA-01 | — | Pending |
-| DATA-02 | — | Pending |
-| DATA-03 | — | Pending |
+| DATA-01 | Phase 23 | Pending |
+| DATA-02 | Phase 23 | Pending |
+| DATA-03 | Phase 23 | Pending |
+| MAP-01 | Phase 24 | Pending |
+| MAP-02 | Phase 24 | Pending |
+| MAP-03 | Phase 25 | Pending |
+| MAP-04 | Phase 25 | Pending |
+| MAP-05 | Phase 25 | Pending |
+| MAP-06 | Phase 25 | Pending |
+| MAP-07 | Phase 25 | Pending |
+| MAP-08 | Phase 25 | Pending |
+| MAP-09 | Phase 25 | Pending |
+| MAP-10 | Phase 25 | Pending |
+| MAP-11 | Phase 25 | Pending |
+| MAP-12 | Phase 25 | Pending |
+| MAP-13 | Phase 25 | Pending |
+| MAP-14 | Phase 25 | Pending |
+| VIS-01 | Phase 26 | Pending |
+| VIS-02 | Phase 26 | Pending |
+| VIS-03 | Phase 26 | Pending |
+| VIS-04 | Phase 26 | Pending |
+| VIS-05 | Phase 26 | Pending |
+| VIS-06 | Phase 26 | Pending |
+| PERF-01 | Phase 26 | Pending |
 
 **Coverage:**
 - v1.3 requirements: 24 total
-- Mapped to phases: 0
-- Unmapped: 24 ⚠️
+- Mapped to phases: 24
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-04-02*
-*Last updated: 2026-04-02 after initial definition*
+*Last updated: 2026-04-02 after v1.3 roadmap creation*
