@@ -1,0 +1,237 @@
+---
+// AnimatedDivider.astro
+// Animated section divider with scroll-triggered draw-on animation via IntersectionObserver.
+// Inherits visual language from FloralDivider (Ojibwe woodland floral beadwork tradition).
+// Three visual variants: 'floral' (full vine), 'minimal' (double-curve), 'berry' (vine + clusters).
+// Animation: stroke-dashoffset with pathLength="1" (no getTotalLength needed).
+// Accessibility: aria-hidden + role="presentation"; prefers-reduced-motion shows static fallback.
+
+interface Props {
+  variant?: 'floral' | 'minimal' | 'berry';
+}
+const { variant = 'floral' } = Astro.props;
+---
+
+<div class="animated-divider" aria-hidden="true" role="presentation">
+
+  {variant === 'floral' && (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 800 60"
+      width="100%"
+      height="60"
+      aria-hidden="true"
+      role="presentation"
+      focusable="false"
+    >
+      <!--
+        Central vine ("vine of life") — animated draw-on via stroke-dashoffset.
+        pathLength="1" normalizes the dash calculation without getTotalLength().
+      -->
+      <path
+        d="M0 30 Q100 10 200 30 Q300 50 400 30 Q500 10 600 30 Q700 50 800 30"
+        pathLength="1"
+        stroke="var(--color-gold-500)"
+        stroke-width="1.5"
+        fill="none"
+        opacity="0.7"
+        class="vine-path"
+      />
+      <!-- Vine shadow — berry-700 offset, animated in tandem -->
+      <path
+        d="M0 32 Q100 12 200 32 Q300 52 400 32 Q500 12 600 32 Q700 52 800 32"
+        pathLength="1"
+        stroke="var(--color-berry-700)"
+        stroke-width="1"
+        fill="none"
+        opacity="0.3"
+        class="vine-path"
+      />
+
+      <!-- Accent dot at center — static, appears immediately -->
+      <circle cx="400" cy="30" r="1.5" fill="var(--color-scarlet-400)" opacity="0.5" />
+
+      <!--
+        Opposing leaf pairs — static decorative elements (no vine-path class).
+        Teardrop ellipses at inflection points x=150, x=400, x=650.
+        Bilateral symmetry echoes Ojibwe beadwork botanical forms.
+      -->
+
+      <!-- Leaf pair at x=150 (first vine peak, y≈18) -->
+      <ellipse cx="150" cy="18" rx="10" ry="4" fill="var(--color-moss-500)" stroke="var(--color-lake-500)" stroke-width="0.5" transform="rotate(-25, 150, 18)" opacity="0.55" />
+      <ellipse cx="150" cy="18" rx="10" ry="4" fill="var(--color-moss-500)" stroke="var(--color-lake-600)" stroke-width="0.5" transform="rotate(25, 150, 18)" opacity="0.55" />
+
+      <!-- Leaf pair at x=400 (vine midpoint, y=30) -->
+      <ellipse cx="400" cy="30" rx="10" ry="4" fill="var(--color-moss-600)" transform="rotate(-25, 400, 30)" opacity="0.55" />
+      <ellipse cx="400" cy="30" rx="10" ry="4" fill="var(--color-moss-600)" transform="rotate(25, 400, 30)" opacity="0.55" />
+
+      <!-- Leaf pair at x=650 (second vine peak, y≈18) -->
+      <ellipse cx="650" cy="18" rx="10" ry="4" fill="var(--color-moss-500)" stroke="var(--color-turquoise-500)" stroke-width="0.5" transform="rotate(-25, 650, 18)" opacity="0.55" />
+      <ellipse cx="650" cy="18" rx="10" ry="4" fill="var(--color-moss-500)" stroke="var(--color-sun-500)" stroke-width="0.5" transform="rotate(25, 650, 18)" opacity="0.55" />
+
+      <!--
+        Five-petal blossoms — static decorative elements (no vine-path class).
+        5 ellipses arranged radially at 72° intervals around a center point.
+        Visual reference: the five-petal flower form ubiquitous in Ojibwe beadwork.
+      -->
+
+      <!-- Blossom at x=270, y≈44 (first vine trough) -->
+      <ellipse cx="270" cy="40" rx="4" ry="2" fill="var(--color-gold-400)" transform="rotate(0, 270, 44)" opacity="0.6" />
+      <ellipse cx="274" cy="46" rx="4" ry="2" fill="var(--color-gold-400)" transform="rotate(72, 270, 44)" opacity="0.6" />
+      <ellipse cx="265" cy="49" rx="4" ry="2" fill="var(--color-gold-400)" transform="rotate(144, 270, 44)" opacity="0.6" />
+      <ellipse cx="260" cy="43" rx="4" ry="2" fill="var(--color-gold-400)" transform="rotate(216, 270, 44)" opacity="0.6" />
+      <ellipse cx="265" cy="38" rx="4" ry="2" fill="var(--color-gold-400)" transform="rotate(288, 270, 44)" opacity="0.6" />
+      <circle cx="270" cy="44" r="3.5" fill="var(--color-lake-700)" opacity="0.4" />
+      <circle cx="270" cy="44" r="2" fill="var(--color-berry-500)" opacity="0.75" />
+
+      <!-- Blossom at x=530, y≈44 (second vine trough) -->
+      <ellipse cx="530" cy="40" rx="4" ry="2" fill="var(--color-gold-400)" transform="rotate(0, 530, 44)" opacity="0.6" />
+      <ellipse cx="534" cy="46" rx="4" ry="2" fill="var(--color-gold-400)" transform="rotate(72, 530, 44)" opacity="0.6" />
+      <ellipse cx="525" cy="49" rx="4" ry="2" fill="var(--color-gold-400)" transform="rotate(144, 530, 44)" opacity="0.6" />
+      <ellipse cx="520" cy="43" rx="4" ry="2" fill="var(--color-gold-400)" transform="rotate(216, 530, 44)" opacity="0.6" />
+      <ellipse cx="525" cy="38" rx="4" ry="2" fill="var(--color-gold-400)" transform="rotate(288, 530, 44)" opacity="0.6" />
+      <circle cx="530" cy="44" r="3.5" fill="var(--color-lake-700)" opacity="0.4" />
+      <circle cx="530" cy="44" r="2" fill="var(--color-berry-600)" opacity="0.75" />
+
+      <!--
+        Double-curve accents at center (x≈400) — static decorative elements (no vine-path class).
+        Two opposing arcs: characteristic Ojibwe double-curve motif from beadwork/birchbark biting art.
+      -->
+      <path
+        d="M385 22 Q400 16 415 22"
+        stroke="var(--color-gold-600)"
+        stroke-width="1"
+        fill="none"
+        opacity="0.5"
+      />
+      <path
+        d="M385 38 Q400 44 415 38"
+        stroke="var(--color-gold-500)"
+        stroke-width="1"
+        fill="none"
+        opacity="0.5"
+      />
+    </svg>
+  )}
+
+  {variant === 'minimal' && (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 800 30"
+      width="100%"
+      height="30"
+      aria-hidden="true"
+      role="presentation"
+      focusable="false"
+    >
+      <!--
+        Minimal double-curve — lightweight divider for minor section breaks.
+        Both curves animate via stroke-dashoffset draw-on.
+      -->
+      <path
+        d="M200 15 Q400 5 600 15"
+        pathLength="1"
+        stroke="var(--color-gold-600)"
+        stroke-width="1"
+        fill="none"
+        class="vine-path"
+      />
+      <path
+        d="M200 15 Q400 25 600 15"
+        pathLength="1"
+        stroke="var(--color-gold-500)"
+        stroke-width="1"
+        fill="none"
+        opacity="0.5"
+        class="vine-path"
+      />
+    </svg>
+  )}
+
+  {variant === 'berry' && (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 800 40"
+      width="100%"
+      height="40"
+      aria-hidden="true"
+      role="presentation"
+      focusable="false"
+    >
+      <!--
+        Berry vine — animated draw-on path.
+        Intermediate complexity between minimal and floral.
+      -->
+      <path
+        d="M100 20 Q250 8 400 20 Q550 32 700 20"
+        pathLength="1"
+        stroke="var(--color-berry-500)"
+        stroke-width="1.5"
+        fill="none"
+        class="vine-path"
+      />
+
+      <!--
+        Berry clusters — static decorative elements (no vine-path class).
+        Groups of 3 small circles at x=250, x=400, x=550.
+      -->
+
+      <!-- Berry cluster at x=250 -->
+      <circle cx="248" cy="14" r="3" fill="var(--color-berry-500)" opacity="0.8" />
+      <circle cx="255" cy="11" r="2" fill="var(--color-berry-600)" opacity="0.7" />
+      <circle cx="242" cy="11" r="2.5" fill="var(--color-berry-700)" opacity="0.6" />
+
+      <!-- Berry cluster at x=400 -->
+      <circle cx="398" cy="26" r="3" fill="var(--color-berry-500)" opacity="0.8" />
+      <circle cx="405" cy="23" r="2" fill="var(--color-berry-600)" opacity="0.7" />
+      <circle cx="392" cy="23" r="2.5" fill="var(--color-berry-700)" opacity="0.6" />
+
+      <!-- Berry cluster at x=550 -->
+      <circle cx="548" cy="14" r="3" fill="var(--color-berry-500)" opacity="0.8" />
+      <circle cx="555" cy="11" r="2" fill="var(--color-berry-600)" opacity="0.7" />
+      <circle cx="542" cy="11" r="2.5" fill="var(--color-berry-700)" opacity="0.6" />
+    </svg>
+  )}
+
+</div>
+
+<style>
+  .animated-divider {
+    max-width: 56rem;
+    margin: 0 auto;
+  }
+
+  .vine-path {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    transition: stroke-dashoffset 1.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .animated-divider.is-visible .vine-path {
+    stroke-dashoffset: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .vine-path {
+      stroke-dashoffset: 0;
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  // Trigger draw-on animation for each AnimatedDivider instance independently.
+  // querySelectorAll (not querySelector) ensures multiple instances on same page each fire.
+  document.querySelectorAll('.animated-divider').forEach((divider) => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          divider.classList.add('is-visible');
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.3 }
+    );
+    observer.observe(divider);
+  });
+</script>
