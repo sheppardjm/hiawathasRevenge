@@ -11,8 +11,8 @@ Requirements for Cultural Maximalism milestone. Each maps to roadmap phases.
 
 - [ ] **DES-01**: Color palette expands with turquoise, vermillion/scarlet, and sun-yellow token families added to `@theme static`, each with WCAG AA contrast ratios documented against forest-900/950 backgrounds
 - [ ] **DES-02**: Orphaned v1.1 color tokens (lake-500, berry-500, moss-600, etc.) are activated and assigned purpose in the design system
-- [ ] **DES-03**: Each major page section has a distinct background color drawn from the expanded palette, creating visual rhythm and "journey through distinct moments" rather than monochromatic scroll
-- [ ] **DES-04**: 60-30-10 color distribution rule applied: forest-900/950 dominant backgrounds (60%), existing berry/gold/lake/moss accents (30%), new bold colors as pop accents (10%)
+- [x] **DES-03**: Each major page section has a distinct background color drawn from the expanded palette, creating visual rhythm and "journey through distinct moments" rather than monochromatic scroll
+- [x] **DES-04**: 60-30-10 color distribution rule applied: forest-900/950 dominant backgrounds (60%), existing berry/gold/lake/moss accents (30%), new bold colors as pop accents (10%)
 
 ### Decorative System
 
@@ -84,8 +84,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 |-------------|-------|--------|
 | DES-01 | Phase 18 | Complete |
 | DES-02 | Phase 18 | Complete |
-| DES-03 | Phase 21 | Pending |
-| DES-04 | Phase 21 | Pending |
+| DES-03 | Phase 21 | Complete |
+| DES-04 | Phase 21 | Complete |
 | DEC-01 | Phase 19 | Complete |
 | DEC-02 | Phase 19 | Complete |
 | DEC-03 | Phase 19 | Complete |
