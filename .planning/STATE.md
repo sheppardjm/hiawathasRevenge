@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-03-31)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive, visually stunning showcase that inspires them to ride it and support MBTN.
-**Current focus:** v1.2 Cultural Maximalism -- Phase 21 verified complete, ready for Phase 22
+**Current focus:** v1.2 Cultural Maximalism -- Phase 22 Animation Polish in progress (22-01 complete)
 
 ## Current Position
 
-Phase: 21 (4 of 5 in v1.2) -- Section Color Differentiation -- VERIFIED COMPLETE
-Plan: 01 of 1 in phase -- Complete
-Status: Phase 21 verified (5/5 must-haves passed, DES-03 and DES-04 satisfied)
-Last activity: 2026-04-01 -- Phase 21 verification passed
+Phase: 22 (5 of 5 in v1.2) -- Animation Polish -- In progress
+Plan: 01 of 2 in phase -- Complete
+Status: 22-01 complete (ScrollReveal system, data-reveal wiring, segment card stagger)
+Last activity: 2026-04-02 -- Completed 22-01-PLAN.md
 
-Progress: [██████████] 92% (11/12 v1.2 plans)
+Progress: [██████████] 96% (12/13 v1.2 plans)
 
 ## Performance Metrics
 
@@ -70,6 +70,9 @@ All v1.0 + v1.1 decisions logged in PROJECT.md Key Decisions table.
 | 21-01 | bg-forest-800 for action/data sections, bg-forest-950 for deep editorial/footer | Creates 60-30-10 distribution: forest-900/950 dominant, forest-800 accent |
 | 21-01 | Full-width pattern: outer section with bg-*, inner div with max-w-4xl | No colored narrow columns; backgrounds span viewport width |
 | 21-01 | AnimatedDivider placement only at color-transition boundaries (not same-color pairs) | RouteStats and GPX are both forest-800 — no divider between them |
+| 22-01 | threshold 0.15 (not 0.3) for section reveals | Tall sections on mobile may never reach 30% visible; 15% triggers reliably |
+| 22-01 | AnimatedDividers excluded from data-reveal | They manage their own IntersectionObserver per instance — adding data-reveal would conflict |
+| 22-01 | data-reveal added inside component files (not wrapping in index.astro) | Keeps observer targeting the actual section element, not a wrapper |
 
 ### Pending Todos
 
@@ -85,6 +88,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-01
-Stopped at: Phase 21 verified complete -- 1 plan executed, verification passed 5/5
+Last session: 2026-04-02
+Stopped at: Completed 22-01-PLAN.md -- scroll reveal system, 9 sections wired, segment card stagger
 Resume file: None
