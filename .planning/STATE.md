@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-03-31)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive, visually stunning showcase that inspires them to ride it and support MBTN.
-**Current focus:** v1.2 Cultural Maximalism -- Phase 20 verified complete, ready for Phase 21
+**Current focus:** v1.2 Cultural Maximalism -- Phase 21 plan 01 complete, ready for Phase 22
 
 ## Current Position
 
-Phase: 20 (3 of 5 in v1.2) -- Content & Route Enrichment -- VERIFIED COMPLETE
-Plan: 03 of 3 in phase -- Complete
-Status: Phase 20 verified (5/5 must-haves passed, Strava IDs populated for 6/7 segments)
-Last activity: 2026-04-01 -- Phase 20 verification passed after adding Strava segment IDs
+Phase: 21 (4 of 5 in v1.2) -- Section Color Differentiation -- Plan 01 Complete
+Plan: 01 of 1 in phase -- Complete
+Status: Phase 21 plan 01 complete (2/2 tasks done, build passes, all must-haves met)
+Last activity: 2026-04-01 -- Completed 21-01-PLAN.md
 
-Progress: [█████████░] 83% (10/12 v1.2 plans)
+Progress: [██████████] 92% (11/12 v1.2 plans)
 
 ## Performance Metrics
 
@@ -67,6 +67,9 @@ All v1.0 + v1.1 decisions logged in PROJECT.md Key Decisions table.
 | 20-03 | Strava #FC5200 hardcoded, not a design token | Third-party brand color should not pollute the design system |
 | 20-03 | stravaId fields omitted from SEGMENTS (user provides IDs later) | Conditional {seg.stravaId && ...} prevents broken links until IDs are ready |
 | 20 | 6/7 Strava segment IDs populated; Rapid River Truck Trail deferred | User provided IDs for 520, NF2266, Bass Lake Rd, NF2217-2218, ND2225, Doe Lake |
+| 21-01 | bg-forest-800 for action/data sections, bg-forest-950 for deep editorial/footer | Creates 60-30-10 distribution: forest-900/950 dominant, forest-800 accent |
+| 21-01 | Full-width pattern: outer section with bg-*, inner div with max-w-4xl | No colored narrow columns; backgrounds span viewport width |
+| 21-01 | AnimatedDivider placement only at color-transition boundaries (not same-color pairs) | RouteStats and GPX are both forest-800 — no divider between them |
 
 ### Pending Todos
 
@@ -83,5 +86,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-04-01
-Stopped at: Phase 20 verified complete -- all 3 plans executed, Strava IDs populated, verification passed
+Stopped at: Completed 21-01-PLAN.md -- full-width section backgrounds and AnimatedDivider wiring
 Resume file: None
