@@ -7,6 +7,8 @@ import PhotoGallery from '../components/PhotoGallery.astro';
 import RouteStats from '../components/RouteStats.astro';
 import DonateCallout from '../components/DonateCallout.astro';
 import FloralDivider from '../components/FloralDivider.astro';
+import AnimatedDivider from '../components/AnimatedDivider.astro';
+import ShieldMotif from '../components/ShieldMotif.astro';
 import HiawathaExplainer from '../components/HiawathaExplainer.astro';
 import RouteExplainer from '../components/RouteExplainer.astro';
 ---
@@ -42,7 +44,7 @@ import RouteExplainer from '../components/RouteExplainer.astro';
     <span class="text-xs text-cream-200">Load this route onto your GPS device</span>
   </section>
 
-  <FloralDivider />
+  <AnimatedDivider variant="berry" />
 
   <section id="route" class="max-w-4xl mx-auto px-4 py-[--spacing-block]">
     <h2 class="text-3xl mb-[--spacing-element]">Explore the Route</h2>
@@ -65,6 +67,7 @@ import RouteExplainer from '../components/RouteExplainer.astro';
   </section>
 
   <section class="max-w-4xl mx-auto px-4 py-[--spacing-block] pb-8 border-t border-forest-700 mt-[--spacing-section]">
+    <ShieldMotif size={16} class="text-amber-500 mb-3 opacity-60" />
     <p class="text-sm text-cream-200">
       A project supporting <a href="https://mbtn.org" class="underline hover:text-amber-300">MBTN</a>.
     </p>
