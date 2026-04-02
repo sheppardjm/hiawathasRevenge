@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-03-31)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive, visually stunning showcase that inspires them to ride it and support MBTN.
-**Current focus:** v1.2 Cultural Maximalism -- Phase 19 complete, ready for Phase 20
+**Current focus:** v1.2 Cultural Maximalism -- Phase 19 fully complete (all 5 plans), ready for Phase 20
 
 ## Current Position
 
-Phase: 19 (2 of 5 in v1.2) -- Decorative Component Library -- COMPLETE
-Plan: 04 of 4 in phase -- Complete
-Status: Phase 19 complete (gap closure 19-04 done)
-Last activity: 2026-04-01 -- Completed 19-04-PLAN.md (AnimatedDivider blossom color cycling)
+Phase: 19 (2 of 5 in v1.2) -- Decorative Component Library -- FULLY COMPLETE
+Plan: 05 of 5 in phase -- Complete
+Status: Phase 19 complete (gap closure 19-05 done — all three components integrated)
+Last activity: 2026-04-01 -- Completed 19-05-PLAN.md (component wiring: AnimatedDivider, ShieldMotif, ElevationSparkline)
 
-Progress: [██████░░░░] 50% (6/12 v1.2 plans)
+Progress: [███████░░░] 58% (7/12 v1.2 plans)
 
 ## Performance Metrics
 
@@ -29,7 +29,7 @@ Progress: [██████░░░░] 50% (6/12 v1.2 plans)
 - Timeline: 1 day (2026-03-31)
 
 **v1.2 Summary:**
-- Total plans completed: 6 (18-01, 18-02, 19-01, 19-02, 19-03, 19-04)
+- Total plans completed: 7 (18-01, 18-02, 19-01, 19-02, 19-03, 19-04, 19-05)
 - Total phases: 5 (18-22)
 - Estimated plans: ~12
 
@@ -57,6 +57,8 @@ All v1.0 + v1.1 decisions logged in PROJECT.md Key Decisions table.
 | 19-03 | viewBox "0 0 100 30" coordinate space for sparklines | W=100 maps to miles range, H=30 inverted for elevation; optimized for inline sparkline aspect ratio |
 | 19-04 | Animation durations asymmetric (8s blossom, 6s berry) | Prevents synchronization between variant types; creates organic rather than mechanical feel |
 | 19-04 | scarlet-400 used in berry cycling (not scarlet-600) | scarlet-600 is large-text/decorative-only per 18-01; scarlet-400 is safe for decorative SVG fills |
+| 19-05 | AnimatedDivider replaces second FloralDivider (not first) | Preserves contrast between static and animated dividers coexisting on same page |
+| 19-05 | SECTOR_IDS Record map as bridge from segment names to content collection IDs | Explicit, readable, zero runtime cost — decouples display names from data IDs |
 
 ### Pending Todos
 
@@ -73,5 +75,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-04-01
-Stopped at: Completed 19-04-PLAN.md -- AnimatedDivider blossom/berry color cycling via CSS @keyframes (gap closure)
+Stopped at: Completed 19-05-PLAN.md -- Wired AnimatedDivider, ShieldMotif, ElevationSparkline into real pages (gap closure complete)
 Resume file: None
