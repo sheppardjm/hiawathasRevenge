@@ -24,6 +24,11 @@
     background: transparent !important;
     border: none !important;
   }
+
+  :global(.sector-label) {
+    background: transparent !important;
+    border: none !important;
+  }
 </style>
 
 <script>
@@ -83,6 +88,14 @@
       moderate: { line: amber500 },
       hard:     { line: getCSSColor('--color-rust-500') },
     };
+
+    // Sector label pill colors — difficulty-coded background for label markers
+    const LABEL_COLORS = {
+      easy:     getCSSColor('--color-moss-500'),
+      moderate: amber500,
+      hard:     getCSSColor('--color-rust-500'),
+    };
+    const labelTextColor = getCSSColor('--color-forest-900');
 
     // Dynamic import avoids SSR "window is undefined" error — Leaflet requires browser globals
     const L = (await import('leaflet')).default;
@@ -177,6 +190,61 @@
         opacity: 0.85
       }).addTo(map);
     }
+
+    // Sector label markers — pill-shaped divIcon labels at each sector's geographic midpoint
+    const sectorLabels = [];
+
+    for (const sector of sectors) {
+      const midIdx = Math.floor((sector.startIdx + sector.endIdx) / 2);
+      const midPt = latlngs[midIdx];
+      const bgColor = LABEL_COLORS[sector.difficulty] || LABEL_COLORS.moderate;
+      const stars = '★'.repeat(sector.stars);
+
+      const labelIcon = L.divIcon({
+        className: 'sector-label',
+        html: `<div style="
+          background: ${bgColor};
+          color: ${labelTextColor};
+          border: 2px solid ${labelTextColor};
+          border-radius: 12px;
+          padding: 3px 8px;
+          font-family: var(--font-display);
+          font-size: 11px;
+          font-weight: 700;
+          white-space: nowrap;
+          transform: translate(-50%, -50%);
+          box-shadow: 2px 2px 0px rgba(0,0,0,0.4);
+          line-height: 1.3;
+          text-align: center;
+        ">${sector.name}<br><span style="font-size: 9px; letter-spacing: 1px;">${stars}</span></div>`,
+        iconSize: [0, 0],
+        iconAnchor: [0, 0],
+      });
+
+      const labelMarker = L.marker(midPt, {
+        icon: labelIcon,
+        interactive: false,
+        keyboard: false,
+        zIndexOffset: 250,
+      });
+
+      sectorLabels.push(labelMarker);
+    }
+
+    // Zoom gating — show sector labels at zoom >= 12, hide at lower zoom
+    function updateLabelVisibility() {
+      const zoom = map.getZoom();
+      for (const marker of sectorLabels) {
+        if (zoom >= 12 && !marker._map) {
+          marker.addTo(map);
+        } else if (zoom < 12 && marker._map) {
+          marker.remove();
+        }
+      }
+    }
+    map.on('zoomend', updateLabelVisibility);
+    // Initial check — labels may be visible at initial zoom level
+    updateLabelVisibility();
 
     // Restock point markers — clickable amber circles with name/mileage popups
     const restocks = annotations.filter(a => a.type === 'restock');
