@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-03-31)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive, visually stunning showcase that inspires them to ride it and support MBTN.
-**Current focus:** v1.2-gaps UAT Gap Closure -- editorial layout redesign complete (v1.2-gaps-02 done)
+**Current focus:** v1.2-gaps UAT Gap Closure -- photo-hero segment cards and sparkline enhancement complete (v1.2-gaps-03 done)
 
 ## Current Position
 
-Phase: v1.2-gaps (2 of 4 gap closure plans complete)
-Plan: 02 of 4 in phase -- Complete
-Status: v1.2-gaps-02 complete (CSS Grid editorial layout, museum-plate images, pull quote redesign, drop caps)
-Last activity: 2026-04-02 -- Completed v1.2-gaps-02-PLAN.md
+Phase: v1.2-gaps (3 of 4 gap closure plans complete)
+Plan: 03 of 4 in phase -- Complete
+Status: v1.2-gaps-03 complete (photo-hero segment cards, enhanced sparklines with background/grid/area-fill)
+Last activity: 2026-04-02 -- Completed v1.2-gaps-03-PLAN.md
 
-Progress: [██████████] v1.2 base: 100% (13/13) | gap closure: 2/4 complete
+Progress: [██████████] v1.2 base: 100% (13/13) | gap closure: 3/4 complete
 
 ## Performance Metrics
 
@@ -79,6 +79,8 @@ All v1.0 + v1.1 decisions logged in PROJECT.md Key Decisions table.
 | v1.2-gaps-02 | Named CSS Grid tracks (full/breakout/prose) for editorial layout | .editorial-grid > * defaults to prose; .breakout spans breakout; enables magazine-style breakout elements without JS |
 | v1.2-gaps-02 | Pull quote ::first-letter via .pull-quote p::first-letter selector (not class) | Keeps blockquote HTML semantic; CSS selector targets the p inside without adding extra classes |
 | v1.2-gaps-02 | max-w-4xl upgraded to max-w-5xl for HiawathaExplainer | Gives breakout tracks visible room at desktop widths; prose column still constrained to 65ch |
+| v1.2-gaps-03 | linearGradient IDs scoped by sectorId (elev-fill-{sectorId}) | Prevents duplicate-ID collisions when all 7 sparklines render on same page |
+| v1.2-gaps-03 | H=50, padding=4 for ElevationSparkline (drawH=42) | 4px margin top/bottom keeps extreme elevation peaks from clipping at viewBox edges |
 
 ### Pending Todos
 
@@ -94,6 +96,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-02T15:07:41Z
-Stopped at: Completed v1.2-gaps-02-PLAN.md -- magazine editorial grid, museum-plate images, pull quote redesign with attribution, 5 drop caps
+Last session: 2026-04-02T15:23:45Z
+Stopped at: Completed v1.2-gaps-03-PLAN.md -- photo-hero segment cards, enhanced sparklines with background/grid/area-fill/endpoint markers
 Resume file: None
