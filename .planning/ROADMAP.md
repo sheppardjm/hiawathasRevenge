@@ -54,10 +54,11 @@ Expanded color palette (13 new tokens), animated geometric dividers, shield moti
 3. Running `node pipeline.js` produces surface-type data per route point (paved/dirt/gravel/sand) from `hiawathasRevenge.json` that can be consumed by track coloring
 4. The build passes with no missing-data errors after these changes
 
-**Plans:** TBD
+**Plans:** 2 plans
 
 Plans:
-- [ ] 23-01: Reconcile difficulty data and generate sector-details.json pipeline step
+- [ ] 23-01-PLAN.md — Reconcile difficulty stars + surface-points pipeline step (DATA-01, DATA-03)
+- [ ] 23-02-PLAN.md — Sector details pipeline step + full build verification (DATA-02)
 
 ---
 
@@ -138,7 +139,7 @@ Plans:
 | 0–11. MVP foundations | v1.0 | 33/33 | Complete | 2026-03-31 |
 | 12–17. Visual redesign | v1.1 | 8/8 | Complete | 2026-03-31 |
 | 18–22. Cultural maximalism | v1.2 | 17/17 | Complete | 2026-04-02 |
-| 23. Data reconciliation | v1.3 | 0/TBD | Not started | — |
+| 23. Data reconciliation | v1.3 | 0/2 | Not started | — |
 | 24. Sector labels | v1.3 | 0/TBD | Not started | — |
 | 25. Click handlers + surface track | v1.3 | 0/TBD | Not started | — |
 | 26. Editorial polish | v1.3 | 0/TBD | Not started | — |
