@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-04-02)
 ## Current Position
 
 Phase: 26 of 26 (Editorial Polish / iOS Safari Testing)
-Plan: 2 of 2 in current phase
+Plan: 3 of 3 in current phase
 Status: Phase complete
-Last activity: 2026-04-02 — Completed 26-02-PLAN.md (EB Garamond typography, cultural motifs, background fade)
+Last activity: 2026-04-02 — Completed 26-03-PLAN.md (Three sub-section parallax backgrounds, VIS-04 gap closure)
 
 Progress: [████████████████████] v1.0 ✅ | v1.1 ✅ | v1.2 ✅ | v1.3 Phase 23 ✅ | Phase 24 ✅ | Phase 25 ✅ | Phase 26 ✅ | v1.3 COMPLETE
 
@@ -56,6 +56,9 @@ Recent decisions relevant to v1.3:
 - Phase 26-02: Bidirectional IntersectionObserver (classList.toggle) not one-shot for background fade in/out on scroll
 - Phase 26-02: prefers-reduced-motion: static 4% opacity (not zero) — subtle atmospheric quality preserved for all users
 - Phase 26-02: TurtleMotif uses currentColor for Tailwind text-* theming (same as ShieldMotif pattern)
+- Phase 26-03: overflow:hidden removed from .hiawatha-section — required for background-attachment:fixed to work on descendant ::before elements
+- Phase 26-03: subsection-bg wrapper replicates editorial-grid column tracks (grid-column:full + grid-template-columns) enabling ::before parallax without overflow:hidden
+- Phase 26-03: querySelectorAll + sections.forEach(observe) — single IntersectionObserver instance observes all three sub-sections independently (threshold 0.15)
 
 ### Pending Todos
 
@@ -77,6 +80,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-02T21:34:23Z
-Stopped at: Completed 26-02-PLAN.md (EB Garamond typography, cultural motifs, background fade) — v1.3 COMPLETE
+Last session: 2026-04-02T21:57:07Z
+Stopped at: Completed 26-03-PLAN.md (Three sub-section parallax backgrounds, VIS-04 gap closure) — v1.3 COMPLETE
 Resume file: None
