@@ -7,122 +7,137 @@ import historicalPhotos from '../../public/data/historical-photos.json';
 import ShieldMotif from './ShieldMotif.astro';
 ---
 
-<section data-reveal data-bg-fade class="hiawatha-section py-[--spacing-block]">
+<section data-reveal class="hiawatha-section py-[--spacing-block]">
   <div class="max-w-5xl mx-auto px-4">
     <h2 class="text-3xl mb-[--spacing-element]">The Poem, the Forest, the Ride</h2>
 
     <div class="editorial-grid">
 
-      <h3 class="text-2xl font-display text-amber-500 mt-0 mb-4 tracking-wide section-heading">The Poem</h3>
+      <!-- VIS-04: Poem sub-section wrapper with independent parallax background -->
+      <div class="subsection-bg poem-section" data-bg-fade>
 
-      <p class="drop-cap">
-        In 1855, Henry Wadsworth Longfellow committed one of American literature's
-        most spectacular acts of geographic and cultural confusion. He published
-        <em>The Song of Hiawatha</em>, an epic poem in the meter of the Finnish
-        <em>Kalevala</em>, drawing heavily on Ojibwe oral traditions that ethnographer
-        Henry Rowe Schoolcraft had collected along the shores of Lake Superior.
-        Longfellow set the whole thing in Michigan's Upper Peninsula, peopled it with
-        Ojibwe figures and Ojibwe landscape, and then — for reasons that remain a
-        testament to the perils of desk-bound scholarship — named his hero after
-        someone else entirely.
-      </p>
+        <h3 class="text-2xl font-display text-amber-500 mt-0 mb-4 tracking-wide section-heading">The Poem</h3>
 
-      <h3 class="text-2xl font-display text-turquoise-400 section-heading section-heading--gap mb-4 tracking-wide">The Confusion</h3>
+        <p class="drop-cap">
+          In 1855, Henry Wadsworth Longfellow committed one of American literature's
+          most spectacular acts of geographic and cultural confusion. He published
+          <em>The Song of Hiawatha</em>, an epic poem in the meter of the Finnish
+          <em>Kalevala</em>, drawing heavily on Ojibwe oral traditions that ethnographer
+          Henry Rowe Schoolcraft had collected along the shores of Lake Superior.
+          Longfellow set the whole thing in Michigan's Upper Peninsula, peopled it with
+          Ojibwe figures and Ojibwe landscape, and then — for reasons that remain a
+          testament to the perils of desk-bound scholarship — named his hero after
+          someone else entirely.
+        </p>
 
-      <p class="drop-cap">
-        Hiawatha was a real historical figure, but he had nothing to do with the
-        Ojibwe, Lake Superior, or Michigan. He was a Mohawk chief — a
-        <em>Haudenosaunee</em> (Iroquois) statesman from present-day southern Ontario
-        and upper New York who, alongside the prophet Deganawida, helped unite the
-        Five Nations — Seneca, Cayuga, Onondaga, Oneida, and Kanyen'kehà:ka — into
-        one of the most sophisticated political confederacies in the precolonial world.
-        As the primary carrier of Deganawida's message of peace, Hiawatha was an
-        agent of diplomacy and reconciliation, subordinating himself to former enemies
-        in the name of unity. He was, in other words, precisely the kind of figure
-        you would not confuse with Nanabozho: the shape-shifting, endlessly scheming
-        Ojibwe trickster-hero who actually lived in Schoolcraft's stories.
-      </p>
+        <h3 class="text-2xl font-display text-turquoise-400 section-heading section-heading--gap mb-4 tracking-wide">The Confusion</h3>
 
-      <p>
-        Longfellow apparently found the names interchangeable. He took Nanabozho's
-        adventures, Nanabozho's landscape, Nanabozho's Ojibwe world — and published
-        the whole thing under Hiawatha's name. Scholars have spent the better part of
-        two centuries untangling the wreckage. As one assessment put it, the poem
-        ultimately became
-      </p>
+        <p class="drop-cap">
+          Hiawatha was a real historical figure, but he had nothing to do with the
+          Ojibwe, Lake Superior, or Michigan. He was a Mohawk chief — a
+          <em>Haudenosaunee</em> (Iroquois) statesman from present-day southern Ontario
+          and upper New York who, alongside the prophet Deganawida, helped unite the
+          Five Nations — Seneca, Cayuga, Onondaga, Oneida, and Kanyen'kehà:ka — into
+          one of the most sophisticated political confederacies in the precolonial world.
+          As the primary carrier of Deganawida's message of peace, Hiawatha was an
+          agent of diplomacy and reconciliation, subordinating himself to former enemies
+          in the name of unity. He was, in other words, precisely the kind of figure
+          you would not confuse with Nanabozho: the shape-shifting, endlessly scheming
+          Ojibwe trickster-hero who actually lived in Schoolcraft's stories.
+        </p>
 
-      <blockquote class="pull-quote breakout">
-        <p>"a romanticized conflation of disparate Indian tribes, their traditions, and
-        their legends" — one that presented Native American culture as doomed, a relic
-        of the past inevitably making way for Euro-American expansion.</p>
-        <footer class="pull-quote-attribution">
-          — <cite><a href="https://www.american.edu/arts/hiawatha-in-context.cfm" target="_blank" rel="noopener noreferrer">American University, "Hiawatha in Context"</a></cite>
-        </footer>
-        <ShieldMotif size={12} class="pull-quote-ornament" />
-      </blockquote>
+        <p>
+          Longfellow apparently found the names interchangeable. He took Nanabozho's
+          adventures, Nanabozho's landscape, Nanabozho's Ojibwe world — and published
+          the whole thing under Hiawatha's name. Scholars have spent the better part of
+          two centuries untangling the wreckage. As one assessment put it, the poem
+          ultimately became
+        </p>
 
-      {historicalPhotos.length > 0 && (
-        <figure class="museum-plate breakout">
-          <img
-            src={historicalPhotos[0].thumb}
-            alt={`${historicalPhotos[0].title} by ${historicalPhotos[0].artist}, ${historicalPhotos[0].year}`}
-            loading="lazy"
-            decoding="async"
-          />
-          <figcaption>
-            <em>{historicalPhotos[0].title}</em> — {historicalPhotos[0].artist}, {historicalPhotos[0].year}. {historicalPhotos[0].source}
-          </figcaption>
-        </figure>
-      )}
+        <blockquote class="pull-quote breakout">
+          <p>"a romanticized conflation of disparate Indian tribes, their traditions, and
+          their legends" — one that presented Native American culture as doomed, a relic
+          of the past inevitably making way for Euro-American expansion.</p>
+          <footer class="pull-quote-attribution">
+            — <cite><a href="https://www.american.edu/arts/hiawatha-in-context.cfm" target="_blank" rel="noopener noreferrer">American University, "Hiawatha in Context"</a></cite>
+          </footer>
+          <ShieldMotif size={12} class="pull-quote-ornament" />
+        </blockquote>
 
-      <div class="two-col-moment">
-        <div class="two-col-prose">
-          <h3 class="text-2xl font-display text-sun-400 section-heading section-heading--gap mb-4 tracking-wide">The Forest</h3>
-
-          <p class="drop-cap">
-            None of this diminished the poem's popularity. <em>The Song of Hiawatha</em>
-            became one of the best-selling poetry collections of the nineteenth century,
-            inspiring parlor readings, theatrical productions, and, in 1931, the naming of
-            nearly 900,000 acres of Upper Peninsula forest. The federal government
-            designated this land the <strong>Hiawatha National Forest</strong> — after
-            Longfellow's fictional protagonist, not after either of the actual historical
-            figures whose identities had been quietly merged to create him. The forest
-            spreads today from Lake Superior to Lake Michigan, sheltering over a hundred
-            miles of Great Lakes shoreline, a wilderness of hardwoods and cedar swamp and
-            glacial lake that has changed little since Schoolcraft paddled through taking
-            notes.
-          </p>
-        </div>
-
-        {historicalPhotos.length > 1 && (
-          <figure class="museum-plate">
+        {historicalPhotos.length > 0 && (
+          <figure class="museum-plate breakout">
             <img
-              src={historicalPhotos[1].thumb}
-              alt={`${historicalPhotos[1].title} by ${historicalPhotos[1].artist}, ${historicalPhotos[1].year}`}
+              src={historicalPhotos[0].thumb}
+              alt={`${historicalPhotos[0].title} by ${historicalPhotos[0].artist}, ${historicalPhotos[0].year}`}
               loading="lazy"
               decoding="async"
             />
             <figcaption>
-              <em>{historicalPhotos[1].title}</em> — {historicalPhotos[1].artist}, {historicalPhotos[1].year}. {historicalPhotos[1].source}
+              <em>{historicalPhotos[0].title}</em> — {historicalPhotos[0].artist}, {historicalPhotos[0].year}. {historicalPhotos[0].source}
             </figcaption>
           </figure>
         )}
+
       </div>
 
-      <h3 class="text-2xl font-display text-scarlet-400 section-heading section-heading--gap mb-4 tracking-wide">The Ride</h3>
+      <!-- VIS-04: Forest sub-section wrapper with independent parallax background -->
+      <div class="subsection-bg forest-section" data-bg-fade>
 
-      <p class="drop-cap">
-        Into this magnificent, improbably-named landscape, the
-        <a href="https://mbtn.org" class="underline hover:text-amber-300">Munising Bay Trail Network</a>
-        (MBTN) — a 501(c)(3) nonprofit devoted to building and maintaining singletrack
-        trails across the Hiawatha National Forest — has routed 100 miles of cycling
-        through the heart of it. <em>Hiawatha's Revenge</em> starts and finishes in
-        Munising, threading quiet forest roads, rugged two-track, and remote
-        singletrack through exactly the terrain Longfellow imagined without ever
-        visiting. It is a ride that tests your legs, rewards your soul, and, for those
-        who appreciate a good literary irony, puts you directly inside one of the
-        nineteenth century's most celebrated mistakes.
-      </p>
+        <div class="two-col-moment">
+          <div class="two-col-prose">
+            <h3 class="text-2xl font-display text-sun-400 section-heading section-heading--gap mb-4 tracking-wide">The Forest</h3>
+
+            <p class="drop-cap">
+              None of this diminished the poem's popularity. <em>The Song of Hiawatha</em>
+              became one of the best-selling poetry collections of the nineteenth century,
+              inspiring parlor readings, theatrical productions, and, in 1931, the naming of
+              nearly 900,000 acres of Upper Peninsula forest. The federal government
+              designated this land the <strong>Hiawatha National Forest</strong> — after
+              Longfellow's fictional protagonist, not after either of the actual historical
+              figures whose identities had been quietly merged to create him. The forest
+              spreads today from Lake Superior to Lake Michigan, sheltering over a hundred
+              miles of Great Lakes shoreline, a wilderness of hardwoods and cedar swamp and
+              glacial lake that has changed little since Schoolcraft paddled through taking
+              notes.
+            </p>
+          </div>
+
+          {historicalPhotos.length > 1 && (
+            <figure class="museum-plate">
+              <img
+                src={historicalPhotos[1].thumb}
+                alt={`${historicalPhotos[1].title} by ${historicalPhotos[1].artist}, ${historicalPhotos[1].year}`}
+                loading="lazy"
+                decoding="async"
+              />
+              <figcaption>
+                <em>{historicalPhotos[1].title}</em> — {historicalPhotos[1].artist}, {historicalPhotos[1].year}. {historicalPhotos[1].source}
+              </figcaption>
+            </figure>
+          )}
+        </div>
+
+      </div>
+
+      <!-- VIS-04: Ride sub-section wrapper with independent parallax background -->
+      <div class="subsection-bg ride-section" data-bg-fade>
+
+        <h3 class="text-2xl font-display text-scarlet-400 section-heading section-heading--gap mb-4 tracking-wide">The Ride</h3>
+
+        <p class="drop-cap">
+          Into this magnificent, improbably-named landscape, the
+          <a href="https://mbtn.org" class="underline hover:text-amber-300">Munising Bay Trail Network</a>
+          (MBTN) — a 501(c)(3) nonprofit devoted to building and maintaining singletrack
+          trails across the Hiawatha National Forest — has routed 100 miles of cycling
+          through the heart of it. <em>Hiawatha's Revenge</em> starts and finishes in
+          Munising, threading quiet forest roads, rugged two-track, and remote
+          singletrack through exactly the terrain Longfellow imagined without ever
+          visiting. It is a ride that tests your legs, rewards your soul, and, for those
+          who appreciate a good literary irony, puts you directly inside one of the
+          nineteenth century's most celebrated mistakes.
+        </p>
+
+      </div>
 
     </div>
   </div>
@@ -132,37 +147,6 @@ import ShieldMotif from './ShieldMotif.astro';
   .hiawatha-section {
     background-color: var(--color-forest-950);
     position: relative;
-    overflow: hidden;
-  }
-
-  /* VIS-04: Scroll-driven background image fade */
-  .hiawatha-section::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image: url('/images/Eo6Lpv5a2onA-EMkS4BGrkQOHMQb4rwDbey7kfJDAZc-1536x2048.jpg');
-    background-size: cover;
-    background-position: center;
-    opacity: 0;
-    transition: opacity 1.2s ease-in-out;
-    z-index: 0;
-    pointer-events: none;
-  }
-
-  .hiawatha-section.bg-visible::before {
-    opacity: 0.06;
-  }
-
-  .hiawatha-section > div {
-    position: relative;
-    z-index: 1;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .hiawatha-section::before {
-      transition: none;
-      opacity: 0.04;
-    }
   }
 
   /* ============================================================
@@ -190,11 +174,95 @@ import ShieldMotif from './ShieldMotif.astro';
     grid-column: breakout;
   }
 
+  /* VIS-04: Sub-section wrappers span full editorial grid width and replicate grid tracks */
+  .subsection-bg {
+    grid-column: full;
+    position: relative;
+    display: grid;
+    grid-template-columns:
+      [full-start] 1fr
+      [breakout-start] 1fr
+      [prose-start] min(65ch, 100%) [prose-end]
+      1fr [breakout-end]
+      1fr [full-end];
+    row-gap: 0;
+  }
+
+  /* Default: children in prose column (mirrors .editorial-grid > *) */
+  .subsection-bg > * {
+    grid-column: prose;
+    position: relative;
+    z-index: 1;
+  }
+
+  .subsection-bg > .breakout {
+    grid-column: breakout;
+  }
+
+  .subsection-bg > .two-col-moment {
+    grid-column: breakout;
+  }
+
+  /* Sub-section padding to maintain breathing room between sections */
+  .poem-section {
+    padding-top: 0;
+    padding-bottom: 2rem;
+  }
+
+  .forest-section {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+
+  .ride-section {
+    padding-top: 2rem;
+    padding-bottom: 0;
+  }
+
+  /* VIS-04: Three independent parallax backgrounds */
+  .subsection-bg::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    opacity: 0;
+    transition: opacity 1.2s ease-in-out;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* Each section gets its own background image from /images/ */
+  .poem-section::before {
+    background-image: url('/images/Eo6Lpv5a2onA-EMkS4BGrkQOHMQb4rwDbey7kfJDAZc-1536x2048.jpg');
+  }
+
+  .forest-section::before {
+    background-image: url('/images/K9zNeD_N2ikOKXNlKHc1dGUY7N6W3cGWVevoXlB49aI-1536x2048.jpg');
+  }
+
+  .ride-section::before {
+    background-image: url('/images/Gw-ZiugqoNyWNNMHZ-n65VcO7XjnipWnDWQz77mE2kQ-1536x2048.jpg');
+  }
+
+  .subsection-bg.bg-visible::before {
+    opacity: 0.06;
+  }
+
+  /* prefers-reduced-motion: static backgrounds, no transition */
+  @media (prefers-reduced-motion: reduce) {
+    .subsection-bg::before {
+      transition: none;
+      opacity: 0.04;
+    }
+  }
+
   /* ============================================================
      Section Headings
      ============================================================ */
   .section-heading {
-    /* inherits grid-column: prose from .editorial-grid > * */
+    /* inherits grid-column: prose from .subsection-bg > * */
   }
 
   .section-heading--gap {
@@ -240,7 +308,7 @@ import ShieldMotif from './ShieldMotif.astro';
   }
 
   /* Standalone breakout museum-plate: centered within breakout track */
-  .editorial-grid > .museum-plate.breakout {
+  .subsection-bg > .museum-plate.breakout {
     margin-left: auto;
     margin-right: auto;
   }
@@ -350,6 +418,22 @@ import ShieldMotif from './ShieldMotif.astro';
       grid-column: 1;
     }
 
+    .subsection-bg {
+      grid-template-columns: 1fr;
+    }
+
+    .subsection-bg > * {
+      grid-column: 1;
+    }
+
+    .subsection-bg > .breakout {
+      grid-column: 1;
+    }
+
+    .subsection-bg > .two-col-moment {
+      grid-column: 1;
+    }
+
     .two-col-moment {
       grid-column: 1;
     }
@@ -376,16 +460,16 @@ import ShieldMotif from './ShieldMotif.astro';
 </style>
 
 <script>
-  // VIS-04: Background fade on scroll — toggles class (not one-shot like ScrollReveal)
+  // VIS-04: Independent background fade per sub-section
   if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    const section = document.querySelector('[data-bg-fade]');
-    if (section) {
+    const sections = document.querySelectorAll('[data-bg-fade]');
+    if (sections.length > 0) {
       const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           entry.target.classList.toggle('bg-visible', entry.isIntersecting);
         });
-      }, { threshold: 0.1 });
-      observer.observe(section);
+      }, { threshold: 0.15 });
+      sections.forEach(section => observer.observe(section));
     }
   }
 </script>
