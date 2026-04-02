@@ -148,10 +148,10 @@ Plans:
 2. Clicking the map area outside the open panel closes the panel — OR a documented decision exists that this affordance is intentionally omitted in favor of map interactivity
 3. Stale comment at RouteMap.astro line 482 is removed, dead `::backdrop` CSS is removed, and NF2217 display name is consistent between panel and segment card
 
-**Plans:** 0 plans (not yet planned)
+**Plans:** 1 plan
 
 Plans:
-- [ ] 27-01-PLAN.md — (pending `/gsd:plan-phase 27`)
+- [ ] 27-01-PLAN.md — VIS-02 font fix, MAP-08 trade-off documentation, NF2217 name consistency, and RouteMap.astro tech debt cleanup
 
 ---
 
