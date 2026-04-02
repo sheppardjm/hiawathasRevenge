@@ -54,7 +54,7 @@ Visitors experience the beauty and scale of the Hiawatha's Revenge route through
 - OAuth / user accounts — no login needed
 - Mobile app — web only
 
-## Current Milestone: v1.3 Map Interactivity (Planned)
+## Current Milestone: v1.3 Map Interactivity
 
 **Goal:** Make the route map a first-class interactive experience — sector labels with names and difficulty ratings visible on the map, clickable sectors that open slide-out detail panels with descriptions, surface types, and elevation snippets.
 
@@ -110,4 +110,4 @@ Historical context in `data.md` — segment details with star ratings, Hiawatha 
 | Spread conditional for featured field | No featured: false noise in JSON | ✓ Good — clean data |
 
 ---
-*Last updated: 2026-04-02 after v1.2 milestone completion*
+*Last updated: 2026-04-02 after v1.3 milestone start*
