@@ -179,6 +179,21 @@
   .panel-jump-link:hover {
     text-decoration: underline;
   }
+
+  .panel-sparkline {
+    display: block;
+    width: 100%;
+    margin-bottom: 12px;
+    border-radius: 3px;
+  }
+
+  .panel-ele-range {
+    font-size: 0.75rem;
+    color: var(--color-cream-300, rgba(255,255,255,0.5));
+    margin-top: -8px;
+    margin-bottom: 12px;
+    text-align: center;
+  }
 </style>
 
 <script>
@@ -411,6 +426,53 @@
     // ---- Panel open/close logic ----
     const panel = document.getElementById('sector-panel');
 
+    // generateSparklineSvg — client-side replication of ElevationSparkline.astro build-time algorithm
+    // Renders an SVG elevation profile with difficulty-coded stroke color and gradient area fill
+    function generateSparklineSvg(elevData) {
+      if (!elevData || !elevData.elevationPoints || !elevData.elevationPoints.length) return '';
+
+      const W = 100, H = 50, padding = 4;
+      const points = elevData.elevationPoints;
+      const eles = points.map(p => p.ele);
+      const miles = points.map(p => p.miles);
+      const eleMin = Math.min(...eles);
+      const eleMax = Math.max(...eles);
+      const eleRange = eleMax - eleMin;
+      const milesRange = miles[miles.length - 1] - miles[0];
+      const drawH = H - 2 * padding;
+
+      const DIFFICULTY_COLORS = {
+        easy:     '#7d9448',
+        moderate: '#c8973e',
+        hard:     '#f87171',
+      };
+      const strokeColor = DIFFICULTY_COLORS[elevData.difficulty] ?? '#c8973e';
+
+      const computed = points.map((p, i) => ({
+        x: milesRange > 0 ? (p.miles - miles[0]) / milesRange * W : i / Math.max(points.length - 1, 1) * W,
+        y: eleRange > 0 ? (H - padding) - ((p.ele - eleMin) / eleRange * drawH) : H / 2,
+      }));
+
+      const polylinePoints = computed.map(pt => `${pt.x.toFixed(1)},${pt.y.toFixed(1)}`).join(' ');
+      const last = computed[computed.length - 1];
+      const areaPoints = [...computed.map(pt => `${pt.x.toFixed(1)},${pt.y.toFixed(1)}`), `${last.x.toFixed(1)},${H}`, `0,${H}`].join(' ');
+      const gradId = `elev-fill-${elevData.id}`;
+
+      return `<svg class="panel-sparkline" viewBox="0 0 ${W} ${H}" width="100%" height="${H}" aria-hidden="true" role="presentation" focusable="false">
+    <defs>
+      <linearGradient id="${gradId}" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="${strokeColor}" stop-opacity="0.35"/>
+        <stop offset="100%" stop-color="${strokeColor}" stop-opacity="0.05"/>
+      </linearGradient>
+    </defs>
+    <rect x="0" y="0" width="${W}" height="${H}" rx="3" fill="#1a2e1a" opacity="0.6"/>
+    <polygon points="${areaPoints}" fill="url(#${gradId})"/>
+    <polyline points="${polylinePoints}" stroke="${strokeColor}" stroke-width="2.5" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
+    <circle cx="${computed[0].x.toFixed(1)}" cy="${computed[0].y.toFixed(1)}" r="2" fill="${strokeColor}"/>
+    <circle cx="${last.x.toFixed(1)}" cy="${last.y.toFixed(1)}" r="2" fill="${strokeColor}"/>
+  </svg>`;
+    }
+
     function openPanel({ sector, details, elevData }) {
       previousFocus = document.activeElement;
 
@@ -429,9 +491,16 @@
         ? `<a href="#${details.id}" class="panel-jump-link">View in route guide \u2193</a>`
         : '';
 
+      const sparklineSvg = generateSparklineSvg(elevData);
+      const eleRangeHtml = elevData
+        ? `<div class="panel-ele-range">${Math.round(elevData.eleMin * 3.28084)} ft \u2013 ${Math.round(elevData.eleMax * 3.28084)} ft</div>`
+        : '';
+
       panel.querySelector('.sector-panel__body').innerHTML = `
         <div class="panel-stars" aria-label="Difficulty: ${sector.stars} of 5 stars">${stars}</div>
         <div class="panel-meta">${milesRange} \u00b7 ${surface}</div>
+        ${sparklineSvg}
+        ${eleRangeHtml}
         <p class="panel-description">${description}</p>
         ${stravaHtml}
         ${jumpHtml}
