@@ -86,12 +86,12 @@ Plans:
   3. Historical illustrations are visually distinct from route photography -- sepia/desaturated for historical versus full-color for route photos
   4. The Longfellow critique blockquote has dramatic pull quote treatment -- breakout width, oversized quotation marks, background color shift, and arrowhead ornament
   5. Each route segment has a National Park typeface subheading with difficulty-coded color and shield icon, a Strava segment link, and expanded terrain description with surface type, landmarks, and seasonal notes
-**Plans**: ~3 plans
+**Plans**: 3 plans
 
 Plans:
-- [ ] 20-01: HiawathaExplainer editorial restructure with subheadings and historical imagery
-- [ ] 20-02: Pull quote treatment and content layout polish
-- [ ] 20-03: RouteExplainer enrichment with Strava links and terrain details
+- [ ] 20-01: Historical image sourcing and HiawathaExplainer editorial restructure with subheadings
+- [ ] 20-02: Dramatic pull quote treatment with ShieldMotif ornament
+- [ ] 20-03: RouteExplainer enrichment with difficulty-coded shields, Strava links, and expanded terrain descriptions
 
 ### Phase 21: Section Color Differentiation
 **Goal**: Scrolling the page feels like a journey through distinct visual moments -- each major section has its own background color, animated dividers transition between them, and the 60-30-10 color rule creates visual rhythm without chaos
