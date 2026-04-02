@@ -1,5 +1,34 @@
 # Project Milestones: Hiawatha's Revenge
 
+## v1.2 Cultural Maximalism (Shipped: 2026-04-02)
+
+**Delivered:** Maximalist cultural celebration with bold expanded color palette (turquoise/scarlet/sun-yellow), geometric animated dividers, shield/arrowhead motif system, historical Remington illustrations with sepia treatment, magazine editorial layout, enriched segment cards with sparklines and Strava links, scroll-driven reveals, and multi-color section backgrounds — elevating the site to award-winning non-profit visual storytelling.
+
+**Phases completed:** 18-22 + v1.2-gaps (17 plans total)
+
+**Key accomplishments:**
+
+- Expanded color palette with 13 new tokens (turquoise, scarlet, sun-yellow families) and WCAG AA contrast documentation, plus orphaned v1.1 tokens activated
+- AnimatedDivider with 3 geometric variants (zigzag, chevron, diamond) and FloralDivider redesigned with bold pattern bands, all with reduced-motion fallbacks
+- ShieldMotif SVG symbol+use component system with currentColor inheritance at multiple sizes (icon, watermark, ornament)
+- Build-time ElevationSparkline SVGs with gradient fills, grid lines, and per-segment elevation data computed by pipeline
+- Historical Hiawatha illustrations (Frederic Remington 1891 via Met Open Access CC0) with sepia treatment, magazine editorial grid layout with named CSS tracks
+- Enriched segment cards with photo-hero layout, difficulty-coded shields, Strava links (6/7), and expanded terrain descriptions
+- Scroll-driven section reveals with staggered segment cards, dual CSS+JS reduced-motion guards, 614KB transfer size
+
+**Stats:**
+
+- 72 files created/modified
+- 2,936 lines of Astro/TypeScript/JavaScript/CSS (total codebase)
+- 6 phases, 17 plans, 63 commits
+- 2 days (2026-04-01 → 2026-04-02)
+
+**Git range:** `41b0ec2` (docs(18): research phase) → `3fc7e01` (docs(v1.2-gaps): complete UAT gap closure phase)
+
+**What's next:** v1.3 Map Interactivity — sector labels, clickable detail panels
+
+---
+
 ## v1.1 Visual Redesign (Shipped: 2026-03-31)
 
 **Delivered:** Immersive editorial experience with Ojibwe-inspired design system, dramatic full-viewport hero, witty Hiawatha narrative, photo-integrated route explainer, and masonry gallery — elevating the site from functional showcase to visual storytelling.

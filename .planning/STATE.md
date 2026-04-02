@@ -2,19 +2,19 @@
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-03-31)
+See: .planning/PROJECT.md (updated 2026-04-02)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive, visually stunning showcase that inspires them to ride it and support MBTN.
-**Current focus:** v1.2 Cultural Maximalism + UAT Gap Closure complete -- verified 20/20 must-haves passed
+**Current focus:** v1.3 Map Interactivity — planning next milestone
 
 ## Current Position
 
-Phase: v1.2-gaps -- UAT Gap Closure -- COMPLETE (verified)
-Plan: 04 of 4 in phase -- Complete
-Status: Phase verified (20/20 must-haves passed), user approved visual checkpoint
-Last activity: 2026-04-02 -- Phase v1.2-gaps verified and complete
+Phase: Not started — v1.3 pending `/gsd:new-milestone`
+Plan: Not started
+Status: Ready to plan
+Last activity: 2026-04-02 — v1.2 milestone archived
 
-Progress: [██████████] v1.2 base: 100% (13/13) | gap closure: 4/4 complete | verification: PASSED
+Progress: v1.0 shipped | v1.1 shipped | v1.2 shipped | v1.3 planned
 
 ## Performance Metrics
 
@@ -33,61 +33,11 @@ Progress: [██████████] v1.2 base: 100% (13/13) | gap closure
 - Total phases: 5 (18-22) + v1.2-gaps
 - Timeline: 2 days (2026-04-01 -> 2026-04-02)
 
-**v1.2 Gap Closure Summary:**
-- Plans completed: 4 (gaps-01, gaps-02, gaps-03, gaps-04)
-- Verification: 20/20 must-haves passed
-- Human checkpoint: approved
-
 ## Accumulated Context
 
 ### Decisions
 
-All v1.0 + v1.1 decisions logged in PROJECT.md Key Decisions table.
-
-| Phase | Decision | Rationale |
-|-------|----------|-----------|
-| 18-01 | scarlet-600 (#dc2626) = large-text/decorative ONLY | 3.00:1 on forest-900, 3.71:1 on forest-950 — both fail WCAG AA normal text |
-| 18-01 | sun-yellow all 4 shades pass AA normal text | Safest of the 3 new families for body text use |
-| 18-01 | FloralDivider is canonical surface for orphaned/decorative tokens | Decorative aria-hidden component naturally accommodates expanded color vocabulary |
-| 18-02 | Standalone script per image category (not modifying generate-thumbnails.js) | Zero risk to existing 51-photo route photo pipeline; clean isolation |
-| 18-02 | process-historical inserted as step 5 of 7 (after copy-images, before match-photos) | Groups all image processing steps together in pipeline sequence |
-| 18-02 | Empty manifest writes [] and exits 0 (not an error) | Enables clean builds before Phase 20 populates historical images |
-| 19-01 | pathLength=1 + stroke-dashoffset pattern established as v1.2 animation standard | Normalizes animated path length without getTotalLength(); works in all browsers |
-| 19-01 | Static decorative elements (leaves, blossoms, clusters) do NOT animate — only vine strokes draw on | Preserves full visual richness immediately; only structural vine animates on scroll |
-| 19-02 | SVG symbol placed immediately after <body> tag (not in <head>) | SVG symbols must be in document body to be valid <use href> targets |
-| 19-02 | height = size * 2 always (1:2 aspect ratio for 28x56 viewBox) | Callers control width via size prop; component maintains correct proportions automatically |
-| 19-02 | Decorative by default (no label = aria-hidden + role=presentation) | Majority use case is decorative ornamentation; accessible usage is opt-in via label prop |
-| 19-03 | compute-sector-elevations inserted as step 3 of 8 in pipeline | Depends on annotations.json (startIdx/endIdx), runs before generate-thumbnails |
-| 19-03 | ElevationSparkline uses getCollection() not direct JSON import | Respects Astro content layer type safety and caching |
-| 19-03 | viewBox "0 0 100 30" coordinate space for sparklines | W=100 maps to miles range, H=30 inverted for elevation; optimized for inline sparkline aspect ratio |
-| 19-04 | Animation durations asymmetric (8s blossom, 6s berry) | Prevents synchronization between variant types; creates organic rather than mechanical feel |
-| 19-04 | scarlet-400 used in berry cycling (not scarlet-600) | scarlet-600 is large-text/decorative-only per 18-01; scarlet-400 is safe for decorative SVG fills |
-| 19-05 | AnimatedDivider replaces second FloralDivider (not first) | Preserves contrast between static and animated dividers coexisting on same page |
-| 19-05 | SECTOR_IDS Record map as bridge from segment names to content collection IDs | Explicit, readable, zero runtime cost — decouples display names from data IDs |
-| 20-01 | MET Open Access / Wikimedia CC0 for Remington illustrations | DP-12259-001 and DP-12259-002 from 1891 Houghton Mifflin edition — cleanest possible public domain (CC0 not merely PD) |
-| 20-01 | sepia(80%) saturate(30%) brightness(0.9) as canonical historical artifact filter | Visually distinct from full-color route photography; established as reusable pattern |
-| 20-01 | mt-0 on first editorial h3, mt-[6rem] on subsequent three | First h3 follows h2 which already provides separation; subsequent sections need full 6rem gap |
-| 20-01 | Conditional rendering guards on historicalPhotos.length for graceful degradation | Build passes cleanly even if historical-photos.json is empty |
-| 20-03 | DIFFICULTY_COLORS uses sun-400/amber-500/scarlet-400 (not scarlet-600) | All three pass WCAG AA normal text on forest-950 per 18-01 constraints |
-| 20-03 | Strava #FC5200 hardcoded, not a design token | Third-party brand color should not pollute the design system |
-| 20-03 | stravaId fields omitted from SEGMENTS (user provides IDs later) | Conditional {seg.stravaId && ...} prevents broken links until IDs are ready |
-| 20 | 6/7 Strava segment IDs populated; Rapid River Truck Trail deferred | User provided IDs for 520, NF2266, Bass Lake Rd, NF2217-2218, ND2225, Doe Lake |
-| 21-01 | bg-forest-800 for action/data sections, bg-forest-950 for deep editorial/footer | Creates 60-30-10 distribution: forest-900/950 dominant, forest-800 accent |
-| 21-01 | Full-width pattern: outer section with bg-*, inner div with max-w-4xl | No colored narrow columns; backgrounds span viewport width |
-| 21-01 | AnimatedDivider placement only at color-transition boundaries (not same-color pairs) | RouteStats and GPX are both forest-800 — no divider between them |
-| 22-01 | threshold 0.15 (not 0.3) for section reveals | Tall sections on mobile may never reach 30% visible; 15% triggers reliably |
-| 22-01 | AnimatedDividers excluded from data-reveal | They manage their own IntersectionObserver per instance — adding data-reveal would conflict |
-| 22-01 | data-reveal added inside component files (not wrapping in index.astro) | Keeps observer targeting the actual section element, not a wrapper |
-| 22-02 | No source changes needed — 22-01 passed all ANI-03/ANI-04 audits | reduced-motion CSS guards, JS matchMedia skip, above-fold exclusions, and 614KB transfer all compliant |
-| v1.2-gaps-01 | Polyline used for animated zigzag/chevron paths (vs path) | Simpler coordinate syntax for geometric shapes; bilateral symmetry enforced by mirroring at x=400 |
-| v1.2-gaps-01 | cycle-blossom/cycle-berry @keyframes fully removed | No SVG elements reference them after floral content replaced; leaving dead CSS would be misleading |
-| v1.2-gaps-02 | Named CSS Grid tracks (full/breakout/prose) for editorial layout | .editorial-grid > * defaults to prose; .breakout spans breakout; enables magazine-style breakout elements without JS |
-| v1.2-gaps-02 | Pull quote ::first-letter via .pull-quote p::first-letter selector (not class) | Keeps blockquote HTML semantic; CSS selector targets the p inside without adding extra classes |
-| v1.2-gaps-02 | max-w-4xl upgraded to max-w-5xl for HiawathaExplainer | Gives breakout tracks visible room at desktop widths; prose column still constrained to 65ch |
-| v1.2-gaps-03 | linearGradient IDs scoped by sectorId (elev-fill-{sectorId}) | Prevents duplicate-ID collisions when all 7 sparklines render on same page |
-| v1.2-gaps-03 | H=50, padding=4 for ElevationSparkline (drawH=42) | 4px margin top/bottom keeps extreme elevation peaks from clipping at viewBox edges |
-| v1.2-gaps-04 | sun-500 gold, amber-500 orange, turquoise-700 teal for 3 section backgrounds | Delivers user's "yellow and orange and teal" request; all pass WCAG AA contrast |
-| v1.2-gaps-04 | :global() required for Astro scoped child component style overrides | DonateCallout uses Astro hash-scoped styles; parent page must use .section :global(.child-class) pattern |
+All decisions logged in PROJECT.md Key Decisions table and MILESTONES.md entries.
 
 ### Pending Todos
 
@@ -98,11 +48,14 @@ None.
 - Ojibwe community consultation recommended (cultural sensitivity review)
 - Project requires Node >=22.12.0 -- use Volta (`/Users/Sheppardjm/.volta/bin/node`)
 - Strava IDs populated for 6/7 segments (Rapid River Truck Trail pending — user hasn't created that segment yet)
-- Historical imagery sourced: Frederic Remington 1891 via Met Open Access CC0 (RESOLVED)
-- scarlet-600 (#dc2626) documented as large-text/decorative ONLY in 18-01 (RESOLVED)
+
+### Tech Debt (carried from v1.2)
+
+- Hero image 640KB JPEG — no WebP fallback, no srcset, no preload hint
+- Difficulty data inconsistency for 3 segments (numeric vs text systems disagree)
 
 ## Session Continuity
 
-Last session: 2026-04-02T16:00:00Z
-Stopped at: Completed v1.2-gaps-04-PLAN.md -- bold section colors (gold/amber/teal), all v1.2 UAT gaps closed, user-approved
+Last session: 2026-04-02
+Stopped at: v1.2 milestone archived, ready for v1.3
 Resume file: None

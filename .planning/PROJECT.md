@@ -34,15 +34,15 @@ Visitors experience the beauty and scale of the Hiawatha's Revenge route through
 - ✓ Event date (June 6, 2026) prominently featured in hero section — v1.1
 - ✓ Ojibwe woodland floral beadwork SVG motifs with cultural attribution — v1.1
 - ✓ Warmer Ojibwe-inspired color palette (berry/gold/lake/moss) with WCAG AA compliance — v1.1
+- ✓ Content sections broken up with landscape photos, cultural design elements, whitespace, secondary/tertiary headings, and multi-color section differentiation — v1.2
+- ✓ Segment section subheads in National Park typeface with Strava links, detailed terrain descriptions, per-sector elevation snippets, and landmarks/POI — v1.2
+- ✓ Shield/arrowhead motif repeated throughout site as backgrounds, section icons, and decorative elements — maximalist cultural layering — v1.2
+- ✓ Bold color palette expansion — turquoise, red, yellow, black alongside existing Ojibwe tones, applied consistently across typography, backgrounds, and design elements — v1.2
+- ✓ Animated multicolored section dividers — award-winning non-profit aesthetic — v1.2
+- ✓ Historical Hiawatha imagery sourced from public domain (poem illustrations, theatrical productions, musicals) integrated throughout content — v1.2
 
 ### Active
 
-- [ ] Content sections broken up with landscape photos, cultural design elements, whitespace, secondary/tertiary headings, and multi-color section differentiation
-- [ ] Segment section subheads in National Park typeface with Strava links, detailed terrain descriptions, per-sector elevation snippets, and landmarks/POI
-- [ ] Shield/arrowhead motif repeated throughout site as backgrounds, section icons, and decorative elements — maximalist cultural layering
-- [ ] Bold color palette expansion — turquoise, red, yellow, black alongside existing Ojibwe tones, applied consistently across typography, backgrounds, and design elements
-- [ ] Animated multicolored section dividers — award-winning non-profit aesthetic
-- [ ] Historical Hiawatha imagery sourced from public domain (poem illustrations, theatrical productions, musicals) integrated throughout content
 - [ ] Sector map labels with names and star difficulty ratings, clickable with slide-out detail panels (deferred to v1.3)
 
 ### Out of Scope
@@ -54,25 +54,23 @@ Visitors experience the beauty and scale of the Hiawatha's Revenge route through
 - OAuth / user accounts — no login needed
 - Mobile app — web only
 
-## Current Milestone: v1.2 Cultural Maximalism
+## Current Milestone: v1.3 Map Interactivity (Planned)
 
-**Goal:** Transform the site into a maximalist cultural celebration — leaning into Longfellow's cultural mashup with exuberant design, bold colors, historical imagery, enriched segment content, and animated section breaks worthy of an award-winning non-profit site.
+**Goal:** Make the route map a first-class interactive experience — sector labels with names and difficulty ratings visible on the map, clickable sectors that open slide-out detail panels with descriptions, surface types, and elevation snippets.
 
 **Target features:**
-- Content layout overhaul with photos, design elements, whitespace, and multi-color headings
-- Segment enrichment with National Park subheads, Strava links, terrain details, elevation snippets
-- Shield/arrowhead motif system repeated throughout as backgrounds, icons, decorative elements
-- Bold palette expansion (turquoise, red, yellow, black) alongside existing Ojibwe tones
-- Animated multicolored section dividers
-- Historical Hiawatha imagery (public domain illustrations, theatrical photos, musical imagery)
+- Gravel sectors labeled on map with names and star difficulty ratings
+- Clicking a sector opens a slide-out detail panel with description, surface type, and elevation snippet
+- Detail panel is responsive — right slide-out on desktop, bottom sheet on mobile
 
 ## Context
 
-Shipped v1.0 + v1.1 with 1,912 LOC across Astro/TypeScript/JavaScript/CSS.
+Shipped v1.0 + v1.1 + v1.2 with 2,936 LOC across Astro/TypeScript/JavaScript/CSS.
 Tech stack: Astro 6, Tailwind 4, Vite 7, Leaflet, Chart.js, PhotoSwipe, sharp, gpxparser.
-Build pipeline: 6-step pipeline.js (parse-gpx → resolve-annotations → generate-thumbnails → copy-images → match-photos → copy-gpx).
-51 route photos with mileage-assigned manifest (3 duplicates removed in v1.1), 456 simplified route points (from 1,927 source), 2,258 ft elevation gain.
+Build pipeline: 8-step pipeline.js (parse-gpx → resolve-annotations → compute-sector-elevations → generate-thumbnails → copy-images → process-historical → match-photos → copy-gpx).
+51 route photos with mileage-assigned manifest, 2 historical Remington illustrations (Met CC0), 456 simplified route points, 2,258 ft elevation gain.
 v1.1 added Ojibwe-inspired design system (12 color tokens), full-viewport hero, editorial narrative, route explainer, masonry gallery, and cultural attribution.
+v1.2 added 13 new color tokens (turquoise/scarlet/sun-yellow), geometric animated dividers, shield motif system, historical imagery with sepia treatment, magazine editorial layout, enriched segment cards with sparklines and Strava links, scroll-driven reveals, and multi-color section backgrounds.
 Reference implementation: github.com/sheppardjm/mkUltraGravel — same architecture, different visual identity.
 MBTN (mbtn.org) is the beneficiary — donate CTA links to their site.
 Historical context in `data.md` — segment details with star ratings, Hiawatha history with Longfellow critique quote.
@@ -112,4 +110,4 @@ Historical context in `data.md` — segment details with star ratings, Hiawatha 
 | Spread conditional for featured field | No featured: false noise in JSON | ✓ Good — clean data |
 
 ---
-*Last updated: 2026-03-31 after v1.2 milestone start*
+*Last updated: 2026-04-02 after v1.2 milestone completion*
