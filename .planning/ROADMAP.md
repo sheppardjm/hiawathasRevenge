@@ -35,7 +35,7 @@
 **Milestone Goal:** Transform the site into a maximalist cultural celebration -- bold colors, historical imagery, enriched segment content, animated section breaks, and shield motifs layered throughout, worthy of an award-winning non-profit heritage site.
 
 - [x] **Phase 18: Color Foundation** - Expanded palette tokens and pipeline prep for historical imagery (completed 2026-04-01)
-- [ ] **Phase 19: Decorative Component Library** - Animated dividers, shield motifs, and elevation sparklines
+- [x] **Phase 19: Decorative Component Library** - Animated dividers, shield motifs, and elevation sparklines (completed 2026-04-01)
 - [ ] **Phase 20: Content & Route Enrichment** - Historical imagery, editorial restructure, and segment detail expansion
 - [ ] **Phase 21: Section Color Differentiation** - Per-section backgrounds and page assembly with animated dividers
 - [ ] **Phase 22: Animation & Polish** - Scroll-driven reveals, accessibility audit, and performance validation
@@ -70,9 +70,11 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 19-01: AnimatedDivider component with variants and reduced-motion support
-- [ ] 19-02: ShieldMotif component with symbol/use reuse pattern
-- [ ] 19-03: ElevationSparkline component and pipeline elevation extraction
+- [x] 19-01: AnimatedDivider component with variants and reduced-motion support
+- [x] 19-02: ShieldMotif component with symbol/use reuse pattern
+- [x] 19-03: ElevationSparkline component and pipeline elevation extraction
+- [x] 19-04: Blossom color cycling animation (gap closure)
+- [x] 19-05: Component page integration (gap closure)
 
 ### Phase 20: Content & Route Enrichment
 **Goal**: The HiawathaExplainer and RouteExplainer sections are transformed with historical imagery, dramatic typography, pull quotes, and enriched segment details -- the site reads like an award-winning editorial feature, not a simple ride page
@@ -129,7 +131,7 @@ Phases execute in numeric order: 18 -> 19 -> 20 -> 21 -> 22
 | 0-11 | v1.0 | 33/33 | Complete | 2026-03-31 |
 | 12-17 | v1.1 | 8/8 | Complete | 2026-03-31 |
 | 18. Color Foundation | v1.2 | 2/2 | Complete | 2026-04-01 |
-| 19. Decorative Components | v1.2 | 0/3 | Not started | - |
+| 19. Decorative Components | v1.2 | 5/5 | Complete | 2026-04-01 |
 | 20. Content & Route Enrichment | v1.2 | 0/3 | Not started | - |
 | 21. Section Color Differentiation | v1.2 | 0/1 | Not started | - |
 | 22. Animation & Polish | v1.2 | 0/2 | Not started | - |
