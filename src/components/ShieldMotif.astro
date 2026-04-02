@@ -1,0 +1,33 @@
+---
+// ShieldMotif.astro
+// Renders the shield/arrowhead motif at any size via SVG <use>.
+// Symbol definition lives in BaseLayout.astro.
+// Color inherits from parent via currentColor — use Tailwind text-* classes.
+//
+// Usage:
+//   Icon:       <ShieldMotif size={20} class="text-amber-500" />
+//   Watermark:  <ShieldMotif size={500} class="text-gold-600 opacity-[0.04] absolute" />
+//   Accessible: <ShieldMotif size={24} class="text-amber-400" label="Shield emblem" />
+
+interface Props {
+  size?: number;
+  class?: string;
+  label?: string;
+}
+
+const { size = 24, class: className = '', label } = Astro.props;
+const isDecorative = !label;
+const height = size * 2; // Shield aspect ratio is 1:2 (28 wide x 56 tall)
+---
+
+<svg
+  width={size}
+  height={height}
+  class={className}
+  aria-hidden={isDecorative ? 'true' : undefined}
+  aria-label={!isDecorative ? label : undefined}
+  role={isDecorative ? 'presentation' : 'img'}
+  focusable="false"
+>
+  <use href="#shield-motif" />
+</svg>
