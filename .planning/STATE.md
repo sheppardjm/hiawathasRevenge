@@ -5,14 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-03-31)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive, visually stunning showcase that inspires them to ride it and support MBTN.
-**Current focus:** v1.2 Cultural Maximalism -- Phase 19 verified complete, ready for Phase 20
+**Current focus:** v1.2 Cultural Maximalism -- Phase 20 in progress
 
 ## Current Position
 
 Phase: 20 (3 of 5 in v1.2) -- Content & Route Enrichment -- In progress
-Plan: 03 of 3 in phase -- Complete
-Status: Plan 20-03 complete (2/2 tasks, build passes, segment cards enriched)
-Last activity: 2026-04-02 -- Completed 20-03-PLAN.md (ShieldMotif icons, difficulty colors, Strava links, expanded descriptions)
+Plan: 02 of 3 in phase -- Complete (wave 2 done)
+Status: Plans 20-01, 20-02, and 20-03 complete; phase 20 fully complete
+Last activity: 2026-04-02 -- Completed 20-02-PLAN.md (Longfellow pull quote with forest-950 bg, 5rem quotation mark, ShieldMotif ornament)
 
 Progress: [█████████░] 83% (10/12 v1.2 plans)
 
@@ -82,5 +82,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-04-02
-Stopped at: Completed 20-03-PLAN.md -- segment cards enriched with ShieldMotif icons, difficulty colors, Strava links, expanded descriptions
+Stopped at: Completed 20-02-PLAN.md -- Longfellow critique blockquote transformed into editorial pull quote
 Resume file: None
