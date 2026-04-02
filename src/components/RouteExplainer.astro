@@ -50,7 +50,7 @@ const segmentsWithPhotos = SEGMENTS.map(seg => ({
 }));
 ---
 
-<section class="route-explainer-section py-[--spacing-block]">
+<section data-reveal class="route-explainer-section py-[--spacing-block]">
   <div class="max-w-4xl mx-auto px-4">
     <h2 class="text-3xl mb-[--spacing-element]">The Route, Segment by Segment</h2>
     <p class="max-w-prose text-cream-200 mb-8">
@@ -157,6 +157,39 @@ const segmentsWithPhotos = SEGMENTS.map(seg => ({
     width: 100%;
     height: auto;
     object-fit: cover;
+  }
+
+  /* Stagger: cards hidden by default, revealed when parent section is visible */
+  .segment-card {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* nth-child stagger — 100ms per card, 7 cards = 600ms max */
+  .segment-card:nth-child(1) { transition-delay: 0ms; }
+  .segment-card:nth-child(2) { transition-delay: 100ms; }
+  .segment-card:nth-child(3) { transition-delay: 200ms; }
+  .segment-card:nth-child(4) { transition-delay: 300ms; }
+  .segment-card:nth-child(5) { transition-delay: 400ms; }
+  .segment-card:nth-child(6) { transition-delay: 500ms; }
+  .segment-card:nth-child(7) { transition-delay: 600ms; }
+
+  /* Cards become visible when parent section is revealed */
+  .route-explainer-section.is-visible .segment-card {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Reduced motion: cards always visible, no stagger */
+  @media (prefers-reduced-motion: reduce) {
+    .segment-card {
+      opacity: 1;
+      transform: none;
+      transition: none;
+      transition-delay: 0ms;
+    }
   }
 
   /* Star rating — clip gradient technique */
