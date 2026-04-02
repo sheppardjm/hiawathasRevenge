@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-03-31)
 ## Current Position
 
 Phase: 19 (2 of 5 in v1.2) -- Decorative Component Library
-Plan: Not started
-Status: Ready to plan
-Last activity: 2026-04-01 -- Phase 18 verified and complete
+Plan: 01 of 3 in phase -- In progress
+Status: Plan 19-01 complete
+Last activity: 2026-04-02 -- Completed 19-01-PLAN.md (AnimatedDivider component)
 
-Progress: [██░░░░░░░░] 18% (2/11 v1.2 plans)
+Progress: [███░░░░░░░] 27% (3/11 v1.2 plans)
 
 ## Performance Metrics
 
@@ -47,6 +47,8 @@ All v1.0 + v1.1 decisions logged in PROJECT.md Key Decisions table.
 | 18-02 | Standalone script per image category (not modifying generate-thumbnails.js) | Zero risk to existing 51-photo route photo pipeline; clean isolation |
 | 18-02 | process-historical inserted as step 5 of 7 (after copy-images, before match-photos) | Groups all image processing steps together in pipeline sequence |
 | 18-02 | Empty manifest writes [] and exits 0 (not an error) | Enables clean builds before Phase 20 populates historical images |
+| 19-01 | pathLength=1 + stroke-dashoffset pattern established as v1.2 animation standard | Normalizes animated path length without getTotalLength(); works in all browsers |
+| 19-01 | Static decorative elements (leaves, blossoms, clusters) do NOT animate — only vine strokes draw on | Preserves full visual richness immediately; only structural vine animates on scroll |
 
 ### Pending Todos
 
@@ -62,6 +64,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-01
-Stopped at: Phase 18 complete and verified -- ready to plan Phase 19
+Last session: 2026-04-02
+Stopped at: Completed 19-01-PLAN.md -- AnimatedDivider component created and committed
 Resume file: None
