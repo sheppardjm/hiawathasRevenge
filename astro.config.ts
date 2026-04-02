@@ -18,6 +18,13 @@ export default defineConfig({
       weights: [400, 600, 700, 800],
       styles: ['normal'],
     },
+    {
+      provider: fontProviders.google(),
+      name: 'EB Garamond',
+      cssVariable: '--font-garamond',
+      weights: [400, 700],
+      styles: ['normal', 'italic'],
+    },
   ],
   vite: {
     plugins: [tailwindcss()],

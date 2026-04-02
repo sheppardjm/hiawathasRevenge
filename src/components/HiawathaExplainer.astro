@@ -7,7 +7,7 @@ import historicalPhotos from '../../public/data/historical-photos.json';
 import ShieldMotif from './ShieldMotif.astro';
 ---
 
-<section data-reveal class="hiawatha-section py-[--spacing-block]">
+<section data-reveal data-bg-fade class="hiawatha-section py-[--spacing-block]">
   <div class="max-w-5xl mx-auto px-4">
     <h2 class="text-3xl mb-[--spacing-element]">The Poem, the Forest, the Ride</h2>
 
@@ -131,6 +131,38 @@ import ShieldMotif from './ShieldMotif.astro';
 <style>
   .hiawatha-section {
     background-color: var(--color-forest-950);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* VIS-04: Scroll-driven background image fade */
+  .hiawatha-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url('/images/Eo6Lpv5a2onA-EMkS4BGrkQOHMQb4rwDbey7kfJDAZc-1536x2048.jpg');
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    transition: opacity 1.2s ease-in-out;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .hiawatha-section.bg-visible::before {
+    opacity: 0.06;
+  }
+
+  .hiawatha-section > div {
+    position: relative;
+    z-index: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hiawatha-section::before {
+      transition: none;
+      opacity: 0.04;
+    }
   }
 
   /* ============================================================
@@ -251,7 +283,7 @@ import ShieldMotif from './ShieldMotif.astro';
   }
 
   .pull-quote p {
-    font-size: var(--font-size-xl);
+    font-size: var(--font-size-2xl);
     font-style: italic;
     color: var(--color-cream-100);
     line-height: 1.6;
@@ -279,7 +311,7 @@ import ShieldMotif from './ShieldMotif.astro';
      Drop Caps — subsection first paragraphs and pull quote
      ============================================================ */
   .drop-cap::first-letter {
-    font-family: var(--font-display);
+    font-family: var(--font-garamond, 'EB Garamond', serif);
     font-size: 4.5rem;
     float: left;
     line-height: 0.8;
@@ -290,7 +322,7 @@ import ShieldMotif from './ShieldMotif.astro';
   }
 
   .pull-quote p::first-letter {
-    font-family: var(--font-display);
+    font-family: var(--font-garamond, 'EB Garamond', serif);
     font-size: 4.5rem;
     float: left;
     line-height: 0.8;
@@ -334,7 +366,7 @@ import ShieldMotif from './ShieldMotif.astro';
     }
 
     .pull-quote p {
-      font-size: var(--font-size-lg);
+      font-size: var(--font-size-xl);
     }
 
     .museum-plate {
@@ -342,3 +374,18 @@ import ShieldMotif from './ShieldMotif.astro';
     }
   }
 </style>
+
+<script>
+  // VIS-04: Background fade on scroll — toggles class (not one-shot like ScrollReveal)
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const section = document.querySelector('[data-bg-fade]');
+    if (section) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          entry.target.classList.toggle('bg-visible', entry.isIntersecting);
+        });
+      }, { threshold: 0.1 });
+      observer.observe(section);
+    }
+  }
+</script>
