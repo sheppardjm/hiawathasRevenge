@@ -1,5 +1,33 @@
 # Project Milestones: Hiawatha's Revenge
 
+## v1.3 Interactive Map & Editorial Polish (Shipped: 2026-04-02)
+
+**Delivered:** First-class interactive map experience with sector labels, clickable detail panels with elevation sparklines, surface-colored route track, and editorial polish with EB Garamond drop-caps, parallax backgrounds, skeleton loaders, and three new Native American cultural motif components.
+
+**Phases completed:** 23-27 (9 plans total)
+
+**Key accomplishments:**
+
+- Complete build-time data pipeline: surface-points.json (456 entries), sector-details.json (7 entries), and canonical difficulty stars in annotations.json — single source of truth for all map interactivity
+- Interactive sector map with NP-styled difficulty-colored pill labels at polyline midpoints, zoom gating (>= 12), surface-colored route track (paved/gravel/dirt/unknown), and ghost polyline hit targets for reliable mobile touch
+- Sector detail panels via HTML `<dialog>` with elevation sparklines, terrain descriptions, Strava links, and jump links to route guide — desktop slide-in (350px) and mobile bottom sheet (50vh) with X/Escape/click-outside close affordances
+- Editorial polish: EB Garamond drop-caps, 3 independent parallax sub-section backgrounds with IntersectionObserver fade, doubled section spacing, route stats legibility fix, and photo gallery skeleton loaders
+- Three new cultural motif SVG components (OjibweBorderPattern, WaterWavePattern, TurtleMotif) with proper accessibility attributes and currentColor theming
+- Audit gap closure: EB Garamond Font tag, MAP-08 show() trade-off documented, NF2217-2218 name consistency, RouteMap.astro tech debt cleanup
+
+**Stats:**
+
+- 51 files created/modified
+- 3,660 lines of Astro/TypeScript/JavaScript/CSS (total codebase)
+- 5 phases, 9 plans, 17 tasks
+- 3 days from first commit to ship (2026-03-30 → 2026-04-02)
+
+**Git range:** `c2dfff2` (docs(23): research phase) → `6d4681f` (docs(27): complete audit gap closure phase)
+
+**What's next:** TBD — next milestone via `/gsd:new-milestone`
+
+---
+
 ## v1.2 Cultural Maximalism (Shipped: 2026-04-02)
 
 **Delivered:** Maximalist cultural celebration with bold expanded color palette (turquoise/scarlet/sun-yellow), geometric animated dividers, shield/arrowhead motif system, historical Remington illustrations with sepia treatment, magazine editorial layout, enriched segment cards with sparklines and Strava links, scroll-driven reveals, and multi-color section backgrounds — elevating the site to award-winning non-profit visual storytelling.

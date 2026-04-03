@@ -2,7 +2,7 @@
 
 ## What This Is
 
-An immersive editorial showcase website for Hiawatha's Revenge, a 100-mile cycling ride through Michigan's Hiawatha National Forest that supports the Munising Bay Trail Network (MBTN). The site combines interactive cartography (Leaflet route map with gravel sector overlays, Chart.js elevation profile synced via event bus) with rich visual storytelling — a dramatic full-viewport hero, witty editorial narrative on Longfellow's Hiawatha/Nanabozho conflation, photo-integrated route explainer, and masonry gallery. The design draws from Ojibwe woodland floral beadwork traditions with hand-authored SVG motifs and a warm berry/gold/lake/moss color palette.
+An immersive editorial showcase website for Hiawatha's Revenge, a 100-mile cycling ride through Michigan's Hiawatha National Forest that supports the Munising Bay Trail Network (MBTN). The site combines interactive cartography — a Leaflet route map with surface-colored track, clickable sector detail panels with elevation sparklines, difficulty-starred labels, and a Chart.js elevation profile synced via event bus — with rich visual storytelling: a dramatic full-viewport hero, witty editorial narrative on Longfellow's Hiawatha/Nanabozho conflation, photo-integrated route explainer, parallax editorial sections with EB Garamond drop-caps, and masonry gallery. The design draws from Ojibwe woodland floral beadwork traditions with hand-authored SVG motifs and a warm berry/gold/lake/moss color palette enriched with geometric cultural elements.
 
 ## Core Value
 
@@ -40,12 +40,17 @@ Visitors experience the beauty and scale of the Hiawatha's Revenge route through
 - ✓ Bold color palette expansion — turquoise, red, yellow, black alongside existing Ojibwe tones, applied consistently across typography, backgrounds, and design elements — v1.2
 - ✓ Animated multicolored section dividers — award-winning non-profit aesthetic — v1.2
 - ✓ Historical Hiawatha imagery sourced from public domain (poem illustrations, theatrical productions, musicals) integrated throughout content — v1.2
+- ✓ Interactive map sector labels with difficulty-colored pills at polyline midpoints, zoom gating — v1.3
+- ✓ Clickable sector detail panels with elevation sparklines, terrain descriptions, Strava links, jump links — desktop slide-in + mobile bottom sheet — v1.3
+- ✓ Route polyline colored by surface type (paved/gravel/dirt) using RidewithGPS data — v1.3
+- ✓ EB Garamond drop-cap pull quotes, parallax sub-section backgrounds, doubled section spacing — v1.3
+- ✓ Photo gallery skeleton loaders preventing CLS, route stats legibility fix — v1.3
+- ✓ Three new Native American cultural motif SVG components (OjibweBorderPattern, WaterWavePattern, TurtleMotif) — v1.3
+- ✓ Complete build-time data pipeline: surface-points.json, sector-details.json, canonical difficulty stars — v1.3
 
 ### Active
 
-- [ ] Interactive map sector labels, clickable detail panels, surface-colored track
-- [ ] Editorial polish: pull quote redesign, parallax images, section whitespace, stats legibility
-- [ ] Photo loading skeletons, additional Native American design elements
+(None — planning next milestone)
 
 ### Out of Scope
 
@@ -55,31 +60,18 @@ Visitors experience the beauty and scale of the Hiawatha's Revenge route through
 - Real-time features — purely static showcase
 - OAuth / user accounts — no login needed
 - Mobile app — web only
-
-## Current Milestone: v1.3 Interactive Map & Editorial Polish
-
-**Goal:** Make the route map a first-class interactive experience with sector labels, clickable detail panels, and surface-colored track — while polishing the editorial layout with better whitespace, redesigned pull quotes, parallax imagery, and additional cultural design elements.
-
-**Target features:**
-- Sector labels on map with names and star difficulty ratings (NP-styled)
-- Clickable sectors with slide-out detail panels (desktop) / bottom sheet (mobile)
-- Route polyline colored by surface type (paved/dirt/gravel/sand) using RidewithGPS data
-- Pull quote redesign with drop cap and classic American typeface
-- Sticky parallax background images in editorial sections
-- More section padding/whitespace, route stats legibility fix
-- Photo loading skeletons, additional Native American design elements
+- Leaflet 2.0 upgrade — alpha, plugins incompatible
+- AI-generated cultural imagery — contradicts site's cultural critique narrative
 
 ## Context
 
-Shipped v1.0 + v1.1 + v1.2 with 2,936 LOC across Astro/TypeScript/JavaScript/CSS.
+Shipped v1.0 + v1.1 + v1.2 + v1.3 with 3,660 LOC across Astro/TypeScript/JavaScript/CSS.
 Tech stack: Astro 6, Tailwind 4, Vite 7, Leaflet, Chart.js, PhotoSwipe, sharp, gpxparser.
-Build pipeline: 8-step pipeline.js (parse-gpx → resolve-annotations → compute-sector-elevations → generate-thumbnails → copy-images → process-historical → match-photos → copy-gpx).
+Build pipeline: 10-step pipeline.js (parse-gpx → generate-surface-points → resolve-annotations → generate-sector-details → compute-sector-elevations → generate-thumbnails → copy-images → process-historical → match-photos → copy-gpx).
 51 route photos with mileage-assigned manifest, 2 historical Remington illustrations (Met CC0), 456 simplified route points, 2,258 ft elevation gain.
-v1.1 added Ojibwe-inspired design system (12 color tokens), full-viewport hero, editorial narrative, route explainer, masonry gallery, and cultural attribution.
-v1.2 added 13 new color tokens (turquoise/scarlet/sun-yellow), geometric animated dividers, shield motif system, historical imagery with sepia treatment, magazine editorial layout, enriched segment cards with sparklines and Strava links, scroll-driven reveals, and multi-color section backgrounds.
+v1.3 added interactive sector map (labels, panels, surface-colored track), editorial polish (EB Garamond, parallax, spacing), and 3 new cultural motif components.
 Reference implementation: github.com/sheppardjm/mkUltraGravel — same architecture, different visual identity.
 MBTN (mbtn.org) is the beneficiary — donate CTA links to their site.
-Historical context in `data.md` — segment details with star ratings, Hiawatha history with Longfellow critique quote.
 
 ## Constraints
 
@@ -114,6 +106,15 @@ Historical context in `data.md` — segment details with star ratings, Hiawatha 
 | Specific Ojibwe/Anishinaabe attribution | Generic "Native American" insufficient per DSN-04 | ✓ Good — respectful specificity |
 | CSS columns for masonry gallery | Only CSS-only masonry approach; no JS dependency | ✓ Good — standard, performant |
 | Spread conditional for featured field | No featured: false noise in JSON | ✓ Good — clean data |
+| Build-time sector-details.json | Single source of truth for panel content, not hardcoded | ✓ Good — clean data pipeline |
+| Ghost polyline pattern (not leaflet-highlightable-layers) | Zero new dependencies | ✓ Good — simple, reliable |
+| HTML dialog + CSS translate for panels | No JS animation library needed | ✓ Good — native semantics |
+| dialog.show() over showModal() | Map stays interactive while panel is open | ✓ Good — documented trade-off |
+| 5-decimal coordinate matching for surface lookup | 456/456 match rate, no fallback needed | ✓ Good — perfect accuracy |
+| Hardcoded hex in sparkline SVG | CSS vars unavailable in innerHTML-injected SVG | ✓ Good — matches design tokens |
+| Cascade fix for stat legibility | Specific :global() overrides, no !important | ✓ Good — clean CSS |
+| EB Garamond Font tag without preload | Drop-cap use below-fold only | ✓ Good — no critical-path weight |
+| MAP-08 show() trade-off | Non-modal preserves map interactivity, no backdrop expected | ✓ Good — intentional design |
 
 ---
-*Last updated: 2026-04-02 after v1.3 milestone start*
+*Last updated: 2026-04-02 after v1.3 milestone*
