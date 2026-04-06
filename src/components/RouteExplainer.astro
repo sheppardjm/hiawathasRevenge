@@ -218,21 +218,28 @@ const segmentsWithPhotos = SEGMENTS.map(seg => ({
     .segment-hero { height: 180px; }
   }
 
-  /* Star rating — clip gradient technique */
+  /* Star rating — clip gradient technique with @supports progressive enhancement */
   .star-rating {
     --percent: calc(var(--rating) / 5 * 100%);
     display: inline-block;
     font-size: 1rem;
     line-height: 1;
+    /* Solid amber fallback for browsers without background-clip: text support */
     color: var(--color-amber-500);
-    background: linear-gradient(
-      to right,
-      var(--color-amber-500) var(--percent),
-      var(--color-forest-700) var(--percent)
-    );
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
+  }
+
+  @supports (background-clip: text) or (-webkit-background-clip: text) {
+    .star-rating {
+      background: linear-gradient(
+        to right,
+        var(--color-amber-500) var(--percent),
+        var(--color-forest-700) var(--percent)
+      );
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent;
+    }
   }
 
   .star-rating::before {
