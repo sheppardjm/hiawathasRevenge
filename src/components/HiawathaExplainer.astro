@@ -233,17 +233,26 @@ import ShieldMotif from './ShieldMotif.astro';
     pointer-events: none;
   }
 
-  /* Each section gets its own background image from /images/ */
+  /* Each section gets its own background image from /images/ — WebP preferred, JPEG fallback */
   .poem-section::before {
-    background-image: url('/images/Eo6Lpv5a2onA-EMkS4BGrkQOHMQb4rwDbey7kfJDAZc-1536x2048.jpg');
+    background-image: image-set(
+      url('/images/Eo6Lpv5a2onA-EMkS4BGrkQOHMQb4rwDbey7kfJDAZc-1536x2048.webp') type("image/webp"),
+      url('/images/Eo6Lpv5a2onA-EMkS4BGrkQOHMQb4rwDbey7kfJDAZc-1536x2048.jpg') type("image/jpeg")
+    );
   }
 
   .forest-section::before {
-    background-image: url('/images/K9zNeD_N2ikOKXNlKHc1dGUY7N6W3cGWVevoXlB49aI-1536x2048.jpg');
+    background-image: image-set(
+      url('/images/K9zNeD_N2ikOKXNlKHc1dGUY7N6W3cGWVevoXlB49aI-1536x2048.webp') type("image/webp"),
+      url('/images/K9zNeD_N2ikOKXNlKHc1dGUY7N6W3cGWVevoXlB49aI-1536x2048.jpg') type("image/jpeg")
+    );
   }
 
   .ride-section::before {
-    background-image: url('/images/Gw-ZiugqoNyWNNMHZ-n65VcO7XjnipWnDWQz77mE2kQ-1536x2048.jpg');
+    background-image: image-set(
+      url('/images/Gw-ZiugqoNyWNNMHZ-n65VcO7XjnipWnDWQz77mE2kQ-1536x2048.webp') type("image/webp"),
+      url('/images/Gw-ZiugqoNyWNNMHZ-n65VcO7XjnipWnDWQz77mE2kQ-1536x2048.jpg') type("image/jpeg")
+    );
   }
 
   .subsection-bg.bg-visible::before {
