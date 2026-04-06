@@ -308,11 +308,11 @@
     // Fetch all data in parallel — consolidates sequential awaits for faster startup
     const [routeData, annotations, sectorDetails, sectorElevations, surfacePoints, photosData] =
       await Promise.all([
-        fetch('/data/route-data.json').then(r => r.json()),
-        fetch('/data/annotations.json').then(r => r.json()),
+        fetch('/data/100mi/route-data.json').then(r => r.json()),
+        fetch('/data/100mi/annotations.json').then(r => r.json()),
         fetch('/data/sector-details.json').then(r => r.json()),
-        fetch('/data/sector-elevations.json').then(r => r.json()),
-        fetch('/data/surface-points.json').then(r => r.json()),
+        fetch('/data/100mi/sector-elevations.json').then(r => r.json()),
+        fetch('/data/100mi/surface-points.json').then(r => r.json()),
         fetch('/data/photos.json').then(r => r.json()),
       ]);
 

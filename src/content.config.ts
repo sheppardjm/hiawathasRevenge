@@ -8,7 +8,7 @@ import { file } from 'astro/loaders';
 // entry with id 'route' using a custom parser.
 
 const routeData = defineCollection({
-  loader: file('public/data/route-data.json', {
+  loader: file('public/data/100mi/route-data.json', {
     parser: (text) => {
       const data = JSON.parse(text);
       return [{ id: 'route', ...data }];
@@ -43,7 +43,7 @@ const routeData = defineCollection({
 // so the default file() loader works directly.
 
 const annotations = defineCollection({
-  loader: file('public/data/annotations.json'),
+  loader: file('public/data/100mi/annotations.json'),
   schema: z.discriminatedUnion('type', [
     z.object({
       id: z.string(),
@@ -81,7 +81,7 @@ const annotations = defineCollection({
 // produced by compute-sector-elevations.js in the pipeline.
 
 const sectorElevations = defineCollection({
-  loader: file('public/data/sector-elevations.json'),
+  loader: file('public/data/100mi/sector-elevations.json'),
   schema: z.object({
     id: z.string(),
     name: z.string(),

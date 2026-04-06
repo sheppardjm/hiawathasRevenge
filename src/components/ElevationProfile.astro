@@ -53,7 +53,7 @@
     Chart.register(LineController, LineElement, PointElement, LinearScale, Filler, Tooltip, Decimation, annotationPlugin);
 
     // Fetch route data — same source as RouteMap.astro
-    const routeData = await fetch('/data/route-data.json').then(r => r.json());
+    const routeData = await fetch('/data/100mi/route-data.json').then(r => r.json());
 
     // Build dataset: convert elevation from meters to feet, use miles for x-axis
     // parsing: false requires data to be in {x, y} format, sorted ascending by x
@@ -63,7 +63,7 @@
     }));
 
     // Fetch annotations and build sector band overlays
-    const annotations = await fetch('/data/annotations.json').then(r => r.json());
+    const annotations = await fetch('/data/100mi/annotations.json').then(r => r.json());
     const sectors = annotations.filter(a => a.type === 'sector');
     const sectorAnnotations = {};
     for (const sector of sectors) {
