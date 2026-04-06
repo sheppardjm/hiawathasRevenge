@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-04-06)
 ## Current Position
 
 Phase: 33 of 36 (Pipeline & Route Data)
-Plan: 0 of 3 in current phase
-Status: Ready to plan
-Last activity: 2026-04-06 -- Roadmap created for v1.5 milestone
+Plan: 1 of 3 in current phase
+Status: In progress
+Last activity: 2026-04-06 -- Completed 33-01-PLAN.md (multi-route pipeline foundation)
 
-Progress: [████████████████████] v1.0-v1.4 complete | v1.5 [░░░░░░░░░░] 0/9 plans
+Progress: [████████████████████] v1.0-v1.4 complete | v1.5 [█░░░░░░░░░] 1/9 plans
 
 ## Performance Metrics
 
@@ -28,7 +28,12 @@ Progress: [████████████████████] v1.0-v1
 
 ### Decisions
 
-All decisions logged in PROJECT.md Key Decisions table and MILESTONES.md entries.
+| Plan | Decision | Rationale |
+|------|----------|-----------|
+| 33-01 | Subdirectory output: public/data/{routeId}/ | Enables lazy loading, avoids index collisions, matches ARCHITECTURE.md spec |
+| 33-01 | Coordinate-verified sector membership for 100k/50k | [520, NF2266, Doe Lake, Rapid River] -- NOT Bass Lake/NF2217/ND2225 as previously estimated in STACK.md |
+| 33-01 | Elevation calibration conditional on elevationTargetRange | Skip threshold scan for 100k/50k; use fixed 2m threshold |
+| 33-01 | Consecutive duplicate deduplication in parse-gpx.js | Handles Strava triplicate-start artifact (100k had 51 dupes) |
 
 ### Pending Todos
 
@@ -41,8 +46,9 @@ None.
 - Strava IDs populated for 6/7 segments (Rapid River Truck Trail pending)
 - iOS Safari device testing deferred to v1.5+ (requires physical device)
 - astro.config.ts site URL is placeholder -- update before deployment
-- Surface data gap: 100k/50k lack RidewithGPS JSON; fallback strategy needed (Phase 33)
-- Sector-to-route membership estimated from mile ranges, not verified against GPX tracks (Phase 33)
+- **[33-01 NEW]** content.config.ts and RouteMap.astro/ElevationProfile.astro reference flat public/data/route-data.json which no longer receives output -- must update to public/data/100mi/route-data.json to restore Astro build
+- Surface data gap: 100k/50k lack RidewithGPS JSON; fallback strategy needed (Phase 33 plan 33-02)
+- Elevation gains for 100k (~1,616 ft) and 50k (~809 ft) unverified against Strava/Garmin reference recordings
 
 ### Tech Debt
 
@@ -50,6 +56,6 @@ All tech debt items from v1.0-v1.4 resolved. No outstanding items.
 
 ## Session Continuity
 
-Last session: 2026-04-06
-Stopped at: v1.5 roadmap created -- ready to plan Phase 33
+Last session: 2026-04-06T21:42:34Z
+Stopped at: Completed 33-01-PLAN.md -- ready to execute 33-02
 Resume file: None
