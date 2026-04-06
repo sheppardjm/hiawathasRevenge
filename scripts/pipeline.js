@@ -22,6 +22,7 @@ const steps = [
   { name: 'compute-sector-elevations', script: 'scripts/compute-sector-elevations.js' },
   { name: 'generate-thumbnails', script: 'scripts/generate-thumbnails.js' },
   { name: 'copy-images', script: 'scripts/copy-images.js' },
+  { name: 'generate-webp', script: 'scripts/generate-webp.js' },
   { name: 'process-historical', script: 'scripts/process-historical.js' },
   { name: 'match-photos', script: 'scripts/match-photos.js' },
   { name: 'copy-gpx', script: 'scripts/copy-gpx.js' },
