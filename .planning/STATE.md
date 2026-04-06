@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-04-06)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive, visually stunning showcase that inspires them to ride it and support MBTN.
-**Current focus:** v1.5 Multi-Route Support -- Phase 34 COMPLETE, ready for Phase 35
+**Current focus:** v1.5 Multi-Route Support -- Phase 35 In Progress (Plan 01 complete)
 
 ## Current Position
 
-Phase: 34 of 36 (Route Selector & Map Switching) -- COMPLETE
-Plan: 2 of 2 in current phase
-Status: Phase complete
-Last activity: 2026-04-06 -- Completed 34-02-PLAN.md (Route selector, ghost polylines, elevation chart switching)
+Phase: 35 of 36 (Elevation Profile and Route Stats)
+Plan: 1 of 2 in current phase
+Status: In progress
+Last activity: 2026-04-06 -- Completed 35-01-PLAN.md (ElevationProfile race fix, RouteStats dynamic updates)
 
-Progress: [████████████████████] v1.0-v1.4 complete | v1.5 [█████░░░░░] 5/9 plans
+Progress: [████████████████████] v1.0-v1.4 complete | v1.5 [██████░░░░] 6/9 plans
 
 ## Performance Metrics
 
@@ -46,6 +46,9 @@ Progress: [████████████████████] v1.0-v1
 | 34-02 | Ghost polylines created AFTER renderRoute('100mi') | Map needs valid pixel bounds from fitBounds before Leaflet _clipPoints |
 | 34-02 | Ghost polylines on map directly (not activeRouteGroup) with bringToBack | Persist across route switches; bringToBack for z-order behind active route |
 | 34-02 | ElevationProfile updateChart uses chart.update('none') | Instant in-place data swap without animation; preserves crosshair annotation |
+| 35-01 | window.__activeRouteId set before route:change dispatch | Global available to any post-init sync even if dispatch is synchronous |
+| 35-01 | Post-init sync only corrects non-100mi routes | 100mi is correct initChart() default; no redundant re-fetch needed |
+| 35-01 | RouteStats uses Astro getEntry for SSG + script for runtime updates | Build-time HTML valid for 100mi; runtime script corrects on route switch |
 
 ### Pending Todos
 
@@ -66,6 +69,6 @@ All tech debt items from v1.0-v1.4 resolved. No outstanding items.
 
 ## Session Continuity
 
-Last session: 2026-04-06T23:00:00Z
-Stopped at: Completed Phase 34 -- Route Selector & Map Switching complete, ready for Phase 35
+Last session: 2026-04-06T23:24:22Z
+Stopped at: Completed 35-01-PLAN.md -- ElevationProfile race fix, RouteStats dynamic stats + sector card
 Resume file: None
