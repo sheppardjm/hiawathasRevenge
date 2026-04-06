@@ -69,7 +69,7 @@ Requirements for ship-ready polish. Each maps to roadmap phases.
 | SEO-03 | Phase 29 | Complete |
 | SEO-04 | Phase 29 | Complete |
 | DEBT-01 | Phase 28 | Complete |
-| DEBT-02 | Phase 28 | Complete |
+| DEBT-02 | Phase 28, Phase 32 (source fix) | Complete |
 | DEBT-03 | Phase 28 | Complete |
 
 **Coverage:**
@@ -79,4 +79,4 @@ Requirements for ship-ready polish. Each maps to roadmap phases.
 
 ---
 *Requirements defined: 2026-04-06*
-*Last updated: 2026-04-06 after Phase 31 completion (v1.4 complete)*
+*Last updated: 2026-04-06 after Phase 32 completion (v1.4 gap closure complete)*
