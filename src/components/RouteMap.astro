@@ -211,6 +211,15 @@
   let activeSector = null;
   let previousFocus = null;
 
+  // Module-scope route state — managed by renderRoute() / clearActiveRoute()
+  let activeRouteGroup = null;
+  let activeRouteId = '100mi';
+  let sectorLayerEntries = [];
+  let routesManifest = null;
+  let sectorDetailsData = null;
+  let sectorLabels = [];
+  let initialBounds = null;
+
   // snapByMiles — O(n) nearest-distance search over route points
   // Uses miles field (distance-along-route) — NOT array index — for accurate sync with elevation chart
   function snapByMiles(points, targetMiles) {
@@ -258,6 +267,14 @@
     const LABEL_COLOR = amber500;
     const labelTextColor = getCSSColor('--color-forest-900');
 
+    // Surface color palette — distinct from sector overlay colors (lake, amber, rust, forest)
+    const SURFACE_COLORS = {
+      paved:   lake400,
+      gravel:  amber400,
+      dirt:    getCSSColor('--color-rust-600'),
+      unknown: getCSSColor('--color-forest-700'),
+    };
+
     // Dynamic import avoids SSR "window is undefined" error — Leaflet requires browser globals
     const L = (await import('leaflet')).default;
 
@@ -281,8 +298,7 @@
     }).addTo(map);
 
     // Custom reset control — appears below zoom buttons (top-left)
-    // Note: initialBounds referenced in click handler is computed after Promise.all below;
-    // the closure captures the variable binding, so declaration order is fine in JS.
+    // Note: initialBounds referenced in click handler is module-scope; updated by renderRoute().
     const ResetControl = L.Control.extend({
       options: { position: 'topleft' },
       onAdd() {
@@ -296,7 +312,7 @@
         L.DomEvent.disableClickPropagation(container);
         L.DomEvent.on(btn, 'click', (e) => {
           L.DomEvent.preventDefault(e);
-          map.fitBounds(initialBounds, { padding: [20, 20], animate: !prefersReducedMotion });
+          if (initialBounds) map.fitBounds(initialBounds, { padding: [20, 20], animate: !prefersReducedMotion });
           map.closePopup();
           if (bikeMarker && bikeMarker._map) bikeMarker.remove();
         });
@@ -305,37 +321,22 @@
     });
     new ResetControl().addTo(map);
 
-    // Fetch all data in parallel — consolidates sequential awaits for faster startup
-    const [routeData, annotations, sectorDetails, sectorElevations, surfacePoints, photosData] =
+    // Fetch shared data in parallel — routes manifest + sector details + photos
+    // Route-specific data (route-data, annotations, sector-elevations, surface-points) is fetched in renderRoute()
+    const [routesData, sectorDetails, photosData] =
       await Promise.all([
-        fetch('/data/100mi/route-data.json').then(r => r.json()),
-        fetch('/data/100mi/annotations.json').then(r => r.json()),
+        fetch('/data/routes.json').then(r => r.json()),
         fetch('/data/sector-details.json').then(r => r.json()),
-        fetch('/data/100mi/sector-elevations.json').then(r => r.json()),
-        fetch('/data/100mi/surface-points.json').then(r => r.json()),
         fetch('/data/photos.json').then(r => r.json()),
       ]);
 
-    const latlngs = routeData.points.map((pt) => [pt.lat, pt.lon]);
+    // Store shared data at module scope for use by renderRoute() and panel logic
+    routesManifest = routesData;
+    sectorDetailsData = sectorDetails;
 
-    // Assign module-scope reference for use by snapByMiles in window event listeners
-    routePoints = routeData.points;
-
-    // initialBounds — computed here for use in ResetControl click handler and fitBounds below
-    const initialBounds = L.latLngBounds(latlngs);
-
-    // Surface color palette — distinct from sector overlay colors (moss-500, amber-500, rust-500)
-    const SURFACE_COLORS = {
-      paved:   lake400,
-      gravel:  amber400,
-      dirt:    getCSSColor('--color-rust-600'),
-      unknown: getCSSColor('--color-forest-700'),
-    };
-
-    // Base route polyline — single uniform color for the entire route
-    L.polyline(latlngs, {
-      color: forest900, weight: 4, opacity: 0.9, smoothFactor: 1, interactive: false,
-    }).addTo(map);
+    // Create the active route layer group — all route-specific layers go here
+    // clearLayers() on this group removes everything on route switch
+    activeRouteGroup = L.layerGroup().addTo(map);
 
     // Bike dot marker — circle dot that moves along the route on elevation chart hover
     // className: '' REQUIRED — removes default leaflet-div-icon white background/border
@@ -358,50 +359,6 @@
       zIndexOffset: 1000
     });
 
-    // Sector overlays — rendered AFTER surface polylines so they appear on top
-    // Ghost+visible pattern: ghost handles events (20px hit target), visible handles styling
-    const sectors = annotations.filter(a => a.type === 'sector');
-    const sectorLayers = [];
-
-    for (const sector of sectors) {
-      // slice(startIdx, endIdx + 1) — JavaScript slice excludes end index; +1 prevents off-by-one gap
-      const sectorPts = latlngs.slice(sector.startIdx, sector.endIdx + 1);
-      const defaultStyle = { color: SECTOR_COLOR.line, weight: 5, opacity: 0.85 };
-
-      const visiblePoly = L.polyline(sectorPts, { ...defaultStyle, interactive: false }).addTo(map);
-      const ghostPoly = L.polyline(sectorPts, {
-        color: SECTOR_COLOR.line, weight: 20, opacity: 0, interactive: true,
-      }).addTo(map);
-
-      const entry = { sectorId: sector.id, visiblePoly, ghostPoly, defaultStyle };
-      sectorLayers.push(entry);
-
-      // Desktop hover — skip if this sector is currently active (preserves active highlight)
-      ghostPoly.on('mouseover', () => {
-        if (activeSector?.sectorId !== sector.id) {
-          visiblePoly.setStyle({ weight: 7, opacity: 1.0 });
-        }
-      });
-      ghostPoly.on('mouseout', () => {
-        if (activeSector?.sectorId !== sector.id) {
-          visiblePoly.setStyle(defaultStyle);
-        }
-      });
-
-      // Click — open panel with sector details
-      ghostPoly.on('click', () => {
-        if (activeSector && activeSector.sectorId !== sector.id) {
-          activeSector.visiblePoly.setStyle(activeSector.defaultStyle);
-        }
-        activeSector = entry;
-        visiblePoly.setStyle({ weight: 8, opacity: 1.0 });
-        visiblePoly.bringToFront();
-        const details = sectorDetails.find(d => d.id === sector.id);
-        const elevData = sectorElevations.find(e => e.id === sector.id);
-        openPanel({ sector, details, elevData });
-      });
-    }
-
     // ---- Panel open/close logic ----
     const panel = document.getElementById('sector-panel');
 
@@ -420,11 +377,6 @@
       const milesRange = miles[miles.length - 1] - miles[0];
       const drawH = H - 2 * padding;
 
-      const DIFFICULTY_COLORS = {
-        easy:     '#c8973e',
-        moderate: '#c8973e',
-        hard:     '#c8973e',
-      };
       const strokeColor = '#c8973e';
 
       const computed = points.map((p, i) => ({
@@ -531,95 +483,200 @@
       }
     });
 
-    // Sector label markers — pill-shaped divIcon labels at each sector's geographic midpoint
-    const sectorLabels = [];
-
-    for (const sector of sectors) {
-      const midIdx = Math.floor((sector.startIdx + sector.endIdx) / 2);
-      const midPt = latlngs[midIdx];
-      const bgColor = LABEL_COLOR;
-      const stars = '★'.repeat(sector.stars);
-
-      const labelIcon = L.divIcon({
-        className: 'sector-label',
-        html: `<div style="
-          background: ${bgColor};
-          color: ${labelTextColor};
-          border: 2px solid ${labelTextColor};
-          border-radius: 12px;
-          padding: 3px 8px;
-          font-family: var(--font-display);
-          font-size: 11px;
-          font-weight: 700;
-          white-space: nowrap;
-          transform: translate(-50%, -50%);
-          box-shadow: 2px 2px 0px rgba(0,0,0,0.4);
-          line-height: 1.3;
-          text-align: center;
-        ">${sector.name}<br><span style="font-size: 9px; letter-spacing: 1px;">${stars}</span></div>`,
-        iconSize: [0, 0],
-        iconAnchor: [0, 0],
-      });
-
-      const labelMarker = L.marker(midPt, {
-        icon: labelIcon,
-        interactive: false,
-        keyboard: false,
-        zIndexOffset: 250,
-      });
-
-      sectorLabels.push(labelMarker);
-    }
-
-    // Zoom gating — show sector labels at zoom >= 12, hide at lower zoom
+    // Zoom gating for sector labels — uses opacity so labels remain in activeRouteGroup
+    // add/remove approach would require re-adding to map after clearLayers; opacity avoids that
     function updateLabelVisibility() {
       const zoom = map.getZoom();
       for (const marker of sectorLabels) {
-        if (zoom >= 12 && !marker._map) {
-          marker.addTo(map);
-        } else if (zoom < 12 && marker._map) {
-          marker.remove();
-        }
+        const el = marker.getElement?.();
+        if (!el) continue;
+        el.style.opacity = zoom >= 12 ? '1' : '0';
+        el.style.pointerEvents = zoom >= 12 ? 'auto' : 'none';
       }
     }
     map.on('zoomend', updateLabelVisibility);
-    // Initial check — labels may be visible at initial zoom level
-    updateLabelVisibility();
 
-    // Restock point markers — clickable amber circles with name/mileage popups
-    const restocks = annotations.filter(a => a.type === 'restock');
+    // ---- clearActiveRoute — removes all route-specific layers from the map ----
+    function clearActiveRoute() {
+      if (activeSector) {
+        activeSector.visiblePoly.setStyle(activeSector.defaultStyle);
+        activeSector = null;
+      }
+      if (activeRouteGroup) {
+        activeRouteGroup.clearLayers();
+      }
+      sectorLayerEntries.length = 0;
+      sectorLabels = [];
+    }
 
-    for (const stop of restocks) {
-      const restockIcon = L.divIcon({
-        className: 'restock-marker',
-        html: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="26" viewBox="0 0 20 26">
+    // ---- drawSurfacePolyline — run-flush algorithm for surface-colored polyline segments ----
+    // surfacePoints array must be same length as latlngs (one surface type per route point)
+    // Groups consecutive same-surface points into a single polyline segment
+    function drawSurfacePolyline(latlngs, surfacePoints, layerGroup) {
+      if (surfacePoints.length !== latlngs.length) {
+        console.warn(`Surface points (${surfacePoints.length}) != route points (${latlngs.length}), falling back to uniform color`);
+        layerGroup.addLayer(L.polyline(latlngs, { color: forest900, weight: 4, opacity: 0.9, smoothFactor: 1, interactive: false }));
+        return;
+      }
+      let prev = null;
+      let runStart = 0;
+      function flushRun(endIdx) {
+        if (prev === null) return;
+        const pts = latlngs.slice(runStart, endIdx + 1);
+        if (pts.length >= 2) {
+          layerGroup.addLayer(L.polyline(pts, {
+            color: SURFACE_COLORS[prev] || SURFACE_COLORS.unknown,
+            weight: 4, opacity: 0.9, smoothFactor: 1, interactive: false,
+          }));
+        }
+      }
+      for (let i = 0; i < surfacePoints.length; i++) {
+        const s = surfacePoints[i].surface;
+        if (s !== prev) { flushRun(i); runStart = i; prev = s; }
+      }
+      flushRun(surfacePoints.length - 1);
+    }
+
+    // ---- renderRoute — fetches per-route data and rebuilds all route-specific layers ----
+    async function renderRoute(routeId) {
+      // 1. Fetch route-specific data in parallel
+      const [routeData, annotations, sectorElevations, surfacePoints] = await Promise.all([
+        fetch(`/data/${routeId}/route-data.json`).then(r => r.json()),
+        fetch(`/data/${routeId}/annotations.json`).then(r => r.json()),
+        fetch(`/data/${routeId}/sector-elevations.json`).then(r => r.json()),
+        fetch(`/data/${routeId}/surface-points.json`).then(r => r.json()),
+      ]);
+
+      // 2. Clear previous route layers
+      clearActiveRoute();
+
+      // 3. Build latlngs and update module-scope references
+      const latlngs = routeData.points.map(pt => [pt.lat, pt.lon]);
+      routePoints = routeData.points;
+
+      // 4. Draw surface-colored polyline (run-flush algorithm)
+      drawSurfacePolyline(latlngs, surfacePoints, activeRouteGroup);
+
+      // 5. Build sector overlays (visible + ghost per sector)
+      // Ghost+visible pattern: ghost handles events (20px hit target), visible handles styling
+      const sectors = annotations.filter(a => a.type === 'sector');
+      for (const sector of sectors) {
+        // slice(startIdx, endIdx + 1) — JavaScript slice excludes end index; +1 prevents off-by-one gap
+        const sectorPts = latlngs.slice(sector.startIdx, sector.endIdx + 1);
+        const defaultStyle = { color: SECTOR_COLOR.line, weight: 5, opacity: 0.85 };
+        const visiblePoly = L.polyline(sectorPts, { ...defaultStyle, interactive: false });
+        const ghostPoly = L.polyline(sectorPts, { color: SECTOR_COLOR.line, weight: 20, opacity: 0, interactive: true });
+        activeRouteGroup.addLayer(visiblePoly);
+        activeRouteGroup.addLayer(ghostPoly);
+        const entry = { sectorId: sector.id, visiblePoly, ghostPoly, defaultStyle };
+        sectorLayerEntries.push(entry);
+
+        // Desktop hover — skip if this sector is currently active (preserves active highlight)
+        ghostPoly.on('mouseover', () => {
+          if (activeSector?.sectorId !== sector.id) visiblePoly.setStyle({ weight: 7, opacity: 1.0 });
+        });
+        ghostPoly.on('mouseout', () => {
+          if (activeSector?.sectorId !== sector.id) visiblePoly.setStyle(defaultStyle);
+        });
+
+        // Click — open panel with sector details
+        ghostPoly.on('click', () => {
+          if (activeSector && activeSector.sectorId !== sector.id) activeSector.visiblePoly.setStyle(activeSector.defaultStyle);
+          activeSector = entry;
+          visiblePoly.setStyle({ weight: 8, opacity: 1.0 });
+          visiblePoly.bringToFront();
+          const details = sectorDetailsData.find(d => d.id === sector.id);
+          const elevData = sectorElevations.find(e => e.id === sector.id);
+          openPanel({ sector, details, elevData });
+        });
+      }
+
+      // 6. Build sector labels — pill-shaped divIcon labels at each sector's geographic midpoint
+      sectorLabels = [];
+      for (const sector of sectors) {
+        const midIdx = Math.floor((sector.startIdx + sector.endIdx) / 2);
+        const midPt = latlngs[midIdx];
+        const bgColor = LABEL_COLOR;
+        const stars = '\u2605'.repeat(sector.stars);
+
+        const labelIcon = L.divIcon({
+          className: 'sector-label',
+          html: `<div style="
+            background: ${bgColor};
+            color: ${labelTextColor};
+            border: 2px solid ${labelTextColor};
+            border-radius: 12px;
+            padding: 3px 8px;
+            font-family: var(--font-display);
+            font-size: 11px;
+            font-weight: 700;
+            white-space: nowrap;
+            transform: translate(-50%, -50%);
+            box-shadow: 2px 2px 0px rgba(0,0,0,0.4);
+            line-height: 1.3;
+            text-align: center;
+          ">${sector.name}<br><span style="font-size: 9px; letter-spacing: 1px;">${stars}</span></div>`,
+          iconSize: [0, 0],
+          iconAnchor: [0, 0],
+        });
+
+        const labelMarker = L.marker(midPt, {
+          icon: labelIcon,
+          interactive: false,
+          keyboard: false,
+          zIndexOffset: 250,
+        });
+
+        activeRouteGroup.addLayer(labelMarker);
+        sectorLabels.push(labelMarker);
+      }
+      updateLabelVisibility();
+
+      // 7. Build restock markers — clickable water-drop SVG icons with name/mileage popups
+      const restocks = annotations.filter(a => a.type === 'restock');
+      for (const stop of restocks) {
+        const restockIcon = L.divIcon({
+          className: 'restock-marker',
+          html: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="26" viewBox="0 0 20 26">
     <path d="M10 0C10 0 0 12 0 17c0 5.523 4.477 10 10 10s10-4.477 10-10C20 12 10 0 10 0z" fill="${lake400}" stroke="${forest900}" stroke-width="1.5"/>
     <circle cx="10" cy="17" r="3" fill="rgba(255,255,255,0.5)"/>
   </svg>`,
-        iconSize: [20, 26],
-        iconAnchor: [10, 26],
-        popupAnchor: [0, -26]
-      });
+          iconSize: [20, 26],
+          iconAnchor: [10, 26],
+          popupAnchor: [0, -26]
+        });
 
-      L.marker([stop.lat, stop.lon], {
-        icon: restockIcon,
-        title: stop.name,
-        zIndexOffset: 500
-      })
-        .bindPopup(
+        const restockMarker = L.marker([stop.lat, stop.lon], {
+          icon: restockIcon,
+          title: stop.name,
+          zIndexOffset: 500
+        }).bindPopup(
           `<strong>${stop.name}</strong><br>Mile ${stop.mile}`,
           { className: 'restock-popup' }
-        )
-        .addTo(map);
+        );
+
+        activeRouteGroup.addLayer(restockMarker);
+      }
+
+      // 8. Update bounds and fit map to route
+      initialBounds = L.latLngBounds(latlngs);
+      map.fitBounds(initialBounds, { padding: [20, 20], animate: !prefersReducedMotion });
+
+      // 9. Panel close-on-switch — close if active sector not in new route
+      const routeConfig = routesManifest.routes.find(r => r.id === routeId);
+      if (activeSector && routeConfig && !routeConfig.sectorIds.includes(activeSector.sectorId)) {
+        closePanel();
+      }
+
+      // 10. Update active route tracking
+      activeRouteId = routeId;
     }
 
-    // ---- Photo cluster markers ----
+    // ---- Photo cluster markers — shared across routes, not route-specific ----
     // CRITICAL: Set window.L before importing the markercluster plugin.
     // The plugin is UMD and attaches to the global L object during evaluation.
     window.L = L;
     await import('leaflet.markercluster/dist/leaflet.markercluster-src.js');
-
-    // photosData already loaded via Promise.all at the top of initMap()
 
     if (photosData.length > 0) {
       const clusterGroup = L.markerClusterGroup({
@@ -654,9 +711,8 @@
       clusterGroup.addTo(map);
     }
 
-    // Auto-fit map to the full route bounds
-    // initialBounds computed above from latlngs (routeLine removed)
-    map.fitBounds(initialBounds, { padding: [20, 20], animate: !prefersReducedMotion });
+    // Initial route render — loads 100mi data and draws all route-specific layers
+    await renderRoute('100mi');
   } // end initMap
 
   // Defer Leaflet/map loading until the user begins scrolling toward the map section.
