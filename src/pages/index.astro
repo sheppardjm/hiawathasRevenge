@@ -145,6 +145,11 @@ import ScrollReveal from '../components/ScrollReveal.astro';
     color: var(--color-forest-800);
   }
 
+  .gold-section :global(a:focus-visible),
+  .gold-section :global(button:focus-visible) {
+    outline-color: var(--color-forest-950);
+  }
+
   /* Amber/orange section — amber-500 bg, dark text (forest-950) */
   .amber-section {
     background-color: var(--color-amber-500);

@@ -159,6 +159,13 @@
     color: var(--color-amber-300);
   }
 
+  a:focus-visible,
+  button:focus-visible {
+    outline: 2px solid var(--color-amber-500);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
   /* Restock popup — forest-themed dark popup for restock point markers */
   .leaflet-popup.restock-popup .leaflet-popup-content-wrapper {
     background: var(--color-forest-900);
