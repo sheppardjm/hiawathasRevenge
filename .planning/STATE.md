@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-04-06)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive, visually stunning showcase that inspires them to ride it and support MBTN.
-**Current focus:** v1.5 Multi-Route Support -- Phase 33 COMPLETE, ready for Phase 34
+**Current focus:** v1.5 Multi-Route Support -- Phase 34 In Progress (Route Selector & Map Switching)
 
 ## Current Position
 
-Phase: 33 of 36 (Pipeline & Route Data) -- COMPLETE
-Plan: 3 of 3 in current phase
-Status: Phase complete
-Last activity: 2026-04-06 -- Completed 33-03-PLAN.md (routes manifest, GPX copy, frontend path migration, build validation)
+Phase: 34 of 36 (Route Selector & Map Switching) -- In progress
+Plan: 1 of 2 in current phase
+Status: In progress
+Last activity: 2026-04-06 -- Completed 34-01-PLAN.md (RouteMap refactor: initMap()/renderRoute() split, activeRouteGroup, surface-colored polylines)
 
-Progress: [████████████████████] v1.0-v1.4 complete | v1.5 [███░░░░░░░] 3/9 plans
+Progress: [████████████████████] v1.0-v1.4 complete | v1.5 [████░░░░░░] 4/9 plans
 
 ## Performance Metrics
 
@@ -40,6 +40,8 @@ Progress: [████████████████████] v1.0-v1
 | 33-03 | routes.json manifest includes shortName, gpxFile, color, totalMiles, elevationGainFeet, sectorIds | Provides everything a route switcher needs without additional lookups |
 | 33-03 | sector-details.json and photos.json remain at flat /data/ paths | Not per-route; sector-details is route-agnostic, photos matched to 100mi |
 | 33-03 | content.config.ts Astro collections point to 100mi subdirectory | Primary route for SSG build; 100mi is default/display route |
+| 34-01 | sector-details.json fetched once in initMap() (not renderRoute) | Route-agnostic; no need to re-fetch on route switch |
+| 34-01 | updateLabelVisibility() uses opacity toggle not add/remove | Labels stay in activeRouteGroup across zoom changes; avoids re-add complexity |
 
 ### Pending Todos
 
@@ -66,6 +68,6 @@ All tech debt items from v1.0-v1.4 resolved. No outstanding items.
 
 ## Session Continuity
 
-Last session: 2026-04-06T21:52:10Z
-Stopped at: Completed 33-03-PLAN.md -- Phase 33 complete, ready for Phase 34
+Last session: 2026-04-06T22:36:22Z
+Stopped at: Completed 34-01-PLAN.md -- RouteMap refactored with initMap()/renderRoute() split, activeRouteGroup, surface-colored polylines
 Resume file: None
