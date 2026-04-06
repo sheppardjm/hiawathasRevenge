@@ -201,10 +201,15 @@
     display: flex;
     gap: 0;
     background: var(--color-forest-900);
-    border: 1px solid var(--color-forest-700) !important;
-    border-radius: 6px !important;
+    border: 1px solid var(--color-forest-700);
+    border-radius: 6px;
     padding: 2px;
     overflow: hidden;
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
   }
 
   :global(.route-selector__btn) {
@@ -721,27 +726,6 @@
       }));
     }
 
-    // ---- Ghost polylines — persist on map across route switches ----
-    // Fetched here (not in renderRoute) so they exist before first render.
-    // Added directly to `map` (NOT activeRouteGroup) so clearLayers() doesn't remove them.
-    const allRouteData = await Promise.all(
-      routesManifest.routes.map(r =>
-        fetch(`/data/${r.id}/route-data.json`).then(d => d.json())
-      )
-    );
-
-    for (let i = 0; i < routesManifest.routes.length; i++) {
-      const route = routesManifest.routes[i];
-      const ghostLatlngs = allRouteData[i].points.map(pt => [pt.lat, pt.lon]);
-      ghostPolylines[route.id] = L.polyline(ghostLatlngs, {
-        color: route.color,   // '#c8973e' amber, '#5b9279' moss, '#4a90c4' lake
-        weight: 2,
-        opacity: 0.2,
-        interactive: false,
-        smoothFactor: 1,
-      }).addTo(map);
-    }
-
     // updateGhostVisibility — hides the active route ghost (opacity 0), shows others (opacity 0.2)
     function updateGhostVisibility(activeId) {
       for (const [id, ghost] of Object.entries(ghostPolylines)) {
@@ -749,75 +733,73 @@
       }
     }
 
-    // ---- RouteSelector control — segmented pill-bar in top-left (below ResetControl) ----
-    const RouteSelector = L.Control.extend({
-      options: { position: 'topleft' },
-      onAdd() {
-        const container = L.DomUtil.create('div', 'leaflet-bar leaflet-control route-selector');
-        container.setAttribute('role', 'radiogroup');
-        container.setAttribute('aria-label', 'Select route distance');
-        L.DomEvent.disableClickPropagation(container);
+    // ---- RouteSelector — top-center pill bar, appended directly to map container ----
+    // Not a Leaflet L.Control (those are confined to corner divs). Positioned via CSS
+    // on the map container itself for true horizontal centering.
+    const selectorContainer = document.createElement('div');
+    selectorContainer.className = 'route-selector';
+    selectorContainer.setAttribute('role', 'radiogroup');
+    selectorContainer.setAttribute('aria-label', 'Select route distance');
 
-        const routes = routesManifest.routes;
-        const btns = [];
+    const routes = routesManifest.routes;
+    const selectorBtns = [];
 
-        routes.forEach((route, i) => {
-          const btn = L.DomUtil.create('button', 'route-selector__btn', container);
-          btn.textContent = route.shortName;   // "100mi", "100k", "50k"
-          btn.dataset.routeId = route.id;
-          btn.setAttribute('role', 'radio');
-          btn.setAttribute('aria-checked', i === 0 ? 'true' : 'false');
-          btn.setAttribute('tabindex', i === 0 ? '0' : '-1');
+    routes.forEach((route, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'route-selector__btn';
+      btn.textContent = route.shortName;
+      btn.dataset.routeId = route.id;
+      btn.setAttribute('role', 'radio');
+      btn.setAttribute('aria-checked', i === 0 ? 'true' : 'false');
+      btn.setAttribute('tabindex', i === 0 ? '0' : '-1');
 
-          // Set initial active styling for the first button
-          if (i === 0) {
-            btn.style.background = route.color;
-            btn.style.color = forest900;
-          }
+      if (i === 0) {
+        btn.style.background = route.color;
+        btn.style.color = forest900;
+      }
 
-          btns.push(btn);
+      selectorBtns.push(btn);
+      selectorContainer.appendChild(btn);
 
-          // Single canonical click handler — updates ALL state: aria, tabindex, styles, route
-          L.DomEvent.on(btn, 'click', () => {
-            if (route.id === activeRouteId) return;  // no-op same route
+      btn.addEventListener('click', () => {
+        if (route.id === activeRouteId) return;
 
-            // Update all buttons: aria-checked, tabindex, and background styles
-            btns.forEach(b => {
-              const isActive = b.dataset.routeId === route.id;
-              b.setAttribute('aria-checked', isActive ? 'true' : 'false');
-              b.setAttribute('tabindex', isActive ? '0' : '-1');
-              b.style.background = isActive ? route.color : 'transparent';
-              b.style.color = isActive ? forest900 : '';
-            });
-
-            renderRoute(route.id);
-          });
+        selectorBtns.forEach(b => {
+          const isActive = b.dataset.routeId === route.id;
+          b.setAttribute('aria-checked', isActive ? 'true' : 'false');
+          b.setAttribute('tabindex', isActive ? '0' : '-1');
+          b.style.background = isActive ? route.color : 'transparent';
+          b.style.color = isActive ? forest900 : '';
         });
 
-        // Arrow key navigation — roving tabindex (W3C APG radiogroup pattern)
-        L.DomEvent.on(container, 'keydown', (e) => {
-          const currentIdx = btns.findIndex(b => b === document.activeElement);
-          if (currentIdx === -1) return;
-          let nextIdx = -1;
-          if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-            L.DomEvent.preventDefault(e);
-            L.DomEvent.stopPropagation(e);
-            nextIdx = (currentIdx + 1) % btns.length;
-          } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-            L.DomEvent.preventDefault(e);
-            L.DomEvent.stopPropagation(e);
-            nextIdx = (currentIdx - 1 + btns.length) % btns.length;
-          }
-          if (nextIdx !== -1) {
-            btns[nextIdx].focus();
-            btns[nextIdx].click();  // arrow = select + focus per radiogroup pattern
-          }
-        });
+        renderRoute(route.id);
+      });
+    });
 
-        return container;
+    // Arrow key navigation — roving tabindex (W3C APG radiogroup pattern)
+    selectorContainer.addEventListener('keydown', (e) => {
+      const currentIdx = selectorBtns.findIndex(b => b === document.activeElement);
+      if (currentIdx === -1) return;
+      let nextIdx = -1;
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        e.stopPropagation();
+        nextIdx = (currentIdx + 1) % selectorBtns.length;
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        e.stopPropagation();
+        nextIdx = (currentIdx - 1 + selectorBtns.length) % selectorBtns.length;
+      }
+      if (nextIdx !== -1) {
+        selectorBtns[nextIdx].focus();
+        selectorBtns[nextIdx].click();
       }
     });
-    new RouteSelector().addTo(map);
+
+    // Prevent map interactions (drag, zoom) when clicking/touching the selector
+    L.DomEvent.disableClickPropagation(selectorContainer);
+
+    map.getContainer().appendChild(selectorContainer);
 
     // ---- Photo cluster markers — shared across routes, not route-specific ----
     // CRITICAL: Set window.L before importing the markercluster plugin.
@@ -859,7 +841,33 @@
     }
 
     // Initial route render — loads 100mi data and draws all route-specific layers
+    // MUST run before ghost polylines so the map has valid pixel bounds for Leaflet's _clipPoints
     await renderRoute('100mi');
+
+    // ---- Ghost polylines — persist on map across route switches ----
+    // Created AFTER renderRoute('100mi') because the map needs a valid view (from fitBounds)
+    // before Leaflet can clip polyline points. Added directly to `map` (NOT activeRouteGroup)
+    // so clearLayers() doesn't remove them.
+    const allRouteData = await Promise.all(
+      routesManifest.routes.map(r =>
+        fetch(`/data/${r.id}/route-data.json`).then(d => d.json())
+      )
+    );
+
+    for (let i = 0; i < routesManifest.routes.length; i++) {
+      const route = routesManifest.routes[i];
+      const ghostLatlngs = allRouteData[i].points.map(pt => [pt.lat, pt.lon]);
+      ghostPolylines[route.id] = L.polyline(ghostLatlngs, {
+        color: route.color,
+        weight: 2,
+        opacity: 0.2,
+        interactive: false,
+        smoothFactor: 1,
+      }).addTo(map);
+      // bringToBack so ghosts render behind activeRouteGroup layers
+      ghostPolylines[route.id].bringToBack();
+    }
+    updateGhostVisibility('100mi');
   } // end initMap
 
   // Defer Leaflet/map loading until the user begins scrolling toward the map section.
