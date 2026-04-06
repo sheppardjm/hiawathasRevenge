@@ -28,7 +28,7 @@ All v1.0-v1.4 phases shipped. See `.planning/MILESTONES.md` for full history.
 
 - [x] **Phase 33: Pipeline & Route Data** - Build-time pipeline produces per-route JSON data for all 3 distances
 - [x] **Phase 34: Route Selector & Map Switching** - Users toggle between routes on the map with full visual feedback
-- [ ] **Phase 35: Elevation Profile & Route Stats** - Chart and stats stay synchronized with the selected route
+- [x] **Phase 35: Elevation Profile & Route Stats** - Chart and stats stay synchronized with the selected route
 - [ ] **Phase 36: Downloads, Deep Linking & Hero Video** - GPX downloads, URL-based route sharing, and hero video replacement
 
 ## Phase Details
@@ -79,8 +79,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 35-01-PLAN.md -- Lazy-init race fix, dynamic RouteStats with sector count and route:change listener
-- [ ] 35-02-PLAN.md -- Route comparison sidebar with active highlight
+- [x] 35-01-PLAN.md -- Lazy-init race fix, dynamic RouteStats with sector count and route:change listener
+- [x] 35-02-PLAN.md -- Route comparison sidebar with active highlight
 
 ### Phase 36: Downloads, Deep Linking & Hero Video
 **Goal**: Users can download GPX files for any route, share links that pre-select a specific route, and experience a video hero section
@@ -106,7 +106,7 @@ Phases execute in numeric order: 33 → 34 → 35 → 36
 |-------|-----------|----------------|--------|-----------|
 | 33. Pipeline & Route Data | v1.5 | 3/3 | ✓ Complete | 2026-04-06 |
 | 34. Route Selector & Map Switching | v1.5 | 2/2 | ✓ Complete | 2026-04-06 |
-| 35. Elevation Profile & Route Stats | v1.5 | 0/2 | Not started | - |
+| 35. Elevation Profile & Route Stats | v1.5 | 2/2 | ✓ Complete | 2026-04-06 |
 | 36. Downloads, Deep Linking & Hero Video | v1.5 | 0/2 | Not started | - |
 
 ---

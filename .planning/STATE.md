@@ -5,7 +5,7 @@
 See: .planning/PROJECT.md (updated 2026-04-06)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive, visually stunning showcase that inspires them to ride it and support MBTN.
-**Current focus:** v1.5 Multi-Route Support -- Phase 35 Complete, Phase 36 pending
+**Current focus:** v1.5 Multi-Route Support -- Phase 35 COMPLETE, ready for Phase 36
 
 ## Current Position
 
@@ -14,7 +14,7 @@ Plan: 2 of 2 in current phase
 Status: Phase complete
 Last activity: 2026-04-06 -- Completed 35-02-PLAN.md (Route comparison grid with active highlight)
 
-Progress: [████████████████████] v1.0-v1.4 complete | v1.5 [████████░░] 8/9 plans
+Progress: [████████████████████] v1.0-v1.4 complete | v1.5 [████████░░] 7/9 plans
 
 ## Performance Metrics
 

@@ -31,11 +31,11 @@ Requirements for multi-route support. Each maps to roadmap phases.
 
 ### Elevation & Stats
 
-- [ ] **ELEV-01**: Elevation profile chart swaps data to the selected route (new distance on x-axis, new elevation on y-axis)
-- [ ] **ELEV-02**: Sector annotation bands on the elevation chart filter to sectors present on the selected route
-- [ ] **ELEV-03**: Bike marker crosshair on the map snaps to the selected route's coordinates (not the previous route)
-- [ ] **STAT-01**: Route stats (distance, elevation gain) update to the selected route's values on route change
-- [ ] **STAT-02**: Route comparison sidebar shows all 3 routes' key stats (distance, elevation, sector count) side by side
+- [x] **ELEV-01**: Elevation profile chart swaps data to the selected route (new distance on x-axis, new elevation on y-axis)
+- [x] **ELEV-02**: Sector annotation bands on the elevation chart filter to sectors present on the selected route
+- [x] **ELEV-03**: Bike marker crosshair on the map snaps to the selected route's coordinates (not the previous route)
+- [x] **STAT-01**: Route stats (distance, elevation gain) update to the selected route's values on route change
+- [x] **STAT-02**: Route comparison sidebar shows all 3 routes' key stats (distance, elevation, sector count) side by side
 
 ### Downloads & Links
 
@@ -88,11 +88,11 @@ Requirements for multi-route support. Each maps to roadmap phases.
 | MAP-03 | Phase 34 | Complete |
 | MAP-04 | Phase 34 | Complete |
 | MAP-05 | Phase 34 | Complete |
-| ELEV-01 | Phase 35 | Pending |
-| ELEV-02 | Phase 35 | Pending |
-| ELEV-03 | Phase 35 | Pending |
-| STAT-01 | Phase 35 | Pending |
-| STAT-02 | Phase 35 | Pending |
+| ELEV-01 | Phase 35 | Complete |
+| ELEV-02 | Phase 35 | Complete |
+| ELEV-03 | Phase 35 | Complete |
+| STAT-01 | Phase 35 | Complete |
+| STAT-02 | Phase 35 | Complete |
 | DL-01 | Phase 36 | Pending |
 | LINK-01 | Phase 36 | Pending |
 | HERO-01 | Phase 36 | Pending |
@@ -104,4 +104,4 @@ Requirements for multi-route support. Each maps to roadmap phases.
 
 ---
 *Requirements defined: 2026-04-06*
-*Last updated: 2026-04-06 after Phase 34 completion*
+*Last updated: 2026-04-06 after Phase 35 completion*
