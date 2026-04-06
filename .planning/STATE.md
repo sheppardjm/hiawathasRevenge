@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-04-06)
 ## Current Position
 
 Phase: 28 of 31 (Tech Debt Cleanup) — first of 4 v1.4 phases
-Plan: —
-Status: Ready to plan
-Last activity: 2026-04-03 — Roadmap created for v1.4
+Plan: 1 of 1 in Phase 28
+Status: Phase 28 complete
+Last activity: 2026-04-06 — Completed 28-01-PLAN.md (tech debt cleanup)
 
-Progress: [████████████████████] v1.0-v1.3 ✅ | v1.4 [░░░░░░░░░░] 0/6 plans
+Progress: [████████████████████] v1.0-v1.3 ✅ | v1.4 [█░░░░░░░░░] 1/6 plans
 
 ## Performance Metrics
 
@@ -40,14 +40,14 @@ None.
 - Strava IDs populated for 6/7 segments (Rapid River Truck Trail pending — user hasn't created segment yet)
 - iOS Safari device testing deferred to v1.5+ (requires physical device)
 
-### Tech Debt (addressed in Phase 28)
+### Tech Debt (resolved in Phase 28 Plan 01)
 
-- DEBT-01: var(--font-body) undefined CSS variable in RouteMap.astro
-- DEBT-02: Pipeline name divergence NF2217 vs NF2217-2218
-- DEBT-03: Firefox -webkit-text-fill-color fallback for star ratings
+- DEBT-01: RESOLVED — Spectral font added via Astro Fonts API; --font-serif semantic variable defined; RouteMap.astro sector panel uses var(--font-serif)
+- DEBT-02: RESOLVED — NF2217-2218 name consistent across annotations.json, sector-details.json, sector-elevations.json; sector ID unchanged
+- DEBT-03: RESOLVED — @supports guard with color:transparent for Firefox gradient text; solid amber fallback for non-supporting browsers
 
 ## Session Continuity
 
-Last session: 2026-04-03
-Stopped at: v1.4 roadmap created — ready to plan Phase 28
+Last session: 2026-04-06
+Stopped at: Completed 28-01-PLAN.md — Phase 28 (Tech Debt Cleanup) complete
 Resume file: None
