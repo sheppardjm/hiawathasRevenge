@@ -2,6 +2,7 @@ import { defineConfig, fontProviders } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
+  site: 'https://hiawathasrevenge.com', // TODO: update to actual deployed URL
   output: 'static',
   fonts: [
     {
