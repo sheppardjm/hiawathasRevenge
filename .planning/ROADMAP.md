@@ -26,7 +26,7 @@ All v1.0-v1.4 phases shipped. See `.planning/MILESTONES.md` for full history.
 - Integer phases (33, 34, 35, 36): Planned milestone work
 - Decimal phases (33.1, 34.1): Urgent insertions if needed (marked with INSERTED)
 
-- [ ] **Phase 33: Pipeline & Route Data** - Build-time pipeline produces per-route JSON data for all 3 distances
+- [x] **Phase 33: Pipeline & Route Data** - Build-time pipeline produces per-route JSON data for all 3 distances
 - [ ] **Phase 34: Route Selector & Map Switching** - Users toggle between routes on the map with full visual feedback
 - [ ] **Phase 35: Elevation Profile & Route Stats** - Chart and stats stay synchronized with the selected route
 - [ ] **Phase 36: Downloads, Deep Linking & Hero Video** - GPX downloads, URL-based route sharing, and hero video replacement
@@ -46,9 +46,9 @@ All v1.0-v1.4 phases shipped. See `.planning/MILESTONES.md` for full history.
 **Plans**: 3 plans
 
 Plans:
-- [ ] 33-01-PLAN.md -- Route config, pipeline loop, and parse-gpx multi-route
-- [ ] 33-02-PLAN.md -- Coordinate-based sector snapping and surface-point generation with fallback
-- [ ] 33-03-PLAN.md -- Route manifest, GPX copy, content path updates, and pipeline validation
+- [x] 33-01-PLAN.md -- Route config, pipeline loop, and parse-gpx multi-route
+- [x] 33-02-PLAN.md -- Coordinate-based sector snapping and surface-point generation with fallback
+- [x] 33-03-PLAN.md -- Route manifest, GPX copy, content path updates, and pipeline validation
 
 ### Phase 34: Route Selector & Map Switching
 **Goal**: Users can switch between 100mi, 100k, and 50k routes on the map and see the correct polyline, sector overlays, ghost routes, and labels for their selection
@@ -105,7 +105,7 @@ Phases execute in numeric order: 33 → 34 → 35 → 36
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
-| 33. Pipeline & Route Data | v1.5 | 0/3 | Not started | - |
+| 33. Pipeline & Route Data | v1.5 | 3/3 | ✓ Complete | 2026-04-06 |
 | 34. Route Selector & Map Switching | v1.5 | 0/3 | Not started | - |
 | 35. Elevation Profile & Route Stats | v1.5 | 0/2 | Not started | - |
 | 36. Downloads, Deep Linking & Hero Video | v1.5 | 0/2 | Not started | - |

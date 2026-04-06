@@ -9,11 +9,11 @@ Requirements for multi-route support. Each maps to roadmap phases.
 
 ### Pipeline & Data
 
-- [ ] **PIPE-01**: Pipeline processes all 3 GPX files (100mi, 100k, 50k) and produces per-route JSON data (route points, elevation, metadata)
-- [ ] **PIPE-02**: Pipeline generates per-route surface-points data for surface-colored polylines (with fallback for routes lacking RidewithGPS surface metadata)
-- [ ] **PIPE-03**: Pipeline produces per-route sector annotations with coordinate-based snapping (not mile-based) so sectors map correctly to each route's point array
-- [ ] **PIPE-04**: Pipeline validates sector-to-route membership against actual GPS tracks and outputs a route-sector mapping
-- [ ] **PIPE-05**: Pipeline copies all 3 GPX files to public/ for download
+- [x] **PIPE-01**: Pipeline processes all 3 GPX files (100mi, 100k, 50k) and produces per-route JSON data (route points, elevation, metadata)
+- [x] **PIPE-02**: Pipeline generates per-route surface-points data for surface-colored polylines (with fallback for routes lacking RidewithGPS surface metadata)
+- [x] **PIPE-03**: Pipeline produces per-route sector annotations with coordinate-based snapping (not mile-based) so sectors map correctly to each route's point array
+- [x] **PIPE-04**: Pipeline validates sector-to-route membership against actual GPS tracks and outputs a route-sector mapping
+- [x] **PIPE-05**: Pipeline copies all 3 GPX files to public/ for download
 
 ### Route Selector
 
@@ -75,11 +75,11 @@ Requirements for multi-route support. Each maps to roadmap phases.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| PIPE-01 | Phase 33 | Pending |
-| PIPE-02 | Phase 33 | Pending |
-| PIPE-03 | Phase 33 | Pending |
-| PIPE-04 | Phase 33 | Pending |
-| PIPE-05 | Phase 33 | Pending |
+| PIPE-01 | Phase 33 | Complete |
+| PIPE-02 | Phase 33 | Complete |
+| PIPE-03 | Phase 33 | Complete |
+| PIPE-04 | Phase 33 | Complete |
+| PIPE-05 | Phase 33 | Complete |
 | SEL-01 | Phase 34 | Pending |
 | SEL-02 | Phase 34 | Pending |
 | SEL-03 | Phase 34 | Pending |
@@ -104,4 +104,4 @@ Requirements for multi-route support. Each maps to roadmap phases.
 
 ---
 *Requirements defined: 2026-04-06*
-*Last updated: 2026-04-06 after roadmap phase mapping*
+*Last updated: 2026-04-06 after Phase 33 completion*
