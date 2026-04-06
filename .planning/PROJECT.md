@@ -50,7 +50,16 @@ Visitors experience the beauty and scale of the Hiawatha's Revenge route through
 
 ### Active
 
-(None — planning next milestone)
+#### Current Milestone: v1.4 Performance & Polish
+
+**Goal:** Ship-ready polish — hero image optimization, iOS Safari testing, tech debt cleanup, Lighthouse audit, and accessibility hardening so the site is confident to share publicly.
+
+**Target features:**
+- Hero image optimization (WebP, srcset, preload)
+- iOS Safari device testing and touch/gesture fixes
+- Tech debt cleanup (pipeline name divergence, undefined CSS var, etc.)
+- Lighthouse performance audit and fixes
+- Accessibility audit and WCAG compliance pass
 
 ### Out of Scope
 
@@ -117,4 +126,4 @@ MBTN (mbtn.org) is the beneficiary — donate CTA links to their site.
 | MAP-08 show() trade-off | Non-modal preserves map interactivity, no backdrop expected | ✓ Good — intentional design |
 
 ---
-*Last updated: 2026-04-02 after v1.3 milestone*
+*Last updated: 2026-04-06 after v1.4 milestone started*
