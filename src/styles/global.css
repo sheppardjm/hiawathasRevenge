@@ -110,6 +110,7 @@
   /* --font-space-mono and --font-national-park are injected by Astro Fonts API */
   --font-mono: var(--font-space-mono, 'Space Mono', ui-monospace, monospace);
   --font-display: var(--font-national-park, 'National Park', sans-serif);
+  --font-serif: var(--font-spectral, 'Spectral', Georgia, serif);
 
   /* ============================================================
      Spacing Scale

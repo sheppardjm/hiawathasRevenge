@@ -25,6 +25,13 @@ export default defineConfig({
       weights: [400, 700],
       styles: ['normal', 'italic'],
     },
+    {
+      provider: fontProviders.google(),
+      name: 'Spectral',
+      cssVariable: '--font-spectral',
+      weights: [400, 700],
+      styles: ['normal', 'italic'],
+    },
   ],
   vite: {
     plugins: [tailwindcss()],
