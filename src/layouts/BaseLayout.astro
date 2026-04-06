@@ -68,6 +68,21 @@ const eventSchema = {
     <!-- Canonical URL (SEO-03) -->
     <link rel="canonical" href={canonicalURL.href} />
 
+    <!-- Hero LCP preload (IMG-02) -->
+    <link
+      rel="preload"
+      as="image"
+      href="/images/irrVhAXHnnFzslJGVemLiPEy5iQFbqZF6VzqxYOHL1o-2048x1536-1280w.webp"
+      imagesrcset="
+        /images/irrVhAXHnnFzslJGVemLiPEy5iQFbqZF6VzqxYOHL1o-2048x1536-640w.webp   640w,
+        /images/irrVhAXHnnFzslJGVemLiPEy5iQFbqZF6VzqxYOHL1o-2048x1536-1280w.webp 1280w,
+        /images/irrVhAXHnnFzslJGVemLiPEy5iQFbqZF6VzqxYOHL1o-2048x1536-1600w.webp 1600w
+      "
+      imagesizes="100vw"
+      fetchpriority="high"
+      type="image/webp"
+    />
+
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
     <Font cssVariable="--font-space-mono" preload />
