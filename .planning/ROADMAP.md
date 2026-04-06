@@ -36,10 +36,10 @@ See MILESTONES.md for full history.
   1. RouteMap.astro sector panel text renders with the intended body font, not falling back to monospace
   2. The NF2217/NF2217-2218 segment displays consistent naming across annotations.json, sector-details.json, and the rendered UI
   3. Star rating gradient text renders identically in Firefox and Chrome (no missing gradient or invisible stars)
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 28-01: Fix undefined --font-body, reconcile NF2217 naming, add Firefox -webkit-text-fill-color fallback
+- [ ] 28-01-PLAN.md -- Fix undefined --font-body (add Spectral via Fonts API), reconcile NF2217 naming to NF2217-2218, add Firefox @supports fallback for star rating gradient
 
 ### Phase 29: SEO & Social Sharing
 **Goal**: The site appears with a rich preview (title, description, hero image) when shared on social media or indexed by search engines, with structured event data for Google
