@@ -1,14 +1,16 @@
 /**
  * compute-sector-elevations.js
  *
- * Reads public/data/route-data.json and public/data/annotations.json,
- * extracts per-sector elevation point arrays, and writes the result
- * to public/data/sector-elevations.json.
+ * Reads public/data/${routeId}/route-data.json and
+ * public/data/${routeId}/annotations.json, extracts per-sector elevation
+ * point arrays, and writes the result to
+ * public/data/${routeId}/sector-elevations.json.
  *
- * Usage: node scripts/compute-sector-elevations.js
+ * Usage: node scripts/compute-sector-elevations.js <routeId>
+ *   e.g. node scripts/compute-sector-elevations.js 100mi
  */
 
-import { readFileSync, writeFileSync, mkdirSync } from 'fs';
+import { readFileSync, writeFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, resolve } from 'path';
 
@@ -16,11 +18,21 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, '..');
 
 // ---------------------------------------------------------------------------
+// Parse argv
+// ---------------------------------------------------------------------------
+
+const routeId = process.argv[2];
+if (!routeId) {
+  console.error('Usage: node scripts/compute-sector-elevations.js <routeId>');
+  process.exit(1);
+}
+
+// ---------------------------------------------------------------------------
 // Load data
 // ---------------------------------------------------------------------------
 
-const routeDataPath = resolve(ROOT, 'public', 'data', 'route-data.json');
-const annotationsPath = resolve(ROOT, 'public', 'data', 'annotations.json');
+const routeDataPath = resolve(ROOT, 'public', 'data', routeId, 'route-data.json');
+const annotationsPath = resolve(ROOT, 'public', 'data', routeId, 'annotations.json');
 
 const routeData = JSON.parse(readFileSync(routeDataPath, 'utf8'));
 const annotations = JSON.parse(readFileSync(annotationsPath, 'utf8'));
@@ -32,9 +44,9 @@ const annotations = JSON.parse(readFileSync(annotationsPath, 'utf8'));
 const sectors = annotations.filter((a) => a.type === 'sector');
 
 if (sectors.length === 0) {
-  const outputPath = resolve(ROOT, 'public', 'data', 'sector-elevations.json');
+  const outputPath = resolve(ROOT, 'public', 'data', routeId, 'sector-elevations.json');
   writeFileSync(outputPath, '[]', 'utf8');
-  console.log('compute-sector-elevations: complete');
+  console.log(`compute-sector-elevations (${routeId}): complete`);
   console.log('  Sectors found    : 0 (wrote empty array)');
   process.exit(0);
 }
@@ -106,14 +118,14 @@ const results = sectors.map((sector) => {
 // Write output
 // ---------------------------------------------------------------------------
 
-const outputPath = resolve(ROOT, 'public', 'data', 'sector-elevations.json');
+const outputPath = resolve(ROOT, 'public', 'data', routeId, 'sector-elevations.json');
 writeFileSync(outputPath, JSON.stringify(results, null, 2), 'utf8');
 
 // ---------------------------------------------------------------------------
 // Summary log
 // ---------------------------------------------------------------------------
 
-console.log('compute-sector-elevations: complete');
+console.log(`compute-sector-elevations (${routeId}): complete`);
 console.log(`  Sectors processed: ${results.length}`);
 console.log(`  Total ele points : ${totalPoints}`);
-console.log(`  Output           : public/data/sector-elevations.json`);
+console.log(`  Output           : public/data/${routeId}/sector-elevations.json`);

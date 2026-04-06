@@ -1,0 +1,1826 @@
+[
+  {
+    "miles": 0,
+    "surface": "paved"
+  },
+  {
+    "miles": 0.06,
+    "surface": "gravel"
+  },
+  {
+    "miles": 0.14,
+    "surface": "gravel"
+  },
+  {
+    "miles": 0.63,
+    "surface": "gravel"
+  },
+  {
+    "miles": 0.87,
+    "surface": "gravel"
+  },
+  {
+    "miles": 1.03,
+    "surface": "gravel"
+  },
+  {
+    "miles": 1.22,
+    "surface": "gravel"
+  },
+  {
+    "miles": 1.42,
+    "surface": "gravel"
+  },
+  {
+    "miles": 1.55,
+    "surface": "gravel"
+  },
+  {
+    "miles": 1.75,
+    "surface": "gravel"
+  },
+  {
+    "miles": 1.87,
+    "surface": "gravel"
+  },
+  {
+    "miles": 1.99,
+    "surface": "gravel"
+  },
+  {
+    "miles": 2.09,
+    "surface": "gravel"
+  },
+  {
+    "miles": 2.12,
+    "surface": "gravel"
+  },
+  {
+    "miles": 2.43,
+    "surface": "paved"
+  },
+  {
+    "miles": 5.09,
+    "surface": "paved"
+  },
+  {
+    "miles": 5.26,
+    "surface": "paved"
+  },
+  {
+    "miles": 5.4,
+    "surface": "paved"
+  },
+  {
+    "miles": 5.51,
+    "surface": "paved"
+  },
+  {
+    "miles": 5.63,
+    "surface": "paved"
+  },
+  {
+    "miles": 5.83,
+    "surface": "paved"
+  },
+  {
+    "miles": 6.52,
+    "surface": "paved"
+  },
+  {
+    "miles": 6.55,
+    "surface": "gravel"
+  },
+  {
+    "miles": 6.72,
+    "surface": "gravel"
+  },
+  {
+    "miles": 7.38,
+    "surface": "gravel"
+  },
+  {
+    "miles": 7.88,
+    "surface": "gravel"
+  },
+  {
+    "miles": 8.08,
+    "surface": "gravel"
+  },
+  {
+    "miles": 8.25,
+    "surface": "gravel"
+  },
+  {
+    "miles": 8.36,
+    "surface": "gravel"
+  },
+  {
+    "miles": 8.61,
+    "surface": "gravel"
+  },
+  {
+    "miles": 8.89,
+    "surface": "gravel"
+  },
+  {
+    "miles": 9.09,
+    "surface": "gravel"
+  },
+  {
+    "miles": 9.48,
+    "surface": "gravel"
+  },
+  {
+    "miles": 9.9,
+    "surface": "paved"
+  },
+  {
+    "miles": 10.01,
+    "surface": "paved"
+  },
+  {
+    "miles": 10.15,
+    "surface": "paved"
+  },
+  {
+    "miles": 10.49,
+    "surface": "paved"
+  },
+  {
+    "miles": 10.84,
+    "surface": "paved"
+  },
+  {
+    "miles": 11.2,
+    "surface": "paved"
+  },
+  {
+    "miles": 11.36,
+    "surface": "paved"
+  },
+  {
+    "miles": 11.42,
+    "surface": "paved"
+  },
+  {
+    "miles": 11.63,
+    "surface": "paved"
+  },
+  {
+    "miles": 11.83,
+    "surface": "paved"
+  },
+  {
+    "miles": 11.92,
+    "surface": "paved"
+  },
+  {
+    "miles": 12.01,
+    "surface": "paved"
+  },
+  {
+    "miles": 12.05,
+    "surface": "paved"
+  },
+  {
+    "miles": 12.28,
+    "surface": "paved"
+  },
+  {
+    "miles": 12.46,
+    "surface": "gravel"
+  },
+  {
+    "miles": 12.62,
+    "surface": "gravel"
+  },
+  {
+    "miles": 12.9,
+    "surface": "gravel"
+  },
+  {
+    "miles": 13.02,
+    "surface": "gravel"
+  },
+  {
+    "miles": 13.39,
+    "surface": "gravel"
+  },
+  {
+    "miles": 13.63,
+    "surface": "gravel"
+  },
+  {
+    "miles": 13.82,
+    "surface": "gravel"
+  },
+  {
+    "miles": 14.13,
+    "surface": "gravel"
+  },
+  {
+    "miles": 14.18,
+    "surface": "gravel"
+  },
+  {
+    "miles": 14.38,
+    "surface": "gravel"
+  },
+  {
+    "miles": 14.54,
+    "surface": "paved"
+  },
+  {
+    "miles": 14.7,
+    "surface": "paved"
+  },
+  {
+    "miles": 14.82,
+    "surface": "paved"
+  },
+  {
+    "miles": 15.17,
+    "surface": "paved"
+  },
+  {
+    "miles": 15.53,
+    "surface": "paved"
+  },
+  {
+    "miles": 15.71,
+    "surface": "paved"
+  },
+  {
+    "miles": 16.02,
+    "surface": "paved"
+  },
+  {
+    "miles": 16.19,
+    "surface": "paved"
+  },
+  {
+    "miles": 16.32,
+    "surface": "paved"
+  },
+  {
+    "miles": 16.51,
+    "surface": "paved"
+  },
+  {
+    "miles": 16.65,
+    "surface": "paved"
+  },
+  {
+    "miles": 16.78,
+    "surface": "paved"
+  },
+  {
+    "miles": 16.97,
+    "surface": "paved"
+  },
+  {
+    "miles": 17.15,
+    "surface": "paved"
+  },
+  {
+    "miles": 17.41,
+    "surface": "paved"
+  },
+  {
+    "miles": 17.5,
+    "surface": "paved"
+  },
+  {
+    "miles": 17.75,
+    "surface": "paved"
+  },
+  {
+    "miles": 17.99,
+    "surface": "paved"
+  },
+  {
+    "miles": 18.07,
+    "surface": "paved"
+  },
+  {
+    "miles": 18.15,
+    "surface": "paved"
+  },
+  {
+    "miles": 18.24,
+    "surface": "paved"
+  },
+  {
+    "miles": 18.31,
+    "surface": "paved"
+  },
+  {
+    "miles": 18.35,
+    "surface": "paved"
+  },
+  {
+    "miles": 18.69,
+    "surface": "paved"
+  },
+  {
+    "miles": 18.97,
+    "surface": "paved"
+  },
+  {
+    "miles": 19.23,
+    "surface": "unknown"
+  },
+  {
+    "miles": 19.6,
+    "surface": "paved"
+  },
+  {
+    "miles": 19.74,
+    "surface": "paved"
+  },
+  {
+    "miles": 19.86,
+    "surface": "paved"
+  },
+  {
+    "miles": 20.24,
+    "surface": "paved"
+  },
+  {
+    "miles": 20.38,
+    "surface": "paved"
+  },
+  {
+    "miles": 20.77,
+    "surface": "paved"
+  },
+  {
+    "miles": 21.15,
+    "surface": "paved"
+  },
+  {
+    "miles": 21.42,
+    "surface": "paved"
+  },
+  {
+    "miles": 21.52,
+    "surface": "paved"
+  },
+  {
+    "miles": 21.83,
+    "surface": "paved"
+  },
+  {
+    "miles": 22,
+    "surface": "paved"
+  },
+  {
+    "miles": 22.1,
+    "surface": "paved"
+  },
+  {
+    "miles": 22.16,
+    "surface": "paved"
+  },
+  {
+    "miles": 22.28,
+    "surface": "paved"
+  },
+  {
+    "miles": 22.66,
+    "surface": "paved"
+  },
+  {
+    "miles": 23.19,
+    "surface": "paved"
+  },
+  {
+    "miles": 23.25,
+    "surface": "paved"
+  },
+  {
+    "miles": 23.39,
+    "surface": "paved"
+  },
+  {
+    "miles": 23.46,
+    "surface": "paved"
+  },
+  {
+    "miles": 23.55,
+    "surface": "paved"
+  },
+  {
+    "miles": 23.73,
+    "surface": "paved"
+  },
+  {
+    "miles": 23.86,
+    "surface": "gravel"
+  },
+  {
+    "miles": 24.1,
+    "surface": "gravel"
+  },
+  {
+    "miles": 24.53,
+    "surface": "gravel"
+  },
+  {
+    "miles": 24.7,
+    "surface": "gravel"
+  },
+  {
+    "miles": 24.94,
+    "surface": "gravel"
+  },
+  {
+    "miles": 25.17,
+    "surface": "unknown"
+  },
+  {
+    "miles": 25.25,
+    "surface": "paved"
+  },
+  {
+    "miles": 25.5,
+    "surface": "dirt"
+  },
+  {
+    "miles": 25.57,
+    "surface": "dirt"
+  },
+  {
+    "miles": 26.46,
+    "surface": "dirt"
+  },
+  {
+    "miles": 26.51,
+    "surface": "dirt"
+  },
+  {
+    "miles": 26.71,
+    "surface": "dirt"
+  },
+  {
+    "miles": 26.82,
+    "surface": "dirt"
+  },
+  {
+    "miles": 26.87,
+    "surface": "dirt"
+  },
+  {
+    "miles": 27.16,
+    "surface": "dirt"
+  },
+  {
+    "miles": 27.56,
+    "surface": "dirt"
+  },
+  {
+    "miles": 27.78,
+    "surface": "dirt"
+  },
+  {
+    "miles": 28.15,
+    "surface": "dirt"
+  },
+  {
+    "miles": 28.32,
+    "surface": "dirt"
+  },
+  {
+    "miles": 28.74,
+    "surface": "dirt"
+  },
+  {
+    "miles": 28.77,
+    "surface": "dirt"
+  },
+  {
+    "miles": 29,
+    "surface": "dirt"
+  },
+  {
+    "miles": 29.07,
+    "surface": "dirt"
+  },
+  {
+    "miles": 29.36,
+    "surface": "dirt"
+  },
+  {
+    "miles": 29.45,
+    "surface": "dirt"
+  },
+  {
+    "miles": 29.52,
+    "surface": "dirt"
+  },
+  {
+    "miles": 29.61,
+    "surface": "dirt"
+  },
+  {
+    "miles": 29.73,
+    "surface": "dirt"
+  },
+  {
+    "miles": 30.3,
+    "surface": "dirt"
+  },
+  {
+    "miles": 31.24,
+    "surface": "dirt"
+  },
+  {
+    "miles": 31.52,
+    "surface": "dirt"
+  },
+  {
+    "miles": 31.68,
+    "surface": "dirt"
+  },
+  {
+    "miles": 32.15,
+    "surface": "dirt"
+  },
+  {
+    "miles": 32.73,
+    "surface": "dirt"
+  },
+  {
+    "miles": 33.24,
+    "surface": "gravel"
+  },
+  {
+    "miles": 33.43,
+    "surface": "gravel"
+  },
+  {
+    "miles": 33.54,
+    "surface": "gravel"
+  },
+  {
+    "miles": 33.71,
+    "surface": "gravel"
+  },
+  {
+    "miles": 33.75,
+    "surface": "gravel"
+  },
+  {
+    "miles": 33.8,
+    "surface": "gravel"
+  },
+  {
+    "miles": 33.95,
+    "surface": "gravel"
+  },
+  {
+    "miles": 34.09,
+    "surface": "gravel"
+  },
+  {
+    "miles": 34.41,
+    "surface": "gravel"
+  },
+  {
+    "miles": 34.88,
+    "surface": "gravel"
+  },
+  {
+    "miles": 34.95,
+    "surface": "gravel"
+  },
+  {
+    "miles": 35.02,
+    "surface": "gravel"
+  },
+  {
+    "miles": 35.13,
+    "surface": "gravel"
+  },
+  {
+    "miles": 35.37,
+    "surface": "gravel"
+  },
+  {
+    "miles": 35.52,
+    "surface": "gravel"
+  },
+  {
+    "miles": 36.1,
+    "surface": "gravel"
+  },
+  {
+    "miles": 36.38,
+    "surface": "unknown"
+  },
+  {
+    "miles": 36.47,
+    "surface": "unknown"
+  },
+  {
+    "miles": 36.61,
+    "surface": "unknown"
+  },
+  {
+    "miles": 36.75,
+    "surface": "unknown"
+  },
+  {
+    "miles": 37.17,
+    "surface": "paved"
+  },
+  {
+    "miles": 37.39,
+    "surface": "paved"
+  },
+  {
+    "miles": 37.56,
+    "surface": "paved"
+  },
+  {
+    "miles": 37.7,
+    "surface": "paved"
+  },
+  {
+    "miles": 37.77,
+    "surface": "dirt"
+  },
+  {
+    "miles": 38.03,
+    "surface": "dirt"
+  },
+  {
+    "miles": 38.34,
+    "surface": "dirt"
+  },
+  {
+    "miles": 38.51,
+    "surface": "dirt"
+  },
+  {
+    "miles": 38.96,
+    "surface": "dirt"
+  },
+  {
+    "miles": 39.02,
+    "surface": "dirt"
+  },
+  {
+    "miles": 39.23,
+    "surface": "dirt"
+  },
+  {
+    "miles": 39.53,
+    "surface": "paved"
+  },
+  {
+    "miles": 40.24,
+    "surface": "dirt"
+  },
+  {
+    "miles": 40.49,
+    "surface": "gravel"
+  },
+  {
+    "miles": 40.7,
+    "surface": "gravel"
+  },
+  {
+    "miles": 41.35,
+    "surface": "gravel"
+  },
+  {
+    "miles": 41.74,
+    "surface": "dirt"
+  },
+  {
+    "miles": 41.96,
+    "surface": "gravel"
+  },
+  {
+    "miles": 42.06,
+    "surface": "gravel"
+  },
+  {
+    "miles": 43.19,
+    "surface": "paved"
+  },
+  {
+    "miles": 43.27,
+    "surface": "paved"
+  },
+  {
+    "miles": 43.31,
+    "surface": "paved"
+  },
+  {
+    "miles": 43.39,
+    "surface": "paved"
+  },
+  {
+    "miles": 43.51,
+    "surface": "paved"
+  },
+  {
+    "miles": 43.6,
+    "surface": "paved"
+  },
+  {
+    "miles": 43.84,
+    "surface": "gravel"
+  },
+  {
+    "miles": 44.23,
+    "surface": "gravel"
+  },
+  {
+    "miles": 44.64,
+    "surface": "paved"
+  },
+  {
+    "miles": 44.8,
+    "surface": "paved"
+  },
+  {
+    "miles": 44.87,
+    "surface": "unknown"
+  },
+  {
+    "miles": 45.02,
+    "surface": "unknown"
+  },
+  {
+    "miles": 45.43,
+    "surface": "unknown"
+  },
+  {
+    "miles": 45.5,
+    "surface": "unknown"
+  },
+  {
+    "miles": 45.7,
+    "surface": "unknown"
+  },
+  {
+    "miles": 45.83,
+    "surface": "unknown"
+  },
+  {
+    "miles": 46.66,
+    "surface": "unknown"
+  },
+  {
+    "miles": 46.74,
+    "surface": "unknown"
+  },
+  {
+    "miles": 46.96,
+    "surface": "unknown"
+  },
+  {
+    "miles": 47.05,
+    "surface": "unknown"
+  },
+  {
+    "miles": 47.45,
+    "surface": "unknown"
+  },
+  {
+    "miles": 47.6,
+    "surface": "paved"
+  },
+  {
+    "miles": 47.7,
+    "surface": "paved"
+  },
+  {
+    "miles": 47.95,
+    "surface": "paved"
+  },
+  {
+    "miles": 48.16,
+    "surface": "paved"
+  },
+  {
+    "miles": 48.94,
+    "surface": "paved"
+  },
+  {
+    "miles": 49.11,
+    "surface": "paved"
+  },
+  {
+    "miles": 49.6,
+    "surface": "paved"
+  },
+  {
+    "miles": 49.86,
+    "surface": "paved"
+  },
+  {
+    "miles": 50.13,
+    "surface": "gravel"
+  },
+  {
+    "miles": 50.36,
+    "surface": "gravel"
+  },
+  {
+    "miles": 50.61,
+    "surface": "gravel"
+  },
+  {
+    "miles": 50.92,
+    "surface": "gravel"
+  },
+  {
+    "miles": 51.23,
+    "surface": "gravel"
+  },
+  {
+    "miles": 51.46,
+    "surface": "gravel"
+  },
+  {
+    "miles": 51.69,
+    "surface": "gravel"
+  },
+  {
+    "miles": 51.93,
+    "surface": "gravel"
+  },
+  {
+    "miles": 53.05,
+    "surface": "gravel"
+  },
+  {
+    "miles": 53.1,
+    "surface": "gravel"
+  },
+  {
+    "miles": 53.8,
+    "surface": "paved"
+  },
+  {
+    "miles": 54.36,
+    "surface": "gravel"
+  },
+  {
+    "miles": 54.82,
+    "surface": "gravel"
+  },
+  {
+    "miles": 55,
+    "surface": "gravel"
+  },
+  {
+    "miles": 55.14,
+    "surface": "gravel"
+  },
+  {
+    "miles": 55.61,
+    "surface": "paved"
+  },
+  {
+    "miles": 55.78,
+    "surface": "gravel"
+  },
+  {
+    "miles": 55.85,
+    "surface": "gravel"
+  },
+  {
+    "miles": 56.05,
+    "surface": "gravel"
+  },
+  {
+    "miles": 56.28,
+    "surface": "gravel"
+  },
+  {
+    "miles": 56.44,
+    "surface": "gravel"
+  },
+  {
+    "miles": 56.63,
+    "surface": "gravel"
+  },
+  {
+    "miles": 56.71,
+    "surface": "gravel"
+  },
+  {
+    "miles": 56.84,
+    "surface": "gravel"
+  },
+  {
+    "miles": 57.02,
+    "surface": "gravel"
+  },
+  {
+    "miles": 57.17,
+    "surface": "gravel"
+  },
+  {
+    "miles": 57.25,
+    "surface": "gravel"
+  },
+  {
+    "miles": 57.38,
+    "surface": "gravel"
+  },
+  {
+    "miles": 57.47,
+    "surface": "gravel"
+  },
+  {
+    "miles": 57.69,
+    "surface": "gravel"
+  },
+  {
+    "miles": 57.83,
+    "surface": "gravel"
+  },
+  {
+    "miles": 58,
+    "surface": "gravel"
+  },
+  {
+    "miles": 58.1,
+    "surface": "gravel"
+  },
+  {
+    "miles": 58.31,
+    "surface": "gravel"
+  },
+  {
+    "miles": 58.44,
+    "surface": "gravel"
+  },
+  {
+    "miles": 58.56,
+    "surface": "paved"
+  },
+  {
+    "miles": 58.77,
+    "surface": "paved"
+  },
+  {
+    "miles": 58.84,
+    "surface": "paved"
+  },
+  {
+    "miles": 59.17,
+    "surface": "paved"
+  },
+  {
+    "miles": 59.24,
+    "surface": "paved"
+  },
+  {
+    "miles": 59.34,
+    "surface": "paved"
+  },
+  {
+    "miles": 59.43,
+    "surface": "paved"
+  },
+  {
+    "miles": 59.45,
+    "surface": "paved"
+  },
+  {
+    "miles": 59.53,
+    "surface": "paved"
+  },
+  {
+    "miles": 59.58,
+    "surface": "paved"
+  },
+  {
+    "miles": 59.74,
+    "surface": "gravel"
+  },
+  {
+    "miles": 59.84,
+    "surface": "gravel"
+  },
+  {
+    "miles": 59.94,
+    "surface": "gravel"
+  },
+  {
+    "miles": 60.04,
+    "surface": "gravel"
+  },
+  {
+    "miles": 60.1,
+    "surface": "gravel"
+  },
+  {
+    "miles": 60.26,
+    "surface": "gravel"
+  },
+  {
+    "miles": 60.45,
+    "surface": "gravel"
+  },
+  {
+    "miles": 60.82,
+    "surface": "gravel"
+  },
+  {
+    "miles": 61.51,
+    "surface": "gravel"
+  },
+  {
+    "miles": 61.68,
+    "surface": "gravel"
+  },
+  {
+    "miles": 61.73,
+    "surface": "gravel"
+  },
+  {
+    "miles": 61.99,
+    "surface": "gravel"
+  },
+  {
+    "miles": 62.29,
+    "surface": "gravel"
+  },
+  {
+    "miles": 62.43,
+    "surface": "gravel"
+  },
+  {
+    "miles": 62.5,
+    "surface": "gravel"
+  },
+  {
+    "miles": 62.62,
+    "surface": "gravel"
+  },
+  {
+    "miles": 62.74,
+    "surface": "gravel"
+  },
+  {
+    "miles": 63.16,
+    "surface": "gravel"
+  },
+  {
+    "miles": 63.28,
+    "surface": "gravel"
+  },
+  {
+    "miles": 63.33,
+    "surface": "gravel"
+  },
+  {
+    "miles": 63.41,
+    "surface": "gravel"
+  },
+  {
+    "miles": 63.47,
+    "surface": "gravel"
+  },
+  {
+    "miles": 63.65,
+    "surface": "gravel"
+  },
+  {
+    "miles": 63.73,
+    "surface": "gravel"
+  },
+  {
+    "miles": 63.82,
+    "surface": "gravel"
+  },
+  {
+    "miles": 64.24,
+    "surface": "gravel"
+  },
+  {
+    "miles": 64.3,
+    "surface": "gravel"
+  },
+  {
+    "miles": 64.42,
+    "surface": "dirt"
+  },
+  {
+    "miles": 64.67,
+    "surface": "dirt"
+  },
+  {
+    "miles": 64.75,
+    "surface": "dirt"
+  },
+  {
+    "miles": 64.86,
+    "surface": "dirt"
+  },
+  {
+    "miles": 64.93,
+    "surface": "dirt"
+  },
+  {
+    "miles": 65.1,
+    "surface": "dirt"
+  },
+  {
+    "miles": 65.27,
+    "surface": "dirt"
+  },
+  {
+    "miles": 65.47,
+    "surface": "dirt"
+  },
+  {
+    "miles": 65.71,
+    "surface": "dirt"
+  },
+  {
+    "miles": 65.87,
+    "surface": "dirt"
+  },
+  {
+    "miles": 66.1,
+    "surface": "dirt"
+  },
+  {
+    "miles": 66.34,
+    "surface": "dirt"
+  },
+  {
+    "miles": 66.6,
+    "surface": "dirt"
+  },
+  {
+    "miles": 66.83,
+    "surface": "dirt"
+  },
+  {
+    "miles": 66.91,
+    "surface": "dirt"
+  },
+  {
+    "miles": 67.07,
+    "surface": "dirt"
+  },
+  {
+    "miles": 67.21,
+    "surface": "dirt"
+  },
+  {
+    "miles": 67.38,
+    "surface": "dirt"
+  },
+  {
+    "miles": 67.42,
+    "surface": "dirt"
+  },
+  {
+    "miles": 67.71,
+    "surface": "dirt"
+  },
+  {
+    "miles": 68.01,
+    "surface": "dirt"
+  },
+  {
+    "miles": 68.27,
+    "surface": "dirt"
+  },
+  {
+    "miles": 68.51,
+    "surface": "dirt"
+  },
+  {
+    "miles": 68.81,
+    "surface": "dirt"
+  },
+  {
+    "miles": 68.85,
+    "surface": "dirt"
+  },
+  {
+    "miles": 68.93,
+    "surface": "dirt"
+  },
+  {
+    "miles": 68.99,
+    "surface": "dirt"
+  },
+  {
+    "miles": 69.05,
+    "surface": "dirt"
+  },
+  {
+    "miles": 69.18,
+    "surface": "dirt"
+  },
+  {
+    "miles": 69.55,
+    "surface": "dirt"
+  },
+  {
+    "miles": 70.11,
+    "surface": "dirt"
+  },
+  {
+    "miles": 70.78,
+    "surface": "gravel"
+  },
+  {
+    "miles": 70.82,
+    "surface": "gravel"
+  },
+  {
+    "miles": 71.01,
+    "surface": "gravel"
+  },
+  {
+    "miles": 71.07,
+    "surface": "gravel"
+  },
+  {
+    "miles": 71.23,
+    "surface": "gravel"
+  },
+  {
+    "miles": 71.36,
+    "surface": "gravel"
+  },
+  {
+    "miles": 71.42,
+    "surface": "gravel"
+  },
+  {
+    "miles": 71.68,
+    "surface": "gravel"
+  },
+  {
+    "miles": 71.98,
+    "surface": "gravel"
+  },
+  {
+    "miles": 72.08,
+    "surface": "gravel"
+  },
+  {
+    "miles": 72.28,
+    "surface": "gravel"
+  },
+  {
+    "miles": 72.53,
+    "surface": "gravel"
+  },
+  {
+    "miles": 72.61,
+    "surface": "gravel"
+  },
+  {
+    "miles": 72.74,
+    "surface": "gravel"
+  },
+  {
+    "miles": 72.89,
+    "surface": "gravel"
+  },
+  {
+    "miles": 72.98,
+    "surface": "gravel"
+  },
+  {
+    "miles": 73.11,
+    "surface": "gravel"
+  },
+  {
+    "miles": 73.2,
+    "surface": "gravel"
+  },
+  {
+    "miles": 73.28,
+    "surface": "gravel"
+  },
+  {
+    "miles": 73.46,
+    "surface": "gravel"
+  },
+  {
+    "miles": 73.54,
+    "surface": "gravel"
+  },
+  {
+    "miles": 73.84,
+    "surface": "gravel"
+  },
+  {
+    "miles": 74.25,
+    "surface": "gravel"
+  },
+  {
+    "miles": 74.31,
+    "surface": "gravel"
+  },
+  {
+    "miles": 74.48,
+    "surface": "gravel"
+  },
+  {
+    "miles": 74.64,
+    "surface": "gravel"
+  },
+  {
+    "miles": 74.75,
+    "surface": "gravel"
+  },
+  {
+    "miles": 74.84,
+    "surface": "unknown"
+  },
+  {
+    "miles": 75.07,
+    "surface": "unknown"
+  },
+  {
+    "miles": 75.2,
+    "surface": "unknown"
+  },
+  {
+    "miles": 75.36,
+    "surface": "unknown"
+  },
+  {
+    "miles": 75.96,
+    "surface": "unknown"
+  },
+  {
+    "miles": 76.09,
+    "surface": "unknown"
+  },
+  {
+    "miles": 76.24,
+    "surface": "unknown"
+  },
+  {
+    "miles": 76.39,
+    "surface": "unknown"
+  },
+  {
+    "miles": 76.47,
+    "surface": "unknown"
+  },
+  {
+    "miles": 77.12,
+    "surface": "unknown"
+  },
+  {
+    "miles": 77.2,
+    "surface": "paved"
+  },
+  {
+    "miles": 77.44,
+    "surface": "paved"
+  },
+  {
+    "miles": 77.55,
+    "surface": "dirt"
+  },
+  {
+    "miles": 77.75,
+    "surface": "dirt"
+  },
+  {
+    "miles": 77.84,
+    "surface": "dirt"
+  },
+  {
+    "miles": 77.94,
+    "surface": "dirt"
+  },
+  {
+    "miles": 78.06,
+    "surface": "dirt"
+  },
+  {
+    "miles": 78.24,
+    "surface": "dirt"
+  },
+  {
+    "miles": 78.28,
+    "surface": "dirt"
+  },
+  {
+    "miles": 78.41,
+    "surface": "dirt"
+  },
+  {
+    "miles": 78.48,
+    "surface": "dirt"
+  },
+  {
+    "miles": 78.68,
+    "surface": "dirt"
+  },
+  {
+    "miles": 78.82,
+    "surface": "dirt"
+  },
+  {
+    "miles": 79.23,
+    "surface": "dirt"
+  },
+  {
+    "miles": 79.27,
+    "surface": "dirt"
+  },
+  {
+    "miles": 79.55,
+    "surface": "dirt"
+  },
+  {
+    "miles": 79.62,
+    "surface": "dirt"
+  },
+  {
+    "miles": 79.73,
+    "surface": "dirt"
+  },
+  {
+    "miles": 80.06,
+    "surface": "dirt"
+  },
+  {
+    "miles": 80.29,
+    "surface": "dirt"
+  },
+  {
+    "miles": 80.4,
+    "surface": "dirt"
+  },
+  {
+    "miles": 80.56,
+    "surface": "dirt"
+  },
+  {
+    "miles": 80.72,
+    "surface": "dirt"
+  },
+  {
+    "miles": 80.78,
+    "surface": "dirt"
+  },
+  {
+    "miles": 81.24,
+    "surface": "dirt"
+  },
+  {
+    "miles": 81.46,
+    "surface": "dirt"
+  },
+  {
+    "miles": 81.62,
+    "surface": "dirt"
+  },
+  {
+    "miles": 82.12,
+    "surface": "dirt"
+  },
+  {
+    "miles": 82.61,
+    "surface": "dirt"
+  },
+  {
+    "miles": 82.86,
+    "surface": "dirt"
+  },
+  {
+    "miles": 83.07,
+    "surface": "dirt"
+  },
+  {
+    "miles": 83.37,
+    "surface": "dirt"
+  },
+  {
+    "miles": 83.64,
+    "surface": "dirt"
+  },
+  {
+    "miles": 84.66,
+    "surface": "dirt"
+  },
+  {
+    "miles": 85.03,
+    "surface": "gravel"
+  },
+  {
+    "miles": 85.49,
+    "surface": "gravel"
+  },
+  {
+    "miles": 86.27,
+    "surface": "gravel"
+  },
+  {
+    "miles": 86.8,
+    "surface": "gravel"
+  },
+  {
+    "miles": 86.92,
+    "surface": "gravel"
+  },
+  {
+    "miles": 87.08,
+    "surface": "gravel"
+  },
+  {
+    "miles": 87.2,
+    "surface": "gravel"
+  },
+  {
+    "miles": 87.51,
+    "surface": "paved"
+  },
+  {
+    "miles": 87.84,
+    "surface": "gravel"
+  },
+  {
+    "miles": 87.94,
+    "surface": "gravel"
+  },
+  {
+    "miles": 88.07,
+    "surface": "gravel"
+  },
+  {
+    "miles": 88.19,
+    "surface": "gravel"
+  },
+  {
+    "miles": 88.79,
+    "surface": "gravel"
+  },
+  {
+    "miles": 88.95,
+    "surface": "gravel"
+  },
+  {
+    "miles": 89.07,
+    "surface": "gravel"
+  },
+  {
+    "miles": 89.3,
+    "surface": "gravel"
+  },
+  {
+    "miles": 89.5,
+    "surface": "gravel"
+  },
+  {
+    "miles": 89.74,
+    "surface": "gravel"
+  },
+  {
+    "miles": 89.79,
+    "surface": "gravel"
+  },
+  {
+    "miles": 89.9,
+    "surface": "gravel"
+  },
+  {
+    "miles": 90.09,
+    "surface": "gravel"
+  },
+  {
+    "miles": 90.13,
+    "surface": "gravel"
+  },
+  {
+    "miles": 90.3,
+    "surface": "gravel"
+  },
+  {
+    "miles": 90.58,
+    "surface": "dirt"
+  },
+  {
+    "miles": 90.76,
+    "surface": "dirt"
+  },
+  {
+    "miles": 90.89,
+    "surface": "dirt"
+  },
+  {
+    "miles": 91.09,
+    "surface": "paved"
+  },
+  {
+    "miles": 91.45,
+    "surface": "dirt"
+  },
+  {
+    "miles": 91.59,
+    "surface": "dirt"
+  },
+  {
+    "miles": 92.19,
+    "surface": "dirt"
+  },
+  {
+    "miles": 92.33,
+    "surface": "dirt"
+  },
+  {
+    "miles": 92.53,
+    "surface": "unknown"
+  },
+  {
+    "miles": 93.25,
+    "surface": "unknown"
+  },
+  {
+    "miles": 93.61,
+    "surface": "unknown"
+  },
+  {
+    "miles": 94.46,
+    "surface": "paved"
+  },
+  {
+    "miles": 94.83,
+    "surface": "dirt"
+  },
+  {
+    "miles": 95.04,
+    "surface": "dirt"
+  },
+  {
+    "miles": 95.41,
+    "surface": "dirt"
+  },
+  {
+    "miles": 95.47,
+    "surface": "dirt"
+  },
+  {
+    "miles": 95.56,
+    "surface": "dirt"
+  },
+  {
+    "miles": 96.32,
+    "surface": "dirt"
+  },
+  {
+    "miles": 96.39,
+    "surface": "dirt"
+  },
+  {
+    "miles": 96.53,
+    "surface": "dirt"
+  },
+  {
+    "miles": 96.59,
+    "surface": "dirt"
+  },
+  {
+    "miles": 96.65,
+    "surface": "dirt"
+  },
+  {
+    "miles": 96.85,
+    "surface": "dirt"
+  },
+  {
+    "miles": 97.09,
+    "surface": "dirt"
+  },
+  {
+    "miles": 97.24,
+    "surface": "dirt"
+  },
+  {
+    "miles": 97.52,
+    "surface": "dirt"
+  },
+  {
+    "miles": 97.58,
+    "surface": "dirt"
+  },
+  {
+    "miles": 97.71,
+    "surface": "dirt"
+  },
+  {
+    "miles": 97.87,
+    "surface": "dirt"
+  },
+  {
+    "miles": 97.99,
+    "surface": "dirt"
+  },
+  {
+    "miles": 98.11,
+    "surface": "dirt"
+  },
+  {
+    "miles": 98.18,
+    "surface": "dirt"
+  },
+  {
+    "miles": 98.33,
+    "surface": "dirt"
+  },
+  {
+    "miles": 98.57,
+    "surface": "dirt"
+  },
+  {
+    "miles": 98.79,
+    "surface": "dirt"
+  },
+  {
+    "miles": 98.94,
+    "surface": "dirt"
+  },
+  {
+    "miles": 99.09,
+    "surface": "dirt"
+  },
+  {
+    "miles": 99.28,
+    "surface": "dirt"
+  },
+  {
+    "miles": 99.42,
+    "surface": "dirt"
+  },
+  {
+    "miles": 99.59,
+    "surface": "dirt"
+  },
+  {
+    "miles": 99.75,
+    "surface": "dirt"
+  },
+  {
+    "miles": 99.9,
+    "surface": "dirt"
+  },
+  {
+    "miles": 100.4,
+    "surface": "dirt"
+  },
+  {
+    "miles": 100.48,
+    "surface": "paved"
+  },
+  {
+    "miles": 100.76,
+    "surface": "dirt"
+  },
+  {
+    "miles": 100.81,
+    "surface": "dirt"
+  },
+  {
+    "miles": 100.89,
+    "surface": "dirt"
+  },
+  {
+    "miles": 100.94,
+    "surface": "gravel"
+  },
+  {
+    "miles": 101.14,
+    "surface": "gravel"
+  },
+  {
+    "miles": 101.38,
+    "surface": "gravel"
+  },
+  {
+    "miles": 101.86,
+    "surface": "gravel"
+  },
+  {
+    "miles": 101.94,
+    "surface": "gravel"
+  },
+  {
+    "miles": 101.98,
+    "surface": "gravel"
+  }
+]

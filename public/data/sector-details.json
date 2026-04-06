@@ -6,8 +6,8 @@
     "surface": "smooth asphalt",
     "stars": 2,
     "stravaLink": "https://www.strava.com/segments/28533709",
-    "startMile": 1.1,
-    "endMile": 2.4
+    "startMile": 1.03,
+    "endMile": 2.43
   },
   {
     "id": "sector-nf2266",
@@ -16,7 +16,7 @@
     "surface": "sand and gravel two-track",
     "stars": 5,
     "stravaLink": "https://www.strava.com/segments/28533671",
-    "startMile": 6.7,
+    "startMile": 6.72,
     "endMile": 9.9
   },
   {
@@ -26,8 +26,8 @@
     "surface": "packed gravel, county-maintained",
     "stars": 2,
     "stravaLink": "https://www.strava.com/segments/31852807",
-    "startMile": 25.3,
-    "endMile": 30.1
+    "startMile": 25.25,
+    "endMile": 30.3
   },
   {
     "id": "sector-nf2217",
@@ -36,8 +36,8 @@
     "surface": "compact gravel and hard-packed dirt",
     "stars": 2,
     "stravaLink": "https://www.strava.com/segments/41149550",
-    "startMile": 36.8,
-    "endMile": 43.4
+    "startMile": 36.75,
+    "endMile": 43.39
   },
   {
     "id": "sector-nd2225",
@@ -46,8 +46,8 @@
     "surface": "loose gravel transitioning to sandy patches",
     "stars": 3,
     "stravaLink": "https://www.strava.com/segments/39343281",
-    "startMile": 55.7,
-    "endMile": 59.6
+    "startMile": 55.78,
+    "endMile": 59.58
   },
   {
     "id": "sector-doe-lake",
@@ -56,8 +56,8 @@
     "surface": "deep sand and rugged two-track",
     "stars": 4,
     "stravaLink": "https://www.strava.com/segments/34543004",
-    "startMile": 84.8,
-    "endMile": 87.9
+    "startMile": 84.66,
+    "endMile": 87.94
   },
   {
     "id": "sector-rapid-river",
@@ -66,7 +66,7 @@
     "surface": "firm packed gravel, USFS-maintained",
     "stars": 2,
     "stravaLink": null,
-    "startMile": 94.6,
-    "endMile": 100.9
+    "startMile": 94.46,
+    "endMile": 100.89
   }
 ]

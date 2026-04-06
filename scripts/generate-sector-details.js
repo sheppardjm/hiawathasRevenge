@@ -72,7 +72,7 @@ const SECTOR_DETAILS = [
 // Load annotations.json and filter to sectors
 // ---------------------------------------------------------------------------
 
-const annotationsPath = resolve(ROOT, 'public', 'data', 'annotations.json');
+const annotationsPath = resolve(ROOT, 'public', 'data', '100mi', 'annotations.json');
 const annotations = JSON.parse(readFileSync(annotationsPath, 'utf8'));
 const sectorAnnotations = annotations.filter((a) => a.type === 'sector');
 
