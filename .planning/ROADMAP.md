@@ -101,13 +101,15 @@ Plans:
   2. After `npm run pipeline`, all three data files (annotations.json, sector-details.json, sector-elevations.json) contain `"NF2217-2218"` with no bare `"NF2217"`
   3. `scripts/pipeline.js` includes a `generate-og-image` step that produces `public/og-image.jpg`
   4. A clean pipeline run from scratch produces all expected outputs including the OG image
+**Plans**: 1 plan
 
-Plans: 0 (needs planning)
+Plans:
+- [ ] 32-01-PLAN.md -- Fix NF2217 source name in resolve-annotations.js and wire generate-og-image.js into pipeline
 
 ## Progress
 
 **Execution Order:**
-Phases 28-31. Phases 28, 29, 30 are independent; Phase 31 depends on Phase 28.
+Phases 28-32. Phases 28, 29, 30 are independent; Phase 31 depends on Phase 28; Phase 32 depends on Phases 28, 29.
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
@@ -115,4 +117,4 @@ Phases 28-31. Phases 28, 29, 30 are independent; Phase 31 depends on Phase 28.
 | 29. SEO & Social Sharing | v1.4 | 1/1 | ✅ Complete | 2026-04-06 |
 | 30. Image Optimization | v1.4 | 2/2 | ✅ Complete | 2026-04-06 |
 | 31. Accessibility Hardening | v1.4 | 2/2 | ✅ Complete | 2026-04-06 |
-| 32. Pipeline Source Fixes | v1.4 | 0/0 | ⏳ Needs planning | — |
+| 32. Pipeline Source Fixes | v1.4 | 0/1 | ⏳ Planned | — |
