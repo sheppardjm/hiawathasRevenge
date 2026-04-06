@@ -380,6 +380,13 @@
     routesManifest = routesData;
     sectorDetailsData = sectorDetails;
 
+    // Deep link: parse #route=<id> from URL hash
+    const hashMatch = location.hash.match(/^#route=(.+)$/);
+    const validIds = routesManifest.routes.map(r => r.id);
+    const initialRouteId = (hashMatch && validIds.includes(hashMatch[1]))
+      ? hashMatch[1]
+      : routesManifest.routes[0].id;
+
     // Create the active route layer group — all route-specific layers go here
     // clearLayers() on this group removes everything on route switch
     activeRouteGroup = L.layerGroup().addTo(map);
@@ -725,6 +732,9 @@
       window.dispatchEvent(new CustomEvent('route:change', {
         detail: { routeId }
       }));
+
+      // Deep link: update URL hash without triggering page reload
+      history.replaceState(null, '', '#route=' + routeId);
     }
 
     // updateGhostVisibility — hides the active route ghost (opacity 0), shows others (opacity 0.2)
@@ -751,10 +761,10 @@
       btn.textContent = route.shortName;
       btn.dataset.routeId = route.id;
       btn.setAttribute('role', 'radio');
-      btn.setAttribute('aria-checked', i === 0 ? 'true' : 'false');
-      btn.setAttribute('tabindex', i === 0 ? '0' : '-1');
+      btn.setAttribute('aria-checked', route.id === initialRouteId ? 'true' : 'false');
+      btn.setAttribute('tabindex', route.id === initialRouteId ? '0' : '-1');
 
-      if (i === 0) {
+      if (route.id === initialRouteId) {
         btn.style.background = route.color;
         btn.style.color = forest900;
       }
@@ -841,9 +851,9 @@
       clusterGroup.addTo(map);
     }
 
-    // Initial route render — loads 100mi data and draws all route-specific layers
+    // Initial route render — loads deep-linked route (or default 100mi) data and draws all route-specific layers
     // MUST run before ghost polylines so the map has valid pixel bounds for Leaflet's _clipPoints
-    await renderRoute('100mi');
+    await renderRoute(initialRouteId);
 
     // ---- Ghost polylines — persist on map across route switches ----
     // Created AFTER renderRoute('100mi') because the map needs a valid view (from fitBounds)
@@ -868,7 +878,7 @@
       // bringToBack so ghosts render behind activeRouteGroup layers
       ghostPolylines[route.id].bringToBack();
     }
-    updateGhostVisibility('100mi');
+    updateGhostVisibility(initialRouteId);
   } // end initMap
 
   // Defer Leaflet/map loading until the user begins scrolling toward the map section.
