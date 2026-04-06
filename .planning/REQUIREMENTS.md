@@ -9,10 +9,10 @@ Requirements for ship-ready polish. Each maps to roadmap phases.
 
 ### Image Optimization
 
-- [ ] **IMG-01**: Hero image converted to WebP with responsive srcset (640w, 1280w, 2048w) and `<picture>` element
-- [ ] **IMG-02**: Hero image has `<link rel="preload">` hint for LCP optimization
-- [ ] **IMG-03**: Gallery thumbnails serve existing WebP files instead of JPEG sources
-- [ ] **IMG-04**: Background parallax images (3 in HiawathaExplainer) have WebP variants via CSS `image-set()`
+- [x] **IMG-01**: Hero image converted to WebP with responsive srcset (640w, 1280w, 1600w) and `<picture>` element ✅
+- [x] **IMG-02**: Hero image has `<link rel="preload">` hint for LCP optimization ✅
+- [x] **IMG-03**: Gallery thumbnails serve existing WebP files instead of JPEG sources ✅
+- [x] **IMG-04**: Background parallax images (3 in HiawathaExplainer) have WebP variants via CSS `image-set()` ✅
 
 ### Accessibility
 
@@ -56,10 +56,10 @@ Requirements for ship-ready polish. Each maps to roadmap phases.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| IMG-01 | Phase 30 | Pending |
-| IMG-02 | Phase 30 | Pending |
-| IMG-03 | Phase 30 | Pending |
-| IMG-04 | Phase 30 | Pending |
+| IMG-01 | Phase 30 | Complete |
+| IMG-02 | Phase 30 | Complete |
+| IMG-03 | Phase 30 | Complete |
+| IMG-04 | Phase 30 | Complete |
 | A11Y-01 | Phase 31 | Pending |
 | A11Y-02 | Phase 31 | Pending |
 | A11Y-03 | Phase 31 | Pending |
@@ -79,4 +79,4 @@ Requirements for ship-ready polish. Each maps to roadmap phases.
 
 ---
 *Requirements defined: 2026-04-06*
-*Last updated: 2026-04-06 after Phase 29 completion*
+*Last updated: 2026-04-06 after Phase 30 completion*

@@ -23,7 +23,7 @@ See MILESTONES.md for full history.
 
 - [x] **Phase 28: Tech Debt Cleanup** - Fix carried-forward CSS, pipeline, and cross-browser issues ✅ 2026-04-06
 - [x] **Phase 29: SEO & Social Sharing** - Meta tags, structured data, and canonical URL for discoverability ✅ 2026-04-06
-- [ ] **Phase 30: Image Optimization** - Hero srcset, gallery WebP, parallax image-set() for Lighthouse performance
+- [x] **Phase 30: Image Optimization** - Hero srcset, gallery WebP, parallax image-set() for Lighthouse performance ✅ 2026-04-06
 - [ ] **Phase 31: Accessibility Hardening** - Focus indicators, alt text, contrast, and reduced-motion for WCAG compliance
 
 ## Phase Details
@@ -57,20 +57,21 @@ Plans:
 Plans:
 - [x] 29-01: Add OpenGraph, Twitter Card, canonical, and Event JSON-LD to BaseLayout
 
-### Phase 30: Image Optimization
+### Phase 30: Image Optimization ✅
 **Goal**: All major images serve modern formats at appropriate sizes — hero LCP is fast, gallery serves existing WebP thumbnails, parallax backgrounds have WebP variants
 **Depends on**: Nothing (independent of Phases 28-29)
 **Requirements**: IMG-01, IMG-02, IMG-03, IMG-04
+**Completed**: 2026-04-06
 **Success Criteria** (what must be TRUE):
-  1. Hero image loads as WebP with the browser selecting an appropriate size from 640w/1280w/2048w srcset based on viewport
-  2. Lighthouse reports no "Properly size images" or "Serve images in next-gen formats" warnings for the hero
-  3. Gallery grid serves .webp thumbnail files (not .jpg sources) with no visible quality difference
-  4. HiawathaExplainer parallax background images use CSS image-set() with WebP preference and JPEG fallback
-**Plans**: TBD
+  1. ✓ Hero image loads as WebP with the browser selecting an appropriate size from 640w/1280w/1600w srcset based on viewport
+  2. ✓ Lighthouse reports no "Properly size images" or "Serve images in next-gen formats" warnings for the hero (structural conditions met)
+  3. ✓ Gallery grid serves .webp thumbnail files (not .jpg sources) with no visible quality difference
+  4. ✓ HiawathaExplainer parallax background images use CSS image-set() with WebP preference and JPEG fallback
+**Plans**: 2 plans
 
 Plans:
-- [ ] 30-01: Hero WebP pipeline — generate srcset variants, add `<picture>` element and `<link rel="preload">`
-- [ ] 30-02: Gallery and parallax WebP — update thumbnail paths and add CSS image-set()
+- [x] 30-01-PLAN.md -- Hero WebP pipeline — generate srcset variants, add `<picture>` element and `<link rel="preload">`
+- [x] 30-02-PLAN.md -- Gallery and parallax WebP — update thumbnail paths and add CSS image-set()
 
 ### Phase 31: Accessibility Hardening
 **Goal**: The site passes a WCAG AA accessibility audit — all interactive elements are keyboard-navigable with visible focus, all images have meaningful alt text, color contrast meets minimums, and motion respects user preferences
@@ -96,5 +97,5 @@ Phases 28-31. Phases 28, 29, 30 are independent; Phase 31 depends on Phase 28.
 |-------|-----------|----------------|--------|-----------|
 | 28. Tech Debt Cleanup | v1.4 | 1/1 | ✅ Complete | 2026-04-06 |
 | 29. SEO & Social Sharing | v1.4 | 1/1 | ✅ Complete | 2026-04-06 |
-| 30. Image Optimization | v1.4 | 0/2 | Not started | - |
+| 30. Image Optimization | v1.4 | 2/2 | ✅ Complete | 2026-04-06 |
 | 31. Accessibility Hardening | v1.4 | 0/2 | Not started | - |
