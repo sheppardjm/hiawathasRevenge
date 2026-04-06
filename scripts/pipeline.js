@@ -26,6 +26,7 @@ const steps = [
   { name: 'process-historical', script: 'scripts/process-historical.js' },
   { name: 'match-photos', script: 'scripts/match-photos.js' },
   { name: 'copy-gpx', script: 'scripts/copy-gpx.js' },
+  { name: 'generate-og-image', script: 'scripts/generate-og-image.js' },
 ];
 
 let currentStep = null;
