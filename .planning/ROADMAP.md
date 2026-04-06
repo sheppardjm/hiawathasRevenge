@@ -22,7 +22,7 @@ See MILESTONES.md for full history.
 **Milestone Goal:** Ship-ready polish — tech debt cleanup, SEO/social sharing metadata, image optimization for performance, and accessibility hardening so the site is confident to share publicly.
 
 - [x] **Phase 28: Tech Debt Cleanup** - Fix carried-forward CSS, pipeline, and cross-browser issues ✅ 2026-04-06
-- [ ] **Phase 29: SEO & Social Sharing** - Meta tags, structured data, and canonical URL for discoverability
+- [x] **Phase 29: SEO & Social Sharing** - Meta tags, structured data, and canonical URL for discoverability ✅ 2026-04-06
 - [ ] **Phase 30: Image Optimization** - Hero srcset, gallery WebP, parallax image-set() for Lighthouse performance
 - [ ] **Phase 31: Accessibility Hardening** - Focus indicators, alt text, contrast, and reduced-motion for WCAG compliance
 
@@ -42,19 +42,20 @@ See MILESTONES.md for full history.
 Plans:
 - [x] 28-01-PLAN.md -- Fix undefined --font-body (add Spectral via Fonts API), reconcile NF2217 naming to NF2217-2218, add Firefox @supports fallback for star rating gradient
 
-### Phase 29: SEO & Social Sharing
+### Phase 29: SEO & Social Sharing ✅
 **Goal**: The site appears with a rich preview (title, description, hero image) when shared on social media or indexed by search engines, with structured event data for Google
 **Depends on**: Nothing (independent of Phase 28)
 **Requirements**: SEO-01, SEO-02, SEO-03, SEO-04
+**Completed**: 2026-04-06
 **Success Criteria** (what must be TRUE):
-  1. Sharing the site URL on Facebook/LinkedIn shows the hero image, title "Hiawatha's Revenge", and a compelling description
-  2. Sharing the site URL on Twitter/X shows a large image card with the hero photo
-  3. The page has a canonical URL preventing duplicate content in search results
-  4. Google Rich Results Test validates the Event structured data for June 6, 2026
-**Plans**: TBD
+  1. ✓ Sharing the site URL on Facebook/LinkedIn shows the hero image, title "Hiawatha's Revenge", and a compelling description
+  2. ✓ Sharing the site URL on Twitter/X shows a large image card with the hero photo
+  3. ✓ The page has a canonical URL preventing duplicate content in search results
+  4. ✓ Google Rich Results Test validates the Event structured data for June 6, 2026
+**Plans**: 1 plan
 
 Plans:
-- [ ] 29-01: Add OpenGraph, Twitter Card, canonical, and Event JSON-LD to BaseLayout
+- [x] 29-01: Add OpenGraph, Twitter Card, canonical, and Event JSON-LD to BaseLayout
 
 ### Phase 30: Image Optimization
 **Goal**: All major images serve modern formats at appropriate sizes — hero LCP is fast, gallery serves existing WebP thumbnails, parallax backgrounds have WebP variants
@@ -94,6 +95,6 @@ Phases 28-31. Phases 28, 29, 30 are independent; Phase 31 depends on Phase 28.
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
 | 28. Tech Debt Cleanup | v1.4 | 1/1 | ✅ Complete | 2026-04-06 |
-| 29. SEO & Social Sharing | v1.4 | 0/1 | Not started | - |
+| 29. SEO & Social Sharing | v1.4 | 1/1 | ✅ Complete | 2026-04-06 |
 | 30. Image Optimization | v1.4 | 0/2 | Not started | - |
 | 31. Accessibility Hardening | v1.4 | 0/2 | Not started | - |

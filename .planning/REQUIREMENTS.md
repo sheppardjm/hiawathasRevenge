@@ -23,10 +23,10 @@ Requirements for ship-ready polish. Each maps to roadmap phases.
 
 ### SEO & Social Sharing
 
-- [ ] **SEO-01**: OpenGraph tags in BaseLayout (og:title, og:description, og:image, og:url)
-- [ ] **SEO-02**: Twitter Card tags in BaseLayout (twitter:card, twitter:title, twitter:image)
-- [ ] **SEO-03**: Canonical link in BaseLayout
-- [ ] **SEO-04**: Schema.org Event JSON-LD structured data for June 6, 2026 ride
+- [x] **SEO-01**: OpenGraph tags in BaseLayout (og:title, og:description, og:image, og:url) ✅
+- [x] **SEO-02**: Twitter Card tags in BaseLayout (twitter:card, twitter:title, twitter:image) ✅
+- [x] **SEO-03**: Canonical link in BaseLayout ✅
+- [x] **SEO-04**: Schema.org Event JSON-LD structured data for June 6, 2026 ride ✅
 
 ### Tech Debt
 
@@ -64,10 +64,10 @@ Requirements for ship-ready polish. Each maps to roadmap phases.
 | A11Y-02 | Phase 31 | Pending |
 | A11Y-03 | Phase 31 | Pending |
 | A11Y-04 | Phase 31 | Pending |
-| SEO-01 | Phase 29 | Pending |
-| SEO-02 | Phase 29 | Pending |
-| SEO-03 | Phase 29 | Pending |
-| SEO-04 | Phase 29 | Pending |
+| SEO-01 | Phase 29 | Complete |
+| SEO-02 | Phase 29 | Complete |
+| SEO-03 | Phase 29 | Complete |
+| SEO-04 | Phase 29 | Complete |
 | DEBT-01 | Phase 28 | Complete |
 | DEBT-02 | Phase 28 | Complete |
 | DEBT-03 | Phase 28 | Complete |
@@ -79,4 +79,4 @@ Requirements for ship-ready polish. Each maps to roadmap phases.
 
 ---
 *Requirements defined: 2026-04-06*
-*Last updated: 2026-04-06 after Phase 28 completion*
+*Last updated: 2026-04-06 after Phase 29 completion*
