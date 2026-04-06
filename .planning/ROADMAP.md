@@ -18,7 +18,7 @@ All v1.0-v1.4 phases shipped. See `.planning/MILESTONES.md` for full history.
 
 </details>
 
-### 🚧 v1.5 Multi-Route Support (In Progress)
+### v1.5 Multi-Route Support (In Progress)
 
 **Milestone Goal:** Add 100k and 50k route variants alongside the existing 100-mile route with a map-based route selector, per-route elevation profiles, filtered sector display, and GPX downloads for all three distances.
 
@@ -91,22 +91,22 @@ Plans:
   2. Navigating to `#route=100k` in the URL pre-selects the 100k route on page load
   3. Switching routes updates the URL hash via replaceState without a page reload
   4. The hero section plays a looping background video with the existing hero image as poster/fallback
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 36-01: GPX download switching and URL hash deep linking
-- [ ] 36-02: Hero video replacement with image fallback
+- [ ] 36-01-PLAN.md -- GPX download link switching and URL hash deep linking
+- [ ] 36-02-PLAN.md -- Hero video with image fallback and reduced-motion handling
 
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 33 → 34 → 35 → 36
+Phases execute in numeric order: 33 -> 34 -> 35 -> 36
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
-| 33. Pipeline & Route Data | v1.5 | 3/3 | ✓ Complete | 2026-04-06 |
-| 34. Route Selector & Map Switching | v1.5 | 2/2 | ✓ Complete | 2026-04-06 |
-| 35. Elevation Profile & Route Stats | v1.5 | 2/2 | ✓ Complete | 2026-04-06 |
+| 33. Pipeline & Route Data | v1.5 | 3/3 | Complete | 2026-04-06 |
+| 34. Route Selector & Map Switching | v1.5 | 2/2 | Complete | 2026-04-06 |
+| 35. Elevation Profile & Route Stats | v1.5 | 2/2 | Complete | 2026-04-06 |
 | 36. Downloads, Deep Linking & Hero Video | v1.5 | 0/2 | Not started | - |
 
 ---
