@@ -2,7 +2,7 @@
 
 ## What This Is
 
-An immersive editorial showcase website for Hiawatha's Revenge, a 100-mile cycling ride through Michigan's Hiawatha National Forest that supports the Munising Bay Trail Network (MBTN). The site combines interactive cartography — a Leaflet route map with surface-colored track, clickable sector detail panels with elevation sparklines, difficulty-starred labels, and a Chart.js elevation profile synced via event bus — with rich visual storytelling: a dramatic full-viewport hero, witty editorial narrative on Longfellow's Hiawatha/Nanabozho conflation, photo-integrated route explainer, parallax editorial sections with EB Garamond drop-caps, and masonry gallery. The design draws from Ojibwe woodland floral beadwork traditions with hand-authored SVG motifs and a warm berry/gold/lake/moss color palette enriched with geometric cultural elements.
+An immersive editorial showcase website for Hiawatha's Revenge, a 100-mile cycling ride through Michigan's Hiawatha National Forest that supports the Munising Bay Trail Network (MBTN). The site combines interactive cartography — a Leaflet route map with surface-colored track, clickable sector detail panels with elevation sparklines, difficulty-starred labels, and a Chart.js elevation profile synced via event bus — with rich visual storytelling: a dramatic full-viewport hero, witty editorial narrative on Longfellow's Hiawatha/Nanabozho conflation, photo-integrated route explainer, parallax editorial sections with EB Garamond drop-caps, and masonry gallery. The design draws from Ojibwe woodland floral beadwork traditions with hand-authored SVG motifs and a warm berry/gold/lake/moss color palette enriched with geometric cultural elements. Ship-ready with WebP image optimization, full SEO/social sharing metadata, WCAG AA accessibility compliance, and a self-healing 12-step build pipeline.
 
 ## Core Value
 
@@ -47,19 +47,17 @@ Visitors experience the beauty and scale of the Hiawatha's Revenge route through
 - ✓ Photo gallery skeleton loaders preventing CLS, route stats legibility fix — v1.3
 - ✓ Three new Native American cultural motif SVG components (OjibweBorderPattern, WaterWavePattern, TurtleMotif) — v1.3
 - ✓ Complete build-time data pipeline: surface-points.json, sector-details.json, canonical difficulty stars — v1.3
+- ✓ Hero WebP srcset (640w/1280w/1600w) with `<picture>` element and LCP preload — v1.4
+- ✓ Gallery WebP thumbnails and parallax CSS image-set() with WebP/JPEG format selection — v1.4
+- ✓ Global :focus-visible keyboard indicators, descriptive gallery alt text, star rating contrast (5.30:1) — v1.4
+- ✓ Reduced-motion compliance: sector panel transitions, map fitBounds, Leaflet animations — v1.4
+- ✓ OpenGraph, Twitter Card, canonical URL, Schema.org Event JSON-LD for June 6, 2026 — v1.4
+- ✓ Tech debt resolved: Spectral serif font, NF2217-2218 naming at source, Firefox @supports gradient guard — v1.4
+- ✓ Self-healing 12-step build pipeline with generate-webp and generate-og-image steps — v1.4
 
 ### Active
 
-#### Current Milestone: v1.4 Performance & Polish
-
-**Goal:** Ship-ready polish — hero image optimization, iOS Safari testing, tech debt cleanup, Lighthouse audit, and accessibility hardening so the site is confident to share publicly.
-
-**Target features:**
-- Hero image optimization (WebP, srcset, preload)
-- iOS Safari device testing and touch/gesture fixes
-- Tech debt cleanup (pipeline name divergence, undefined CSS var, etc.)
-- Lighthouse performance audit and fixes
-- Accessibility audit and WCAG compliance pass
+(No active requirements — next milestone via `/gsd:new-milestone`)
 
 ### Out of Scope
 
@@ -74,11 +72,12 @@ Visitors experience the beauty and scale of the Hiawatha's Revenge route through
 
 ## Context
 
-Shipped v1.0 + v1.1 + v1.2 + v1.3 with 3,660 LOC across Astro/TypeScript/JavaScript/CSS.
+Shipped v1.0 through v1.4 with 4,802 LOC across Astro/TypeScript/JavaScript/CSS.
 Tech stack: Astro 6, Tailwind 4, Vite 7, Leaflet, Chart.js, PhotoSwipe, sharp, gpxparser.
-Build pipeline: 10-step pipeline.js (parse-gpx → generate-surface-points → resolve-annotations → generate-sector-details → compute-sector-elevations → generate-thumbnails → copy-images → process-historical → match-photos → copy-gpx).
+Build pipeline: 12-step pipeline.js (parse-gpx → generate-surface-points → resolve-annotations → generate-sector-details → compute-sector-elevations → generate-thumbnails → copy-images → generate-webp → process-historical → match-photos → copy-gpx → generate-og-image).
 51 route photos with mileage-assigned manifest, 2 historical Remington illustrations (Met CC0), 456 simplified route points, 2,258 ft elevation gain.
-v1.3 added interactive sector map (labels, panels, surface-colored track), editorial polish (EB Garamond, parallax, spacing), and 3 new cultural motif components.
+v1.4 added WebP image optimization (hero srcset, parallax image-set), SEO/social sharing (OG, Twitter Card, JSON-LD), WCAG AA accessibility, and pipeline source fixes.
+Site URL configured as https://hiawathasrevenge.com (placeholder — update before deployment).
 Reference implementation: github.com/sheppardjm/mkUltraGravel — same architecture, different visual identity.
 MBTN (mbtn.org) is the beneficiary — donate CTA links to their site.
 
@@ -124,6 +123,15 @@ MBTN (mbtn.org) is the beneficiary — donate CTA links to their site.
 | Cascade fix for stat legibility | Specific :global() overrides, no !important | ✓ Good — clean CSS |
 | EB Garamond Font tag without preload | Drop-cap use below-fold only | ✓ Good — no critical-path weight |
 | MAP-08 show() trade-off | Non-modal preserves map interactivity, no backdrop expected | ✓ Good — intentional design |
+| Spectral serif font for sector panel | Below-fold use, no preload weight | ✓ Good — editorial register |
+| @supports guard for gradient text | Progressive enhancement: Firefox gets solid fallback | ✓ Good — cross-browser safe |
+| amber-300 empty stars (5.30:1) | WCAG AA contrast on forest-800 background | ✓ Good — accessible |
+| :focus-visible not :focus | Keyboard-only indicators per WCAG SC 2.4.7 | ✓ Good — no mouse rings |
+| Sharp center-crop for OG image | Preserve forest midpoint in 1200x630 | ✓ Good — social preview quality |
+| image-set() without -webkit- prefix | Baseline widely available since September 2023 | ✓ Good — clean CSS |
+| Fix NF2217 at source not output | Pipeline source truth prevents regression | ✓ Good — self-healing |
+| generate-og-image as final pipeline step | No data dependencies, safe ordering | ✓ Good — clean pipeline |
+| Placeholder domain in astro.config.ts | Deployment URL TBD; all chain logic correct | — Pending deployment |
 
 ---
-*Last updated: 2026-04-06 after v1.4 milestone started*
+*Last updated: 2026-04-06 after v1.4 milestone complete*

@@ -1,5 +1,33 @@
 # Project Milestones: Hiawatha's Revenge
 
+## v1.4 Performance & Polish (Shipped: 2026-04-06)
+
+**Delivered:** Ship-ready polish with WebP image optimization (hero srcset, gallery, parallax), full SEO/social sharing metadata (OpenGraph, Twitter Card, canonical, Event JSON-LD), WCAG AA accessibility hardening (focus indicators, alt text, contrast, reduced-motion), tech debt cleanup (font, naming, cross-browser), and self-healing build pipeline.
+
+**Phases completed:** 28-32 (7 plans total)
+
+**Key accomplishments:**
+
+- Tech debt resolved: Spectral serif font via Astro Fonts API, NF2217-2218 naming reconciled across all data files, Firefox star rating gradient @supports fallback
+- Full SEO & social sharing: OpenGraph, Twitter Card, canonical URL, Schema.org Event JSON-LD for June 6, 2026 ride with 1200x630 OG image
+- Image optimization: Hero WebP srcset (640w/1280w/1600w) with LCP preload, gallery WebP thumbnails confirmed, parallax CSS image-set() with WebP/JPEG selection
+- WCAG AA accessibility: Global :focus-visible keyboard indicators, descriptive gallery alt text, star rating contrast fix (5.30:1), full reduced-motion compliance
+- Self-healing pipeline: NF2217-2218 fixed at source in resolve-annotations.js, generate-og-image.js wired as 12th pipeline step
+- Comprehensive audit passed: 15/15 requirements, 5/5 phases, 18/18 integration connections, 6/6 E2E flows verified
+
+**Stats:**
+
+- 52 files created/modified (+4,869/-218)
+- 4,802 lines of Astro/TypeScript/JavaScript/CSS (total codebase)
+- 5 phases, 7 plans, ~14 tasks
+- 7 days from first commit to ship (2026-03-30 → 2026-04-06)
+
+**Git range:** `8f47eee` (docs: create milestone v1.4 roadmap) → `e604041` (fix(uat): simplify map colors, fix gallery loading, polish hero and spacing)
+
+**What's next:** TBD — next milestone via `/gsd:new-milestone`
+
+---
+
 ## v1.3 Interactive Map & Editorial Polish (Shipped: 2026-04-02)
 
 **Delivered:** First-class interactive map experience with sector labels, clickable detail panels with elevation sparklines, surface-colored route track, and editorial polish with EB Garamond drop-caps, parallax backgrounds, skeleton loaders, and three new Native American cultural motif components.
