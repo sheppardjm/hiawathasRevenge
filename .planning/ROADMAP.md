@@ -6,7 +6,7 @@
 - ✅ **v1.1 Visual Redesign** - Phases 12-17 (shipped 2026-03-31)
 - ✅ **v1.2 Cultural Maximalism** - Phases 18-22 + gaps (shipped 2026-04-02)
 - ✅ **v1.3 Interactive Map & Editorial Polish** - Phases 23-27 (shipped 2026-04-02)
-- 🚧 **v1.4 Performance & Polish** - Phases 28-31 (in progress)
+- ✅ **v1.4 Performance & Polish** - Phases 28-31 (shipped 2026-04-06)
 
 ## Phases
 
@@ -17,14 +17,14 @@ See MILESTONES.md for full history.
 
 </details>
 
-### 🚧 v1.4 Performance & Polish (In Progress)
+### ✅ v1.4 Performance & Polish (Complete)
 
 **Milestone Goal:** Ship-ready polish — tech debt cleanup, SEO/social sharing metadata, image optimization for performance, and accessibility hardening so the site is confident to share publicly.
 
 - [x] **Phase 28: Tech Debt Cleanup** - Fix carried-forward CSS, pipeline, and cross-browser issues ✅ 2026-04-06
 - [x] **Phase 29: SEO & Social Sharing** - Meta tags, structured data, and canonical URL for discoverability ✅ 2026-04-06
 - [x] **Phase 30: Image Optimization** - Hero srcset, gallery WebP, parallax image-set() for Lighthouse performance ✅ 2026-04-06
-- [ ] **Phase 31: Accessibility Hardening** - Focus indicators, alt text, contrast, and reduced-motion for WCAG compliance
+- [x] **Phase 31: Accessibility Hardening** - Focus indicators, alt text, contrast, and reduced-motion for WCAG compliance ✅ 2026-04-06
 
 ## Phase Details
 
@@ -73,20 +73,21 @@ Plans:
 - [x] 30-01-PLAN.md -- Hero WebP pipeline — generate srcset variants, add `<picture>` element and `<link rel="preload">`
 - [x] 30-02-PLAN.md -- Gallery and parallax WebP — update thumbnail paths and add CSS image-set()
 
-### Phase 31: Accessibility Hardening
+### Phase 31: Accessibility Hardening ✅
 **Goal**: The site passes a WCAG AA accessibility audit — all interactive elements are keyboard-navigable with visible focus, all images have meaningful alt text, color contrast meets minimums, and motion respects user preferences
 **Depends on**: Phase 28 (star rating gradient fix affects A11Y-03 contrast verification)
 **Requirements**: A11Y-01, A11Y-02, A11Y-03, A11Y-04
+**Completed**: 2026-04-06
 **Success Criteria** (what must be TRUE):
-  1. Tabbing through the page shows a visible focus ring on every interactive element (sector panel close button, GPX download link, Strava links, donate CTAs, gallery thumbnails)
-  2. Gallery thumbnail images have descriptive alt text identifying the photo content and approximate mile marker
-  3. Empty stars in difficulty ratings have a contrast ratio of at least 4.5:1 against their background
-  4. Sector panel open/close transitions are instant (no animation) when the user has prefers-reduced-motion enabled
+  1. ✓ Tabbing through the page shows a visible focus ring on every interactive element (sector panel close button, GPX download link, Strava links, donate CTAs, gallery thumbnails)
+  2. ✓ Gallery thumbnail images have descriptive alt text identifying the photo content and approximate mile marker
+  3. ✓ Empty stars in difficulty ratings have a contrast ratio of at least 4.5:1 against their background
+  4. ✓ Sector panel open/close transitions are instant (no animation) when the user has prefers-reduced-motion enabled
 **Plans**: 2 plans
 
 Plans:
-- [ ] 31-01-PLAN.md -- Focus indicators and gallery alt text — global :focus-visible baseline, component overrides, descriptive alt from mile data
-- [ ] 31-02-PLAN.md -- Star rating contrast fix and reduced-motion verification — amber-300 empty stars (5.30:1), A11Y-04 comment
+- [x] 31-01-PLAN.md -- Focus indicators and gallery alt text — global :focus-visible baseline, component overrides, descriptive alt from mile data
+- [x] 31-02-PLAN.md -- Star rating contrast fix and reduced-motion verification — amber-300 empty stars (5.30:1), A11Y-04 comment
 
 ## Progress
 
@@ -98,4 +99,4 @@ Phases 28-31. Phases 28, 29, 30 are independent; Phase 31 depends on Phase 28.
 | 28. Tech Debt Cleanup | v1.4 | 1/1 | ✅ Complete | 2026-04-06 |
 | 29. SEO & Social Sharing | v1.4 | 1/1 | ✅ Complete | 2026-04-06 |
 | 30. Image Optimization | v1.4 | 2/2 | ✅ Complete | 2026-04-06 |
-| 31. Accessibility Hardening | v1.4 | 0/2 | Not started | - |
+| 31. Accessibility Hardening | v1.4 | 2/2 | ✅ Complete | 2026-04-06 |

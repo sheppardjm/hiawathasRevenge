@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-04-06)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive, visually stunning showcase that inspires them to ride it and support MBTN.
-**Current focus:** v1.4 Performance & Polish — Phase 31: Accessibility Hardening IN PROGRESS
+**Current focus:** v1.4 Performance & Polish — COMPLETE
 
 ## Current Position
 
 Phase: 31 of 31 (Accessibility Hardening)
 Plan: 2 of 2 in Phase 31
-Status: In progress
-Last activity: 2026-04-06 — Completed 31-02-PLAN.md (star rating contrast A11Y-03 + reduced-motion A11Y-04 verification)
+Status: v1.4 milestone complete
+Last activity: 2026-04-06 — Phase 31 complete, all A11Y requirements verified
 
-Progress: [████████████████████] v1.0-v1.3 ✅ | v1.4 [█████░░░░░] 5/6 plans
+Progress: [████████████████████] v1.0-v1.3 ✅ | v1.4 [██████████] 6/6 plans ✅
 
 ## Performance Metrics
 
@@ -49,5 +49,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-04-06
-Stopped at: Completed 31-02-PLAN.md — star rating empty-star contrast fixed (A11Y-03), sector panel reduced-motion annotated (A11Y-04)
+Stopped at: Phase 31 complete — all accessibility hardening requirements verified (A11Y-01 through A11Y-04). v1.4 milestone complete.
 Resume file: None

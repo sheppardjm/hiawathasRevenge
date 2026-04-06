@@ -16,10 +16,10 @@ Requirements for ship-ready polish. Each maps to roadmap phases.
 
 ### Accessibility
 
-- [ ] **A11Y-01**: All interactive elements have `:focus-visible` indicators (sector panel close, GPX download, Strava links, donate CTAs)
-- [ ] **A11Y-02**: Gallery thumbnails have meaningful alt text (e.g., "Route photo at mile 42")
-- [ ] **A11Y-03**: Star rating empty stars meet WCAG AA contrast ratio (currently 2.95:1)
-- [ ] **A11Y-04**: RouteMap sector panel transitions respect `prefers-reduced-motion`
+- [x] **A11Y-01**: All interactive elements have `:focus-visible` indicators (sector panel close, GPX download, Strava links, donate CTAs) ✅
+- [x] **A11Y-02**: Gallery thumbnails have meaningful alt text (e.g., "Route photo at mile 42") ✅
+- [x] **A11Y-03**: Star rating empty stars meet WCAG AA contrast ratio (5.30:1 with amber-300) ✅
+- [x] **A11Y-04**: RouteMap sector panel transitions respect `prefers-reduced-motion` ✅
 
 ### SEO & Social Sharing
 
@@ -60,10 +60,10 @@ Requirements for ship-ready polish. Each maps to roadmap phases.
 | IMG-02 | Phase 30 | Complete |
 | IMG-03 | Phase 30 | Complete |
 | IMG-04 | Phase 30 | Complete |
-| A11Y-01 | Phase 31 | Pending |
-| A11Y-02 | Phase 31 | Pending |
-| A11Y-03 | Phase 31 | Pending |
-| A11Y-04 | Phase 31 | Pending |
+| A11Y-01 | Phase 31 | Complete |
+| A11Y-02 | Phase 31 | Complete |
+| A11Y-03 | Phase 31 | Complete |
+| A11Y-04 | Phase 31 | Complete |
 | SEO-01 | Phase 29 | Complete |
 | SEO-02 | Phase 29 | Complete |
 | SEO-03 | Phase 29 | Complete |
@@ -79,4 +79,4 @@ Requirements for ship-ready polish. Each maps to roadmap phases.
 
 ---
 *Requirements defined: 2026-04-06*
-*Last updated: 2026-04-06 after Phase 30 completion*
+*Last updated: 2026-04-06 after Phase 31 completion (v1.4 complete)*
