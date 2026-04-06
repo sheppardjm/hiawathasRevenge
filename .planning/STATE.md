@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-04-06)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive, visually stunning showcase that inspires them to ride it and support MBTN.
-**Current focus:** v1.5 Multi-Route Support — defining requirements
+**Current focus:** v1.5 Multi-Route Support -- Phase 33: Pipeline & Route Data
 
 ## Current Position
 
-Phase: Not started (defining requirements)
-Plan: —
-Status: Defining requirements
-Last activity: 2026-04-06 — Milestone v1.5 started
+Phase: 33 of 36 (Pipeline & Route Data)
+Plan: 0 of 3 in current phase
+Status: Ready to plan
+Last activity: 2026-04-06 -- Roadmap created for v1.5 milestone
 
-Progress: [████████████████████] v1.0-v1.4 ✅ | v1.5 [░░░░░░░░░░] defining
+Progress: [████████████████████] v1.0-v1.4 complete | v1.5 [░░░░░░░░░░] 0/9 plans
 
 ## Performance Metrics
 
@@ -37,17 +37,19 @@ None.
 ### Blockers/Concerns
 
 - Ojibwe community consultation recommended (cultural sensitivity review)
-- Project requires Node >=22.12.0 — use Volta (`/Users/Sheppardjm/.volta/bin/node`)
-- Strava IDs populated for 6/7 segments (Rapid River Truck Trail pending — user hasn't created segment yet)
+- Project requires Node >=22.12.0 -- use Volta (`/Users/Sheppardjm/.volta/bin/node`)
+- Strava IDs populated for 6/7 segments (Rapid River Truck Trail pending)
 - iOS Safari device testing deferred to v1.5+ (requires physical device)
-- astro.config.ts site URL is placeholder (https://hiawathasrevenge.com) — update before deployment
+- astro.config.ts site URL is placeholder -- update before deployment
+- Surface data gap: 100k/50k lack RidewithGPS JSON; fallback strategy needed (Phase 33)
+- Sector-to-route membership estimated from mile ranges, not verified against GPX tracks (Phase 33)
 
-### Tech Debt (all resolved through v1.4)
+### Tech Debt
 
 All tech debt items from v1.0-v1.4 resolved. No outstanding items.
 
 ## Session Continuity
 
 Last session: 2026-04-06
-Stopped at: v1.4 milestone archived — all phases complete, audit passed, archives created
+Stopped at: v1.5 roadmap created -- ready to plan Phase 33
 Resume file: None

@@ -42,6 +42,10 @@ Requirements for multi-route support. Each maps to roadmap phases.
 - [ ] **DL-01**: GPX download link updates href and label text to match the selected route
 - [ ] **LINK-01**: URL hash deep linking (`#route=100k`) pre-selects the specified route on page load and updates on route change via `history.replaceState`
 
+### Hero Video
+
+- [ ] **HERO-01**: Hero section plays a `<video>` element (Stationary_Hero_Video_With_Motion.mp4) with the existing hero image as `<img>` poster/fallback for unsupported browsers or slow connections
+
 ## Future Requirements
 
 ### Cross-Browser/Device (carried from v1.4)
@@ -71,32 +75,33 @@ Requirements for multi-route support. Each maps to roadmap phases.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| PIPE-01 | - | Pending |
-| PIPE-02 | - | Pending |
-| PIPE-03 | - | Pending |
-| PIPE-04 | - | Pending |
-| PIPE-05 | - | Pending |
-| SEL-01 | - | Pending |
-| SEL-02 | - | Pending |
-| SEL-03 | - | Pending |
-| MAP-01 | - | Pending |
-| MAP-02 | - | Pending |
-| MAP-03 | - | Pending |
-| MAP-04 | - | Pending |
-| MAP-05 | - | Pending |
-| ELEV-01 | - | Pending |
-| ELEV-02 | - | Pending |
-| ELEV-03 | - | Pending |
-| STAT-01 | - | Pending |
-| STAT-02 | - | Pending |
-| DL-01 | - | Pending |
-| LINK-01 | - | Pending |
+| PIPE-01 | Phase 33 | Pending |
+| PIPE-02 | Phase 33 | Pending |
+| PIPE-03 | Phase 33 | Pending |
+| PIPE-04 | Phase 33 | Pending |
+| PIPE-05 | Phase 33 | Pending |
+| SEL-01 | Phase 34 | Pending |
+| SEL-02 | Phase 34 | Pending |
+| SEL-03 | Phase 34 | Pending |
+| MAP-01 | Phase 34 | Pending |
+| MAP-02 | Phase 34 | Pending |
+| MAP-03 | Phase 34 | Pending |
+| MAP-04 | Phase 34 | Pending |
+| MAP-05 | Phase 34 | Pending |
+| ELEV-01 | Phase 35 | Pending |
+| ELEV-02 | Phase 35 | Pending |
+| ELEV-03 | Phase 35 | Pending |
+| STAT-01 | Phase 35 | Pending |
+| STAT-02 | Phase 35 | Pending |
+| DL-01 | Phase 36 | Pending |
+| LINK-01 | Phase 36 | Pending |
+| HERO-01 | Phase 36 | Pending |
 
 **Coverage:**
-- v1.5 requirements: 20 total
-- Mapped to phases: 0 (pending roadmap)
-- Unmapped: 20
+- v1.5 requirements: 21 total
+- Mapped to phases: 21/21
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-04-06*
-*Last updated: 2026-04-06 after initial definition*
+*Last updated: 2026-04-06 after roadmap phase mapping*
