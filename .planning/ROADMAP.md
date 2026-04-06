@@ -82,11 +82,11 @@ Plans:
   2. Gallery thumbnail images have descriptive alt text identifying the photo content and approximate mile marker
   3. Empty stars in difficulty ratings have a contrast ratio of at least 4.5:1 against their background
   4. Sector panel open/close transitions are instant (no animation) when the user has prefers-reduced-motion enabled
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 31-01: Focus indicators and alt text audit — :focus-visible styles, gallery alt text from manifest
-- [ ] 31-02: Contrast and motion — star rating contrast fix, sector panel reduced-motion
+- [ ] 31-01-PLAN.md -- Focus indicators and gallery alt text — global :focus-visible baseline, component overrides, descriptive alt from mile data
+- [ ] 31-02-PLAN.md -- Star rating contrast fix and reduced-motion verification — amber-300 empty stars (5.30:1), A11Y-04 comment
 
 ## Progress
 
