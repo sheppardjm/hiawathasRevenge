@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-04-06)
 
 ## Current Position
 
-Phase: 31 of 31 (Accessibility Hardening)
-Plan: 2 of 2 in Phase 31
-Status: v1.4 milestone complete
-Last activity: 2026-04-06 — Phase 31 complete, all A11Y requirements verified
+Phase: 32 of 32 (Pipeline Source Fixes)
+Plan: 1 of 1 in Phase 32
+Status: Phase 32 complete
+Last activity: 2026-04-06 — Completed 32-01-PLAN.md (pipeline source fixes)
 
-Progress: [████████████████████] v1.0-v1.3 ✅ | v1.4 [██████████] 6/6 plans ✅
+Progress: [████████████████████] v1.0-v1.3 ✅ | v1.4 [██████████] 6/6 plans ✅ | v1.5 [██] 1/1 plans ✅
 
 ## Performance Metrics
 
@@ -40,14 +40,14 @@ None.
 - Strava IDs populated for 6/7 segments (Rapid River Truck Trail pending — user hasn't created segment yet)
 - iOS Safari device testing deferred to v1.5+ (requires physical device)
 
-### Tech Debt (resolved in Phase 28 Plan 01)
+### Tech Debt (resolved)
 
 - DEBT-01: RESOLVED — Spectral font added via Astro Fonts API; --font-serif semantic variable defined; RouteMap.astro sector panel uses var(--font-serif)
-- DEBT-02: RESOLVED — NF2217-2218 name consistent across annotations.json, sector-details.json, sector-elevations.json; sector ID unchanged
+- DEBT-02: RESOLVED PERMANENTLY (Phase 32) — NF2217-2218 fixed in resolve-annotations.js source (GRAVEL_SECTORS); pipeline self-healing; og-image.js wired into pipeline
 - DEBT-03: RESOLVED — @supports guard with color:transparent for Firefox gradient text; solid amber fallback for non-supporting browsers
 
 ## Session Continuity
 
 Last session: 2026-04-06
-Stopped at: Phase 31 complete — all accessibility hardening requirements verified (A11Y-01 through A11Y-04). v1.4 milestone complete.
+Stopped at: Phase 32 complete — pipeline source fixes: NF2217-2218 fixed at source, generate-og-image wired into pipeline.js
 Resume file: None
