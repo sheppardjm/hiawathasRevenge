@@ -60,12 +60,11 @@ Plans:
   3. Sector overlays, ghost hit targets, and pill labels show only sectors present on the selected route
   4. Inactive routes appear as faint ghost polylines with route-specific colors for geographic context
   5. The sector detail panel closes automatically if showing a sector not present on the newly selected route
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 34-01: Route selector control and route:change event architecture
-- [ ] 34-02: LayerGroup refactor and polyline/sector switching
-- [ ] 34-03: Ghost routes, color identity, and panel close-on-switch
+- [ ] 34-01-PLAN.md -- RouteMap.astro initMap/renderRoute refactor with activeRouteGroup and surface-colored polylines
+- [ ] 34-02-PLAN.md -- Route selector control, ghost polylines, route:change event, and ElevationProfile switching
 
 ### Phase 35: Elevation Profile & Route Stats
 **Goal**: The elevation chart, sector annotation bands, bike marker crosshair, and route stats all stay synchronized with the selected route
@@ -106,7 +105,7 @@ Phases execute in numeric order: 33 → 34 → 35 → 36
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
 | 33. Pipeline & Route Data | v1.5 | 3/3 | ✓ Complete | 2026-04-06 |
-| 34. Route Selector & Map Switching | v1.5 | 0/3 | Not started | - |
+| 34. Route Selector & Map Switching | v1.5 | 0/2 | Not started | - |
 | 35. Elevation Profile & Route Stats | v1.5 | 0/2 | Not started | - |
 | 36. Downloads, Deep Linking & Hero Video | v1.5 | 0/2 | Not started | - |
 
