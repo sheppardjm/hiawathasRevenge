@@ -1,0 +1,53 @@
+{
+  "defaultRoute": "100mi",
+  "routes": [
+    {
+      "id": "100mi",
+      "name": "100 Mile",
+      "shortName": "100mi",
+      "gpxFile": "Munising_Hiawatha_s_Revenge.gpx",
+      "color": "#c8973e",
+      "totalMiles": 101.98,
+      "elevationGainFeet": 2258,
+      "sectorIds": [
+        "sector-520",
+        "sector-nf2266",
+        "sector-bass-lake",
+        "sector-nf2217",
+        "sector-nd2225",
+        "sector-doe-lake",
+        "sector-rapid-river"
+      ]
+    },
+    {
+      "id": "100k",
+      "name": "100K",
+      "shortName": "100k",
+      "gpxFile": "Hiawatha_s_Revenge_100k.gpx",
+      "color": "#5b9279",
+      "totalMiles": 61.68,
+      "elevationGainFeet": 1616,
+      "sectorIds": [
+        "sector-520",
+        "sector-nf2266",
+        "sector-doe-lake",
+        "sector-rapid-river"
+      ]
+    },
+    {
+      "id": "50k",
+      "name": "50K",
+      "shortName": "50k",
+      "gpxFile": "Hiawatha_s_Revenge_50K_.gpx",
+      "color": "#4a90c4",
+      "totalMiles": 31.19,
+      "elevationGainFeet": 809,
+      "sectorIds": [
+        "sector-520",
+        "sector-nf2266",
+        "sector-doe-lake",
+        "sector-rapid-river"
+      ]
+    }
+  ]
+}
