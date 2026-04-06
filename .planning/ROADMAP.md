@@ -76,11 +76,11 @@ Plans:
   3. Hovering the elevation chart after a route switch moves the bike marker along the correct route's polyline on the map
   4. Route stats (distance, elevation gain, sector count) update to match the selected route
   5. A comparison sidebar shows all 3 routes' key stats side by side
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 35-01: Elevation chart destroy/recreate on route:change
-- [ ] 35-02: Route stats switching and comparison sidebar
+- [ ] 35-01-PLAN.md -- Lazy-init race fix, dynamic RouteStats with sector count and route:change listener
+- [ ] 35-02-PLAN.md -- Route comparison sidebar with active highlight
 
 ### Phase 36: Downloads, Deep Linking & Hero Video
 **Goal**: Users can download GPX files for any route, share links that pre-select a specific route, and experience a video hero section
