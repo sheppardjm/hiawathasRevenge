@@ -7,13 +7,16 @@ const { totalMiles, elevationGainFeet } = routeEntry!.data.meta;
 
 <div class="stats-grid">
   <div class="stat-card">
-    <span class="stat-value">{Math.round(totalMiles)}</span>
+    <span class="stat-value" id="stat-miles">{Math.round(totalMiles)}</span>
     <span class="stat-label">Miles</span>
   </div>
   <div class="stat-card">
-    <span class="stat-value">{elevationGainFeet.toLocaleString()}</span>
+    <span class="stat-value" id="stat-elevation">{elevationGainFeet.toLocaleString()}</span>
     <span class="stat-label">Feet of Climbing</span>
   </div>
+  <div class="stat-card">
+    <span class="stat-value" id="stat-sectors">7</span>
+    <span class="stat-label">Sectors</span>
   </div>
 </div>
 
@@ -59,3 +62,23 @@ const { totalMiles, elevationGainFeet } = routeEntry!.data.meta;
   }
 
 </style>
+
+<script>
+  let _routesCache = null;
+  async function getRoutesData() {
+    if (!_routesCache) _routesCache = fetch('/data/routes.json').then(r => r.json());
+    return _routesCache;
+  }
+
+  window.addEventListener('route:change', async (e) => {
+    const data = await getRoutesData();
+    const route = data.routes.find(r => r.id === e.detail.routeId);
+    if (!route) return;
+    const milesEl = document.getElementById('stat-miles');
+    const elevEl = document.getElementById('stat-elevation');
+    const secEl = document.getElementById('stat-sectors');
+    if (milesEl) milesEl.textContent = Math.round(route.totalMiles);
+    if (elevEl) elevEl.textContent = route.elevationGainFeet.toLocaleString();
+    if (secEl) secEl.textContent = route.sectorIds.length;
+  });
+</script>
