@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-04-06)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive, visually stunning showcase that inspires them to ride it and support MBTN.
-**Current focus:** v1.4 Performance & Polish — Phase 28: Tech Debt Cleanup
+**Current focus:** v1.4 Performance & Polish — Phase 29: SEO & Social Sharing
 
 ## Current Position
 
-Phase: 28 of 31 (Tech Debt Cleanup) — first of 4 v1.4 phases
-Plan: 1 of 1 in Phase 28
-Status: Phase 28 complete
-Last activity: 2026-04-06 — Completed 28-01-PLAN.md (tech debt cleanup)
+Phase: 29 of 31 (SEO & Social Sharing)
+Plan: 1 of 1 in Phase 29
+Status: Phase 29 complete
+Last activity: 2026-04-06 — Completed 29-01-PLAN.md (SEO/social sharing)
 
-Progress: [████████████████████] v1.0-v1.3 ✅ | v1.4 [█░░░░░░░░░] 1/6 plans
+Progress: [████████████████████] v1.0-v1.3 ✅ | v1.4 [██░░░░░░░░] 2/6 plans
 
 ## Performance Metrics
 
@@ -49,5 +49,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-04-06
-Stopped at: Completed 28-01-PLAN.md — Phase 28 (Tech Debt Cleanup) complete
+Stopped at: Completed 29-01-PLAN.md — Phase 29 (SEO & Social Sharing) complete
 Resume file: None
