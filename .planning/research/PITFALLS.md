@@ -1,612 +1,569 @@
-# Domain Pitfalls: v1.3 Map Interactivity
+# Domain Pitfalls: v1.5 Multi-Route Support
 
-**Domain:** Adding interactive sector labels, clickable polylines, slide-out/bottom sheet detail panels to an existing Leaflet map in a static Astro site
-**Researched:** 2026-04-02
-**Confidence:** HIGH for Leaflet-specific pitfalls (verified via official docs and confirmed GitHub issues), MEDIUM for mobile gesture conflicts (platform-specific variance is real), HIGH for integration pitfalls (based on direct codebase analysis)
+**Domain:** Adding multiple route variants (100mi/100k/50k) to an existing single-route Leaflet + Chart.js cycling map
+**Researched:** 2026-04-06
+**Confidence:** HIGH (all pitfalls derived from reading actual source code and analyzing all three GPX files)
 
 ---
 
 ## Critical Pitfalls
 
-Mistakes that cause rewrites, regressions in existing functionality, or broken experiences on mobile. Recovery cost: HIGH.
+Mistakes that cause rewrites, broken features, or data corruption. Recovery cost: HIGH.
 
 ---
 
-### Pitfall 1: Sector Polyline Click Targets Are Unreliable on Mobile Without a Wider Hit Layer
+### Pitfall 1: Surface Data Has No Source for 100k/50k Routes
 
-**What goes wrong:**
-The existing sector polylines are rendered at `weight: 5` (5px SVG stroke). On desktop this is adequately clickable. On mobile, users tap with fingers (contact area 40-60px) against a 5px line — the hit rate is poor. Users get confused when they tap the colored line and nothing happens, or they repeatedly tap until they accidentally hit it. This is especially bad for the shorter sectors (sector-520 at 1.3mi is a short diagonal line on the overview zoom).
+**What goes wrong:** The current surface coloring pipeline depends on `hiawathasRevenge.json` -- a RidewithGPS export that contains an `S` field (surface type) per track point. This JSON export exists only for the 100mi route. The 100k GPX comes from Strava and the 50k from RidewithGPS, but neither has the companion `.json` export with `S` values. Without this, `generate-surface-points.js` cannot produce surface coloring for the shorter routes.
 
-**Why it happens:**
-Leaflet's SVG renderer uses the visual stroke width as the hit detection area. There is no built-in `touchTolerance` or `weight` equivalent for the invisible interaction zone on SVG paths. The Canvas renderer has better tolerances, but this project uses SVG (the default). This has been a known open issue since Leaflet 0.7 (GitHub issue #1264, opened 2013, closed with the note that the Canvas backend fix was available, but SVG was not fixed).
+**Why it happens:** `generate-surface-points.js` (lines 39-44) loads `hiawathasRevenge.json` and builds a coordinate lookup map from `rwgps.route.track_points[].S`. The script then matches simplified route points against this map using 5-decimal-place coordinate keys. There is no fallback, no second data source. The script will exit with code 1 if >5 points are unmatched (lines 98-101).
 
 **Consequences:**
-- Mobile users cannot reliably tap into sectors to open the detail panel
-- The 52px touch target requirement (stated in PROJECT.md) is violated
-- Frustrating UX that undermines the primary v1.3 feature
-
-**Prevention:**
-Add a transparent "ghost" polyline on top of each sector polyline with a weight of 20-30px and `opacity: 0`, keeping the same `click` event handler. The visible polyline uses `interactive: false`; the ghost polyline carries all interaction. This is the same approach used by the community library Leaflet.HighlightableLayers (which adds a 20px transparent overlay).
-
-Implementation pattern:
-```javascript
-// Visible polyline — non-interactive
-L.polyline(sectorPts, {
-  color: colors.line, weight: 5, opacity: 0.85, interactive: false
-}).addTo(map);
-
-// Ghost hit area — interactive, transparent
-L.polyline(sectorPts, {
-  color: 'transparent', weight: 20, opacity: 0, interactive: true
-}).on('click', () => openSectorPanel(sector)).addTo(map);
-```
+- Pipeline crashes on 100k/50k if naively extended to process multiple GPX files
+- If you skip surface data for shorter routes, the map loses its signature visual feature (surface-colored polylines)
+- If you try to reuse the 100mi surface lookup for shared segments, coordinate precision differences between GPX sources (Strava uses 7 decimal places, RidewithGPS uses 5) will cause lookup misses
 
 **Warning signs:**
-- Single polyline for each sector with no ghost layer
-- `weight` value below 20 on touch devices
-- No mention of touch testing in implementation plan
+- `generate-surface-points.js` exits with "ERROR: N unmatched points" for non-100mi routes
+- Surface polylines render entirely as "unknown" color for shorter routes
+- Coordinate key format `"lat,lon"` fails to match across different GPX precision levels
 
-**Phase to address:** The sector-clickability phase — establish this ghost-layer pattern before adding click handlers, not after.
+**Prevention:**
+1. For shared segments (where 100k/50k overlap with 100mi), use nearest-neighbor geographic matching instead of exact coordinate key lookup. A haversine distance threshold of ~10m would match corresponding points across GPX sources with different precision.
+2. For route segments unique to shorter routes, either obtain RidewithGPS JSON exports for those routes OR infer surface type from the 100mi route's surface data by geographic proximity.
+3. Alternatively, restructure to make surface data route-agnostic: build a geographic surface lookup indexed by lat/lon regions, then query it per-route at generation time.
 
-**Recovery cost if hit:** MEDIUM — requires refactoring polyline construction loop for all 7 sectors plus retesting touch behavior on iOS and Android.
+**Detection:** Pipeline error output. Test by running `generate-surface-points.js` against 100k route data early.
+
+**Recovery cost:** HIGH -- requires rethinking the surface data pipeline architecture, not just parameterizing it.
+
+**Which phase should address it:** First pipeline phase. Must be solved before any per-route data generation works.
 
 ---
 
-### Pitfall 2: bubblingMouseEvents on Sector Polylines Fires BOTH Sector Handler AND Map Click Handler
+### Pitfall 2: Event Bus Messages Lack Route Context (Cross-Component Desync)
 
-**What goes wrong:**
-When a click handler is added to each sector polyline and the developer also adds a map-level click handler (e.g., `map.on('click', closePanel)`), clicking a sector fires BOTH the sector click handler (opening the panel) AND the map click handler (immediately closing it). The panel flickers open and instantly closes. This is a confirmed Leaflet behavior change since v1.0.3 (GitHub issue #5313).
+**What goes wrong:** The CustomEvent bus dispatches `elevation:hover` with `{ miles }` and `elevation:leave` with no payload. When multiple routes exist, the map's `snapByMiles()` function (RouteMap.astro line 216-224) searches the module-scope `routePoints` variable. If the elevation chart shows the 50k route (31 miles) but the map still has 100mi `routePoints` loaded, a hover at mile 25 will snap to the wrong geographic point on the wrong route.
 
-**Why it happens:**
-In Leaflet 1.x, `bubblingMouseEvents` defaults to `true` for Path layers. This means polyline click events bubble up to the map. A naively implemented "click map to close panel" handler fires on the same event that opened the panel.
+**Why it happens:** The event bus was designed for a single route. `routePoints` is assigned once (line 322) and never updated. The `elevation:hover` handler (line 228-234) uses it directly with no concept of "which route am I tracking." Similarly, the elevation chart (ElevationProfile.astro line 168) dispatches `miles` without any route identifier.
 
 **Consequences:**
-- Detail panel appears to flash briefly but never stays open
-- Developer may spend hours debugging why the panel won't open
-- Particularly confusing because the behavior is zoom-level and pointer-position dependent
-
-**Prevention:**
-Two options, choose one:
-
-Option A (preferred): Use `bubblingMouseEvents: false` on the interactive polyline:
-```javascript
-L.polyline(sectorPts, {
-  interactive: true, bubblingMouseEvents: false
-}).on('click', (e) => {
-  L.DomEvent.stopPropagation(e);
-  openSectorPanel(sector);
-}).addTo(map);
-```
-
-Option B: Close the panel on `map.on('click', ...)` but add a guard: check that the click source is not a sector polyline. Less clean.
+- Bike marker animates along the wrong route's coordinates when a shorter route is selected
+- Crosshair position on the elevation chart may show nonsensical mile values
+- No error is thrown -- the system silently produces wrong behavior, making it hard to catch in testing
 
 **Warning signs:**
-- Click handler on polyline AND a `map.on('click', ...)` handler in the same code
-- Panel flashes open and closes immediately on click
-- Problem appears on desktop but not always mobile (touch events have slightly different propagation)
+- Hovering the 50k elevation chart moves the bike marker to the 100mi route's corresponding mileage point
+- After switching routes, the bike marker appears in geographic locations not on the visible polyline
 
-**Phase to address:** Sector click implementation phase — set `bubblingMouseEvents: false` from the start, not as a later fix.
+**Prevention:**
+1. Add a `routeId` field to the `elevation:hover` event detail: `{ miles, routeId }`.
+2. Update `RouteMap.astro` to maintain a `currentRouteId` and `routePoints` reference that updates when the route changes. The hover handler should check `routeId` matches before snapping.
+3. Dispatch a new `route:change` event when the user switches routes. Both the map and elevation chart should listen for this and swap their internal state.
+4. Consider whether `elevation:leave` also needs route context (it probably does not, since it only removes the marker).
 
-**Recovery cost if hit:** LOW once identified — a one-line fix, but the debugging process can be costly.
+**Detection:** Manual testing -- hover the elevation chart after switching routes and watch where the bike marker goes.
+
+**Recovery cost:** MEDIUM -- the fix is straightforward (add routeId to events, add state management), but every component that touches the event bus needs updating simultaneously.
+
+**Which phase should address it:** Must be addressed in the same phase that adds route switching UI, before the elevation chart is made route-aware.
 
 ---
 
-### Pitfall 3: Panel Open/Close Breaks elevation:hover Sync via the Existing CustomEvent Bus
+### Pitfall 3: Sector startIdx/endIdx Are Route-Specific Array Indices
 
-**What goes wrong:**
-The existing `elevation:hover` CustomEvent handler in RouteMap.astro updates `bikeMarker` on every chart mousemove. If the sector detail panel is implemented as a DOM element outside `#map` (correct approach), it may capture pointer events and intercept mousemove from the elevation chart area. Alternatively, when the panel slides open and covers part of the map, the Chart.js canvas loses hover events, leaving the bikeMarker frozen at the last position.
+**What goes wrong:** Annotations in `annotations.json` store `startIdx` and `endIdx` as integer indices into the 100mi route's 456-point `simplifiedPoints` array. These indices are used directly in `RouteMap.astro` (line 368: `latlngs.slice(sector.startIdx, sector.endIdx + 1)`) to extract sector polyline coordinates, and in `compute-sector-elevations.js` (line 63: `routePoints.slice(startIdx, endIdx + 1)`) to extract elevation data. If you generate different simplified point arrays for 100k/50k routes (which will have different point counts and different indices), the same sector IDs will need different `startIdx`/`endIdx` values per route.
 
-More specifically: the ElevationProfile chart fires `elevation:leave` when the pointer leaves the chart canvas. If the panel slides over the chart area on mobile, `elevation:leave` never fires, the bikeMarker stays visible, and the map looks wrong.
-
-**Why it happens:**
-The existing event bus uses `window.dispatchEvent` — a global broadcast that cannot be blocked by UI changes. But the SOURCE of those events (Chart.js canvas mousemove) CAN be interrupted. If a panel overlay receives pointer events, Chart.js stops receiving them and stops dispatching `elevation:hover`. The bikeMarker has no timeout/cleanup mechanism in the current code.
+**Why it happens:** `resolve-annotations.js` calls `snapByMileage()` which returns a `snapIdx` -- the index in the 100mi route's point array closest to the sector's start/end mile. The 100k route will have a completely different set of simplified points, with different array lengths and different index assignments for the same geographic locations.
 
 **Consequences:**
-- Biome marker stays frozen at wrong position after sector panel opens
-- Does not affect map tiles or panning, but creates visual confusion
-- Users see a stale "you are here" dot while reading sector details
-
-**Prevention:**
-1. Dispatch `elevation:leave` explicitly when opening any sector panel:
-   ```javascript
-   function openSectorPanel(sector) {
-     window.dispatchEvent(new CustomEvent('elevation:leave'));
-     // ... show panel
-   }
-   ```
-2. Ensure the panel element uses `pointer-events: auto` only on its own content, not on the surrounding overlay/backdrop if there is one.
-3. Use `touch-action: none` only on the map container itself, not on elements that overlap the chart.
+- Sector overlays drawn using 100mi indices on the 100k point array will cover the wrong geographic area or crash with out-of-bounds access
+- Elevation sparklines for sectors will show wrong elevation data
+- The sector detail panel's mile ranges (startMile/endMile) are mileage-correct, but the visual rendering (polylines, sparklines) will be wrong
 
 **Warning signs:**
-- Panel implementation does not dispatch `elevation:leave` on open
-- Bikemode marker remains on map after panel opens during testing
-- No test step: "open sector panel while chart hover is active"
+- Sector polylines on map visually do not align with the actual sector roads when a shorter route is selected
+- Sparkline elevation shapes do not match the sector's actual terrain
+- `slice()` returns empty arrays or arrays extending past the sector boundary
 
-**Phase to address:** Panel open/close phase, before integration testing.
+**Prevention:**
+1. Generate per-route annotation files (e.g., `annotations-100mi.json`, `annotations-100k.json`, `annotations-50k.json`) with route-specific `startIdx`/`endIdx` values.
+2. The `startMile`/`endMile` values must also be recomputed per route -- a sector at "mile 25.3" on the 100mi route will be at a different mile marker on the 100k route because the routes share a start point but diverge at different distances.
+3. Frontend code must swap annotation data when the route changes, not just the polyline.
+4. For sectors that do not exist on a shorter route, the annotation file should simply omit them.
 
-**Recovery cost if hit:** LOW — single `dispatchEvent` call, but requires recognizing the connection to the existing event bus.
+**Detection:** Visual inspection -- draw sector overlays on the map for each route and verify they align with the actual sector roads.
+
+**Recovery cost:** HIGH -- this is a data architecture change that propagates through `resolve-annotations.js`, `compute-sector-elevations.js`, `generate-sector-details.js`, and all frontend consumers (RouteMap.astro sector overlays, sector labels, sector detail panels, ElevationProfile.astro sector bands).
+
+**Which phase should address it:** Pipeline restructuring phase, immediately after parse-gpx is made multi-route capable.
 
 ---
 
-### Pitfall 4: Slide-Out Panel Placed Inside #map Breaks z-index Layering
+### Pitfall 4: Single-File Data Architecture Prevents Clean Route Switching
 
-**What goes wrong:**
-The developer, for convenience, adds the sector detail panel HTML inside the `<div id="map">` element in RouteMap.astro, expecting CSS `z-index` to layer it above the Leaflet tiles. This does not work reliably. Leaflet creates its own stacking context inside `#map` (`position: relative; z-index: 0`). Elements inside `#map` compete with Leaflet's internal panes (overlay pane z-index 400, marker pane z-index 600, popup pane z-index 700). The panel may appear behind markers or popups, and the Leaflet zoom controls (z-index 1000) will always appear in front of it.
+**What goes wrong:** All pipeline output goes to single files with no route qualifier: `route-data.json`, `surface-points.json`, `annotations.json`, `sector-details.json`, `sector-elevations.json`. The content config (`content.config.ts`) defines Zod schemas and Astro content collections that expect these exact filenames. The frontend fetches these paths directly (RouteMap.astro line 309-316, ElevationProfile.astro line 56). Going to multi-route means either: (a) restructuring to per-route files (breaking all existing references), or (b) merging all routes into the same files with a route key (requiring schema changes everywhere).
 
-**Why it happens:**
-CSS z-index only works within a stacking context. Leaflet creates its own stacking context. Adding a panel inside that context means it cannot escape the Leaflet z-index hierarchy (which tops out at 1000 for controls). The panel needs to live in the PAGE stacking context, not Leaflet's.
+**Why it happens:** The system was correctly designed for a single route. Every layer -- pipeline scripts, content collections, Zod schemas, and frontend fetch calls -- assumes one route dataset.
 
 **Consequences:**
-- Panel renders behind Leaflet zoom controls
-- Leaflet popup markers appear on top of panel content
-- On iOS, the stacking behavior differs from desktop, causing unpredictable layering
-
-**Prevention:**
-The panel MUST be a sibling of `#map`, not a child. Wrap both in a relative-positioned container:
-
-```html
-<div class="map-container" style="position: relative;">
-  <div id="map" class="route-map"></div>
-  <aside id="sector-panel" class="sector-panel" style="position: absolute; z-index: 1000; right: 0; top: 0; bottom: 0;">
-    <!-- panel content -->
-  </aside>
-</div>
-```
-
-This places the panel in the same stacking context as the map container, above Leaflet's internal panes.
+- Naive approach of "just run the pipeline 3 times" would overwrite data files
+- Content collection schemas need restructuring regardless of file strategy
+- Build-time components (RouteStats.astro, ElevationSparkline.astro) use `getEntry('routeData', 'route')` which expects a single entry
 
 **Warning signs:**
-- Panel HTML added inside `<div id="map">`
-- Panel is added as a Leaflet Control (L.Control) — controls are Leaflet-pane DOM, constrained to z-index 1000
-- Panel appears behind zoom buttons in testing
+- Pipeline runs for 100k overwrite 100mi data in `route-data.json`
+- Astro content collections fail validation if schema does not match new multi-route structure
 
-**Phase to address:** Panel DOM structure phase — establish correct DOM placement before writing any open/close logic.
+**Prevention:**
+Choose one strategy early and commit to it across the entire stack:
 
-**Recovery cost if hit:** MEDIUM — restructuring the HTML requires updating CSS selectors, Astro scoped styles, and JavaScript DOM queries.
+**Option A: Per-route file namespace** (Recommended)
+- Output: `route-data-100mi.json`, `route-data-100k.json`, `route-data-50k.json` (same pattern for all data files)
+- Content collections: use a glob loader pattern or restructure to folder-based collections
+- Frontend: fetch based on selected route ID
+- Pro: Each file is self-contained, easy to reason about, lazy-loadable
+- Con: More files, content collection refactoring needed
+
+**Option B: Single file with route-keyed structure**
+- Output: `route-data.json` contains `{ "100mi": {...}, "100k": {...}, "50k": {...} }`
+- Content collections: update schemas to expect the wrapping object
+- Frontend: destructure by route key after fetch
+- Pro: Fewer files, simpler fetch logic
+- Con: Larger single file, more complex schemas, all routes loaded even when only one is viewed
+
+**Recommendation: Option A.** Per-route files are cleaner, smaller, and allow the frontend to lazy-load only the selected route's data. The content collection refactoring is a one-time cost.
+
+**Detection:** Attempt to run pipeline for two routes and observe file overwrites.
+
+**Recovery cost:** HIGH if you start building without deciding. Retrofitting file naming and content collection schemas after components are built causes cascading changes.
+
+**Which phase should address it:** Very first pipeline phase. This is a prerequisite decision that determines how every other phase operates.
 
 ---
 
-### Pitfall 5: Permanent Tooltip Labels Positioned Wrong on First Load (Lazy Init Timing)
+### Pitfall 5: parse-gpx.js Elevation Gain Calibration Is Route-Specific
 
-**What goes wrong:**
-Sector name labels implemented as `bindTooltip(..., { permanent: true })` appear mispositioned on initial render — often at `[0, 0]` (top-left of map), or at the top-left corner of the sector bounds rather than the midpoint. This is caused by a known Leaflet timing issue: when `bindTooltip` is called before the map has completed its first `fitBounds` + tile load cycle, the tooltip position calculation uses pre-fitBounds coordinate projections that become stale.
+**What goes wrong:** `parse-gpx.js` (lines 111-136) has a calibration loop that tries noise filter thresholds (2m, 1m, 3m, 1.5m, 2.5m, 4m) to hit a target elevation gain range of 2,123-2,411 ft. This range was empirically determined for the 100mi route against Garmin/Strava recordings. Running the same calibration logic against the 100k or 50k GPX files will target a range that is meaningless for those routes, causing the loop to either: (a) land on a bad threshold, or (b) fail to find any threshold in range and silently use the default 2m.
 
-This is compounded by the existing lazy-init pattern in RouteMap.astro. The map is initialized on first scroll via IntersectionObserver. If sectors are added and labeled during async `initMap()` while tiles are still loading, the DOM layout and map projection may not be stable when `bindTooltip` calculates its pixel position.
-
-**Why it happens:**
-Leaflet's tooltip position is calculated at the time `bindTooltip` fires. For polylines, `permanent: true` tooltips default to the geometric center of the layer's bounds. If the map's projection changes after tooltip binding (because `fitBounds` fires, or a tile causes a repaint), the tooltip position is not recalculated. The `moveend` event does trigger repositioning, but there is a race condition in async init flows.
+**Why it happens:** The target range constants (`TARGET_MIN_FT = 2123`, `TARGET_MAX_FT = 2411`) are hardcoded for the 100-mile route. The entire calibration section was designed as a one-time validation step, not a reusable algorithm.
 
 **Consequences:**
-- Labels appear at wrong positions on first page load
-- Labels correctly reposition after any user pan/zoom (which triggers the moveend update)
-- This creates a confusing experience: broken on load, then suddenly correct when user interacts
-
-**Prevention:**
-1. Add labels AFTER `map.fitBounds()` completes, not before. Use the `map.once('moveend', ...)` callback:
-   ```javascript
-   map.fitBounds(routeLine.getBounds(), { padding: [20, 20] });
-   map.once('moveend', () => {
-     // Add labels here — map projection is stable
-     for (const sector of sectors) {
-       polyline.bindTooltip(labelHTML, { permanent: true, direction: 'center' });
-     }
-   });
-   ```
-2. Alternatively, use `divIcon` markers at the manually computed midpoint (index `Math.floor((startIdx + endIdx) / 2)` of the `latlngs` array) rather than `bindTooltip` with `direction: 'center'`. This avoids Leaflet's internal projection calculation entirely.
+- Elevation gain figures for 100k/50k will either be wrong or use an inappropriate noise threshold
+- RouteStats.astro displays `elevationGainFeet` from meta -- wrong values will be user-visible
+- If the calibration silently succeeds with a bad threshold, the error is invisible until someone cross-checks against Strava
 
 **Warning signs:**
-- Labels added during the main sector creation loop, before `fitBounds`
-- Labels look correct after first user pan but wrong on load
-- No `moveend` listener or post-fitBounds hook in label creation code
-
-**Phase to address:** Sector label rendering phase — explicit post-fitBounds placement strategy needed.
-
-**Recovery cost if hit:** MEDIUM — requires restructuring the label creation timing, plus regression testing the lazy-init flow.
-
----
-
-### Pitfall 6: Bottom Sheet Gesture Conflicts With Map Pan on iOS Safari
-
-**What goes wrong:**
-On iOS Safari, the bottom sheet's drag handle and the Leaflet map pan gesture compete for touch events. The user swipes up to expand the bottom sheet; instead, Leaflet's touchmove handler intercepts the swipe and pans the map. Conversely, when the user tries to pan the map while the bottom sheet is open (partially expanded state), the sheet intercepts the swipe instead. This makes both interactions unreliable simultaneously.
-
-The project already uses `leaflet-gesture-handling`. This plugin has documented issues on iOS devices (elmarquis/Leaflet.GestureHandling GitHub issues #98 and #99, reported July-September 2024): on iOS, the gesture handling plugin can make it harder to click markers, and in some configurations fails to properly intercept touch events.
-
-**Why it happens:**
-Touch events on mobile do not respect CSS `z-index` for routing decisions. They are dispatched to the topmost element at the touch point. When the bottom sheet partially overlaps the map, touches in the overlap zone are captured by whichever element has the first matching touch handler. Leaflet registers `touchstart` on the map container; the bottom sheet registers `touchstart` on its drag handle. The order of handler registration and DOM position both matter.
-
-Additionally, iOS Safari's bounce effect (`overscroll-behavior`) can cause the bottom sheet to trigger the native page bounce when the sheet's scroll content reaches its top, affecting the visual stability of both the sheet and the map.
-
-**Consequences:**
-- Swiping up to open the bottom sheet pans the map instead
-- Swiping on the map while the sheet is docked pans the sheet instead
-- iOS bounce creates visual jitter
-- The feature appears broken on first mobile test
+- Console output during pipeline: threshold scan shows no checkmark ("IN RANGE") line for shorter routes
+- Elevation gain for 50k route appears unreasonably high or low vs Strava data
+- 100k elevation gain does not roughly scale proportionally to 100mi
 
 **Prevention:**
-1. When the bottom sheet begins a drag gesture, call `map.dragging.disable()` to halt Leaflet pan handling. Re-enable on sheet settle: `map.dragging.enable()`.
-2. Apply `touch-action: none` to the bottom sheet drag handle to prevent the browser from handling those gestures natively.
-3. Apply `overscroll-behavior: none` to the bottom sheet's scrollable content to prevent iOS bounce propagating to the map.
-4. Use `pointer-events: none` on the map container while the sheet is in a drag transition state.
-5. Test specifically: partially-expanded bottom sheet + attempt to pan map. This is the highest-risk interaction combination.
+1. Remove the hard-coded target range from `parse-gpx.js`. Use a fixed threshold (e.g., 2m, the value that works for 100mi) for all routes, or allow per-route configuration.
+2. If per-route calibration is desired, accept target ranges as parameters or read them from a route config file.
+3. Log the computed elevation gain prominently and require manual verification against Strava for each route before shipping.
 
-**Warning signs:**
-- Bottom sheet drag handle has no `touch-action` CSS
-- `map.dragging.disable()` is never called
-- Bottom sheet height uses `100dvh` (causes layout recalc jitter on iOS as URL bar hides/shows)
-- No iOS-specific testing in the phase plan
+**Detection:** Pipeline console output -- check if "IN RANGE" appears for each route during the threshold scan.
 
-**Phase to address:** Bottom sheet mobile implementation phase.
+**Recovery cost:** LOW -- the fix is straightforward code parameterization. But the data error is invisible, so the real cost is shipping wrong numbers to users.
 
-**Recovery cost if hit:** HIGH — touch event management on iOS Safari requires careful sequencing of enable/disable calls plus device-specific testing that cannot be emulated in Chrome DevTools.
-
----
-
-### Pitfall 7: Sector Labels Unreadable at Default Zoom Level Due to CyclOSM Tile Background Interference
-
-**What goes wrong:**
-CyclOSM tiles contain their own text labels: road names, forest names, lake names, elevation markers. Custom sector name labels placed via `divIcon` at the default route-overview zoom level collide visually with CyclOSM's own rendered text. The sector names become unreadable because they sit on top of (or directly adjacent to) road name text, water body labels, or topographic contour labels in the tile layer.
-
-Additionally, the labels may be unreadable at low zoom levels where the sectors are short pixel segments. A 1.3-mile sector (sector-520) at zoom level 11 spans roughly 30px — a label wider than the segment.
-
-**Why it happens:**
-CyclOSM is a busy tile style designed for cycling navigation. It includes substantial label density at zoom levels 10-13, which overlap with the route-overview zoom (the `fitBounds` result for the 100-mile route typically settles around zoom 10-11). Unlike Mapbox GL or similar vector tile renderers, Leaflet has no built-in label collision detection between divIcon labels and tile text.
-
-**Consequences:**
-- Sector name labels are visually confusing or illegible at the default zoom
-- The "National Park aesthetic" goal (PROJECT.md) is undermined by cluttered labels
-- Star ratings placed beside sector names may not be readable at small sizes
-
-**Prevention:**
-1. Only show sector labels at zoom level 12 or higher, where sector lines are long enough to support a label and tile text is less dense. Implement via a `zoomend` listener:
-   ```javascript
-   map.on('zoomend', () => {
-     const zoom = map.getZoom();
-     labelMarkers.forEach(m => {
-       if (zoom >= 12) { m.addTo(map); }
-       else { m.remove(); }
-     });
-   });
-   ```
-2. At the default overview zoom, display no labels — the colored polylines suffice. Labels appear when the user zooms in.
-3. Use a label background: dark forest green pill with white text (`background: var(--color-forest-900)`, `color: white`, `padding: 2px 6px`, `border-radius: 9999px`). This creates contrast against any tile background rather than relying on tile colors.
-4. Use `text-shadow` for fallback contrast: `text-shadow: 0 0 3px #0d1a0d, 0 0 3px #0d1a0d`.
-5. Limit label width: truncate names and use CSS `white-space: nowrap; overflow: hidden; max-width: 120px`.
-
-**Warning signs:**
-- Labels added without a `zoomend` visibility gate
-- Labels use light text on transparent backgrounds
-- Default (overview) zoom shows all labels simultaneously
-
-**Phase to address:** Sector label rendering phase.
-
-**Recovery cost if hit:** MEDIUM — requires adding zoom visibility logic after-the-fact and redesigning label styling.
+**Which phase should address it:** parse-gpx.js refactoring, first pipeline phase.
 
 ---
 
 ## Moderate Pitfalls
 
-Mistakes that cause delays, visual regressions, or technical debt. Recovery cost: MEDIUM.
+Mistakes that cause significant delays or technical debt. Recovery cost: MEDIUM.
 
 ---
 
-### Pitfall 8: Sector Difficulty Rating Inconsistency Between annotations.json and data.md
+### Pitfall 6: GPX Files Come from Different Sources with Incompatible Structures
 
-**What goes wrong:**
-The annotations.json and data.md disagree on sector difficulty levels for multiple segments:
+**What goes wrong:** The three GPX files have different origins and structures:
+- 100mi (`Munising_Hiawatha_s_Revenge.gpx`): RidewithGPS export, 1,927 points, 5-decimal lat/lon
+- 100k (`Hiawatha_s_Revenge_100k.gpx`): Strava export, 2,780 points, 7-decimal lat/lon, triplicate start points, different XML namespace
+- 50k (`Hiawatha_s_Revenge_50K_.gpx`): RidewithGPS export, 954 points, 5-decimal lat/lon, has `<metadata>` block with `<link>` and `<time>` elements
 
-| Sector | data.md rating | annotations.json difficulty |
-|--------|---------------|----------------------------|
-| 520 | 2-star | moderate |
-| NF2266 | 5-star | moderate |
-| Bass Lake Rd | 2-star | easy |
-| NF2217-2218 | 2-star | moderate |
-| ND2225 | 3-star | moderate |
-| Doe Lake | 4-star | easy |
-| Rapid River Truck Trail | 2-star | hard |
+The current `parse-gpx.js` accesses `parsed.gpx.trk.trkseg.trkpt` directly. The 50k GPX nests `<trk>` inside `<trk><name>` and `<metadata>` blocks, while the 100k has a simpler Strava structure. Different XML shapes may cause fast-xml-parser to produce different JavaScript object structures.
 
-The panel will display star ratings from one source; the map polyline color uses the other. A user sees a "hard" red polyline for Rapid River (from annotations.json `hard`), but the panel shows "2-star" (from data.md). For Doe Lake they see easy/green on the map but "4-star" in the panel. This is contradictory and confusing.
-
-**Why it happens:**
-The annotations.json `difficulty` field was set by the build pipeline (resolve-annotations.js) using a different classification system than the editorial `data.md`. The annotations use `easy/moderate/hard` (3-tier) for COLORS; data.md uses star ratings (2-5 stars) for EDITORIAL content. These were never reconciled.
-
-**Prevention:**
-Before building the detail panel, explicitly audit and reconcile the difficulty classification:
-1. Decide on canonical source: data.md star ratings (more granular, editorial) OR annotations.json tiers (drives polyline color)
-2. Either add star ratings to annotations.json (e.g., `"stars": 4`) OR reclassify annotations.json difficulty tiers to match data.md
-3. The SECTOR_COLORS in RouteMap.astro uses annotations.json — the polyline color scheme must stay consistent with whatever canonical source is chosen
-
-**Warning signs:**
-- Panel displays star ratings sourced from a different file than the one driving polyline color
-- No reconciliation step in the phase plan
-- Difficulty descriptions in the panel contradict the visual color of the line on the map
-
-**Phase to address:** Data preparation phase — BEFORE building the panel UI.
-
-**Recovery cost if hit:** MEDIUM — requires pipeline changes and data re-sync, plus visual regression testing.
-
----
-
-### Pitfall 9: Label divIcon Default White Box Appears Unless Explicitly Nulled
-
-**What goes wrong:**
-Leaflet's `L.divIcon` adds a default CSS class `.leaflet-div-icon` which applies `background: white; border: 1px solid #666; padding: 2px`. Every sector label marker will have a white box with a dark border unless this is overridden. This contradicts the National Park aesthetic.
-
-**Why it happens:**
-This is a well-known Leaflet footgun — the default class cannot be removed, only overridden. RouteMap.astro already handles this for photo markers and restock markers (`className: 'photo-marker'` with `:global(.photo-marker) { background: transparent !important; border: none !important; }`). New sector label divIcons will require the same treatment.
-
-**Prevention:**
-Follow the existing pattern already established in RouteMap.astro. Set `className: 'sector-label'` on divIcon and add `:global(.sector-label) { background: transparent !important; border: none !important; }` in the component's `<style>` block. OR: override the default styling directly in the `html` string of the divIcon by wrapping content in a fully styled `<div>`.
-
-**Warning signs:**
-- `L.divIcon({html: ..., iconSize: [...]})` with no `className` override
-- White boxes visible around sector name labels in testing
-
-**Phase to address:** Sector label styling phase.
-
-**Recovery cost if hit:** LOW — one CSS rule, but visually obvious and embarrassing until fixed.
-
----
-
-### Pitfall 10: Map Does Not Resize Correctly When Slide-Out Panel Opens on Desktop
-
-**What goes wrong:**
-On desktop, the slide-out panel appears on the right side, narrowing the visible map area. If the map container `#map` width is set via `width: 100%` in CSS and the panel is positioned as an overlay (absolute/fixed), the map container does not physically narrow — the panel just covers the right portion. The map's tiles continue to render for the original full width, and the center point of the map appears visually shifted (it is centered on the full width, but the visible area is now the left portion). Additionally, if the panel is implemented with CSS Grid or flex that actually changes the map container's dimensions, Leaflet does not automatically detect the resize and `map.invalidateSize()` must be called manually.
-
-**Why it happens:**
-Leaflet caches the map container's pixel dimensions at initialization time. If the container CSS dimensions change at runtime (due to layout changes from a panel opening), Leaflet does not automatically recompute tile bounds. The existing code has no `ResizeObserver` on the map container.
+**Why it happens:** GPX is a standard, but different tools (Strava, RidewithGPS, Garmin) produce slightly different XML structures and precision levels. The 100k file duplicates its first point 3 times (likely a Strava export artifact).
 
 **Consequences:**
-- After panel opens, tiles at the right edge may be missing (grey tiles)
-- Zoom control positions do not update
-- Labels repositioned by pan/zoom events may calculate to wrong pixel positions
+- Parser may crash if GPX structure differs from what `parse-gpx.js` expects
+- Duplicate start points in 100k inflate distance calculation at the very start
+- Coordinate precision differences (5 vs 7 decimal places) propagate through all downstream matching
+
+**Warning signs:**
+- `parse-gpx.js` crashes with "Cannot read property 'trkpt' of undefined"
+- Total distance for a route is slightly off from expected due to duplicate points
+- Point count per route varies wildly (954 vs 2,780) affecting RDP simplification output
 
 **Prevention:**
-1. If the panel pushes the map (changes its actual CSS width), call `map.invalidateSize({ animate: false })` after the panel CSS transition completes:
-   ```javascript
-   panelEl.addEventListener('transitionend', () => {
-     if (leafletMap) leafletMap.invalidateSize({ animate: false });
-   });
+1. Add defensive GPX parsing: normalize the path to `trkpt` array, handle both single-track and multi-track structures, deduplicate consecutive identical points.
+2. Normalize coordinate precision early (round to 5 decimal places) across all routes.
+3. Add a `routes.config.js` or similar that declares per-route metadata: GPX filename, source format, expected total distance, and which sectors apply.
+
+**Detection:** Run `parse-gpx.js` against each GPX file individually and compare output.
+
+**Recovery cost:** MEDIUM -- requires refactoring parse-gpx.js, but the changes are well-scoped.
+
+**Which phase should address it:** First pipeline phase, as part of parse-gpx.js multi-route refactoring.
+
+---
+
+### Pitfall 7: Content Collections and Build-Time Components Assume Single Route
+
+**What goes wrong:** Multiple Astro components consume route data at build time through content collections:
+- `RouteStats.astro` (line 4-5): `getEntry('routeData', 'route')` returns one entry, destructures `totalMiles` and `elevationGainFeet`
+- `ElevationSparkline.astro` (line 13): `getCollection('sectorElevations')` returns all sectors -- no route filtering
+- `content.config.ts` (lines 10-16): wraps `route-data.json` as a single entry with id `'route'` using a custom parser
+
+These build-time components render static HTML. Multi-route requires dynamic content that changes based on user interaction.
+
+**Why it happens:** Build-time rendering is the correct Astro pattern for a single-route site. Multi-route requires runtime content switching that is fundamentally at odds with static rendering.
+
+**Consequences:**
+- RouteStats.astro can only show one route's stats at build time -- the other two need JavaScript to swap
+- ElevationSparkline.astro renders all sector sparklines at build time -- would need to render sparklines for all routes x sectors (up to 21 combinations)
+- Astro content collection schemas need restructuring
+
+**Warning signs:**
+- Stats section always shows 100mi values regardless of route selection
+- Sector sparklines in the RouteExplainer section show 100mi elevation profiles even when a shorter route is selected
+
+**Prevention:**
+1. Keep RouteStats as a build-time component but render all three route variants in hidden containers, toggled by client-side JavaScript based on route selection. This preserves static HTML performance while enabling route switching.
+2. For ElevationSparkline, either pre-render all route variants (feasible -- only ~21 SVGs total) or convert to client-side rendering.
+3. Default to 100mi on page load (the primary/flagship route), switch on user interaction.
+4. Update content collections to load per-route data files.
+
+**Detection:** Select a non-default route and check if stats/sparklines update.
+
+**Recovery cost:** MEDIUM -- patterns are known, but touching build-time components requires understanding Astro's hydration boundaries.
+
+**Which phase should address it:** After pipeline produces per-route data, before UI route switching is wired up.
+
+---
+
+### Pitfall 8: Sector-to-Route Mapping Is Not Defined Anywhere
+
+**What goes wrong:** The project context says "shorter routes use subset of same 7 gravel sectors" but there is no formal mapping of which sectors appear on which route. The sector definitions in `resolve-annotations.js` use mile markers from the 100mi route (e.g., "Doe Lake starts at mile 84.8"). The 100k route is only ~62 miles long, and the 50k is ~31 miles -- sectors beyond those distances obviously are not on those routes. But sectors are defined by geographic location, not by mile marker, and a shorter loop that takes a different return path might pass through a sector at a different mile marker than the 100mi route.
+
+**Why it happens:** The existing system has no concept of "which route does this sector belong to." Sectors are defined purely by mile markers on the 100mi route.
+
+**Consequences:**
+- Without explicit sector-to-route mapping, the frontend cannot filter sector overlays per route
+- Mile-based sector boundaries from the 100mi route do not transfer to shorter routes (a sector at "mile 25" on the 100mi route might be at "mile 20" on the 100k route, or might not appear at all)
+- Risk of showing sectors on routes that do not actually traverse them
+
+**Warning signs:**
+- Sector overlays appear on the map for routes that do not pass through those geographic areas
+- Sector mile ranges in detail panels do not match the selected route's distance markers
+- User confusion when "Doe Lake (mile 84.8)" appears while viewing a 31-mile route
+
+**Prevention:**
+1. Create a route configuration file that explicitly maps routes to their sectors. Based on the route distances (100mi = 102mi, 100k = 62mi, 50k = 31mi) and sector mile ranges, a plausible mapping is:
+   - **100mi**: all 7 sectors (520, NF2266, Bass Lake, NF2217, ND2225, Doe Lake, Rapid River)
+   - **100k**: first 4 sectors (520, NF2266, Bass Lake, NF2217) -- sectors beyond ~43 miles are past the 100k turnaround
+   - **50k**: first 2-3 sectors (520, NF2266, possibly Bass Lake) -- sectors beyond ~25 miles are past the 50k turnaround
+2. Validate this mapping by checking geographic overlap between each route's coordinates and each sector's coordinate range.
+3. Pipeline should generate per-route sector annotations with route-specific mile markers.
+4. This mapping must be verified against the actual GPX tracks, not assumed from distance alone.
+
+**Detection:** Overlay all three routes on a map and visually check which sectors each route passes through.
+
+**Recovery cost:** MEDIUM -- the mapping itself is simple once verified, but it must be propagated through the entire pipeline and frontend.
+
+**Which phase should address it:** Route configuration phase, before pipeline generates per-route annotations.
+
+---
+
+### Pitfall 9: Map Layer Cleanup on Route Switch (Leaflet Memory Leak)
+
+**What goes wrong:** RouteMap.astro creates multiple Leaflet layers that are never designed to be removed: base polyline (line 336-338), sector ghost/visible polylines (lines 371-374), sector label markers (lines 564-569), restock markers (lines 604-613), and photo cluster group (line 625-655). These layers are added to the map via `.addTo(map)` during `initMap()`. When switching routes, all route-specific layers need to be removed and new ones added. Leaflet layers that are added but never removed cause memory leaks and visual artifacts.
+
+**Why it happens:** `initMap()` is a fire-once function. It does not return references to created layers in a structure suitable for later removal. Variables like `sectorLayers` are scoped inside `initMap()` and inaccessible from a route-switch handler.
+
+**Consequences:**
+- Old route polylines remain visible when new route is selected (visual clutter)
+- Sector overlays from the wrong route remain interactive (clicking shows wrong sector data)
+- Memory usage grows with each route switch (Leaflet layers accumulate)
+- `bikeMarker`, `routePoints`, `initialBounds` retain stale values
+
+**Warning signs:**
+- Multiple route polylines visible simultaneously after switching
+- Clicking a sector overlay opens the wrong route's sector panel
+- Browser memory increases with repeated route switches
+- `fitBounds` zooms to wrong extent after switch
+
+**Prevention:**
+1. Refactor `initMap()` to separate initialization from data rendering. `initMap()` creates the map, tiles, and controls once. A new `renderRoute(routeId)` function handles data-specific layers.
+2. Use a Leaflet `L.layerGroup()` or `L.featureGroup()` to hold all route-specific layers. On route switch, call `layerGroup.clearLayers()` before adding new ones.
+3. Expose module-scope references to the route layer group and current route ID.
+4. Update `initialBounds` when route changes so the reset control works correctly.
+
+**Detection:** Switch routes multiple times and monitor: (a) visual layer count, (b) DevTools memory tab.
+
+**Recovery cost:** MEDIUM -- the refactoring is well-understood, but RouteMap.astro is the largest and most complex component (692 lines).
+
+**Which phase should address it:** Same phase as the route selector UI on the map.
+
+---
+
+### Pitfall 10: Chart.js Elevation Profile Cannot Swap Data Without Careful Orchestration
+
+**What goes wrong:** ElevationProfile.astro creates a Chart.js instance (line 82) with hardcoded dataset, scale configuration (`x.max = routeData.meta.totalMiles`), and sector band annotation overlays. The `chart` instance is scoped inside `initChart()` (line 82) and not accessible from outside. The sector annotations object (lines 68-79) is built once from fetched data. There is no mechanism to rebuild any of this when the route changes.
+
+**Why it happens:** `chart` is function-scoped. The sector annotations, axis max, and data array are all set once at construction time.
+
+**Consequences:**
+- After route switch, elevation chart still shows old route data
+- X-axis max stays at 100mi value (~102 miles), causing a 50k route (~31 miles) to render compressed into the left third of the chart with massive empty space
+- Sector band overlays correspond to wrong mile ranges
+- Crosshair dispatches wrong mile values via `elevation:hover`
+
+**Warning signs:**
+- Elevation chart looks "compressed" into the left portion after switching to a shorter route
+- Sector band overlays do not align with elevation features
+- Hovering the chart dispatches miles beyond the shorter route's total distance
+
+**Prevention:**
+1. Expose the `chart` instance at module scope (similar to how `bikeMarker` and `leafletMap` are exposed in RouteMap.astro).
+2. Create an `updateChart(routeId)` function that: fetches the new route data, replaces `chart.data.datasets[0].data`, updates `chart.options.scales.x.max`, rebuilds sector annotations, and calls `chart.update()`.
+3. Listen for the `route:change` event and call `updateChart()`.
+4. Alternative: destroy the chart (`chart.destroy()`) and recreate it entirely. This is simpler but causes a visible flash. With `animation: false` already set, the flash is minimal.
+
+**Detection:** Switch routes and check that the elevation chart x-axis max matches the new route's total distance.
+
+**Recovery cost:** MEDIUM -- Chart.js data swapping is documented but the annotation plugin integration adds complexity.
+
+**Which phase should address it:** Same phase as the elevation profile per-route support.
+
+---
+
+## Minor Pitfalls
+
+Mistakes that cause annoyance but are fixable. Recovery cost: LOW.
+
+---
+
+### Pitfall 11: RouteExplainer.astro Hardcoded Segments Cannot Be Route-Filtered
+
+**What goes wrong:** RouteExplainer.astro (lines 17-25) has a hardcoded `SEGMENTS` array with all 7 sectors, mile ranges, and editorial descriptions. This is rendered at build time with no mechanism for filtering by route. The component also has a hardcoded intro text: "100 miles of forest roads..." (line 57-58) which is wrong for 100k and 50k routes.
+
+**Why it happens:** Build-time rendering. The component was designed to show a single route's sector breakdown.
+
+**Consequences:**
+- Route explainer always shows all 7 sectors regardless of selected route
+- Sector cards for sectors not on the selected route create confusion
+- Intro text is factually wrong for shorter routes
+
+**Warning signs:**
+- 50k route selected but all 7 sector cards visible
+- "100 miles" text appears while viewing 50k route
+
+**Prevention:**
+1. Simplest approach: keep all sectors visible (they are editorial content about the ride) and add a visual indicator showing which sectors are on the currently selected route. This avoids the complexity of conditionally hiding/showing build-time HTML.
+2. If filtering is required: render all sector cards at build time with `data-routes="100mi,100k"` attributes, then use client-side JavaScript to show/hide based on route selection.
+3. Update the intro paragraph dynamically or use a template that adapts to the selected route.
+4. Consider whether the RouteExplainer even needs route-awareness -- it may be more useful as "here are all the sectors on the full ride" regardless of which distance you choose.
+
+**Detection:** Select a shorter route and check if irrelevant sector cards are still visible.
+
+**Recovery cost:** LOW-MEDIUM -- the simplest approach (visual indicators) is low effort. Full filtering is medium due to build-time vs runtime tension.
+
+**Which phase should address it:** After route switching is functional, as a polish item.
+
+---
+
+### Pitfall 12: GPX Download Link Is Hardcoded to Single Route
+
+**What goes wrong:** `index.astro` (lines 48-53) has a single `<a href="/Munising_Hiawatha_s_Revenge.gpx" download="HiawathasRevenge.gpx">` download link. `copy-gpx.js` copies only the 100mi GPX file to `public/`. Multi-route requires per-route download links and per-route GPX files in `public/`.
+
+**Why it happens:** Single-route design. One GPX file, one download button.
+
+**Consequences:**
+- Users always download the 100mi GPX regardless of which route they are viewing
+- Missing download capability for 100k and 50k routes
+
+**Warning signs:**
+- Download button label says "Download GPX File" with no route indication
+- Downloaded file is always 100mi regardless of route context
+
+**Prevention:**
+1. Update `copy-gpx.js` to copy all three GPX files to `public/` with consistent naming.
+2. Make the download section route-aware: either show three download buttons always, or dynamically update the download link based on the selected route.
+3. Include the route name in the download filename (e.g., `HiawathasRevenge-100mi.gpx`).
+
+**Detection:** Check download link href after route switch.
+
+**Recovery cost:** LOW -- straightforward file copying and link updates.
+
+**Which phase should address it:** Late phase, after route switching is functional.
+
+---
+
+### Pitfall 13: Photo Matching Assumes Single Route Point Array
+
+**What goes wrong:** `match-photos.js` snaps photo mileage to coordinates using the 100mi route's point array. Photos are then placed on the map at these snapped coordinates. For routes that share segments, the photos will still appear at the correct geographic locations. However, photos with mileage values beyond the shorter route's total distance should be excluded from the shorter route's view, or at least not shown when that route is selected.
+
+**Why it happens:** Photos are assigned mileage in the manifest based on the 100mi route. The mileage-to-coordinate snap uses 100mi route points.
+
+**Consequences:**
+- Photo markers for miles beyond a shorter route's distance appear on the map even when that route is selected
+- Photo mileage labels in popups may not make sense for shorter routes ("Mile 85" on a 31-mile route)
+- Not a crash, but a UX inconsistency
+
+**Warning signs:**
+- Photo markers appear in geographic areas not covered by the selected route
+- Clicking a photo marker shows a mile value that exceeds the selected route's total distance
+
+**Prevention:**
+1. Filter photo markers on the map based on geographic proximity to the selected route's polyline, rather than by mile range.
+2. Use the route layer group pattern (from Pitfall 9) to include photo cluster layers in the route-specific layer group.
+3. Alternatively, keep all photos visible regardless of route (they are geographic points of interest, not route-specific), but update the mile label in popups based on the selected route.
+
+**Detection:** Select the 50k route and check if photos from mile 80+ are still visible.
+
+**Recovery cost:** LOW -- filtering, not restructuring.
+
+**Which phase should address it:** Same phase as route switching on the map.
+
+---
+
+### Pitfall 14: RDP Simplification Tolerance Is Route-Length Dependent
+
+**What goes wrong:** `parse-gpx.js` uses a fixed RDP tolerance of `0.0002` decimal degrees which produces ~456 points from the 100mi route's 1,927 raw points. The 100k route has 2,780 points (more than 100mi despite being shorter -- Strava exports are denser) and the 50k has 954 points. The same tolerance will produce different point densities for different routes. The 100k may simplify to 600+ points (triggering the warning on line 74-76), while the 50k may simplify to ~100 points (possibly losing elevation detail).
+
+**Why it happens:** The tolerance was tuned for the 100mi route's specific point density and geographic spread. Different source tools (Strava vs RidewithGPS) produce different raw point densities.
+
+**Consequences:**
+- Inconsistent visual quality across routes (50k may look angular, 100k may be unnecessarily dense)
+- Point count warnings in build output
+- Performance differences in map rendering
+
+**Warning signs:**
+- "WARNING: N points exceeds 600 target" in pipeline output for 100k
+- 50k route polyline looks jagged on the map
+- Large file size variance across route data JSON files
+
+**Prevention:**
+1. Use adaptive tolerance: adjust per route until point count falls in a target range (200-500 points).
+2. Alternatively, deduplicate identical points first (the 100k GPX has 3 duplicate start points), then apply RDP.
+3. Log the point count per route and visually verify each simplified route.
+
+**Detection:** Pipeline console output -- check simplified point count for each route.
+
+**Recovery cost:** LOW -- tolerance tuning is a configuration change, not an architectural one.
+
+**Which phase should address it:** parse-gpx.js refactoring in the first pipeline phase.
+
+---
+
+### Pitfall 15: Stale Module-Scope Variables After Route Switch
+
+**What goes wrong:** RouteMap.astro has module-scope variables (lines 208-212): `bikeMarker`, `routePoints`, `leafletMap`, `activeSector`, `previousFocus`. These are set during `initMap()` and referenced by window event listeners. When switching routes, `routePoints` must be updated, `activeSector` must be cleared (its referenced polylines will be removed), and `bikeMarker` must be removed from the map. If any of these are missed, the system operates on stale state.
+
+**Why it happens:** Module-scope state was appropriate for single-route initialization. Multi-route turns "initialize once" into "initialize once, update many times."
+
+**Consequences:**
+- `activeSector` references a layer from the previous route that no longer exists on the map
+- Calling `activeSector.visiblePoly.setStyle()` on a removed layer throws errors
+- `routePoints` contains the wrong route's point array, causing `snapByMiles()` to return wrong coordinates
+
+**Warning signs:**
+- JavaScript console errors after route switch: "Cannot read property 'setStyle' of null" or similar
+- Route switch works the first time but breaks on subsequent switches
+- Bike marker disappears or appears at wrong location after route switch
+
+**Prevention:**
+1. Create a `resetRouteState()` function that clears all route-specific module-scope variables.
+2. Call `resetRouteState()` before loading new route data.
+3. Consider consolidating route-specific state into a single object for easier lifecycle management:
+   ```js
+   let routeState = { id: null, points: null, layerGroup: null, activeSector: null };
    ```
-2. Preferred alternative: use absolute/overlay positioning for the panel — it overlaps the map without changing the map container's physical dimensions. Call `invalidateSize` only if the map container's width actually changes.
-3. Do NOT call `invalidateSize` with `{ pan: true }` — this causes map center to shift (documented Leaflet issue #6051).
 
-**Warning signs:**
-- Grey tiles visible at map edge after panel opens
-- Panel implementation changes the CSS `width` of `#map` via flex/grid layout
-- No `invalidateSize` call in the panel open transition
+**Detection:** Switch routes 3+ times rapidly and check for console errors.
 
-**Phase to address:** Panel layout phase.
+**Recovery cost:** LOW -- once identified, the fix is mechanical.
 
-**Recovery cost if hit:** LOW — add `invalidateSize` call, but may require debugging which layout approach is causing the dimension change.
+**Which phase should address it:** Same phase as route switching UI.
 
 ---
 
-### Pitfall 11: Sector Label Midpoint Calculation Using getBounds().getCenter() Places Label Outside Curved Sectors
+## Pitfall Dependency Chain
 
-**What goes wrong:**
-Using `polyline.getBounds().getCenter()` to position sector labels places them at the geographic center of the bounding box, not along the actual polyline path. For curved or L-shaped sectors (NF2217 spans 6.6 miles with significant direction changes), the bounding box center may be in a forest clearing well off the actual road. The label appears to float in empty space with no obvious connection to a colored line.
+Some pitfalls must be solved in order because later solutions depend on earlier ones:
 
-**Why it happens:**
-`getBounds().getCenter()` returns the center of the smallest enclosing rectangle, not a point on the feature. Leaflet's `getCenter()` on Polygon calculates centroid but may also fall outside concave shapes. For polylines specifically, `polyline.getCenter()` was not added to the Leaflet core until relatively recently, and even then computes a geometric centroid that may not be visually on-path.
-
-**Prevention:**
-Use the midpoint of the point array directly — the actual geographic coordinate at the middle index of the sector's route points. This is guaranteed to be ON the road:
-```javascript
-const midIdx = Math.floor((sector.startIdx + sector.endIdx) / 2);
-const midPoint = latlngs[midIdx]; // [lat, lon] on the actual road
-const labelMarker = L.marker(midPoint, {
-  icon: L.divIcon({ html: labelHTML, className: 'sector-label', ... }),
-  interactive: false
-});
 ```
-This is more reliable than any centroid calculation for route polylines.
-
-**Warning signs:**
-- Labels positioned via `getBounds().getCenter()` or `polyline.getCenter()`
-- Labels appear in areas that don't look like roads on CyclOSM tiles
-- NF2217 or NF2266 labels appear displaced from their visible colored lines
-
-**Phase to address:** Sector label rendering phase.
-
-**Recovery cost if hit:** LOW — replace the position calculation, but requires re-testing all 7 label positions.
-
----
-
-## Technical Debt Patterns
-
-Established patterns in this codebase that interact with the new features.
-
----
-
-### Debt Pattern A: Difficulty Data Is Not Single-Source
-
-The existing system has TWO representations of difficulty: `annotations.json` (`easy/moderate/hard`) drives map polyline color via `SECTOR_COLORS`, while `data.md` star ratings (2-5 stars) drive the `RouteExplainer.astro` SEGMENTS array. These have never been reconciled (see Pitfall 8 for specific mismatches). Adding a detail panel that displays BOTH a colored polyline indicator AND star ratings will make this discrepancy user-visible for the first time.
-
-**Mitigation:** Add a `stars` field to `annotations.json` and treat it as the canonical source for the panel display. This is a data schema migration, not a UI problem.
-
----
-
-### Debt Pattern B: SEGMENTS Array Is Hardcoded in RouteExplainer.astro
-
-The panel needs rich data: description, surface type, Strava link. This data currently lives as inline JavaScript in RouteExplainer.astro's frontmatter SEGMENTS array. It is not in any JSON file. The panel in RouteMap.astro (a separate `<script>` context) cannot access RouteExplainer.astro's inline data directly.
-
-**Mitigation:** Either (a) duplicate the sector descriptions in `annotations.json`, or (b) write a new `sector-details.json` file populated at build time, or (c) inline the sector descriptions into the panel HTML as static `data-*` attributes rendered at build time by Astro. Option (c) is lowest risk and requires no pipeline changes — RouteMap.astro can loop over sectors at build time and embed their descriptions in hidden `<div data-sector-id="...">` elements that the panel JavaScript reads.
-
----
-
-### Debt Pattern C: Lazy Init Race Condition Window
-
-The `initMap()` function is triggered on first scroll or IntersectionObserver. All sector setup happens inside `initMap()`. If a user somehow triggers a sector click before `initMap()` completes (not likely but possible on very fast connections), the click handler does not exist yet. The existing code has `mapInitialized` guard flag but this only prevents double-init, not click-during-init.
-
-**Mitigation:** The panel DOM elements should exist in the HTML from initial page load (hidden via CSS), so that ANY JavaScript timing can find them. Only the `leafletMap` reference and the sector click handlers need to wait for `initMap()`.
-
----
-
-## Integration Gotchas
-
-Specific interactions between the new features and the existing system.
-
----
-
-### Gotcha 1: `window.L = L` Must Remain Before Any Further Plugin Imports
-
-RouteMap.astro sets `window.L = L` before importing `leaflet.markercluster` because the UMD plugin attaches to the global `L` object. Any new Leaflet plugin (e.g., Leaflet.HighlightableLayers for wider touch targets) must be imported AFTER this line, or the plugin will fail silently because `window.L` is not yet set. The ordering must be:
-1. `const L = await import('leaflet')`
-2. `window.L = L`
-3. `await import('any-leaflet-plugin')`
-
----
-
-### Gotcha 2: `L.DomEvent.disableClickPropagation` Is Required for Panel DOM
-
-The sector detail panel will contain scrollable content, links, and close buttons. These are standard DOM elements, not Leaflet layers. If the panel is positioned OVER the map (absolute positioning within the map container wrapper), clicks on the panel will propagate down to the Leaflet map via pointer events unless explicitly blocked. Use `L.DomEvent.disableClickPropagation(panelEl)` OR ensure the panel is a true sibling (outside `#map`) where Leaflet does not intercept DOM events.
-
----
-
-### Gotcha 3: GestureHandling "Use Ctrl+Scroll" Overlay Conflicts With Panel on iOS
-
-The existing `gestureHandling: true` configuration displays a semi-transparent "Use two fingers to move the map" overlay. On iOS, this overlay sometimes appears when the user touches the bottom sheet (because the gesture is intercepted as a single-finger map interaction). This creates an confusing UX where the gesture hint appears while the user is clearly trying to interact with the panel. Consider calling `map.gestureHandling.disable()` while the panel is in a drag/transition state and re-enabling on settle.
-
----
-
-### Gotcha 4: The Reset Button Calls `map.closePopup()` — This Will Not Close the Custom Panel
-
-The existing reset control (lines 121-127 of RouteMap.astro) calls `map.closePopup()` on reset. Leaflet's `closePopup()` only closes popup layers — it does NOT close a custom DOM panel. The reset button should also dispatch a `sector:panelClose` event (or call the panel close function directly) so that resetting the map also collapses the panel.
-
----
-
-## Performance Traps
-
----
-
-### Trap 1: Adding a `zoomend` Listener Without Debouncing
-
-Adding a `map.on('zoomend', ...)` handler to show/hide sector labels runs on every zoom step. Leaflet fires `zoomend` once per zoom level change, which is reasonable. However, if the handler does DOM operations (adding/removing 7 markers), it should be structured to minimize work — batch adds/removes, not one DOM operation per zoom event per marker. Not a crisis for 7 sectors, but worth doing correctly.
-
----
-
-### Trap 2: Sparkline SVG in Panel Re-Generated on Every Open
-
-If the sector detail panel renders a fresh elevation sparkline SVG on each open (by recalculating from `sector-elevations.json` points at runtime), it will block the JavaScript thread briefly for each sector click. For 7 sectors with ~10 elevation points each, this is negligible. But if the sparkline calculation is inadvertently moved into a loop over all 456 route points (regression), it becomes noticeable. Use `sector-elevations.json` which already has pre-computed per-sector elevation data — never recalculate from `route-data.json` at runtime.
-
----
-
-### Trap 3: Panel CSS Transitions with `height: auto`
-
-CSS transitions from `height: 0` to `height: auto` do not animate — they jump. The bottom sheet in particular will appear to snap open rather than slide if `height: auto` is used. Use `max-height` transitions or `transform: translateY` instead. The existing animated dividers in this project use `transform` transitions — follow that pattern.
-
----
-
-## UX Pitfalls
-
----
-
-### UX Pitfall 1: Detail Panel Obscures the Sector Being Described
-
-On mobile, a bottom sheet that opens to 50% viewport height covers the lower half of the map. The sector being described (e.g., Rapid River at mile 94-100, near the route endpoint) may be in the lower half of the map view and thus completely hidden by the panel. The user clicks a sector and it disappears behind the panel they opened.
-
-**Prevention:** When a sector is clicked and the panel opens, pan the map to center on the sector's midpoint, offset by the panel height. Leaflet supports this via `map.panBy([0, -panelHeightPx / 2])` or `map.panTo(midpoint, { animate: true })`.
-
----
-
-### UX Pitfall 2: No Visual Indication of Which Sector Is "Active"
-
-When a user clicks sector A and the panel opens showing sector A's details, then zooms out and cannot remember which colored line triggered the panel, they are confused. The active sector has no visual highlight distinguishing it from the other 6 sectors.
-
-**Prevention:** On sector click, visually differentiate the active polyline (increase weight to 7, or add a white border/outline). Store a reference to the currently-active sector polyline. On panel close, reset the style. Using the ghost-layer pattern (Pitfall 1), apply the highlight to the visible layer.
-
----
-
-### UX Pitfall 3: Close Button Is the Only Escape on Mobile
-
-If the panel has only a close button (and no backdrop tap, no swipe-down gesture), mobile users who are used to "tap outside to close" will be confused. iOS bottom sheet conventions include a horizontal drag handle at the top for swipe-down dismissal.
-
-**Prevention:** Implement both: (1) a visible close button meeting 52px touch target requirement, and (2) a swipe-down-to-close gesture on the drag handle.
-
----
-
-### UX Pitfall 4: prefers-reduced-motion Not Applied to Panel Slide Transition
-
-The existing codebase has comprehensive `prefers-reduced-motion` support (Leaflet transitions, animated dividers, scroll reveals — all gated). A new panel slide-in animation must follow the same discipline. A panel that slides in from the right (desktop) or up from the bottom (mobile) must either stop animating or use `opacity` fade only when `prefers-reduced-motion: reduce` is active.
-
-**Prevention:** Follow the existing pattern: read `window.matchMedia('(prefers-reduced-motion: reduce)').matches` at the start of `initMap()`. Store as `prefersReducedMotion` (already done in the existing code). Use this flag to conditionally skip panel slide transitions:
-```javascript
-const transitionClass = prefersReducedMotion ? 'sector-panel--no-motion' : 'sector-panel--animate';
-panelEl.classList.add(transitionClass);
+Pitfall 4 (file naming decision)
+  |
+  v
+Pitfall 6 (GPX parsing normalization) + Pitfall 8 (sector-to-route mapping)
+  |
+  v
+Pitfall 5 (elevation calibration) + Pitfall 14 (RDP tolerance)
+  |
+  v
+Pitfall 1 (surface data pipeline) + Pitfall 3 (per-route indices)
+  |
+  v
+Pitfall 7 (content collections)
+  |
+  v
+Pitfall 2 (event bus context) + Pitfall 9 (layer cleanup) + Pitfall 15 (state reset)
+  |
+  v
+Pitfall 10 (chart swap)
+  |
+  v
+Pitfall 11 (RouteExplainer) + Pitfall 12 (downloads) + Pitfall 13 (photos)
 ```
 
----
-
-## "Looks Done But Isn't" Checklist
-
-Tests that appear to pass on first inspection but hide real problems.
-
-- [ ] **Desktop-only testing**: Panel works on desktop, but bottom sheet not tested on real iOS Safari device (not DevTools emulation). Touch gesture conflicts on iOS differ from Chrome mobile emulation.
-- [ ] **Short session testing**: Labels look correct after first user pan. But did you test labels on page load before ANY user interaction? Permanent tooltip positioning on first load is a known failure mode (Pitfall 5).
-- [ ] **Rapid click testing**: Click sector A, immediately click sector B before A's panel finishes sliding in. Does the panel show B's data? Does state get corrupted?
-- [ ] **Reset button smoke test**: Open a sector panel, then click the map reset button. Does the panel close? Does the map return to full-route view? Does the bikeMarker disappear if it was visible?
-- [ ] **Hover sync after panel closes**: Open a panel, close it, then hover over the elevation chart. Does the bikeMarker reappear correctly? (Tests Pitfall 3 cleanup.)
-- [ ] **Sector click on zoom level 10**: At the default route-overview zoom, clicking a 5px polyline on a touchscreen. Succeeds? (Tests Pitfall 1.)
-- [ ] **Panel z-index above zoom controls**: Zoom controls have z-index 1000 in Leaflet. Is the panel rendered above or below them? (Tests Pitfall 4.)
-- [ ] **Keyboard accessibility**: Can the panel be dismissed with Escape? Does focus return to the previously-focused element (the map)? (Not cosmetic — required for WCAG 2.1.2.)
-- [ ] **Screen reader test**: Does a screen reader announce the panel when it opens? Does `aria-modal` or `role="dialog"` + `aria-label` exist?
-- [ ] **prefers-reduced-motion**: Enable "Reduce Motion" in macOS Accessibility settings. Does the panel appear instantly (no slide) or animate?
+**Reading the chain:** You cannot solve layer cleanup (Pitfall 9) without first having per-route data files (Pitfall 4) and per-route annotations (Pitfall 3). You cannot solve per-route annotations without first normalizing GPX parsing (Pitfall 6) and knowing which sectors belong to which route (Pitfall 8).
 
 ---
 
-## Recovery Strategies
+## Phase-Specific Warning Summary
 
-If a pitfall is hit post-implementation:
-
-**For ghost layer touch targets (Pitfall 1):**
-Wrap the sector-creation loop in a helper function `addSectorPolylines(sector, latlngs)`. This makes it easy to modify the creation pattern for all 7 sectors at once without copy-paste error.
-
-**For event propagation (Pitfall 2):**
-If the map click handler and sector click handler conflict, add `e.originalEvent._leafletHandled = true` in the sector handler and check for this flag in the map handler before executing. This is a reliable Leaflet-compatible propagation guard.
-
-**For difficulty data reconciliation (Pitfall 8):**
-The safest migration path is to add a `stars` field to annotations.json without removing `difficulty`. The `difficulty` field continues to drive polyline colors. The new `stars` field drives the panel display. The two systems are then independent and can be corrected separately.
-
-**For bottom sheet iOS gesture conflict (Pitfall 6):**
-If full gesture disambiguation is too complex for the first implementation, a safe fallback is to close the bottom sheet automatically when the user starts a map drag (`map.on('dragstart', closePanel)`). This prevents the conflict by ensuring only one interaction is active at a time, at the cost of the sheet closing unexpectedly during map exploration.
-
----
-
-## Pitfall-to-Phase Mapping
-
-| Phase Topic | Likely Pitfall | Mitigation |
-|-------------|---------------|------------|
-| Sector click handler setup | Pitfall 2 (event bubbling) | Set `bubblingMouseEvents: false` first |
-| Sector click touch targets | Pitfall 1 (thin hit area) | Ghost layer pattern from day one |
-| Sector label placement | Pitfalls 5, 7, 11 | Post-fitBounds timing, zoom gating, midpoint index |
-| Label styling | Pitfall 9 (white box) | Follow existing photo-marker pattern |
-| Panel DOM structure | Pitfall 4 (z-index) | Panel as sibling, not child of #map |
-| Panel data content | Pitfall 8 (difficulty mismatch), Debt B | Reconcile data sources before building UI |
-| Panel open/close logic | Pitfall 3 (event bus), Gotcha 4 | Dispatch `elevation:leave`; update reset button |
-| Desktop layout (slide-out) | Pitfall 10 (invalidateSize) | `invalidateSize` on transitionend |
-| Mobile layout (bottom sheet) | Pitfall 6 (gesture conflict), UX 1 (obscures sector) | `map.dragging.disable()`, pan to sector |
-| Animation/transitions | UX Pitfall 4 (reduced motion) | Use existing `prefersReducedMotion` flag |
-| Accessibility | UX Pitfall 3, checklist items | Focus trap, Escape key, ARIA roles |
+| Phase Topic | Likely Pitfalls | Highest Severity | Key Mitigation |
+|-------------|----------------|------------------|----------------|
+| Pipeline multi-route | 1 (surface data), 4 (file naming), 5 (elevation cal), 6 (GPX sources), 14 (RDP tolerance) | CRITICAL | Decide file namespace first; nearest-neighbor surface matching; normalize GPX parsing |
+| Route config & sector mapping | 3 (indices), 8 (sector-to-route) | CRITICAL | Create explicit route config; generate per-route annotations with route-specific indices |
+| Content collection refactoring | 7 (build-time components) | MODERATE | Pre-render all route variants; update Zod schemas |
+| Route selector UI & map | 2 (event bus), 9 (layer cleanup), 15 (stale state) | CRITICAL | Add routeId to events; use L.layerGroup; consolidate route state |
+| Elevation profile per-route | 10 (chart swap) | MODERATE | Expose chart instance; create updateChart function |
+| Route explainer & polish | 11 (hardcoded segments) | MINOR | data-routes attributes with JS show/hide |
+| Downloads & photos | 12 (GPX links), 13 (photo filtering) | MINOR | Copy all GPX files; filter markers by route extent |
 
 ---
 
 ## Sources
 
-- Leaflet GitHub issue #1264 (polyline touch area): https://github.com/Leaflet/Leaflet/issues/1264
-- Leaflet GitHub issue #5313 (bubblingMouseEvents polyline + map click): https://github.com/Leaflet/Leaflet/issues/5313
-- Leaflet.HighlightableLayers (20px transparent hit area): https://github.com/FacilMap/Leaflet.HighlightableLayers
-- Leaflet map panes and z-index documentation: https://leafletjs.com/examples/map-panes/
-- Leaflet tooltip hide/show by zoom (GitHub issue #5032): https://github.com/Leaflet/Leaflet/issues/5032
-- Leaflet permanent tooltip positioning issue: https://github.com/miguelcobain/ember-leaflet/issues/165
-- Leaflet invalidateSize center-shift issue (#6051): https://github.com/Leaflet/Leaflet/issues/6051
-- OpenStreetMap community: Leaflet z-index DOM overlay conflict: https://community.openstreetmap.org/t/leaflet-map-is-unaffected-by-z-index-interferes-with-overlayed-dom-events/114778
-- Leaflet GestureHandling iOS issues (#98, #99): https://github.com/elmarquis/leaflet.gesturehandling/issues
-- MDN overscroll-behavior: https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/overscroll-behavior
-- MDN touch-action: https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/touch-action
-- iOS Safari dvh viewport height issues: https://opus.ing/posts/fixing-ios-safaris-menu-bar-overlap-css-viewport-units
-- Focus management for modal dialogs (accessibility): https://testparty.ai/blog/modal-dialog-accessibility
-- Accessible slide menus (focus trap): https://knowbility.org/blog/2020/accessible-slide-menus
-- Automatic Labels in Leaflet (academic, 2023): https://ica-adv.copernicus.org/articles/4/8/2023/ica-adv-4-8-2023.pdf
-- Direct codebase analysis: `/Users/Sheppardjm/Repos/hiawathasRevenge/src/components/RouteMap.astro`
-- Direct data analysis: `/Users/Sheppardjm/Repos/hiawathasRevenge/public/data/annotations.json`, `sector-elevations.json`, `data.md`
+All pitfalls derived from direct source code analysis of the Hiawatha's Revenge codebase at `/Users/Sheppardjm/Repos/hiawathasRevenge/`:
+
+**Pipeline scripts analyzed:**
+- `scripts/pipeline.js` -- 12-step pipeline orchestrator
+- `scripts/parse-gpx.js` -- GPX parsing with RDP simplification (line 22: hardcoded GPX filename, lines 111-136: elevation calibration)
+- `scripts/generate-surface-points.js` -- Surface type mapping via RidewithGPS S field (lines 39-44: single JSON source, lines 98-101: fail threshold)
+- `scripts/resolve-annotations.js` -- Sector/restock snapping to route indices (lines 87-117: startIdx/endIdx from single route)
+- `scripts/generate-sector-details.js` -- Editorial content merge with annotation geometry
+- `scripts/compute-sector-elevations.js` -- Per-sector elevation extraction using startIdx/endIdx (line 63)
+- `scripts/copy-gpx.js` -- Single GPX file copy (line 15: hardcoded filename)
+- `scripts/match-photos.js` -- Photo mileage snapping to single route (line 23: single route path)
+
+**Frontend components analyzed:**
+- `src/components/RouteMap.astro` -- Leaflet map (lines 208-212: module-scope state, lines 228-234: event handler, lines 309-316: data fetches, line 336-338: base polyline, lines 364-403: sector overlays)
+- `src/components/ElevationProfile.astro` -- Chart.js (line 56: single route fetch, line 82: scoped chart instance, line 139: hardcoded x-axis max, line 168: event dispatch without routeId)
+- `src/components/RouteExplainer.astro` -- Build-time segments (lines 17-25: hardcoded SEGMENTS, line 57: "100 miles" text)
+- `src/components/RouteStats.astro` -- Build-time stats (line 4-5: single entry content collection)
+- `src/components/ElevationSparkline.astro` -- Build-time sparklines (line 13: unfiltered collection)
+- `src/content.config.ts` -- Content collections (lines 10-16: single-entry route data, all schemas)
+- `src/pages/index.astro` -- Page layout (lines 48-53: single GPX download link)
+
+**GPX file analysis:**
+- 100mi: 1,927 raw points, 102 miles, RidewithGPS export, paired with `hiawathasRevenge.json` (has surface `S` field)
+- 100k: 2,780 raw points, 62 miles, Strava export, no companion JSON, 7-decimal precision, 3 duplicate start points
+- 50k: 954 raw points, 31 miles, RidewithGPS export, no companion JSON, 5-decimal precision
+- All three are loops starting/ending near Munising (~46.364, -86.713)

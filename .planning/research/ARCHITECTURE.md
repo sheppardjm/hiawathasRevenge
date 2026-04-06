@@ -1,526 +1,719 @@
-# Architecture Research: v1.3 Map Interactivity
+# Architecture Research: v1.5 Multi-Route Support
 
-**Domain:** Sector labels, click handlers, and slide-out/bottom-sheet panels on an existing Leaflet + Astro 6 static site
-**Researched:** 2026-04-02
-**Confidence:** HIGH — based on direct analysis of all source files, verified Leaflet 1.9.4 docs, and first-principles reasoning from the shipped v1.2 architecture
+**Domain:** Multi-route GPX processing, route-keyed JSON data, and client-side route switching for an existing Astro 6 + Leaflet + Chart.js showcase site
+**Researched:** 2026-04-06
+**Confidence:** HIGH -- based on direct analysis of all 12 pipeline scripts, both frontend components (RouteMap.astro, ElevationProfile.astro), all 3 GPX files, existing JSON output schemas, and Astro content collection configuration
 
 ---
 
 ## Executive Summary
 
-v1.3 "Map Interactivity" adds three tightly coupled UI capabilities to the existing map: permanent sector labels on the map surface, click handlers that fire when a user clicks any sector polyline, and a responsive detail panel (right slide-out on desktop, bottom sheet on mobile) that shows sector content.
+The v1.5 milestone adds 100k (~62 miles) and 50k (~31 miles) route variants alongside the existing 100-mile route. All three routes start and end in Munising (within ~500 ft of each other) but take different paths through the Hiawatha National Forest. The 100-mile route passes through all 7 gravel sectors; the 100k and 50k routes share a shorter loop that passes through only 4 sectors (520, NF2266, Doe Lake, Rapid River Truck Trail), skipping the interior sectors (Bass Lake Rd, NF2217-2218, ND2225).
 
-The critical architectural question is how to get build-time content (sector descriptions from RouteExplainer, star ratings, surface types) into a purely client-side panel that is assembled after lazy-init. The answer: **bake sector data into a JSON file at build time, fetch it client-side in initMap() alongside the existing annotations.json fetch, and render panel HTML from that data using the same module-scope pattern already used for bikeMarker and routePoints.**
+The central architectural decision is **separate JSON files per route** (not a combined file with route keys). This recommendation is driven by four factors:
 
-Nothing in v1.3 requires SSR, a new build step, or touching the CustomEvent bus wiring for elevation sync. The feature is implemented as:
+1. **Index coupling** -- Sector annotations use `startIdx`/`endIdx` referencing the route's point array. These indices are completely different per route (Doe Lake is at index ~379 on the 100-mile route but at a completely different index on the 100k). Combining routes into one file would require namespaced indices that add complexity for zero benefit.
+2. **Fetch efficiency** -- Only the active route's data is needed at any time. Separate files allow fetching only the selected route's data (~46KB for 100mi, likely ~28KB for 100k, ~14KB for 50k). A combined file would always transfer all three.
+3. **Pipeline simplicity** -- The existing pipeline scripts produce flat files from a single GPX. Running the pipeline in a loop over 3 routes, writing to `public/data/{routeId}/`, requires minimal script changes compared to merging outputs into combined structures.
+4. **Component simplicity** -- The existing `fetch('/data/route-data.json')` pattern changes to `fetch(\`/data/${routeId}/route-data.json\`)`. No JSON key navigation, no data reshaping at runtime.
 
-1. A new build-time JSON (`sector-details.json`) carrying all panel content
-2. New markup in RouteMap.astro's HTML template (panel overlay, not a separate Astro component)
-3. Extensions to the existing `initMap()` function to register L.tooltip labels and polyline click handlers
-4. Pure CSS panel transitions (translate + opacity) using the existing Tailwind token system
-5. One new CustomEvent (`map:sectorClick`) to allow future cross-component coordination
-
-The most important constraint: **all code that touches Leaflet must live inside `initMap()`**, because `window.L` and the map instance are only available after lazy-init completes. Sector labels and click handlers cannot be registered at module scope.
+The pipeline runs 3 times (once per route) writing to route-specific subdirectories. Frontend components add a route selector that re-fetches data and rebuilds visualizations. The CustomEvent bus gains route context. Shared content (sector editorial, photos) remains in the existing flat files.
 
 ---
 
 ## System Overview
 
-### ASCII Data and Event Flow
+### Current Data Flow (Single Route)
 
 ```
-BUILD TIME
-──────────────────────────────────────────────────────────────────────
-scripts/resolve-annotations.js
-  (unchanged — produces annotations.json with sector coords/indices)
-
-scripts/compute-sector-elevations.js
-  (unchanged — produces sector-elevations.json)
-
-[NEW] scripts/generate-sector-details.js
-  Reads: RouteExplainer.astro SEGMENTS array (or a new sectors-source.json)
-  Writes: public/data/sector-details.json
-  Shape: [ { id, name, difficulty, stars, startMile, endMile,
-             lengthMiles, description, stravaId, surfaceType } ]
-
-pipeline.js
-  Step N+1: generate-sector-details  ← NEW step added to pipeline
-
-
-RUNTIME — initMap() execution (after lazy-init triggers)
-──────────────────────────────────────────────────────────────────────
-
-      fetch('/data/annotations.json')   fetch('/data/sector-details.json')
-               │                                    │
-               ▼                                    ▼
-        sectors[]                           sectorDetails{}
-     (coords, difficulty)              (description, stars, etc.)
-               │                                    │
-               └─────────────┬──────────────────────┘
-                             ▼
-                   for each sector:
-                     L.polyline(sectorPts) ──► .on('click', handler)
-                                          ──► .on('mouseover', highlight)
-                                          ──► .on('mouseout', unhighlight)
-                     L.tooltip(midpointLatLng, {permanent:true})
-                       .setContent(labelHTML)
-                       .addTo(map)
-
-
-USER ACTION — click on sector polyline
-──────────────────────────────────────────────────────────────────────
-
-  polyline.on('click')
-       │
-       ▼
-  openSectorPanel(sectorId)
-       │
-       ├── Looks up sectorDetails[sectorId]
-       ├── Looks up sectorElevData[sectorId]  (from sector-elevations.json)
-       ├── Renders panel HTML (name, stars, description, sparkline SVG URL)
-       ├── Sets panel visibility class → CSS transition plays
-       ├── window.dispatchEvent(new CustomEvent('map:sectorClick',
-       │     { detail: { sectorId } }))
-       └── Traps focus inside panel (a11y)
-
-
-USER ACTION — close panel (X button or Escape key)
-──────────────────────────────────────────────────────────────────────
-
-  closeSectorPanel()
-       │
-       ├── Removes visibility class → CSS reverse transition
-       └── Returns focus to map (a11y)
-
-
-EXISTING EVENT BUS — UNCHANGED
-──────────────────────────────────────────────────────────────────────
-
-  ElevationProfile ──elevation:hover──► RouteMap (bikeMarker)
-  ElevationProfile ──elevation:leave──► RouteMap (bikeMarker hide)
-  RouteMap         ──map:photoClick──► PhotoGallery (lightbox open)
-  RouteMap         ──map:sectorClick──► (new, no current listener)
+Munising_Hiawatha_s_Revenge.gpx
+         |
+    pipeline.js (12 steps, sequential)
+         |
+    public/data/
+    +-- route-data.json        (456 points + meta)
+    +-- annotations.json       (7 sectors + 2 restocks, with startIdx/endIdx)
+    +-- sector-details.json    (7 sectors with editorial content)
+    +-- sector-elevations.json (7 sectors with elevation point arrays)
+    +-- surface-points.json    (456 entries, mile -> surface type)
+    +-- photos.json            (shared, not route-specific)
+    +-- historical-photos.json (shared)
+    +-- photos-manifest.json   (shared)
 ```
 
----
-
-## Component Responsibilities
-
-### Modified Components
-
-| Component | Modification | Why |
-|-----------|-------------|-----|
-| `RouteMap.astro` | Add panel HTML template to the component's HTML block; extend `initMap()` with label + click handler registration | All Leaflet code must be co-located with `initMap()` due to lazy-init; panel DOM must be in page before JS runs |
-| `pipeline.js` | Add `generate-sector-details` as a new pipeline step before `build` | Sector detail JSON must exist before Astro build reads it |
-
-### New Files
-
-| File | Type | Purpose |
-|------|------|---------|
-| `scripts/generate-sector-details.js` | Build script | Reads sector content from a source (see below), writes `public/data/sector-details.json` |
-| `public/data/sector-details.json` | Data | Panel content keyed by sector id, consumed by `initMap()` at runtime |
-
-### Unchanged Components
-
-| Component | Reason |
-|-----------|--------|
-| `ElevationProfile.astro` | No changes to chart; elevation sync not affected by panel |
-| `PhotoGallery.astro` | No changes; `map:photoClick` event flow unchanged |
-| `content.config.ts` | No new Astro content collections needed (sector-details.json is fetch-only) |
-| `ElevationSparkline.astro` | Build-time SVGs already exist; panel uses inline SVG strings from sector-elevations.json data, not the Astro component |
-| `BaseLayout.astro` | No structural changes needed |
-| `index.astro` | No changes; panel overlay is scoped to RouteMap.astro |
-
----
-
-## Recommended Project Structure
+### Proposed Data Flow (Multi-Route)
 
 ```
-src/components/
-  RouteMap.astro          ← MODIFY: add panel HTML + extend initMap()
-
-scripts/
-  generate-sector-details.js   ← NEW: build-time sector content generator
-  resolve-annotations.js       (unchanged)
-  compute-sector-elevations.js (unchanged)
-  pipeline.js                  ← MODIFY: add generate-sector-details step
-
-public/data/
-  sector-details.json     ← NEW: generated panel content
-  annotations.json        (unchanged)
-  sector-elevations.json  (unchanged)
-  route-data.json         (unchanged)
+GPX files (3):
+  Munising_Hiawatha_s_Revenge.gpx  (100mi, 1927 pts)
+  Hiawatha_s_Revenge_100k.gpx       (100k,  2780 pts)
+  Hiawatha_s_Revenge_50K_.gpx       (50k,    954 pts)
+         |
+    pipeline.js (runs route-specific steps for each of 3 routes)
+         |
+    public/data/
+    +-- routes.json                  (NEW: route manifest)
+    +-- 100mi/
+    |   +-- route-data.json          (456 points + meta, SAME as current)
+    |   +-- annotations.json         (7 sectors + 2 restocks)
+    |   +-- sector-elevations.json   (7 sectors)
+    |   +-- surface-points.json      (456 entries)
+    +-- 100k/
+    |   +-- route-data.json          (~300 points + meta)
+    |   +-- annotations.json         (4 sectors, route-specific mile/idx)
+    |   +-- sector-elevations.json   (4 sectors)
+    |   +-- surface-points.json      (~300 entries)
+    +-- 50k/
+    |   +-- route-data.json          (~200 points + meta)
+    |   +-- annotations.json         (4 sectors, route-specific mile/idx)
+    |   +-- sector-elevations.json   (4 sectors)
+    |   +-- surface-points.json      (~200 entries)
+    +-- sector-details.json          (SHARED: 7 sectors, editorial content)
+    +-- photos.json                  (SHARED: not route-specific)
+    +-- historical-photos.json       (SHARED)
+    +-- photos-manifest.json         (SHARED)
 ```
 
-**No new Astro components.** The panel is HTML inside RouteMap.astro's template, styled with scoped `<style>` and driven by JavaScript inside the component's `<script>` block. This matches the existing pattern for the map reset button control and the photo cluster group — both live inside RouteMap.astro rather than as separate components.
+### Route Manifest (routes.json)
 
----
-
-## Architectural Patterns
-
-### Pattern 1: Sector Details JSON (Build-Time Data Pipeline)
-
-**What:** A new script `generate-sector-details.js` exports sector content as a static JSON file fetched at runtime.
-
-**Why:** The panel needs detailed descriptions, star ratings, surface types, and Strava IDs. This content currently lives in RouteExplainer.astro as a hardcoded `SEGMENTS` array. Duplicating it inside `initMap()` creates two sources of truth. The correct solution is to extract the content into a shared source: a `sectors-source.json` config file that both `generate-sector-details.js` and RouteExplainer.astro read at build time.
-
-**Shape of `sector-details.json`:**
 ```json
-[
+{
+  "defaultRoute": "100mi",
+  "routes": [
+    {
+      "id": "100mi",
+      "name": "100 Mile",
+      "shortName": "100mi",
+      "gpxFile": "Munising_Hiawatha_s_Revenge.gpx",
+      "color": "#c8973e",
+      "sectors": ["sector-520", "sector-nf2266", "sector-bass-lake", "sector-nf2217", "sector-nd2225", "sector-doe-lake", "sector-rapid-river"]
+    },
+    {
+      "id": "100k",
+      "name": "100k",
+      "shortName": "100k",
+      "gpxFile": "Hiawatha_s_Revenge_100k.gpx",
+      "color": "#5b9279",
+      "sectors": ["sector-520", "sector-nf2266", "sector-doe-lake", "sector-rapid-river"]
+    },
+    {
+      "id": "50k",
+      "name": "50k",
+      "shortName": "50k",
+      "gpxFile": "Hiawatha_s_Revenge_50K_.gpx",
+      "color": "#4a90c4",
+      "sectors": ["sector-520", "sector-nf2266", "sector-doe-lake", "sector-rapid-river"]
+    }
+  ]
+}
+```
+
+---
+
+## Data Architecture Decision: Separate Files Per Route
+
+### Why Not a Combined File?
+
+The strongest argument against a combined file is the **index coupling problem**.
+
+Currently, `annotations.json` contains sector entries like:
+```json
+{
+  "id": "sector-doe-lake",
+  "startIdx": 379,
+  "endIdx": 389,
+  "startMile": 84.8,
+  "endMile": 87.9
+}
+```
+
+These `startIdx`/`endIdx` values index into `route-data.json`'s `points` array. RouteMap.astro uses them directly:
+```javascript
+const sectorPts = latlngs.slice(sector.startIdx, sector.endIdx + 1);
+```
+
+On the 100k route, Doe Lake appears at a completely different mileage (~44.3 miles) and a completely different array index. A combined file would need either:
+- **Namespaced indices** like `startIdx_100mi`, `startIdx_100k`, `startIdx_50k` -- ugly and fragile
+- **Nested route objects** like `routes.100mi.annotations[...]` -- requires restructuring all consumer code
+
+Separate files per route avoid this entirely. Each route's `annotations.json` contains indices that match its own `route-data.json` point array.
+
+### What Stays Shared
+
+Two files are NOT route-specific:
+
+1. **`sector-details.json`** -- Editorial content (descriptions, surface labels, Strava links) is the same regardless of which route you're viewing. The sector names, descriptions, and star ratings don't change. This file stays at `public/data/sector-details.json`.
+
+2. **`photos.json`** -- Photos are geotagged by mile on the 100-mile route. For shorter routes, photo display could be filtered by proximity, but the photo data itself doesn't change. Stays shared.
+
+### File Size Impact
+
+Current single-route totals (~97KB across 5 files). Per-route estimates:
+
+| File | 100mi | 100k (est.) | 50k (est.) |
+|------|-------|-------------|------------|
+| route-data.json | 46KB | ~28KB | ~14KB |
+| annotations.json | 2.7KB | ~1.5KB | ~1.5KB |
+| sector-elevations.json | 10.5KB | ~6KB | ~6KB |
+| surface-points.json | 23.7KB | ~14KB | ~7KB |
+| **Total per route** | **83KB** | **~50KB** | **~29KB** |
+
+Initial page load fetches only the default route (100mi, 83KB -- same as today). Route switching fetches ~29-50KB per switch. This is excellent for a static site.
+
+---
+
+## Pipeline Changes
+
+### Route Configuration
+
+A new configuration file defines the three routes and their sector membership:
+
+**`scripts/route-config.js`** (NEW)
+
+```javascript
+export const ROUTES = [
   {
-    "id": "sector-nf2266",
-    "name": "NF2266",
-    "difficulty": "moderate",
-    "stars": 5,
-    "startMile": 6.7,
-    "endMile": 9.9,
-    "lengthMiles": 3.2,
-    "description": "The route's crucible...",
-    "stravaId": "28533671",
-    "surfaceType": "deteriorating sand and gravel two-track"
-  }
-]
+    id: '100mi',
+    name: '100 Mile',
+    gpxFile: 'Munising_Hiawatha_s_Revenge.gpx',
+    rwgpsJson: 'hiawathasRevenge.json',    // RidewithGPS surface data
+    sectors: [
+      'sector-520', 'sector-nf2266', 'sector-bass-lake',
+      'sector-nf2217', 'sector-nd2225', 'sector-doe-lake',
+      'sector-rapid-river'
+    ],
+    restocks: ['restock-camp7', 'restock-midway'],
+    elevationTargetRange: [2123, 2411],  // ft, for noise filter calibration
+  },
+  {
+    id: '100k',
+    name: '100k',
+    gpxFile: 'Hiawatha_s_Revenge_100k.gpx',
+    rwgpsJson: null,  // No RidewithGPS export (Strava GPX)
+    sectors: ['sector-520', 'sector-nf2266', 'sector-doe-lake', 'sector-rapid-river'],
+    restocks: [],  // No restock points on 100k route
+    elevationTargetRange: null,  // No verified target
+  },
+  {
+    id: '50k',
+    name: '50k',
+    gpxFile: 'Hiawatha_s_Revenge_50K_.gpx',
+    rwgpsJson: null,  // RidewithGPS GPX but no JSON export with S-field
+    sectors: ['sector-520', 'sector-nf2266', 'sector-doe-lake', 'sector-rapid-river'],
+    restocks: [],
+    elevationTargetRange: null,
+  },
+];
+
+export const DEFAULT_ROUTE = '100mi';
 ```
 
-**Confidence:** HIGH — matches the established pattern of annotations.json and sector-elevations.json (build-time scripts producing fetch-time JSON).
+### Script-by-Script Changes
 
-### Pattern 2: Permanent Tooltip Labels via Standalone L.tooltip()
+#### 1. pipeline.js -- Orchestrator (MODIFY)
 
-**What:** For each sector, create a standalone `L.tooltip()` positioned at the geographic midpoint of the sector polyline with `{ permanent: true, direction: 'center', className: 'sector-label' }`.
+**Current:** Runs 12 steps sequentially, each operating on a single implicit route.
+**Change:** Add a route loop around the 5 route-specific steps. Non-route steps run once.
 
-**Why not `bindTooltip()` on the polyline:** `bindTooltip()` positions the tooltip at the mouse cursor by default (or at a fixed offset from the polyline), which is unsuitable for permanent labels that should float above the midpoint. Standalone tooltips with `setLatLng()` allow precise placement at a computed midpoint.
+```
+ROUTE-SPECIFIC steps (run per route):
+  1. parse-gpx          -- reads GPX, writes route-data.json
+  2. generate-surface-points -- maps surface types
+  3. resolve-annotations -- snaps sectors to route points
+  4. compute-sector-elevations -- extracts per-sector elevation arrays
 
-**Midpoint calculation:**
+SHARED steps (run once):
+  5. generate-sector-details -- editorial content, reads from 100mi annotations
+  6. generate-thumbnails
+  7. copy-images
+  8. generate-webp
+  9. process-historical
+  10. match-photos
+  11. copy-gpx  (expanded to copy all 3 GPX files)
+  12. generate-og-image
+  13. generate-routes-manifest (NEW)
+```
+
+The pipeline passes the route ID as a command-line argument to route-specific scripts:
 ```javascript
-// Inside initMap(), after creating the sector polyline:
-const midIdx = Math.floor(sectorPts.length / 2);
-const midLatLng = sectorPts[midIdx]; // already [lat, lon] array
-
-const label = L.tooltip({
-  permanent: true,
-  direction: 'center',
-  className: 'sector-label',
-  interactive: false,
-  offset: [0, 0]
-})
-  .setLatLng(midLatLng)
-  .setContent(labelHTML(sector, detail))
-  .addTo(map);
-```
-
-**Label HTML:** A small `<div>` with the sector name and a star rating bar, rendered as an HTML string. Use inline style referencing CSS custom properties (which work in Leaflet tooltip DOM since it is in-document). Example:
-```javascript
-function labelHTML(sector, detail) {
-  const stars = '★'.repeat(detail.stars) + '☆'.repeat(5 - detail.stars);
-  return `<span class="sector-label-name">${sector.name}</span>
-          <span class="sector-label-stars" data-diff="${sector.difficulty}">${stars}</span>`;
-}
-```
-
-**Confidence:** HIGH — confirmed via Leaflet 1.9.4 official docs that `L.tooltip` accepts `latlng` constructor signature and has `setLatLng()` from DivOverlay inheritance.
-
-### Pattern 3: Polyline Click Handlers
-
-**What:** Each sector `L.polyline` registers `click`, `mouseover`, and `mouseout` handlers directly on the Leaflet layer, matching the pattern already used for photo markers.
-
-```javascript
-// Inside the sector loop in initMap():
-const polyline = L.polyline(sectorPts, { ... }).addTo(map);
-
-polyline.on('click', () => {
-  openSectorPanel(sector.id, sectorDetailsMap, sectorElevMap);
-});
-polyline.on('mouseover', () => {
-  polyline.setStyle({ weight: 7, opacity: 1 });
-});
-polyline.on('mouseout', () => {
-  polyline.setStyle({ weight: 5, opacity: 0.85 });
-});
-```
-
-**Interactive polylines require `interactive: true`** (Leaflet default). Do not set `interactive: false` on sector polylines (currently they have no interactive option set, which defaults to true — this is already correct).
-
-**Confidence:** HIGH — matches existing photo marker `.on('click', ...)` pattern in RouteMap.astro.
-
-### Pattern 4: Panel Overlay in RouteMap.astro HTML Block
-
-**What:** The panel is a `<div>` rendered directly in RouteMap.astro's HTML template, positioned absolutely relative to the map container. The map container needs `position: relative` (already set via `.route-map { position: relative; }`).
-
-```html
-<!-- In RouteMap.astro HTML block, after <div id="map"> -->
-<div id="sector-panel" class="sector-panel" aria-hidden="true" role="dialog" 
-     aria-modal="true" aria-label="Sector details">
-  <button id="sector-panel-close" class="sector-panel-close" 
-          aria-label="Close sector details">&#x2715;</button>
-  <div id="sector-panel-content" class="sector-panel-content"></div>
-</div>
-```
-
-**Why not a separate Astro component:** The panel must be in the same component as the `initMap()` script because `openSectorPanel()` directly manipulates panel DOM. Astro component isolation makes cross-component DOM manipulation brittle (Astro scoped class names). Keeping the panel co-located with the map is the correct pattern — it mirrors how ResetControl HTML is defined inside the same component.
-
-### Pattern 5: CSS-Only Panel Transitions
-
-**What:** Panel visibility is controlled by toggling a CSS class on the panel element. No inline style manipulation from JavaScript.
-
-```css
-/* In RouteMap.astro <style> block */
-.sector-panel {
-  position: absolute;
-  z-index: 1000;      /* above map tiles but below Leaflet controls (1001) */
-  top: 0;
-  right: 0;
-  width: 300px;
-  height: 100%;
-  background: var(--color-forest-900);
-  border-left: 1px solid var(--color-forest-700);
-  transform: translateX(100%);
-  transition: transform 0.3s ease;
-  overflow-y: auto;
-}
-
-.sector-panel.is-open {
-  transform: translateX(0);
-}
-
-/* Mobile: bottom sheet */
-@media (max-width: 640px) {
-  .sector-panel {
-    top: auto;
-    bottom: 0;
-    right: 0;
-    left: 0;
-    width: 100%;
-    height: 60%;
-    border-left: none;
-    border-top: 1px solid var(--color-forest-700);
-    transform: translateY(100%);
-  }
-  .sector-panel.is-open {
-    transform: translateY(0);
+for (const route of ROUTES) {
+  for (const step of routeSpecificSteps) {
+    execFileSync(process.execPath, [step.script, route.id], { ... });
   }
 }
+```
 
-@media (prefers-reduced-motion: reduce) {
-  .sector-panel { transition: none; }
+#### 2. parse-gpx.js (MODIFY)
+
+**Current:** Hardcodes `Munising_Hiawatha_s_Revenge.gpx`, writes to `public/data/route-data.json`.
+**Change:**
+- Accept route ID from `process.argv[2]`
+- Look up GPX filename from route-config.js
+- Write to `public/data/{routeId}/route-data.json`
+- Make elevation threshold configurable per route (100mi has calibrated range, others use default 2m)
+
+Key change:
+```javascript
+const routeId = process.argv[2] || '100mi';
+const routeConfig = ROUTES.find(r => r.id === routeId);
+const gpxContent = readFileSync(join(ROOT, routeConfig.gpxFile), 'utf-8');
+const outDir = join(ROOT, 'public', 'data', routeId);
+mkdirSync(outDir, { recursive: true });
+writeFileSync(join(outDir, 'route-data.json'), JSON.stringify(output, null, 2));
+```
+
+#### 3. generate-surface-points.js (MODIFY)
+
+**Current:** Reads `hiawathasRevenge.json` (RidewithGPS JSON with S-field), maps to surface types.
+**Change:**
+- Accept route ID from `process.argv[2]`
+- For 100mi: use existing `hiawathasRevenge.json` lookup (unchanged behavior)
+- For 100k and 50k: **derive surface from proximity to 100-mile surface data** since no RidewithGPS JSON exists for these routes
+
+**Surface data challenge:** The 100k GPX is from Strava (no surface data). The 50k GPX is from RidewithGPS but we don't have the JSON export with S-field values. The pragmatic approach:
+
+**Proximity-based surface inheritance:** For each point on the 100k/50k route, find the nearest point on the 100-mile route (by geographic distance) and inherit its surface type. Since all three routes share significant road segments, this produces accurate surface coloring on shared sections. For divergent sections, the nearest 100-mile point will typically be on a parallel or nearby road with similar surface characteristics.
+
+This is medium confidence -- accuracy degrades on route sections that diverge significantly from the 100-mile route. An alternative is to source RidewithGPS JSON exports for the 100k and 50k routes if available. Flag this for validation during implementation.
+
+#### 4. resolve-annotations.js (MODIFY)
+
+**Current:** Hardcodes all 7 sectors and 2 restock points, snaps to `route-data.json` points.
+**Change:**
+- Accept route ID from `process.argv[2]`
+- Filter `GRAVEL_SECTORS` and `RESTOCK_POINTS` to only those in the route's config
+- Read from `public/data/{routeId}/route-data.json`
+- Write to `public/data/{routeId}/annotations.json`
+
+The sector definitions (startMile, lengthMiles) in the current hardcoded array are **100-mile specific**. For the 100k and 50k routes, the same physical sectors exist at different mile markers. The script must:
+1. Find each sector's geographic start/end coordinates (lat/lon -- already in the sector definition via the 100mi annotations)
+2. For each route: snap those geographic coordinates to the nearest point on that route's point array
+3. Compute route-specific `startMile`, `endMile`, `startIdx`, `endIdx`
+
+This means changing from mile-based snapping to **coordinate-based snapping** for the shorter routes:
+
+```javascript
+// Instead of snapByMileage(sector.startMile, routePoints)
+// Use snapByCoordinate(sector.startLat, sector.startLon, routePoints)
+function snapByCoordinate(targetLat, targetLon, points) {
+  let bestIdx = 0;
+  let bestDist = Infinity;
+  for (let i = 0; i < points.length; i++) {
+    const dist = haversineMeters(
+      { latitude: targetLat, longitude: targetLon },
+      { latitude: points[i].lat, longitude: points[i].lon }
+    );
+    if (dist < bestDist) { bestDist = dist; bestIdx = i; }
+  }
+  return { ...points[bestIdx], snapIdx: bestIdx, snapDist: bestDist };
 }
 ```
 
-**Why CSS transitions, not JS animation:** Matches the existing animation philosophy (AnimatedDivider, ScrollReveal all use CSS transitions). Respects `prefers-reduced-motion` with a single media query.
+The sector start/end coordinates come from the master sector definition (which can be extracted from the current 100mi annotations or defined in route-config.js by lat/lon).
 
-### Pattern 6: Panel Content Rendering (Inline SVG Sparkline)
+#### 5. compute-sector-elevations.js (MODIFY)
 
-**What:** The panel content function receives a merged `detail` object (from sector-details.json) and `elevData` object (from sector-elevations.json, already fetched in a potential initMap() addition). It renders an HTML string using the same data used by `ElevationSparkline.astro` at build time.
+**Current:** Reads `route-data.json` and `annotations.json`, extracts per-sector elevation arrays.
+**Change:** Read from `public/data/{routeId}/` paths. Otherwise unchanged -- the logic is already generic.
 
-**The sparkline problem:** `ElevationSparkline.astro` is a build-time Astro component; it cannot be invoked at runtime. The panel must replicate a simplified version of the sparkline SVG path computation in JavaScript, or fetch a pre-rendered SVG string.
+#### 6. generate-sector-details.js (NO CHANGE)
 
-**Recommended approach:** Replicate the sparkline math in a small `buildSparklineSVG(elevData)` helper function inside initMap(). The math is ~20 lines and is already fully documented in `ElevationSparkline.astro`. This avoids any new fetch or build complexity.
+Editorial content is route-independent. The current script merges hardcoded descriptions with annotation geometry from the 100mi route. The output stays at `public/data/sector-details.json` (shared).
+
+Note: The panel display logic in RouteMap.astro already does a `sectorDetails.find(d => d.id === sector.id)` lookup, so it naturally shows details only for sectors present in the active route's annotations.
+
+#### 7. copy-gpx.js (MODIFY)
+
+**Current:** Copies single GPX to `public/`.
+**Change:** Copy all 3 GPX files.
+
+#### 8. generate-routes-manifest.js (NEW)
+
+Writes `public/data/routes.json` from route-config.js with computed metadata (totalMiles, elevationGainFeet) pulled from each route's generated `route-data.json`.
+
+---
+
+## Component Changes
+
+### RouteMap.astro
+
+**Current state:** Fetches 6 JSON files at init, renders one route polyline, one set of sector overlays, one set of labels, one set of restock markers.
+
+**Changes needed:**
+
+#### 1. Route Selector UI
+
+Add a control to the Leaflet map (custom L.Control, same pattern as the existing ResetControl):
+
+```
++-----------------------------------+
+| [100mi] [100k] [50k]   [Reset]   |  <- top-left controls
+|                                   |
+|          Map canvas               |
+|                                   |
++-----------------------------------+
+```
+
+Three pill-shaped buttons. Active route gets filled background; inactive routes get outline-only. Position: `topleft`, below zoom controls and above reset button.
+
+Implementation: L.Control subclass with three `<button>` elements. Click handlers dispatch `route:change` CustomEvent and call `switchRoute(routeId)`.
+
+#### 2. switchRoute() Function
+
+The core addition. When a new route is selected:
 
 ```javascript
-function buildSparklineSVG(elevData, strokeColor) {
-  const pts = elevData.elevationPoints;
-  const eles = pts.map(p => p.ele);
-  const miles = pts.map(p => p.miles);
-  const eleMin = Math.min(...eles), eleMax = Math.max(...eles);
-  const eleRange = eleMax - eleMin || 1;
-  const milesRange = (miles[miles.length-1] - miles[0]) || 1;
-  const W = 100, H = 50, pad = 4, drawH = H - 2 * pad;
-  const computed = pts.map(p => ({
-    x: +((p.miles - miles[0]) / milesRange * W).toFixed(1),
-    y: +((H - pad) - ((p.ele - eleMin) / eleRange * drawH)).toFixed(1)
+async function switchRoute(routeId) {
+  // 1. Fetch new route data (parallel)
+  const [newRouteData, newAnnotations, newSectorElevations, newSurfacePoints] =
+    await Promise.all([
+      fetch(`/data/${routeId}/route-data.json`).then(r => r.json()),
+      fetch(`/data/${routeId}/annotations.json`).then(r => r.json()),
+      fetch(`/data/${routeId}/sector-elevations.json`).then(r => r.json()),
+      fetch(`/data/${routeId}/surface-points.json`).then(r => r.json()),
+    ]);
+
+  // 2. Remove existing route layers
+  clearRouteLayers();  // removes polyline, sector overlays, ghost polys, labels
+
+  // 3. Draw new route
+  const newLatlngs = newRouteData.points.map(pt => [pt.lat, pt.lon]);
+  drawRoutePolyline(newLatlngs);
+  drawSectorOverlays(newLatlngs, newAnnotations, newSectorElevations);
+  drawSectorLabels(newLatlngs, newAnnotations);
+
+  // 4. Update module-scope state
+  routePoints = newRouteData.points;
+  currentRouteId = routeId;
+
+  // 5. Refit map bounds
+  const newBounds = L.latLngBounds(newLatlngs);
+  map.fitBounds(newBounds, { padding: [20, 20], animate: !prefersReducedMotion });
+
+  // 6. Notify other components
+  window.dispatchEvent(new CustomEvent('route:change', {
+    detail: { routeId, routeData: newRouteData }
   }));
-  const polyPts = computed.map(p => `${p.x},${p.y}`).join(' ');
-  return `<svg viewBox="0 0 ${W} ${H}" width="100%" height="${H}" aria-hidden="true">
-    <rect x="0" y="0" width="${W}" height="${H}" rx="3" fill="var(--color-forest-900)" opacity="0.6"/>
-    <polyline points="${polyPts}" stroke="${strokeColor}" stroke-width="2.5" fill="none"
-      stroke-linejoin="round" stroke-linecap="round"/>
-  </svg>`;
+
+  // 7. Close any open sector panel
+  closePanel();
 }
 ```
 
-**Confidence:** HIGH — this is a direct port of ElevationSparkline.astro logic, already verified in production.
+#### 3. Layer Management
 
-### Pattern 7: module-scope sectorDetailsMap (parallel to routePoints)
-
-**What:** sector-details.json is fetched in initMap() and stored in a module-scope Map for O(1) lookup by id. Mirrors the existing `routePoints` module-scope variable.
+Currently, layers are created once and never removed. Multi-route requires tracking and removing layers:
 
 ```javascript
-// Module scope
-let sectorDetailsMap = null;  // Map<id, detail>
-let sectorElevMap = null;     // Map<id, elevData>
+// Module-scope layer groups
+let routeLayerGroup = null;  // L.LayerGroup for polyline + surface segments
+let sectorLayerGroup = null; // L.LayerGroup for sector overlays + ghosts
+let labelLayerGroup = null;  // L.LayerGroup for sector labels
 
-// Inside initMap(), after fetches:
-const detailsData = await fetch('/data/sector-details.json').then(r => r.json());
-const elevData = await fetch('/data/sector-elevations.json').then(r => r.json());
-sectorDetailsMap = new Map(detailsData.map(d => [d.id, d]));
-sectorElevMap = new Map(elevData.map(e => [e.id, e]));
+function clearRouteLayers() {
+  if (routeLayerGroup) routeLayerGroup.clearLayers();
+  if (sectorLayerGroup) sectorLayerGroup.clearLayers();
+  if (labelLayerGroup) labelLayerGroup.clearLayers();
+  sectorLayers.length = 0;
+  sectorLabels.length = 0;
+}
 ```
 
-**Note:** `sector-elevations.json` is already fetched by `ElevationSparkline.astro` at build time. It is NOT currently fetched at runtime in initMap(). The panel requires it at runtime for sparkline rendering, so initMap() must add this fetch.
+This requires refactoring the current initMap() to use LayerGroups instead of directly adding layers to the map. Not complex but touches most of the layer creation code.
+
+#### 4. Restock Marker Filtering
+
+Restock points are in the route's annotations.json (only routes that pass through Camp 7 / Midway will have them). The existing `annotations.filter(a => a.type === 'restock')` pattern works unchanged -- the 100k/50k annotations files simply won't contain restock entries.
+
+However, restock markers also need layer management (remove old, add new on route switch). Add to the layer group pattern.
+
+#### 5. Photo Markers
+
+Photos are shared across routes and are not route-specific. Two options:
+- **Keep as-is:** Photo markers always visible regardless of route. Simple, no change.
+- **Filter by proximity:** Only show photos near the active route. More polished but adds complexity.
+
+Recommendation: Keep as-is for v1.5. Photos are geolocated to the 100-mile route; they add context regardless of which route is active.
+
+### ElevationProfile.astro
+
+**Current state:** Fetches `route-data.json` and `annotations.json`, builds one Chart.js chart.
+
+**Changes needed:**
+
+#### 1. Listen for route:change Event
+
+```javascript
+window.addEventListener('route:change', async (e) => {
+  const { routeId } = e.detail;
+  await rebuildChart(routeId);
+});
+```
+
+#### 2. rebuildChart() Function
+
+Chart.js does not support swapping data arrays cleanly on a line chart with LTTB decimation. The most reliable approach is to **destroy and recreate** the chart:
+
+```javascript
+async function rebuildChart(routeId) {
+  // Fetch new route data
+  const [routeData, annotations] = await Promise.all([
+    fetch(`/data/${routeId}/route-data.json`).then(r => r.json()),
+    fetch(`/data/${routeId}/annotations.json`).then(r => r.json()),
+  ]);
+
+  // Destroy old chart
+  if (chart) chart.destroy();
+
+  // Build new data and annotations
+  const data = routeData.points.map(pt => ({
+    x: pt.miles,
+    y: +(pt.ele * 3.28084).toFixed(1)
+  }));
+
+  const sectors = annotations.filter(a => a.type === 'sector');
+  // ... rebuild chart config ...
+
+  chart = new Chart(canvas, newConfig);
+}
+```
+
+The destroy+recreate pattern is standard for Chart.js when the entire dataset changes. It avoids edge cases with LTTB decimation state, annotation plugin state, and scale ranges.
+
+#### 3. Scale Range Update
+
+The x-axis `max` is currently set to `routeData.meta.totalMiles`. This MUST update when switching routes (101.98 for 100mi, ~61.7 for 100k, ~31.2 for 50k). The destroy+recreate approach handles this naturally.
+
+### RouteStats.astro
+
+**Current state:** Uses Astro content collection to read `route-data.json` at build time. Renders static stats (miles, elevation gain).
+
+**Change:** This component needs to become dynamic (client-side JavaScript) to update when the route changes. Two approaches:
+
+**Option A: Render all three, show/hide with CSS**
+Build-time: render three stat blocks with `data-route` attributes. Client-side: toggle visibility on `route:change`. Pros: No JS fetch, instant switching, works with Astro static. Cons: Requires pipeline to pre-compute all route metas.
+
+**Option B: Client-side fetch on route change**
+Build-time: render 100mi stats (default). Client-side: listen for `route:change`, fetch new route meta, update text content. Pros: Single render path. Cons: Flash of old content during fetch.
+
+Recommendation: **Option A** -- pre-render all three and toggle visibility. Aligns with Astro's static-first philosophy. The route manifest (routes.json) or individual route-data.json files provide the meta at build time via content collections.
+
+### GPX Download Section
+
+**Current state:** Single hardcoded download link.
+**Change:** Three download links, or a dynamic link that changes with route selection.
+
+Recommendation: Show all three download links always visible (users may want to download all routes). Each link serves the respective GPX file from `public/`.
+
+### RouteExplainer.astro (Sector-by-Segment Editorial)
+
+**Current state:** Static build-time render of all 7 sectors.
+**Change for v1.5:** Two options:
+
+**Option A: Show all 7 sectors always.** The editorial content is interesting regardless of which route the user is viewing. Add a small badge or note to sectors not on the current route: "This sector is on the 100-mile route only."
+
+**Option B: Filter sectors by active route.** Requires making the static section dynamic, which conflicts with Astro's SSG model.
+
+Recommendation: **Option A** -- keep all sectors visible. The editorial content is the site's primary value. Add a subtle visual indicator (e.g., a badge or reduced opacity) for sectors not on the selected route. This avoids making a static component dynamic.
 
 ---
 
-## Data Flow: Sector Click → Panel Open → Panel Content
+## Event Bus Changes
 
-```
-1. USER clicks sector polyline on map
+### Current Events
 
-2. polyline.on('click') fires
-   └─► openSectorPanel(sector.id)
+| Event | Dispatched By | Consumed By | Detail |
+|-------|--------------|-------------|--------|
+| `elevation:hover` | ElevationProfile | RouteMap | `{ miles }` |
+| `elevation:leave` | ElevationProfile | RouteMap | (none) |
+| `map:photoClick` | RouteMap | PhotoGallery | `{ photoIndex }` |
+| `map:sectorClick` | RouteMap | (unused) | `{ sectorId }` |
 
-3. openSectorPanel(id):
-   a. detail = sectorDetailsMap.get(id)
-      elevData = sectorElevMap.get(id)
-   b. strokeColor = SECTOR_COLORS[detail.difficulty].line
-   c. sparklineSVG = buildSparklineSVG(elevData, strokeColor)
-   d. panelContent.innerHTML = `
-        <h3>${detail.name}</h3>
-        <div class="stars" ...>${stars}</div>
-        <div class="meta">Mile ${detail.startMile}–${detail.endMile} · ${detail.lengthMiles}mi</div>
-        <div class="surface">${detail.surfaceType}</div>
-        ${sparklineSVG}
-        <p class="description">${detail.description}</p>
-        ${detail.stravaId ? stravaLink(detail.stravaId) : ''}
-      `
-   e. panel.setAttribute('aria-hidden', 'false')
-   f. panel.classList.add('is-open')   → CSS transition slides in
-   g. window.dispatchEvent(new CustomEvent('map:sectorClick', { detail: { sectorId: id } }))
-   h. panelCloseBtn.focus()            → a11y focus trap
+### New Events for v1.5
 
-4. CSS transition: translateX(100%) → translateX(0) in 300ms
-   On mobile: translateY(100%) → translateY(0)
-```
+| Event | Dispatched By | Consumed By | Detail |
+|-------|--------------|-------------|--------|
+| `route:change` | RouteMap (selector) | ElevationProfile, RouteStats | `{ routeId, routeData }` |
+
+The `elevation:hover` and `elevation:leave` events already work correctly without route context because:
+- `elevation:hover` sends `{ miles }` which is a distance-along-current-route value
+- `snapByMiles()` in RouteMap searches the module-scope `routePoints` array
+- When `switchRoute()` updates `routePoints`, the snap function automatically uses the new route's points
+
+No changes needed to the elevation sync events. The bike marker will correctly track the active route's polyline.
 
 ---
 
-## Event Bus Extensions
+## Critical Integration Points
 
-### New event: `map:sectorClick`
+### 1. Sector Coordinate Snapping (HIGHEST RISK)
 
-| Field | Value |
-|-------|-------|
-| Event name | `map:sectorClick` |
-| Dispatched by | `RouteMap.astro` initMap() |
-| Payload | `{ detail: { sectorId: string } }` |
-| Current listener | None (dispatched for future use) |
-| Example use case | ElevationProfile could highlight the corresponding sector band when a sector is clicked on the map |
+The current pipeline snaps sectors by **mileage** (`snapByMileage(sector.startMile, routePoints)`). This works because sector mile markers are defined on the 100-mile route.
 
-**Rationale:** Dispatching the event even with no current listener costs nothing and maintains the established pattern (map:photoClick was wired before PhotoGallery consumed it). Future milestones may want to sync the elevation chart when a sector is clicked.
+For 100k and 50k routes, the same physical road segment appears at a different mileage. The pipeline must snap by **geographic coordinates** instead.
 
-### Existing events — no changes
+**Implementation approach:**
+- Define sector geographic anchors (lat/lon of start and end) in route-config.js
+- Extract these from the existing 100mi annotations (they're already computed)
+- For each route: find nearest route point to each sector anchor
+- Validate: snap distance should be < 200 feet (our proximity analysis showed 0-212 ft for matching sectors)
+- Sectors that snap at > 1000 ft are NOT on this route (safety check)
 
-| Event | Status |
-|-------|--------|
-| `elevation:hover` | Unchanged — panel open state does not affect bike marker sync |
-| `elevation:leave` | Unchanged |
-| `map:photoClick` | Unchanged |
+### 2. Surface Points Without RidewithGPS Data (MEDIUM RISK)
+
+The 100k GPX is from Strava (no surface data). The 50k is from RidewithGPS but we lack the JSON export with S-field values.
+
+**Mitigation options (in order of preference):**
+1. Source RidewithGPS JSON exports for 100k and 50k if available
+2. Use proximity-based surface inheritance from the 100-mile route data
+3. Use sector boundaries to infer surface type (within a gravel sector = gravel, outside = paved)
+4. Mark all non-100mi surface data as "unknown" and skip surface coloring
+
+Option 2 is the recommended default. Option 1 would be ideal if the data exists.
+
+### 3. Content Collection Schema Update
+
+`src/content.config.ts` currently defines a single `routeData` collection loading from `public/data/route-data.json`. With per-route subdirectories, this needs updating:
+
+```typescript
+// Option: Multiple collections
+const routeData100mi = defineCollection({
+  loader: file('public/data/100mi/route-data.json', { ... }),
+  schema: routeDataSchema,
+});
+
+// Or: Dynamic loading at build time with a shared parser
+```
+
+This only affects `RouteStats.astro` (the only component using content collections for route data). If RouteStats switches to Option A (pre-render all three), it needs build-time access to all three route metas.
+
+### 4. Map Bounds and Zoom
+
+All three routes are in the same geographic region (Munising area). However:
+- 100-mile route spans a much larger area (south to ~46.07 lat)
+- 100k and 50k routes stay closer to Munising
+
+When switching routes, the map should `fitBounds()` to the new route's extent. The ResetControl should also reset to the active route's bounds.
+
+### 5. Elevation Chart X-Axis Range
+
+The x-axis max must update per route (102mi, 62mi, 31mi). The destroy+recreate approach handles this, but the sector band annotations also need updating (different sectors at different mile ranges per route).
 
 ---
 
-## Build Order
+## Suggested Build Order
 
-```
-Phase 1: Data pipeline extension
-  1a. Create scripts/generate-sector-details.js
-      - Define SECTORS array (or read from sectors-source.json)
-      - Output public/data/sector-details.json
-  1b. Add generate-sector-details to pipeline.js (before astro build)
-  1c. Verify sector-details.json is correct
+The dependencies between changes dictate a natural build order:
 
-Phase 2: Panel HTML and CSS
-  2a. Add panel overlay HTML to RouteMap.astro template
-  2b. Add CSS panel styles to RouteMap.astro <style> block
-      (slide-out, bottom sheet breakpoint, reduced-motion)
-  2c. Verify panel renders in DOM (before JS wires it)
+### Phase 1: Pipeline Infrastructure
 
-Phase 3: Leaflet labels
-  3a. Add sector-details.json + sector-elevations.json fetches to initMap()
-  3b. Populate sectorDetailsMap and sectorElevMap
-  3c. Add L.tooltip() label creation to sector loop
-  3d. Style .sector-label via :global() in RouteMap.astro <style>
-  3e. Verify labels appear at sector midpoints
+**Must come first -- all downstream work depends on this.**
 
-Phase 4: Click handlers + panel logic
-  4a. Add .on('click') to sector polylines
-  4b. Implement openSectorPanel() / closeSectorPanel()
-  4c. Implement buildSparklineSVG() helper
-  4d. Wire close button and Escape key
-  4e. Dispatch map:sectorClick event
-  4f. Focus management (panelCloseBtn.focus() on open, map focus on close)
+1. Create `scripts/route-config.js` with route definitions
+2. Modify `pipeline.js` to loop route-specific steps
+3. Modify `parse-gpx.js` to accept routeId, write to subdirectory
+4. Modify `resolve-annotations.js` with coordinate-based snapping
+5. Modify `compute-sector-elevations.js` to read from subdirectory
+6. Modify `generate-surface-points.js` with proximity fallback
+7. Modify `copy-gpx.js` to copy all 3 GPX files
+8. Create `generate-routes-manifest.js`
+9. Verify: run pipeline, confirm 3 route subdirectories with valid JSON
 
-Phase 5: Responsive + accessibility polish
-  5a. Test bottom-sheet behavior at 375px
-  5b. Test keyboard navigation (Tab trap inside panel, Escape closes)
-  5c. Test prefers-reduced-motion
-  5d. Verify z-index layering: tiles < polylines < labels < panel < Leaflet controls
-```
+**Validation gate:** All JSON files parseable, sector startIdx < endIdx for all routes, surface-points arrays match route-data point counts.
 
-**Why this order matters:**
-- Phase 1 must precede Phase 3 (initMap() fetches the JSON)
-- Phase 2 can run in parallel with Phase 1 (HTML/CSS doesn't need data)
-- Phase 3 must precede Phase 4 (handlers attach to polylines created in Phase 3)
-- Phase 5 requires all prior phases complete
+### Phase 2: Route Selector + Map Switching
+
+**Depends on Phase 1 (needs per-route JSON to exist).**
+
+1. Add route selector L.Control to RouteMap.astro
+2. Refactor initMap() to use LayerGroups for route/sector/label layers
+3. Implement switchRoute() with fetch + layer rebuild
+4. Update restock marker handling for layer groups
+5. Verify: click selector buttons, map redraws with correct route
+
+### Phase 3: Elevation Profile + Stats Switching
+
+**Depends on Phase 1 (needs per-route JSON). Can partially parallel Phase 2.**
+
+1. Add `route:change` listener to ElevationProfile.astro
+2. Implement chart destroy+recreate in rebuildChart()
+3. Update RouteStats to pre-render all three routes (content collection update)
+4. Add CSS toggle for RouteStats visibility on route change
+5. Verify: route switch updates chart, stats, and sector bands correctly
+
+### Phase 4: Polish + Downloads
+
+**Depends on Phases 2-3 being functional.**
+
+1. Update GPX download section with three download links
+2. Add route context to RouteExplainer sector badges
+3. Test elevation:hover sync after route switch
+4. Test sector panel content for shorter routes
+5. End-to-end UAT across all three routes
 
 ---
 
 ## Anti-Patterns to Avoid
 
-### Anti-Pattern 1: Putting Leaflet Code at Module Scope
+### Anti-Pattern 1: Monolithic Combined JSON
 
-**What goes wrong:** Moving L.tooltip() creation or polyline.on() registration outside of `initMap()` fails silently because `window.L` is undefined until the dynamic import in initMap() resolves. The existing event listeners at module scope (elevation:hover, elevation:leave) survive this because they guard with `if (!bikeMarker || !routePoints || !leafletMap) return` — they do not call Leaflet APIs directly.
+**What:** Merging all three routes into single JSON files with route keys.
+**Why bad:** Forces every consumer to navigate `data.routes[routeId].points` instead of a flat array. Bloats initial fetch. Makes index references ambiguous.
+**Instead:** Separate files per route in subdirectories.
 
-**Instead:** All L.* calls must be inside `initMap()`. The module-scope variables (sectorDetailsMap, sectorElevMap) are set during initMap() and are safe to read afterward.
+### Anti-Pattern 2: Runtime Route Computation
 
-### Anti-Pattern 2: A Separate Astro Component for the Panel
+**What:** Shipping all 3 GPX files to the client and parsing them in the browser.
+**Why bad:** GPX parsing is expensive (2780 points for 100k). Contradicts the build-time pipeline philosophy. Increases bundle size.
+**Instead:** All computation at build time. Client fetches pre-computed JSON.
 
-**What goes wrong:** Creating `SectorPanel.astro` and importing it into RouteMap.astro creates a scoped-style boundary. Astro scoped styles add a unique class hash to elements, making it impossible for RouteMap's script block to target `#sector-panel-content` reliably. Additionally, the panel's open/close state is driven by JavaScript in initMap(), not by Astro props, so there is no actual component benefit.
+### Anti-Pattern 3: Chart.js Data Mutation
 
-**Instead:** Keep the panel HTML inside RouteMap.astro's template and the CSS in the same component's `<style>` block. This is explicitly how the ResetControl is handled.
+**What:** Trying to update Chart.js datasets in-place when switching routes.
+**Why bad:** LTTB decimation plugin caches internal state. Annotation plugin doesn't reliably update x-ranges. Results in visual artifacts.
+**Instead:** Destroy and recreate the chart on route change.
 
-### Anti-Pattern 3: Fetching sector-elevations.json Again at Build Time
+### Anti-Pattern 4: Global State for Active Route
 
-**What goes wrong:** sector-elevations.json is already consumed by ElevationSparkline.astro via Astro content collections at build time. Adding a second `getCollection()` call in a panel component creates a redundant pipeline dependency. The runtime fetch approach (Pattern 6) is lighter and consistent with how annotations.json and route-data.json are consumed in initMap().
+**What:** Using a global variable or localStorage for the active route, with multiple components polling it.
+**Why bad:** Race conditions when multiple components react at different speeds. No clear ownership of state transitions.
+**Instead:** Single `route:change` CustomEvent dispatched by the route selector. Each consumer handles its own state update.
 
-**Instead:** Fetch sector-elevations.json inside initMap() alongside the other data files. One fetch, stored in sectorElevMap.
+### Anti-Pattern 5: Hardcoded Mile Ranges for Multi-Route
 
-### Anti-Pattern 4: Using Leaflet Popups for Sector Details
-
-**What goes wrong:** L.Popup has several characteristics that conflict with the panel UX: it closes when the user clicks elsewhere on the map (breaking reading flow), it is z-indexed inside the map container (cannot extend beyond map boundaries), it cannot be styled responsively as a bottom sheet, and it competes visually with restock popups that already use L.Popup.
-
-**Instead:** A CSS-positioned panel overlay on the `.route-map` container gives full styling control, proper bottom-sheet behavior on mobile, and does not interfere with existing restock `.bindPopup()` functionality.
-
-### Anti-Pattern 5: Duplicating Segment Content in Two Places
-
-**What goes wrong:** RouteExplainer.astro already has the full sector descriptions, star ratings, and Strava IDs in its hardcoded `SEGMENTS` array. If the panel also hardcodes this data inside initMap(), any content update must be applied in two places.
-
-**Instead:** Extract the canonical sector content into `scripts/generate-sector-details.js` (or a shared `sectors-source.json`) and have both RouteExplainer.astro and the panel consume from that single source. RouteExplainer.astro would import `sectors-source.json` in its frontmatter; the panel fetches `sector-details.json` at runtime.
-
-### Anti-Pattern 6: L.tooltip() for Click Interaction
-
-**What goes wrong:** Setting `interactive: true` on a permanent tooltip and handling clicks inside the tooltip creates awkward UX (tooltip must be clicked precisely) and conflicts with the polyline's own click events, causing double-firing.
-
-**Instead:** Keep labels as `interactive: false` tooltips purely for display. Handle all user interaction via the polyline layer's `.on('click')` handler.
+**What:** Defining sector mile ranges for 100k/50k by manual inspection.
+**Why bad:** Fragile. If GPX files are updated, hardcoded miles break silently.
+**Instead:** Use coordinate-based snapping. The geographic locations of sectors are fixed; their mile positions are computed dynamically per route.
 
 ---
 
-## Integration Points with Existing Architecture
+## Scalability Considerations
 
-| Existing Element | How v1.3 Touches It | Risk |
-|-----------------|---------------------|------|
-| `sector polylines` in initMap() | Converted from anonymous to named variables (store reference for click handler) | Low — additive change, same L.polyline() call |
-| `routePoints` module-scope pattern | Two new module-scope vars added: sectorDetailsMap, sectorElevMap | None — follows established pattern |
-| `bikeMarker` event handlers | Completely untouched — sector click does not emit elevation events | None |
-| `.route-map { position: relative }` | Panel uses this for absolute positioning — already set | None |
-| Leaflet z-index system | Sector labels (z ~600), panel overlay (z 1000), Leaflet controls (z 1001) | Low — verify no overlap |
-| `getCSSColor()` inside initMap() | Panel's buildSparklineSVG() uses the same local function | None — already in scope |
-| Restock `.bindPopup()` markers | Completely independent — L.Popup and sector panel coexist without conflict | None |
-| `map.closePopup()` in ResetControl | ResetControl already calls closePopup() on reset — add `closeSectorPanel()` to the same handler | Low — one-line addition |
-| `prefersReducedMotion` flag | Already computed in initMap() — panel CSS handles motion reduction via media query, no JS needed | None |
+| Concern | 3 Routes (v1.5) | 5+ Routes (Future) |
+|---------|-----------------|---------------------|
+| Pipeline runtime | ~3x current (~3s total) | Linear, acceptable |
+| JSON file count | 13 per-route + shared | Manageable with manifest |
+| Fetch on switch | 4 parallel fetches, ~50KB | Same pattern, similar size |
+| Map layer count | ~30 layers (polylines, sectors, labels) | May need lazy sector loading |
+| Chart rebuilds | <100ms destroy+recreate | No concern |
+
+The architecture scales cleanly to additional routes. The manifest-driven approach means adding a 4th route requires only:
+1. Add GPX file
+2. Add entry to route-config.js
+3. Re-run pipeline
+
+No component code changes needed.
 
 ---
 
 ## Sources
 
-- Leaflet 1.9.4 official reference: `L.tooltip` options (permanent, direction, interactive, className), `setLatLng()`, `setContent()` — [https://leafletjs.com/reference.html](https://leafletjs.com/reference.html) — MEDIUM confidence (fetched via WebFetch, confirmed options match current version)
-- Direct source analysis: `RouteMap.astro`, `ElevationSparkline.astro`, `ElevationProfile.astro`, `PhotoGallery.astro`, `content.config.ts`, `pipeline.js`, `resolve-annotations.js` — HIGH confidence
-- Existing data files: `annotations.json`, `sector-elevations.json` structure verified — HIGH confidence
-- CSS slide-out / bottom-sheet pattern: no-framework translate+class-toggle — HIGH confidence (standard CSS, no external source needed)
+- **RouteMap.astro** (692 lines): Direct analysis of layer creation, event handling, panel logic
+- **ElevationProfile.astro** (203 lines): Direct analysis of Chart.js configuration, event dispatch
+- **pipeline.js + 5 route-specific scripts**: Direct analysis of data flow, file I/O, dependencies
+- **content.config.ts**: Direct analysis of Astro content collection schemas
+- **GPX file analysis**: Python haversine computation confirming route distances and sector proximity
+- **Leaflet 1.9.4 LayerGroup API**: Used L.LayerGroup for layer management pattern (well-established API)
+- **Chart.js 4.x destroy/create pattern**: Standard approach for full dataset replacement with LTTB decimation
+
+All findings are based on direct source file analysis of the current codebase. Confidence: HIGH.
