@@ -27,7 +27,7 @@ All v1.0-v1.4 phases shipped. See `.planning/MILESTONES.md` for full history.
 - Decimal phases (33.1, 34.1): Urgent insertions if needed (marked with INSERTED)
 
 - [x] **Phase 33: Pipeline & Route Data** - Build-time pipeline produces per-route JSON data for all 3 distances
-- [ ] **Phase 34: Route Selector & Map Switching** - Users toggle between routes on the map with full visual feedback
+- [x] **Phase 34: Route Selector & Map Switching** - Users toggle between routes on the map with full visual feedback
 - [ ] **Phase 35: Elevation Profile & Route Stats** - Chart and stats stay synchronized with the selected route
 - [ ] **Phase 36: Downloads, Deep Linking & Hero Video** - GPX downloads, URL-based route sharing, and hero video replacement
 
@@ -63,8 +63,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 34-01-PLAN.md -- RouteMap.astro initMap/renderRoute refactor with activeRouteGroup and surface-colored polylines
-- [ ] 34-02-PLAN.md -- Route selector control, ghost polylines, route:change event, and ElevationProfile switching
+- [x] 34-01-PLAN.md -- RouteMap.astro initMap/renderRoute refactor with activeRouteGroup and surface-colored polylines
+- [x] 34-02-PLAN.md -- Route selector control, ghost polylines, route:change event, and ElevationProfile switching
 
 ### Phase 35: Elevation Profile & Route Stats
 **Goal**: The elevation chart, sector annotation bands, bike marker crosshair, and route stats all stay synchronized with the selected route
@@ -105,7 +105,7 @@ Phases execute in numeric order: 33 → 34 → 35 → 36
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
 | 33. Pipeline & Route Data | v1.5 | 3/3 | ✓ Complete | 2026-04-06 |
-| 34. Route Selector & Map Switching | v1.5 | 0/2 | Not started | - |
+| 34. Route Selector & Map Switching | v1.5 | 2/2 | ✓ Complete | 2026-04-06 |
 | 35. Elevation Profile & Route Stats | v1.5 | 0/2 | Not started | - |
 | 36. Downloads, Deep Linking & Hero Video | v1.5 | 0/2 | Not started | - |
 

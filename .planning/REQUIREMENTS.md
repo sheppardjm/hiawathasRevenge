@@ -17,17 +17,17 @@ Requirements for multi-route support. Each maps to roadmap phases.
 
 ### Route Selector
 
-- [ ] **SEL-01**: Segmented control (pill bar) on the map with 100mi / 100k / 50k options, 52px touch targets, `role="radiogroup"` with arrow key navigation
-- [ ] **SEL-02**: Each route distance has a consistent color identity (e.g., amber/lake/moss) applied to the selector active state and ghost polylines
-- [ ] **SEL-03**: Route selector dispatches `route:change` CustomEvent consumed by all route-aware components
+- [x] **SEL-01**: Segmented control (pill bar) on the map with 100mi / 100k / 50k options, 52px touch targets, `role="radiogroup"` with arrow key navigation
+- [x] **SEL-02**: Each route distance has a consistent color identity (e.g., amber/lake/moss) applied to the selector active state and ghost polylines
+- [x] **SEL-03**: Route selector dispatches `route:change` CustomEvent consumed by all route-aware components
 
 ### Map Display
 
-- [ ] **MAP-01**: Selected route's surface-colored polyline replaces the previous route on the map via L.layerGroup toggling
-- [ ] **MAP-02**: Sector overlays, ghost hit targets, and pill labels filter to show only sectors present on the selected route
-- [ ] **MAP-03**: Map fitBounds adjusts to the selected route's geographic extent on route change
-- [ ] **MAP-04**: Inactive routes appear as ghost polylines at low opacity (~0.2) with route-specific color for geographic context
-- [ ] **MAP-05**: Sector detail panel closes on route change if showing a sector not on the new route
+- [x] **MAP-01**: Selected route's surface-colored polyline replaces the previous route on the map via L.layerGroup toggling
+- [x] **MAP-02**: Sector overlays, ghost hit targets, and pill labels filter to show only sectors present on the selected route
+- [x] **MAP-03**: Map fitBounds adjusts to the selected route's geographic extent on route change
+- [x] **MAP-04**: Inactive routes appear as ghost polylines at low opacity (~0.2) with route-specific color for geographic context
+- [x] **MAP-05**: Sector detail panel closes on route change if showing a sector not on the new route
 
 ### Elevation & Stats
 
@@ -80,14 +80,14 @@ Requirements for multi-route support. Each maps to roadmap phases.
 | PIPE-03 | Phase 33 | Complete |
 | PIPE-04 | Phase 33 | Complete |
 | PIPE-05 | Phase 33 | Complete |
-| SEL-01 | Phase 34 | Pending |
-| SEL-02 | Phase 34 | Pending |
-| SEL-03 | Phase 34 | Pending |
-| MAP-01 | Phase 34 | Pending |
-| MAP-02 | Phase 34 | Pending |
-| MAP-03 | Phase 34 | Pending |
-| MAP-04 | Phase 34 | Pending |
-| MAP-05 | Phase 34 | Pending |
+| SEL-01 | Phase 34 | Complete |
+| SEL-02 | Phase 34 | Complete |
+| SEL-03 | Phase 34 | Complete |
+| MAP-01 | Phase 34 | Complete |
+| MAP-02 | Phase 34 | Complete |
+| MAP-03 | Phase 34 | Complete |
+| MAP-04 | Phase 34 | Complete |
+| MAP-05 | Phase 34 | Complete |
 | ELEV-01 | Phase 35 | Pending |
 | ELEV-02 | Phase 35 | Pending |
 | ELEV-03 | Phase 35 | Pending |
@@ -104,4 +104,4 @@ Requirements for multi-route support. Each maps to roadmap phases.
 
 ---
 *Requirements defined: 2026-04-06*
-*Last updated: 2026-04-06 after Phase 33 completion*
+*Last updated: 2026-04-06 after Phase 34 completion*

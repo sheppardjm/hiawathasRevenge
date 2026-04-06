@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-04-06)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive, visually stunning showcase that inspires them to ride it and support MBTN.
-**Current focus:** v1.5 Multi-Route Support -- Phase 34 In Progress (Route Selector & Map Switching)
+**Current focus:** v1.5 Multi-Route Support -- Phase 34 COMPLETE, ready for Phase 35
 
 ## Current Position
 
-Phase: 34 of 36 (Route Selector & Map Switching) -- In progress
-Plan: 1 of 2 in current phase
-Status: In progress
-Last activity: 2026-04-06 -- Completed 34-01-PLAN.md (RouteMap refactor: initMap()/renderRoute() split, activeRouteGroup, surface-colored polylines)
+Phase: 34 of 36 (Route Selector & Map Switching) -- COMPLETE
+Plan: 2 of 2 in current phase
+Status: Phase complete
+Last activity: 2026-04-06 -- Completed 34-02-PLAN.md (Route selector, ghost polylines, elevation chart switching)
 
-Progress: [████████████████████] v1.0-v1.4 complete | v1.5 [████░░░░░░] 4/9 plans
+Progress: [████████████████████] v1.0-v1.4 complete | v1.5 [█████░░░░░] 5/9 plans
 
 ## Performance Metrics
 
@@ -42,6 +42,10 @@ Progress: [████████████████████] v1.0-v1
 | 33-03 | content.config.ts Astro collections point to 100mi subdirectory | Primary route for SSG build; 100mi is default/display route |
 | 34-01 | sector-details.json fetched once in initMap() (not renderRoute) | Route-agnostic; no need to re-fetch on route switch |
 | 34-01 | updateLabelVisibility() uses opacity toggle not add/remove | Labels stay in activeRouteGroup across zoom changes; avoids re-add complexity |
+| 34-02 | RouteSelector is plain DOM element (not L.Control) | Enables true top-center positioning; L.Control confined to corner divs |
+| 34-02 | Ghost polylines created AFTER renderRoute('100mi') | Map needs valid pixel bounds from fitBounds before Leaflet _clipPoints |
+| 34-02 | Ghost polylines on map directly (not activeRouteGroup) with bringToBack | Persist across route switches; bringToBack for z-order behind active route |
+| 34-02 | ElevationProfile updateChart uses chart.update('none') | Instant in-place data swap without animation; preserves crosshair annotation |
 
 ### Pending Todos
 
@@ -53,13 +57,7 @@ None.
 - Project requires Node >=22.12.0 -- use Volta (`/Users/Sheppardjm/.volta/bin/node`)
 - Strava IDs populated for 6/7 segments (Rapid River Truck Trail pending)
 - iOS Safari device testing deferred to v1.5+ (requires physical device)
-- Ojibwe community consultation recommended (cultural sensitivity review)
-- Project requires Node >=22.12.0 -- use Volta (`/Users/Sheppardjm/.volta/bin/node`)
-- Strava IDs populated for 6/7 segments (Rapid River Truck Trail pending)
-- iOS Safari device testing deferred to v1.5+ (requires physical device)
 - astro.config.ts site URL is placeholder -- update before deployment
-- ~~content.config.ts and RouteMap.astro/ElevationProfile.astro reference flat public/data/ paths~~ RESOLVED in 33-03
-- ~~Surface data gap: 100k/50k lack RidewithGPS JSON; fallback strategy needed~~ RESOLVED in 33-02 (proximity fallback)
 - Elevation gains for 100k (~1,616 ft) and 50k (~809 ft) unverified against Strava/Garmin reference recordings
 
 ### Tech Debt
@@ -68,6 +66,6 @@ All tech debt items from v1.0-v1.4 resolved. No outstanding items.
 
 ## Session Continuity
 
-Last session: 2026-04-06T22:36:22Z
-Stopped at: Completed 34-01-PLAN.md -- RouteMap refactored with initMap()/renderRoute() split, activeRouteGroup, surface-colored polylines
+Last session: 2026-04-06T23:00:00Z
+Stopped at: Completed Phase 34 -- Route Selector & Map Switching complete, ready for Phase 35
 Resume file: None
