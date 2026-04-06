@@ -233,7 +233,7 @@ const segmentsWithPhotos = SEGMENTS.map(seg => ({
       background: linear-gradient(
         to right,
         var(--color-amber-500) var(--percent),
-        var(--color-forest-700) var(--percent)
+        var(--color-amber-300) var(--percent)  /* A11Y-03: was forest-700 (1.58:1) — amber-300 gives 5.30:1 on forest-800 */
       );
       -webkit-background-clip: text;
       background-clip: text;
