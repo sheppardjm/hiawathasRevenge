@@ -56,27 +56,27 @@ Requirements for ship-ready polish. Each maps to roadmap phases.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| IMG-01 | — | Pending |
-| IMG-02 | — | Pending |
-| IMG-03 | — | Pending |
-| IMG-04 | — | Pending |
-| A11Y-01 | — | Pending |
-| A11Y-02 | — | Pending |
-| A11Y-03 | — | Pending |
-| A11Y-04 | — | Pending |
-| SEO-01 | — | Pending |
-| SEO-02 | — | Pending |
-| SEO-03 | — | Pending |
-| SEO-04 | — | Pending |
-| DEBT-01 | — | Pending |
-| DEBT-02 | — | Pending |
-| DEBT-03 | — | Pending |
+| IMG-01 | Phase 30 | Pending |
+| IMG-02 | Phase 30 | Pending |
+| IMG-03 | Phase 30 | Pending |
+| IMG-04 | Phase 30 | Pending |
+| A11Y-01 | Phase 31 | Pending |
+| A11Y-02 | Phase 31 | Pending |
+| A11Y-03 | Phase 31 | Pending |
+| A11Y-04 | Phase 31 | Pending |
+| SEO-01 | Phase 29 | Pending |
+| SEO-02 | Phase 29 | Pending |
+| SEO-03 | Phase 29 | Pending |
+| SEO-04 | Phase 29 | Pending |
+| DEBT-01 | Phase 28 | Pending |
+| DEBT-02 | Phase 28 | Pending |
+| DEBT-03 | Phase 28 | Pending |
 
 **Coverage:**
 - v1.4 requirements: 15 total
-- Mapped to phases: 0
-- Unmapped: 15
+- Mapped to phases: 15
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-04-06*
-*Last updated: 2026-04-06 after initial definition*
+*Last updated: 2026-04-03 after roadmap creation*
