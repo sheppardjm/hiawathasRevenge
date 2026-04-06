@@ -1,5 +1,6 @@
 ---
 import { getEntry } from 'astro:content';
+import routesManifest from '../../public/data/routes.json';
 
 const routeEntry = await getEntry('routeData', 'route');
 const { totalMiles, elevationGainFeet } = routeEntry!.data.meta;
@@ -18,6 +19,31 @@ const { totalMiles, elevationGainFeet } = routeEntry!.data.meta;
     <span class="stat-value" id="stat-sectors">7</span>
     <span class="stat-label">Sectors</span>
   </div>
+</div>
+
+<h3 class="comparison-heading">Compare Routes</h3>
+<div class="route-comparison">
+  {routesManifest.routes.map(route => (
+    <div
+      class:list={['comparison-card', { 'is-active': route.id === routesManifest.defaultRoute }]}
+      data-route-id={route.id}
+      style={`--route-color: ${route.color}`}
+    >
+      <div class="comparison-name">{route.name}</div>
+      <div class="comparison-stat">
+        <span class="stat-value">{Math.round(route.totalMiles)}</span>
+        <span class="stat-label">Miles</span>
+      </div>
+      <div class="comparison-stat">
+        <span class="stat-value">{route.elevationGainFeet.toLocaleString()}</span>
+        <span class="stat-label">Ft Climbing</span>
+      </div>
+      <div class="comparison-stat">
+        <span class="stat-value">{route.sectorIds.length}</span>
+        <span class="stat-label">Sectors</span>
+      </div>
+    </div>
+  ))}
 </div>
 
 <style>
@@ -61,6 +87,63 @@ const { totalMiles, elevationGainFeet } = routeEntry!.data.meta;
     margin-top: 0.25rem;
   }
 
+  .comparison-heading {
+    font-family: var(--font-display);
+    font-size: var(--font-size-xl);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+
+  .route-comparison {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  @media (min-width: 640px) {
+    .route-comparison {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .comparison-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    border: 1px solid var(--color-forest-700);
+    background: var(--color-forest-800);
+    border-bottom: 3px solid transparent;
+    transition: border-color 0.2s ease;
+  }
+
+  .comparison-card.is-active {
+    border-bottom-color: var(--route-color);
+  }
+
+  .comparison-name {
+    font-family: var(--font-display);
+    font-size: var(--font-size-lg);
+    font-weight: 700;
+    color: var(--route-color);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .comparison-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .comparison-stat .stat-value {
+    font-size: var(--font-size-2xl);
+  }
+
 </style>
 
 <script>
@@ -80,5 +163,10 @@ const { totalMiles, elevationGainFeet } = routeEntry!.data.meta;
     if (milesEl) milesEl.textContent = Math.round(route.totalMiles);
     if (elevEl) elevEl.textContent = route.elevationGainFeet.toLocaleString();
     if (secEl) secEl.textContent = route.sectorIds.length;
+
+    // Update comparison card active highlight
+    document.querySelectorAll('.comparison-card').forEach(card => {
+      card.classList.toggle('is-active', card.dataset.routeId === e.detail.routeId);
+    });
   });
 </script>
