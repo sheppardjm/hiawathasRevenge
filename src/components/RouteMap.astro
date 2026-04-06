@@ -196,6 +196,46 @@
     margin-bottom: 12px;
     text-align: center;
   }
+
+  :global(.route-selector) {
+    display: flex;
+    gap: 0;
+    background: var(--color-forest-900);
+    border: 1px solid var(--color-forest-700) !important;
+    border-radius: 6px !important;
+    padding: 2px;
+    overflow: hidden;
+  }
+
+  :global(.route-selector__btn) {
+    min-height: 52px;
+    min-width: 48px;
+    padding: 0 12px;
+    border: none;
+    background: transparent;
+    color: var(--color-cream-200);
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background 0.15s, color 0.15s;
+  }
+
+  :global(.route-selector__btn[aria-checked="true"]) {
+    color: var(--color-forest-900);
+  }
+
+  :global(.route-selector__btn:focus-visible) {
+    outline: 2px solid var(--color-amber-500);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :global(.route-selector__btn) { transition: none; }
+  }
 </style>
 
 <script>
@@ -219,6 +259,7 @@
   let sectorDetailsData = null;
   let sectorLabels = [];
   let initialBounds = null;
+  let ghostPolylines = {};
 
   // snapByMiles — O(n) nearest-distance search over route points
   // Uses miles field (distance-along-route) — NOT array index — for accurate sync with elevation chart
@@ -312,7 +353,7 @@
         L.DomEvent.disableClickPropagation(container);
         L.DomEvent.on(btn, 'click', (e) => {
           L.DomEvent.preventDefault(e);
-          if (initialBounds) map.fitBounds(initialBounds, { padding: [20, 20], animate: !prefersReducedMotion });
+          if (initialBounds) map.fitBounds(initialBounds, { paddingTopLeft: [20, 80], paddingBottomRight: [20, 20], animate: !prefersReducedMotion });
           map.closePopup();
           if (bikeMarker && bikeMarker._map) bikeMarker.remove();
         });
@@ -660,7 +701,7 @@
 
       // 8. Update bounds and fit map to route
       initialBounds = L.latLngBounds(latlngs);
-      map.fitBounds(initialBounds, { padding: [20, 20], animate: !prefersReducedMotion });
+      map.fitBounds(initialBounds, { paddingTopLeft: [20, 80], paddingBottomRight: [20, 20], animate: !prefersReducedMotion });
 
       // 9. Panel close-on-switch — close if active sector not in new route
       const routeConfig = routesManifest.routes.find(r => r.id === routeId);
@@ -670,7 +711,113 @@
 
       // 10. Update active route tracking
       activeRouteId = routeId;
+
+      // 11. Update ghost polyline visibility — active route hidden (opacity 0), inactive at 0.2
+      updateGhostVisibility(routeId);
+
+      // 12. Notify downstream components (ElevationProfile) of route change
+      window.dispatchEvent(new CustomEvent('route:change', {
+        detail: { routeId }
+      }));
     }
+
+    // ---- Ghost polylines — persist on map across route switches ----
+    // Fetched here (not in renderRoute) so they exist before first render.
+    // Added directly to `map` (NOT activeRouteGroup) so clearLayers() doesn't remove them.
+    const allRouteData = await Promise.all(
+      routesManifest.routes.map(r =>
+        fetch(`/data/${r.id}/route-data.json`).then(d => d.json())
+      )
+    );
+
+    for (let i = 0; i < routesManifest.routes.length; i++) {
+      const route = routesManifest.routes[i];
+      const ghostLatlngs = allRouteData[i].points.map(pt => [pt.lat, pt.lon]);
+      ghostPolylines[route.id] = L.polyline(ghostLatlngs, {
+        color: route.color,   // '#c8973e' amber, '#5b9279' moss, '#4a90c4' lake
+        weight: 2,
+        opacity: 0.2,
+        interactive: false,
+        smoothFactor: 1,
+      }).addTo(map);
+    }
+
+    // updateGhostVisibility — hides the active route ghost (opacity 0), shows others (opacity 0.2)
+    function updateGhostVisibility(activeId) {
+      for (const [id, ghost] of Object.entries(ghostPolylines)) {
+        ghost.setStyle({ opacity: id === activeId ? 0 : 0.2 });
+      }
+    }
+
+    // ---- RouteSelector control — segmented pill-bar in top-left (below ResetControl) ----
+    const RouteSelector = L.Control.extend({
+      options: { position: 'topleft' },
+      onAdd() {
+        const container = L.DomUtil.create('div', 'leaflet-bar leaflet-control route-selector');
+        container.setAttribute('role', 'radiogroup');
+        container.setAttribute('aria-label', 'Select route distance');
+        L.DomEvent.disableClickPropagation(container);
+
+        const routes = routesManifest.routes;
+        const btns = [];
+
+        routes.forEach((route, i) => {
+          const btn = L.DomUtil.create('button', 'route-selector__btn', container);
+          btn.textContent = route.shortName;   // "100mi", "100k", "50k"
+          btn.dataset.routeId = route.id;
+          btn.setAttribute('role', 'radio');
+          btn.setAttribute('aria-checked', i === 0 ? 'true' : 'false');
+          btn.setAttribute('tabindex', i === 0 ? '0' : '-1');
+
+          // Set initial active styling for the first button
+          if (i === 0) {
+            btn.style.background = route.color;
+            btn.style.color = forest900;
+          }
+
+          btns.push(btn);
+
+          // Single canonical click handler — updates ALL state: aria, tabindex, styles, route
+          L.DomEvent.on(btn, 'click', () => {
+            if (route.id === activeRouteId) return;  // no-op same route
+
+            // Update all buttons: aria-checked, tabindex, and background styles
+            btns.forEach(b => {
+              const isActive = b.dataset.routeId === route.id;
+              b.setAttribute('aria-checked', isActive ? 'true' : 'false');
+              b.setAttribute('tabindex', isActive ? '0' : '-1');
+              b.style.background = isActive ? route.color : 'transparent';
+              b.style.color = isActive ? forest900 : '';
+            });
+
+            renderRoute(route.id);
+          });
+        });
+
+        // Arrow key navigation — roving tabindex (W3C APG radiogroup pattern)
+        L.DomEvent.on(container, 'keydown', (e) => {
+          const currentIdx = btns.findIndex(b => b === document.activeElement);
+          if (currentIdx === -1) return;
+          let nextIdx = -1;
+          if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+            L.DomEvent.preventDefault(e);
+            L.DomEvent.stopPropagation(e);
+            nextIdx = (currentIdx + 1) % btns.length;
+          } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+            L.DomEvent.preventDefault(e);
+            L.DomEvent.stopPropagation(e);
+            nextIdx = (currentIdx - 1 + btns.length) % btns.length;
+          }
+          if (nextIdx !== -1) {
+            btns[nextIdx].focus();
+            btns[nextIdx].click();  // arrow = select + focus per radiogroup pattern
+          }
+        });
+
+        return container;
+      }
+    });
+    new RouteSelector().addTo(map);
 
     // ---- Photo cluster markers — shared across routes, not route-specific ----
     // CRITICAL: Set window.L before importing the markercluster plugin.
