@@ -6,7 +6,7 @@
 - ✅ **v1.1 Visual Redesign** - Phases 12-17 (shipped 2026-03-31)
 - ✅ **v1.2 Cultural Maximalism** - Phases 18-22 + gaps (shipped 2026-04-02)
 - ✅ **v1.3 Interactive Map & Editorial Polish** - Phases 23-27 (shipped 2026-04-02)
-- ✅ **v1.4 Performance & Polish** - Phases 28-31 (shipped 2026-04-06)
+- 🔧 **v1.4 Performance & Polish** - Phases 28-32 (gap closure in progress)
 
 ## Phases
 
@@ -25,6 +25,8 @@ See MILESTONES.md for full history.
 - [x] **Phase 29: SEO & Social Sharing** - Meta tags, structured data, and canonical URL for discoverability ✅ 2026-04-06
 - [x] **Phase 30: Image Optimization** - Hero srcset, gallery WebP, parallax image-set() for Lighthouse performance ✅ 2026-04-06
 - [x] **Phase 31: Accessibility Hardening** - Focus indicators, alt text, contrast, and reduced-motion for WCAG compliance ✅ 2026-04-06
+
+- [ ] **Phase 32: Pipeline Source Fixes** - Fix DEBT-02 regression in resolve-annotations.js and wire generate-og-image.js into pipeline
 
 ## Phase Details
 
@@ -89,6 +91,19 @@ Plans:
 - [x] 31-01-PLAN.md -- Focus indicators and gallery alt text — global :focus-visible baseline, component overrides, descriptive alt from mile data
 - [x] 31-02-PLAN.md -- Star rating contrast fix and reduced-motion verification — amber-300 empty stars (5.30:1), A11Y-04 comment
 
+### Phase 32: Pipeline Source Fixes
+**Goal**: The build pipeline produces correct NF2217-2218 naming from source and regenerates the OG image — no manual steps required for a clean `npm run pipeline` output
+**Depends on**: Phase 28 (DEBT-02 fix identified the naming issue), Phase 29 (generate-og-image.js created)
+**Requirements**: DEBT-02 (re-close regression)
+**Gap Closure**: Closes DEBT-02 regression, pipeline integration gap, and build flow gap from v1.4 audit
+**Success Criteria** (what must be TRUE):
+  1. `scripts/resolve-annotations.js` outputs `"name": "NF2217-2218"` for the NF2217 sector
+  2. After `npm run pipeline`, all three data files (annotations.json, sector-details.json, sector-elevations.json) contain `"NF2217-2218"` with no bare `"NF2217"`
+  3. `scripts/pipeline.js` includes a `generate-og-image` step that produces `public/og-image.jpg`
+  4. A clean pipeline run from scratch produces all expected outputs including the OG image
+
+Plans: 0 (needs planning)
+
 ## Progress
 
 **Execution Order:**
@@ -100,3 +115,4 @@ Phases 28-31. Phases 28, 29, 30 are independent; Phase 31 depends on Phase 28.
 | 29. SEO & Social Sharing | v1.4 | 1/1 | ✅ Complete | 2026-04-06 |
 | 30. Image Optimization | v1.4 | 2/2 | ✅ Complete | 2026-04-06 |
 | 31. Accessibility Hardening | v1.4 | 2/2 | ✅ Complete | 2026-04-06 |
+| 32. Pipeline Source Fixes | v1.4 | 0/0 | ⏳ Needs planning | — |
