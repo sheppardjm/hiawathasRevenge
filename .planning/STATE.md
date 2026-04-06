@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-04-06)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive, visually stunning showcase that inspires them to ride it and support MBTN.
-**Current focus:** v1.4 Performance & Polish — Phase 30: Image Optimization
+**Current focus:** v1.4 Performance & Polish — Phase 30: Image Optimization COMPLETE
 
 ## Current Position
 
 Phase: 30 of 31 (Image Optimization)
-Plan: 1 of 2 in Phase 30
-Status: In progress
-Last activity: 2026-04-06 — Completed 30-01-PLAN.md (hero WebP srcset + LCP preload)
+Plan: 2 of 2 in Phase 30
+Status: Phase 30 complete
+Last activity: 2026-04-06 — Completed 30-02-PLAN.md (parallax CSS image-set() + IMG-03 verification)
 
-Progress: [████████████████████] v1.0-v1.3 ✅ | v1.4 [███░░░░░░░] 3/6 plans
+Progress: [████████████████████] v1.0-v1.3 ✅ | v1.4 [████░░░░░░] 4/6 plans
 
 ## Performance Metrics
 
@@ -49,5 +49,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-04-06
-Stopped at: Completed 30-01-PLAN.md — hero WebP srcset variants + LCP preload (Phase 30 Plan 1/2)
+Stopped at: Completed 30-02-PLAN.md — parallax CSS image-set() WebP/JPEG, IMG-03 verified (Phase 30 complete)
 Resume file: None
