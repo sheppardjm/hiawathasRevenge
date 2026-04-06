@@ -21,25 +21,26 @@ See MILESTONES.md for full history.
 
 **Milestone Goal:** Ship-ready polish — tech debt cleanup, SEO/social sharing metadata, image optimization for performance, and accessibility hardening so the site is confident to share publicly.
 
-- [ ] **Phase 28: Tech Debt Cleanup** - Fix carried-forward CSS, pipeline, and cross-browser issues
+- [x] **Phase 28: Tech Debt Cleanup** - Fix carried-forward CSS, pipeline, and cross-browser issues ✅ 2026-04-06
 - [ ] **Phase 29: SEO & Social Sharing** - Meta tags, structured data, and canonical URL for discoverability
 - [ ] **Phase 30: Image Optimization** - Hero srcset, gallery WebP, parallax image-set() for Lighthouse performance
 - [ ] **Phase 31: Accessibility Hardening** - Focus indicators, alt text, contrast, and reduced-motion for WCAG compliance
 
 ## Phase Details
 
-### Phase 28: Tech Debt Cleanup
+### Phase 28: Tech Debt Cleanup ✅
 **Goal**: Known code quality issues from v1.3 audit are resolved — no undefined variables, no naming inconsistencies, no browser-specific rendering gaps
 **Depends on**: Nothing (first phase of v1.4)
 **Requirements**: DEBT-01, DEBT-02, DEBT-03
+**Completed**: 2026-04-06
 **Success Criteria** (what must be TRUE):
-  1. RouteMap.astro sector panel text renders with the intended body font, not falling back to monospace
-  2. The NF2217/NF2217-2218 segment displays consistent naming across annotations.json, sector-details.json, and the rendered UI
-  3. Star rating gradient text renders identically in Firefox and Chrome (no missing gradient or invisible stars)
+  1. ✓ RouteMap.astro sector panel text renders with the intended body font, not falling back to monospace
+  2. ✓ The NF2217/NF2217-2218 segment displays consistent naming across annotations.json, sector-details.json, and the rendered UI
+  3. ✓ Star rating gradient text renders identically in Firefox and Chrome (no missing gradient or invisible stars)
 **Plans**: 1 plan
 
 Plans:
-- [ ] 28-01-PLAN.md -- Fix undefined --font-body (add Spectral via Fonts API), reconcile NF2217 naming to NF2217-2218, add Firefox @supports fallback for star rating gradient
+- [x] 28-01-PLAN.md -- Fix undefined --font-body (add Spectral via Fonts API), reconcile NF2217 naming to NF2217-2218, add Firefox @supports fallback for star rating gradient
 
 ### Phase 29: SEO & Social Sharing
 **Goal**: The site appears with a rich preview (title, description, hero image) when shared on social media or indexed by search engines, with structured event data for Google
@@ -92,7 +93,7 @@ Phases 28-31. Phases 28, 29, 30 are independent; Phase 31 depends on Phase 28.
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
-| 28. Tech Debt Cleanup | v1.4 | 0/1 | Not started | - |
+| 28. Tech Debt Cleanup | v1.4 | 1/1 | ✅ Complete | 2026-04-06 |
 | 29. SEO & Social Sharing | v1.4 | 0/1 | Not started | - |
 | 30. Image Optimization | v1.4 | 0/2 | Not started | - |
 | 31. Accessibility Hardening | v1.4 | 0/2 | Not started | - |

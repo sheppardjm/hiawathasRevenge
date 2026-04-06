@@ -30,9 +30,9 @@ Requirements for ship-ready polish. Each maps to roadmap phases.
 
 ### Tech Debt
 
-- [ ] **DEBT-01**: Fix undefined `--font-body` CSS variable in RouteMap.astro sector panel
-- [ ] **DEBT-02**: Reconcile NF2217 vs NF2217-2218 pipeline name divergence across annotations and sector-details
-- [ ] **DEBT-03**: Add Firefox fallback for `-webkit-text-fill-color` on star rating gradient
+- [x] **DEBT-01**: Fix undefined `--font-body` CSS variable in RouteMap.astro sector panel ✅
+- [x] **DEBT-02**: Reconcile NF2217 vs NF2217-2218 pipeline name divergence across annotations and sector-details ✅
+- [x] **DEBT-03**: Add Firefox fallback for `-webkit-text-fill-color` on star rating gradient ✅
 
 ## Future Requirements
 
@@ -68,9 +68,9 @@ Requirements for ship-ready polish. Each maps to roadmap phases.
 | SEO-02 | Phase 29 | Pending |
 | SEO-03 | Phase 29 | Pending |
 | SEO-04 | Phase 29 | Pending |
-| DEBT-01 | Phase 28 | Pending |
-| DEBT-02 | Phase 28 | Pending |
-| DEBT-03 | Phase 28 | Pending |
+| DEBT-01 | Phase 28 | Complete |
+| DEBT-02 | Phase 28 | Complete |
+| DEBT-03 | Phase 28 | Complete |
 
 **Coverage:**
 - v1.4 requirements: 15 total
@@ -79,4 +79,4 @@ Requirements for ship-ready polish. Each maps to roadmap phases.
 
 ---
 *Requirements defined: 2026-04-06*
-*Last updated: 2026-04-03 after roadmap creation*
+*Last updated: 2026-04-06 after Phase 28 completion*
