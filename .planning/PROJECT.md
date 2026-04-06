@@ -57,7 +57,17 @@ Visitors experience the beauty and scale of the Hiawatha's Revenge route through
 
 ### Active
 
-(No active requirements — next milestone via `/gsd:new-milestone`)
+#### Current Milestone: v1.5 Multi-Route Support
+
+**Goal:** Add 100k and 50k route variants alongside the existing 100-mile route with a map-based route selector, per-route elevation profiles, filtered sector display, and GPX downloads for all three distances.
+
+**Target features:**
+- Pipeline expansion to process 3 GPX files and produce per-route data (route points, sectors, elevations, surface coloring)
+- Route selector UI on the map to toggle between 100mi / 100k / 50k
+- Elevation profile swaps dynamically when the selected route changes
+- Sector overlays, labels, and detail panels filter to show only sectors on the selected route
+- GPX download links for all three route distances
+- Route stats (distance, elevation gain) update per selection
 
 ### Out of Scope
 
@@ -134,4 +144,4 @@ MBTN (mbtn.org) is the beneficiary — donate CTA links to their site.
 | Placeholder domain in astro.config.ts | Deployment URL TBD; all chain logic correct | — Pending deployment |
 
 ---
-*Last updated: 2026-04-06 after v1.4 milestone complete*
+*Last updated: 2026-04-06 after v1.5 milestone started*
