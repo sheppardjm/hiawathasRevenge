@@ -44,7 +44,7 @@ function parseDims(filename: string): { w: number; h: number } {
         >
           <img
             src={photo.thumb}
-            alt=""
+            alt={`Route photo at mile ${photo.mile.toFixed(1)}`}
             loading="lazy"
             decoding="async"
             width={dims.w}
