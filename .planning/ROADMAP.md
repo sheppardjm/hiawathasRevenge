@@ -43,12 +43,12 @@ All v1.0-v1.4 phases shipped. See `.planning/MILESTONES.md` for full history.
   3. A `public/data/routes.json` manifest exists with metadata for all 3 routes (id, name, color, sector membership, distance, elevation gain)
   4. All 3 GPX files are available at `public/*.gpx` for download
   5. The existing 100-mile site renders identically to v1.4 when loading from the new `100mi/` subdirectory paths
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 33-01: Route config, pipeline loop, and parse-gpx multi-route
-- [ ] 33-02: Coordinate-based sector snapping and surface-point generation with fallback
-- [ ] 33-03: Route manifest, GPX copy, and pipeline validation
+- [ ] 33-01-PLAN.md -- Route config, pipeline loop, and parse-gpx multi-route
+- [ ] 33-02-PLAN.md -- Coordinate-based sector snapping and surface-point generation with fallback
+- [ ] 33-03-PLAN.md -- Route manifest, GPX copy, content path updates, and pipeline validation
 
 ### Phase 34: Route Selector & Map Switching
 **Goal**: Users can switch between 100mi, 100k, and 50k routes on the map and see the correct polyline, sector overlays, ghost routes, and labels for their selection
