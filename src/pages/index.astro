@@ -45,6 +45,7 @@ import ScrollReveal from '../components/ScrollReveal.astro';
   <section data-reveal class="bg-forest-800 w-full py-16">
     <div class="max-w-4xl mx-auto px-4 flex flex-col items-center gap-2">
       <a
+        id="gpx-download-link"
         href="/Munising_Hiawatha_s_Revenge.gpx"
         download="HiawathasRevenge.gpx"
         class="gpx-download"
@@ -229,3 +230,24 @@ import ScrollReveal from '../components/ScrollReveal.astro';
     }
   }
 </style>
+
+<script>
+  // GPX download link — route-aware href and label
+  // Updates the download link when the user switches routes via the RouteSelector
+  let _routesCache = null;
+  async function getRoutes() {
+    if (!_routesCache) _routesCache = await fetch('/data/routes.json').then(r => r.json());
+    return _routesCache;
+  }
+
+  window.addEventListener('route:change', async (e) => {
+    const data = await getRoutes();
+    const route = data.routes.find(r => r.id === e.detail.routeId);
+    if (!route) return;
+    const link = document.getElementById('gpx-download-link');
+    if (!link) return;
+    link.href = '/' + route.gpxFile;
+    link.download = 'HiawathasRevenge-' + route.shortName + '.gpx';
+    link.textContent = 'Download ' + route.name + ' GPX';
+  });
+</script>
