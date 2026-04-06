@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-04-06)
 
 ## Current Position
 
-Phase: 35 of 36 (Elevation Profile and Route Stats) -- COMPLETE
+Phase: 36 of 36 (Downloads, Deep Linking, Hero Video)
 Plan: 2 of 2 in current phase
-Status: Phase complete
-Last activity: 2026-04-06 -- Completed 35-02-PLAN.md (Route comparison grid with active highlight)
+Status: In progress -- at checkpoint (awaiting human verification)
+Last activity: 2026-04-06 -- Completed 36-02-PLAN Task 1 (hero video added, awaiting visual verify)
 
-Progress: [████████████████████] v1.0-v1.4 complete | v1.5 [████████░░] 7/9 plans
+Progress: [████████████████████] v1.0-v1.4 complete | v1.5 [█████████░] 8/9 plans (36-02 in progress)
 
 ## Performance Metrics
 
@@ -72,6 +72,6 @@ All tech debt items from v1.0-v1.4 resolved. No outstanding items.
 
 ## Session Continuity
 
-Last session: 2026-04-06T23:30:00Z
-Stopped at: Completed 35-02-PLAN.md -- Route comparison grid with active highlight
+Last session: 2026-04-06T23:54:47Z
+Stopped at: 36-02-PLAN Task 1 complete (0fcec9c) -- hero video added, at checkpoint:human-verify
 Resume file: None
