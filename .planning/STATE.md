@@ -52,6 +52,9 @@ Progress: [████████████████████] v1.0-v1
 | 35-02 | routesManifest frontmatter import (build-time) for comparison grid | Comparison cards are static HTML; no runtime fetch needed |
 | 35-02 | --route-color CSS custom property per card drives active border | Pure-CSS active color without JS color lookup |
 | 35-02 | Comparison highlight consolidated into existing route:change listener | Avoids duplicate listeners; single handler updates both hero stats and comparison grid |
+| 36-01 | history.replaceState (not location.hash) for hash writes | Prevents hashchange event cascade on every route switch |
+| 36-01 | initialRouteId const inside initMap() -- no module scope lift needed | Naturally in scope for selector loop, renderRoute(), updateGhostVisibility() calls |
+| 36-01 | GPX link default stays static (100mi); route:change updates it dynamically | route:change always fires before user can scroll to download section |
 
 ### Pending Todos
 
