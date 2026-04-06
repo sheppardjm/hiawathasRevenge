@@ -251,19 +251,11 @@
     const forest900 = getCSSColor('--color-forest-900');
     const lake400   = getCSSColor('--color-lake-400');
 
-    // Sector difficulty colors — must live inside initMap() so getCSSColor() is available
-    const SECTOR_COLORS = {
-      easy:     { line: getCSSColor('--color-moss-500') },
-      moderate: { line: amber500 },
-      hard:     { line: getCSSColor('--color-rust-500') },
-    };
+    // Sector color — single color for all sectors (no difficulty differentiation)
+    const SECTOR_COLOR = { line: amber500 };
 
-    // Sector label pill colors — difficulty-coded background for label markers
-    const LABEL_COLORS = {
-      easy:     getCSSColor('--color-moss-500'),
-      moderate: amber500,
-      hard:     getCSSColor('--color-rust-500'),
-    };
+    // Sector label pill color — uniform for all sectors
+    const LABEL_COLOR = amber500;
     const labelTextColor = getCSSColor('--color-forest-900');
 
     // Dynamic import avoids SSR "window is undefined" error — Leaflet requires browser globals
@@ -340,36 +332,22 @@
       unknown: getCSSColor('--color-forest-700'),
     };
 
-    // Render surface-colored polylines using run-flush algorithm
-    // Groups consecutive same-surface points into runs; borrows one point from next run
-    // to handle 13 single-point segments (L.polyline needs >= 2 points to render)
-    let prevSurface = null;
-    let runStart = 0;
-    function flushRun(endIdx) {
-      if (prevSurface === null) return;
-      const pts = latlngs.slice(runStart, endIdx + 1);
-      if (pts.length >= 2) {
-        L.polyline(pts, {
-          color: SURFACE_COLORS[prevSurface] || SURFACE_COLORS.unknown,
-          weight: 4, opacity: 0.9, smoothFactor: 1, interactive: false,
-        }).addTo(map);
-      }
-    }
-    for (let i = 0; i < surfacePoints.length; i++) {
-      const s = surfacePoints[i].surface;
-      if (s !== prevSurface) { flushRun(i); runStart = i; prevSurface = s; }
-    }
-    flushRun(surfacePoints.length - 1);
+    // Base route polyline — single uniform color for the entire route
+    L.polyline(latlngs, {
+      color: forest900, weight: 4, opacity: 0.9, smoothFactor: 1, interactive: false,
+    }).addTo(map);
 
     // Bike dot marker — circle dot that moves along the route on elevation chart hover
     // className: '' REQUIRED — removes default leaflet-div-icon white background/border
     const bikeIcon = L.divIcon({
-      html: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
-        <circle cx="8" cy="8" r="6" fill="${amber500}" stroke="${forest900}" stroke-width="2"/>
+      html: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="${getCSSColor('--color-lake-400')}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="5.5" cy="17.5" r="3.5"/>
+        <circle cx="18.5" cy="17.5" r="3.5"/>
+        <path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-3 11.5V14l-3-3 4-3 2 3h2"/>
       </svg>`,
       className: '',
-      iconSize: [16, 16],
-      iconAnchor: [8, 8]
+      iconSize: [24, 24],
+      iconAnchor: [12, 12]
     });
 
     // Create marker but do NOT add to map — appears on first elevation:hover
@@ -388,12 +366,11 @@
     for (const sector of sectors) {
       // slice(startIdx, endIdx + 1) — JavaScript slice excludes end index; +1 prevents off-by-one gap
       const sectorPts = latlngs.slice(sector.startIdx, sector.endIdx + 1);
-      const colors = SECTOR_COLORS[sector.difficulty] || SECTOR_COLORS.moderate;
-      const defaultStyle = { color: colors.line, weight: 5, opacity: 0.85 };
+      const defaultStyle = { color: SECTOR_COLOR.line, weight: 5, opacity: 0.85 };
 
       const visiblePoly = L.polyline(sectorPts, { ...defaultStyle, interactive: false }).addTo(map);
       const ghostPoly = L.polyline(sectorPts, {
-        color: colors.line, weight: 20, opacity: 0, interactive: true,
+        color: SECTOR_COLOR.line, weight: 20, opacity: 0, interactive: true,
       }).addTo(map);
 
       const entry = { sectorId: sector.id, visiblePoly, ghostPoly, defaultStyle };
@@ -444,11 +421,11 @@
       const drawH = H - 2 * padding;
 
       const DIFFICULTY_COLORS = {
-        easy:     '#7d9448',
+        easy:     '#c8973e',
         moderate: '#c8973e',
-        hard:     '#f87171',
+        hard:     '#c8973e',
       };
-      const strokeColor = DIFFICULTY_COLORS[elevData.difficulty] ?? '#c8973e';
+      const strokeColor = '#c8973e';
 
       const computed = points.map((p, i) => ({
         x: milesRange > 0 ? (p.miles - miles[0]) / milesRange * W : i / Math.max(points.length - 1, 1) * W,
@@ -560,7 +537,7 @@
     for (const sector of sectors) {
       const midIdx = Math.floor((sector.startIdx + sector.endIdx) / 2);
       const midPt = latlngs[midIdx];
-      const bgColor = LABEL_COLORS[sector.difficulty] || LABEL_COLORS.moderate;
+      const bgColor = LABEL_COLOR;
       const stars = '★'.repeat(sector.stars);
 
       const labelIcon = L.divIcon({

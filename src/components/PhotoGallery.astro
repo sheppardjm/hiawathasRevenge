@@ -49,6 +49,7 @@ function parseDims(filename: string): { w: number; h: number } {
             decoding="async"
             width={dims.w}
             height={dims.h}
+            style={`aspect-ratio: ${dims.w} / ${dims.h}; background: var(--color-forest-800);`}
             class="w-full h-auto block"
           />
         </a>
@@ -79,11 +80,13 @@ function parseDims(filename: string): { w: number; h: number } {
     );
     background-size: 200% 100%;
     animation: shimmer 1.5s ease-in-out infinite;
+    min-height: 200px;
   }
 
   .img-skeleton.loaded {
     background: none;
     animation: none;
+    min-height: 0;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -104,11 +107,13 @@ function parseDims(filename: string): { w: number; h: number } {
       wrapper.classList.add('loaded');
     }
 
-    if (img.complete) {
+    // img.complete can be true for lazy images that haven't fetched yet —
+    // also check naturalHeight to confirm actual pixel data exists
+    if (img.complete && img.naturalHeight > 0) {
       markLoaded();
     } else {
       img.addEventListener('load', markLoaded, { once: true });
-      img.addEventListener('error', markLoaded, { once: true }); // Remove shimmer even on error
+      img.addEventListener('error', markLoaded, { once: true });
     }
   });
 

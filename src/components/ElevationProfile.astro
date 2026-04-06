@@ -25,12 +25,8 @@
       return `rgba(${r}, ${g}, ${b}, ${alpha})`;
     }
 
-    // Sector difficulty band fill colors — must live inside initChart() so helpers are available
-    const SECTOR_COLORS = {
-      easy:     { fill: hexToRgba(getCSSColor('--color-moss-500'), 0.18) },
-      moderate: { fill: hexToRgba(getCSSColor('--color-amber-500'), 0.18) },
-      hard:     { fill: hexToRgba(getCSSColor('--color-rust-500'), 0.18) },
-    };
+    // Sector band fill color — uniform for all sectors
+    const SECTOR_BAND_FILL = hexToRgba(getCSSColor('--color-amber-500'), 0.18);
 
     // Color variables — defined once, reused throughout initChart()
     const amber500 = getCSSColor('--color-amber-500');
@@ -71,13 +67,12 @@
     const sectors = annotations.filter(a => a.type === 'sector');
     const sectorAnnotations = {};
     for (const sector of sectors) {
-      const colors = SECTOR_COLORS[sector.difficulty] || SECTOR_COLORS.moderate;
       sectorAnnotations[sector.id] = {
         type: 'box',
         xMin: sector.startMile,
         xMax: sector.endMile,
         // yMin/yMax intentionally omitted — auto-expands to full chart height
-        backgroundColor: colors.fill,
+        backgroundColor: SECTOR_BAND_FILL,
         borderWidth: 0,
         drawTime: 'beforeDatasetsDraw'
       };

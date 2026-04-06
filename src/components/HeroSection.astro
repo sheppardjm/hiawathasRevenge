@@ -50,13 +50,13 @@
       <div class="badge-inner">
         <h1 class="badge-title">Hiawatha's Revenge</h1>
         <hr class="badge-rule" />
-        <span class="badge-miles">100 Miles</span>
+        <span class="badge-miles">100mi / 100k / 50k</span>
       </div>
     </div>
     <p class="hero-tagline">A ride that tests your legs and rewards your soul.</p>
     <div class="hero-date-block">
-      <span class="hero-date-label">Ride Date</span>
       <time class="hero-date" datetime="2026-06-06">June 6, 2026</time>
+      <span class="hero-start-time">8 AM Start</span>
     </div>
   </div>
 </section>
@@ -179,7 +179,7 @@
     color: var(--color-cream-50);
     text-transform: uppercase;
     letter-spacing: 0.2em;
-    font-size: var(--font-size-sm);
+    font-size: 0.5rem;
     margin-top: 0.25rem;
   }
 
@@ -198,20 +198,21 @@
     gap: 0.125rem;
   }
 
-  .hero-date-label {
-    font-family: var(--font-display);
-    font-size: clamp(0.625rem, 1.5vw, 0.75rem);
-    color: var(--color-cream-200);
-    text-transform: uppercase;
-    letter-spacing: 0.2em;
-  }
-
   .hero-date {
     font-family: var(--font-display);
     font-size: clamp(1.25rem, 3vw, 2rem);
     font-weight: 700;
     color: var(--color-gold-500);
     letter-spacing: 0.08em;
+  }
+
+  .hero-start-time {
+    font-family: var(--font-display);
+    font-size: clamp(0.75rem, 1.5vw, 1rem);
+    color: var(--color-cream-200);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-top: 0.125rem;
   }
 
   @media (min-width: 640px) {
@@ -222,7 +223,10 @@
       font-size: var(--font-size-3xl);
     }
     .badge-miles {
-      font-size: var(--font-size-base);
+      font-size: 0.625rem;
+    }
+    .hero-start-time {
+      font-size: 1rem;
     }
   }
 </style>
