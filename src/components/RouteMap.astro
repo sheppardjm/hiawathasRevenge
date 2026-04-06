@@ -721,6 +721,7 @@
       updateGhostVisibility(routeId);
 
       // 12. Notify downstream components (ElevationProfile) of route change
+      window.__activeRouteId = routeId;
       window.dispatchEvent(new CustomEvent('route:change', {
         detail: { routeId }
       }));

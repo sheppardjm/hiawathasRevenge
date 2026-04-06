@@ -230,6 +230,15 @@
       chart.options.plugins.annotation.annotations.crosshair.display = false;
       chart.update('none');
     });
+
+    // Sync to active route if user switched before chart initialized
+    // Handles race: user switches route → route:change fires → chart not yet built (returns early)
+    // → user scrolls → IntersectionObserver fires initChart() → chart builds with 100mi default
+    // → this check detects the pending route and corrects it immediately after construction
+    const pendingRoute = window.__activeRouteId;
+    if (pendingRoute && pendingRoute !== '100mi') {
+      updateChart(pendingRoute);
+    }
   } // end initChart
 
   // IntersectionObserver lazy-init — loads Chart.js only when container enters viewport.
