@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-04-07)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive, visually stunning showcase that inspires them to ride it and support MBTN.
-**Current focus:** Planning next milestone
+**Current focus:** v1.7 UX Polish & Photo Pipeline
 
 ## Current Position
 
-Phase: Next TBD
-Plan: Not started
-Status: Ready to plan
-Last activity: 2026-04-07 — v1.6 milestone complete
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-04-07 — Milestone v1.7 started
 
-Progress: [████████████████████] v1.0-v1.6 complete | Next milestone TBD
+Progress: [████████████████████] v1.0-v1.6 complete | v1.7 defining requirements
 
 ## Performance Metrics
 
@@ -50,5 +50,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-04-07
-Stopped at: v1.6 milestone complete — ready for next milestone
+Stopped at: Defining v1.7 requirements
 Resume file: None

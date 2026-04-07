@@ -73,7 +73,16 @@ Visitors experience the beauty and scale of the Hiawatha's Revenge route through
 
 ### Active
 
-(None — planning next milestone)
+#### Current Milestone: v1.7 UX Polish & Photo Pipeline
+
+**Goal:** Simplify the map, fix photo layout, add new photos, and clean up download UX.
+
+- [ ] Two-color route map — sectors one color, rest another; drop surface-type coloring
+- [ ] GPX download text updated to direct users to route selector for alternate routes
+- [ ] Remove broken "View in route guide" button from sector panels
+- [ ] Segment card photos in multi-column layout (not stretched beyond 400px)
+- [ ] New photos optimized and added to gallery and map with mileage tags
+- [ ] Gallery photos ordered by route mileage (start to finish)
 
 ### Out of Scope
 
@@ -167,4 +176,4 @@ MBTN (mbtn.org) is the beneficiary — donate CTA links to their site.
 | Landscape-only rule for descriptions | Omit named lakes/landmarks; use generic corridor references | ✓ Good — consistent voice |
 
 ---
-*Last updated: 2026-04-07 after v1.6 milestone*
+*Last updated: 2026-04-07 after v1.7 milestone start*
