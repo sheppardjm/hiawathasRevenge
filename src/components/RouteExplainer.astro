@@ -21,7 +21,7 @@ const SEGMENTS: Segment[] = [
   { name: 'NF2217-2218',             startMi: 32.0, endMi: 50.0,  distFromStart: '36.8mi', length: '6.6mi', difficulty: 2, stravaId: '41149550', description: 'A long, meditative stretch through the forest interior. Smooth gravel threading between Camp 7 Lake and the headwaters of the Indian River — good surface for making up time. Surface: compact gravel and hard-packed dirt, dual forest road. Camp 7 Lake Campground at mile 44.7 has a water pump and vault toilet — your first restock point. In July and August, this corridor buzzes with horseflies; early morning or late season is kinder.' },
   { name: 'ND2225',                  startMi: 50.0, endMi: 70.0,  distFromStart: '55.7mi', length: '3.9mi', difficulty: 3, stravaId: '39343281', description: 'The route bends south and the surface degrades — loose gravel and intermittent sand demand attention. Quiet and remote, with no services for miles in either direction. Surface: loose gravel transitioning to sandy patches, unmaintained in stretches. You\'ll cross the Indian River headwaters and pass through stands of jack pine and red pine. Fall color peaks here in late September; spring thaw turns the low-lying sections to pudding.' },
   { name: 'Doe Lake',                startMi: 70.0, endMi: 92.0,  distFromStart: '84.8mi', length: '3.1mi', difficulty: 4, stravaId: '34543004', description: 'Technical and punishing. Sandy two-track weaves through dense forest near Doe Lake with short, sharp climbs that hit different at mile 85. The Midway General Store at mile 75.7 is your last chance to restock — food, water, bathrooms, and precious cell service. Surface: deep sand and rugged two-track, roots and embedded rock in spots. Doe Lake appears briefly through the trees to the east. By October the sand firms up somewhat, but summer heat on this stretch is relentless.' },
-  { name: 'Rapid River Truck Trail', startMi: 92.0, endMi: 110.0, distFromStart: '94.6mi', length: '6.3mi', difficulty: 2, description: "The home stretch. A well-maintained truck trail carries you north back toward Munising with long descents and the growing certainty that you're going to finish this thing. Surface: firm packed gravel, USFS-maintained truck trail. You'll cross the Rapid River and catch glimpses of Lake Superior as you descend toward town. In late September, the aspens along this corridor turn gold — a fitting reward for surviving the previous 94 miles." },
+  { name: 'Ridge Rd', startMi: 92.0, endMi: 110.0, distFromStart: '94.6mi', length: '6.3mi', difficulty: 2, stravaId: '41188200', description: "The home stretch. A well-maintained truck trail carries you north back toward Munising with long descents and the growing certainty that you're going to finish this thing. Surface: firm packed gravel, USFS-maintained truck trail. You'll cross the Rapid River and catch glimpses of Lake Superior as you descend toward town. In late September, the aspens along this corridor turn gold — a fitting reward for surviving the previous 94 miles." },
 ];
 
 const DIFFICULTY_COLORS: Record<number, string> = {
@@ -39,7 +39,7 @@ const SECTOR_IDS: Record<string, string> = {
   'NF2217-2218': 'sector-nf2217',
   'ND2225': 'sector-nd2225',
   'Doe Lake': 'sector-doe-lake',
-  'Rapid River Truck Trail': 'sector-rapid-river',
+  'Ridge Rd': 'sector-rapid-river',
 };
 
 const segmentsWithPhotos = SEGMENTS.map(seg => ({

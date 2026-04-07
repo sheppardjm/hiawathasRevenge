@@ -126,7 +126,7 @@ export const SECTOR_DEFS = [
   },
   {
     id: 'sector-rapid-river',
-    name: 'Rapid River Truck Trail',
+    name: 'Ridge Rd',
     startLat: 46.33280,
     startLon: -86.78320,
     endLat: 46.35690,

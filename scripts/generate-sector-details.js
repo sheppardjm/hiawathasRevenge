@@ -64,7 +64,7 @@ const SECTOR_DETAILS = [
     id: 'sector-rapid-river',
     description: "The home stretch. A well-maintained truck trail carries you north back toward Munising with long descents and the growing certainty that you're going to finish this thing. Surface: firm packed gravel, USFS-maintained truck trail. You'll cross the Rapid River and catch glimpses of Lake Superior as you descend toward town. In late September, the aspens along this corridor turn gold — a fitting reward for surviving the previous 94 miles.",
     surface: 'firm packed gravel, USFS-maintained',
-    stravaLink: null,
+    stravaLink: 'https://www.strava.com/segments/41188200',
   },
 ];
 
