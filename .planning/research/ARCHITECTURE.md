@@ -717,3 +717,284 @@ No component code changes needed.
 - **Chart.js 4.x destroy/create pattern**: Standard approach for full dataset replacement with LTTB decimation
 
 All findings are based on direct source file analysis of the current codebase. Confidence: HIGH.
+
+---
+
+## Milestone: Map Label Sizing, 520 Photo Fix, and Site URL Update
+
+**Researched:** 2026-04-06
+**Scope:** Three targeted fixes identified via codebase analysis. All findings are based on direct file reading with exact line numbers. Confidence: HIGH.
+
+---
+
+### Fix 1: Map Sector Label Sizing
+
+#### Problem
+
+The sector labels are `L.divIcon` pill-shaped markers rendered with inline CSS. With `white-space: nowrap` in effect, the label box width is determined by the longest text content. The current font-size of `11px` and padding of `3px 8px` are too small for names like "NF2217-2218" (11 chars) and "Bass Lake Rd" (11 chars). The stars row uses `9px` which compounds the cramped appearance.
+
+#### Exact Location
+
+**File:** `src/components/RouteMap.astro`
+
+The entire label HTML is built inline at **lines 676–694**:
+
+```
+676:        const labelIcon = L.divIcon({
+677:          className: 'sector-label',
+678:          html: `<div style="
+679:            background: ${bgColor};
+680:            color: ${labelTextColor};
+681:            border: 2px solid ${labelTextColor};
+682:            border-radius: 12px;
+683:            padding: 3px 8px;          <-- line 683: CHANGE THIS
+684:            font-family: var(--font-display);
+685:            font-size: 11px;           <-- line 685: CHANGE THIS
+686:            font-weight: 700;
+687:            white-space: nowrap;
+688:            transform: translate(-50%, -50%);
+689:            box-shadow: 2px 2px 0px rgba(0,0,0,0.4);
+690:            line-height: 1.3;
+691:            text-align: center;
+692:          ">${sector.name}<br><span style="font-size: 9px; letter-spacing: 1px;">${stars}</span></div>`,
+                                         ^^ line 692: stars font-size also CHANGE
+```
+
+#### Current Values
+
+| Property | Current | Location |
+|----------|---------|----------|
+| `padding` | `3px 8px` | line 683 |
+| `font-size` (name) | `11px` | line 685 |
+| `font-size` (stars) | `9px` | line 692, inline on `<span>` |
+| `border-radius` | `12px` | line 682 |
+| `letter-spacing` (stars) | `1px` | line 692 |
+
+#### Recommended New Values
+
+| Property | Recommended | Rationale |
+|----------|-------------|-----------|
+| `padding` | `4px 10px` | More breathing room; matches the 4px 8px used in `.route-selector__btn` area (line 120) |
+| `font-size` (name) | `12px` | One step up from 11px; "Bass Lake Rd" at 12px with 10px padding fits comfortably |
+| `font-size` (stars) | `10px` | Proportional increase; keeps stars subordinate but readable |
+| `border-radius` | `12px` | No change — already appropriate for a pill |
+| `letter-spacing` (stars) | `1px` | No change |
+
+The `white-space: nowrap` is correct; labels should not wrap. The fix is purely increasing the font-size and padding so the text has room to breathe at full render size.
+
+#### Why Not CSS Class Instead of Inline?
+
+The label HTML is built dynamically with JavaScript template literals inside an Astro `<script>` block. The Astro scoped CSS (lines 42–45) only applies `background: transparent` and `border: none` to `.sector-label` (the outer Leaflet wrapper div). The inner `<div>` containing the pill styling is generated JavaScript — Astro's scoped CSS cannot reach it. Inline styles are the correct approach here, matching the established pattern in this file.
+
+---
+
+### Fix 2: 520 Segment Missing Photo
+
+#### Problem
+
+The `520` segment is defined in `RouteExplainer.astro` with:
+- `startMi: 0`
+- `endMi: 5.0`
+
+The photo filter in `RouteExplainer.astro` lines 46–50:
+
+```javascript
+const segmentsWithPhotos = SEGMENTS.map(seg => ({
+  ...seg,
+  photos: (photosData as any[])
+    .filter((p: any) => p.mile >= seg.startMi && p.mile < seg.endMi)
+    .slice(0, 2),
+}));
+```
+
+This filters `photos.json` for entries where `mile >= 0 AND mile < 5.0`.
+
+The earliest photo mile in `photos.json` is **5.51** (line 6 of photos.json). No photos fall in the `[0, 5.0)` range. The 520 segment therefore always hits the fallback branch (lines 79–88 of RouteExplainer.astro) which renders a gradient background instead of a photo.
+
+#### Confirmed Gap
+
+All photo mile values from `photos.json` sorted ascending:
+- 5.51 (first entry — just outside 520's range)
+- 8.25
+- 9.09
+- 10.84
+- 13.39
+- 13.63
+- 14.38
+- (continues above 17.5...)
+
+There are zero photos with `mile < 5.0`. The gap is confirmed.
+
+#### Strategy Options
+
+**Option A: Widen the 520 segment's photo range (code change, no new data)**
+
+Change `endMi: 5.0` to `endMi: 10.0` in the `SEGMENTS` array in `RouteExplainer.astro` (line 18). This would pick up the 5.51-mile photo.
+
+Risk: The 5.51-mile photo is geographically in the NF2266 segment (which starts at 5.0). Showing it under the 520 card is mislabeling — it would show a forest road photo on the "paved warm-up" card.
+
+**Option B: Add a photo with mile < 5.0 to photos.json (data addition)**
+
+Identify an existing image that was taken within the first 5 miles (on or near County Road 520) and add it to `photos.json` with the correct `mile`, `lat`, and `lon`. This is the correct fix but requires sourcing a suitable image.
+
+**Option C: Use the 5.51-mile photo with an adjusted alt text (pragmatic)**
+
+Add a special case: for the 520 segment, look for photos in `[0, 6.0)` with the note in the alt text that the photo is "near the start of NF2266". This is a hack.
+
+**Option D: Accept the fallback (no fix needed)**
+
+The fallback hero (lines 79–88 of RouteExplainer.astro) renders a forest-green gradient with the segment name overlaid. It is intentional and functional. If no suitable photo of the 520 pavement exists, this is acceptable.
+
+#### Recommendation
+
+**Option B is ideal but requires sourcing an image.** The correct architectural fix is to get a photo taken on County Road 520 (or near Munising Falls / Pictured Rocks visitor center, both of which the description mentions as landmarks) and add it to `photos.json` with a mile value between 0 and 5.0.
+
+If no such image is available in the existing `images/` directory, **Option D (accept the fallback)** is the correct short-term answer. The fallback is styled and intentional. Do not widen the mile range (Option A) — it would show the wrong photo for the wrong terrain.
+
+#### How to Add a New Photo (if Option B is chosen)
+
+1. Place the image file in `/images/`
+2. Run the existing thumbnail and WebP pipeline steps:
+   - `node scripts/generate-thumbnails.js` (creates `/public/thumbs/*.webp`)
+   - `node scripts/copy-images.js`
+3. Add an entry to `public/data/photos.json`:
+   ```json
+   {
+     "id": "YOUR_FILENAME.jpg",
+     "filename": "YOUR_FILENAME.jpg",
+     "thumb": "/thumbs/YOUR_FILENAME.webp",
+     "mile": 2.5,
+     "lat": 46.XXXXX,
+     "lon": -86.XXXXX
+   }
+   ```
+4. The `match-photos.js` script (`scripts/match-photos.js`) automates step 3 by geolocating images. Run it if the image has EXIF GPS data.
+
+#### File Locations for 520 Photo Fix
+
+| File | Line | Change |
+|------|------|--------|
+| `RouteExplainer.astro` | 18 | `endMi` for 520 segment (only if widening range — not recommended) |
+| `public/data/photos.json` | end of array | Add new photo entry (if sourcing new image) |
+| `scripts/match-photos.js` | — | Run to auto-ingest if image has EXIF GPS |
+
+---
+
+### Fix 3: Site URL in astro.config.ts
+
+#### Exact Location
+
+**File:** `astro.config.ts`
+
+**Line 5:**
+```typescript
+site: 'https://hiawathasrevenge.com', // TODO: update to actual deployed URL
+```
+
+#### Current Value
+
+```typescript
+site: 'https://hiawathasrevenge.com', // TODO: update to actual deployed URL
+```
+
+The URL `https://hiawathasrevenge.com` is a placeholder with a `// TODO` comment. The comment suggests the actual deployed URL was not known at authoring time.
+
+#### Change Required
+
+1. Determine the actual deployed URL (Vercel, Netlify, GitHub Pages, or custom domain).
+2. Replace the placeholder and remove the TODO comment:
+   ```typescript
+   site: 'https://ACTUAL-DEPLOYED-URL.com',
+   ```
+
+This value is used by Astro for:
+- Generating canonical `<link rel="canonical">` tags
+- Building absolute URLs for sitemap.xml (if `@astrojs/sitemap` is added)
+- The `Astro.site` variable in any components that use it
+
+If the site is deployed at `hiawathasrevenge.com` (exactly as written, minus the placeholder comment), then the only change is removing the `// TODO` comment. If the actual domain is different, update accordingly.
+
+---
+
+### Fix 4: Description Authoring Locations
+
+The editorial descriptions for each segment exist in **two files** that must be kept in sync. Both files contain identical description text.
+
+#### File 1: RouteExplainer.astro (Primary Authoring Location)
+
+**File:** `src/components/RouteExplainer.astro`
+**Lines:** 18–25 (the `SEGMENTS` const array)
+
+Each segment object has a `description` field. These are the descriptions rendered in the RouteExplainer section cards. Example:
+
+```javascript
+// Line 18 — 520 segment
+{ name: '520', startMi: 0, endMi: 5.0, ..., description: 'A brief paved warm-up...' }
+
+// Line 19 — NF2266 segment
+{ name: 'NF2266', ..., description: "The route's crucible..." }
+
+// Line 20 — Bass Lake Rd
+// Line 21 — NF2217-2218
+// Line 22 — ND2225
+// Line 23 — Doe Lake
+// Line 24 — Ridge Rd
+```
+
+All 7 descriptions span lines 18–25 of this file.
+
+#### File 2: scripts/generate-sector-details.js (Must Be Kept in Sync)
+
+**File:** `scripts/generate-sector-details.js`
+**Lines:** 26–69 (the `SECTOR_DETAILS` const array)
+
+The script header (line 8) explicitly states:
+> "Descriptions are extracted verbatim from RouteExplainer.astro SEGMENTS const."
+
+Each sector entry has a `description` field that must match RouteExplainer.astro:
+
+```javascript
+// Lines 28–32 — sector-520
+{ id: 'sector-520', description: "A brief paved warm-up...", surface: 'smooth asphalt', ... }
+
+// Lines 34–38 — sector-nf2266
+// Lines 40–44 — sector-bass-lake
+// Lines 46–50 — sector-nf2217
+// Lines 52–56 — sector-nd2225
+// Lines 58–62 — sector-doe-lake
+// Lines 64–68 — sector-rapid-river (Ridge Rd)
+```
+
+After editing `generate-sector-details.js`, the build script must be run to regenerate `public/data/sector-details.json`:
+
+```bash
+node scripts/generate-sector-details.js
+```
+
+This writes to `public/data/sector-details.json`, which is consumed by the map's sector detail panels.
+
+#### Description Sync Protocol
+
+When rewriting any segment description:
+1. Edit `src/components/RouteExplainer.astro` lines 18–25 (the display source)
+2. Edit `scripts/generate-sector-details.js` lines 26–69 (the panel data source)
+3. Run `node scripts/generate-sector-details.js` to regenerate `public/data/sector-details.json`
+4. Both files must contain identical text for each segment
+
+The `surface` field in `generate-sector-details.js` is separate from the description — it is a short editorial label (e.g., "smooth asphalt") displayed in the sector panel. Update it if the description rewrite changes how the surface is characterized.
+
+---
+
+### Summary Change Table
+
+| Fix | File | Lines | Change |
+|-----|------|-------|--------|
+| Label font-size | `src/components/RouteMap.astro` | 685 | `11px` → `12px` |
+| Label padding | `src/components/RouteMap.astro` | 683 | `3px 8px` → `4px 10px` |
+| Stars font-size | `src/components/RouteMap.astro` | 692 | `9px` → `10px` |
+| 520 photo (Option B) | `public/data/photos.json` | append | Add photo entry with `mile < 5.0` |
+| 520 photo (Option D) | (no change) | — | Accept fallback gradient |
+| Site URL | `astro.config.ts` | 5 | Remove `// TODO` comment; confirm/update URL |
+| Descriptions (display) | `src/components/RouteExplainer.astro` | 18–25 | Rewrite 7 `description` fields |
+| Descriptions (panel data) | `scripts/generate-sector-details.js` | 26–69 | Mirror description changes; re-run script |
+
