@@ -344,7 +344,7 @@
     new ResetControl().addTo(map);
 
     // Fetch shared data in parallel — routes manifest + sector details + photos
-    // Route-specific data (route-data, annotations, sector-elevations, surface-points) is fetched in renderRoute()
+    // Route-specific data (route-data, annotations, sector-elevations) is fetched in renderRoute()
     const [routesData, sectorDetails, photosData] =
       await Promise.all([
         fetch('/data/routes.json').then(r => r.json()),
@@ -439,7 +439,7 @@
       // Set panel title
       panel.querySelector('.sector-panel__title').textContent = details?.name || sector.name;
 
-      // Build panel body — stars, meta, sparkline, description, strava link, jump link
+      // Build panel body — stars, meta, sparkline, description, strava link
       const stars = '\u2605'.repeat(sector.stars) + '\u2606'.repeat(5 - sector.stars);
       const milesRange = details ? `${details.startMile}\u2013${details.endMile} mi` : '';
       const surface = details?.surface || '';
