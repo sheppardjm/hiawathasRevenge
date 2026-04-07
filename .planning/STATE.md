@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-04-07)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive, visually stunning showcase that inspires them to ride it and support MBTN.
-**Current focus:** Phase 43 — Gallery Layout Polish
+**Current focus:** Phase 44 — Tech Debt Cleanup
 
 ## Current Position
 
-Phase: 43 of 43 (Gallery Layout Polish) — v1.7 UX Polish & Photo Pipeline
-Plan: 01 of 1 (complete)
-Status: Phase complete
-Last activity: 2026-04-07 — Completed 43-01-PLAN.md (multi-column segment photo grid)
+Phase: 44 of 44 (Tech Debt Cleanup) — v1.7 UX Polish & Photo Pipeline
+Plan: 0 of 0 (not yet planned)
+Status: Pending planning
+Last activity: 2026-04-07 — Added Phase 44 gap closure phase from milestone audit
 
-Progress: [████████████████████] 100% (4/4 phases)
+Progress: [████████████████░░░░] 80% (4/5 phases)
 
 ## Performance Metrics
 

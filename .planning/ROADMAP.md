@@ -9,7 +9,7 @@
 - ✅ **v1.4 Performance & Polish** - Phases 28-32 (shipped 2026-04-06)
 - ✅ **v1.5 Multi-Route Support** - Phases 33-37 (shipped 2026-04-06)
 - ✅ **v1.6 Segment Editorial & Polish** - Phases 38-39 (shipped 2026-04-07)
-- ✅ **v1.7 UX Polish & Photo Pipeline** - Phases 40-43 (shipped 2026-04-07)
+- ✅ **v1.7 UX Polish & Photo Pipeline** - Phases 40-44 (shipped 2026-04-07)
 
 ## Phases
 
@@ -28,6 +28,7 @@ All prior milestone phases documented in .planning/MILESTONES.md.
 - [x] **Phase 41: UX Cleanup** — Remove broken panel button and update download text
 - [x] **Phase 42: Photo Pipeline** — Process new photos and place them on map and gallery
 - [x] **Phase 43: Gallery & Layout Polish** — Fix gallery ordering, aspect ratios, and segment card layout
+- [ ] **Phase 44: Tech Debt Cleanup** — Delete dead files, fix stale comments, correct photo CLS placeholder
 
 ## Phase Details
 
@@ -85,10 +86,23 @@ Plans:
 Plans:
 - [x] 43-01-PLAN.md — Replace segment hero with multi-column photo grid, verify gallery ordering
 
+### Phase 44: Tech Debt Cleanup
+**Goal**: Clean up minor tech debt from v1.7 — dead files, stale comments, incorrect CLS placeholder
+**Depends on**: Phases 40-43 (cleanup of their artifacts)
+**Requirements**: None (tech debt only)
+**Gap Closure**: Closes 4 items from v1.7 milestone audit
+**Success Criteria** (what must be TRUE):
+  1. No `surface-points.json` files exist in `public/data/*/`
+  2. RouteMap.astro comment at ~line 347 no longer references "surface-points"
+  3. RouteMap.astro comment at ~line 442 no longer references "jump link"
+  4. Photo `486608604_...n.jpg` gets correct landscape dimensions from parseDims (not portrait fallback)
+
+Plans: 0 (not yet planned)
+
 ## Progress
 
 **Execution Order:**
-Phases 40, 41, 42 can execute in parallel (no dependencies). Phase 43 follows Phase 42.
+Phases 40, 41, 42 can execute in parallel (no dependencies). Phase 43 follows Phase 42. Phase 44 follows all.
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
@@ -96,3 +110,4 @@ Phases 40, 41, 42 can execute in parallel (no dependencies). Phase 43 follows Ph
 | 41. UX Cleanup | v1.7 | 1/1 | ✓ Complete | 2026-04-07 |
 | 42. Photo Pipeline | v1.7 | 1/1 | ✓ Complete | 2026-04-07 |
 | 43. Gallery & Layout Polish | v1.7 | 1/1 | ✓ Complete | 2026-04-07 |
+| 44. Tech Debt Cleanup | v1.7 | 0/0 | Pending | — |
