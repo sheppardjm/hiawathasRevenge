@@ -67,7 +67,16 @@ Visitors experience the beauty and scale of the Hiawatha's Revenge route through
 
 ### Active
 
-(No active milestone — next via `/gsd:new-milestone`)
+#### Current Milestone: v1.6 Segment Editorial & Polish
+
+**Goal:** Finalize segment descriptions as concise trail-guide blurbs informed by LANDFIRE ecological zone data, fix the 520 missing photo, enlarge map sector labels, and set the production site URL.
+
+**Target features:**
+- Rewrite all 7 segment descriptions: short blurbs covering gravel type (loose/hardpack, fine/coarse), surrounding vegetation, tree cover, and ecological zones
+- Research LANDFIRE ecological zone data overlaid on route to inform descriptions
+- Fix 520 segment missing hero photo
+- Enlarge sector label pills on Leaflet map to fit full segment names
+- Set site URL to hiawathasrevenge.com in astro.config.ts
 
 ### Out of Scope
 
@@ -156,4 +165,4 @@ MBTN (mbtn.org) is the beneficiary — donate CTA links to their site.
 | Mutate Chart.js annotations (not replace) | Replacing triggers Proxy Object.set infinite recursion | ✓ Good — fix for Chart.js v4 |
 
 ---
-*Last updated: 2026-04-07 after v1.5 milestone complete*
+*Last updated: 2026-04-07 after v1.6 milestone started*

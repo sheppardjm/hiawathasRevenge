@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-04-07)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive, visually stunning showcase that inspires them to ride it and support MBTN.
-**Current focus:** Planning next milestone
+**Current focus:** v1.6 Segment Editorial & Polish
 
 ## Current Position
 
-Phase: 37 of 37 — all phases complete through v1.5
-Plan: N/A
-Status: Ready to plan next milestone
-Last activity: 2026-04-07 — v1.5 milestone complete
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-04-07 — Milestone v1.6 started
 
-Progress: [████████████████████] v1.0-v1.5 complete | 37 phases, 84 plans shipped
+Progress: [████████████████████] v1.0-v1.5 complete | v1.6 [░░░░░░░░░░] defining
 
 ## Performance Metrics
 
@@ -39,16 +39,15 @@ None.
 
 - Ojibwe community consultation recommended (cultural sensitivity review)
 - Project requires Node >=22.12.0 -- use Volta (`/Users/Sheppardjm/.volta/bin/node`)
-- iOS Safari device testing deferred to v1.6+ (requires physical device)
-- astro.config.ts site URL is placeholder -- update before deployment
+- iOS Safari device testing deferred (requires physical device)
 - Elevation gains for 100k (~1,616 ft) and 50k (~809 ft) unverified against Strava/Garmin reference recordings
 
 ### Tech Debt
 
-All tech debt items from v1.0-v1.5 resolved. No outstanding items.
+None.
 
 ## Session Continuity
 
 Last session: 2026-04-07
-Stopped at: v1.5 milestone complete
+Stopped at: Defining v1.6 milestone requirements
 Resume file: None
