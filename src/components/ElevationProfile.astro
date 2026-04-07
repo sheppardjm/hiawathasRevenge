@@ -48,13 +48,20 @@
     // Update x-axis max to new route distance
     chart.options.scales.x.max = routeData.meta.totalMiles;
 
-    // Rebuild sector band annotations — preserve crosshair, replace all sector bands
+    // Rebuild sector band annotations — mutate existing object to avoid Chart.js Proxy infinite loop
+    // Replacing the entire annotations object triggers Object.set recursion in Chart.js v4's reactive config
     const SECTOR_BAND_FILL = hexToRgba(getCSSColor('--color-amber-500'), 0.18);
-    const crosshair = chart.options.plugins.annotation.annotations.crosshair;
-    const newAnnotations = { crosshair };
+    const currentAnnotations = chart.options.plugins.annotation.annotations;
     const sectors = annotations.filter(a => a.type === 'sector');
+    // Remove old sector bands (keep crosshair)
+    for (const key of Object.keys(currentAnnotations)) {
+      if (key !== 'crosshair') {
+        delete currentAnnotations[key];
+      }
+    }
+    // Add new sector bands for the selected route
     for (const sector of sectors) {
-      newAnnotations[sector.id] = {
+      currentAnnotations[sector.id] = {
         type: 'box',
         xMin: sector.startMile,
         xMax: sector.endMile,
@@ -63,7 +70,6 @@
         drawTime: 'beforeDatasetsDraw'
       };
     }
-    chart.options.plugins.annotation.annotations = newAnnotations;
 
     // Instant update — no animation on route switch
     chart.update('none');
