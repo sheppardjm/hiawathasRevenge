@@ -25,7 +25,7 @@ All prior milestone phases documented in .planning/MILESTONES.md.
 **Milestone Goal:** Simplify the map to a clean two-color route track, add new photos to the pipeline, fix gallery layout issues, and clean up minor UX rough edges.
 
 - [x] **Phase 40: Map Simplification** — Replace surface-type coloring with a clean two-color route track
-- [ ] **Phase 41: UX Cleanup** — Remove broken panel button and update download text
+- [x] **Phase 41: UX Cleanup** — Remove broken panel button and update download text
 - [ ] **Phase 42: Photo Pipeline** — Process new photos and place them on map and gallery
 - [ ] **Phase 43: Gallery & Layout Polish** — Fix gallery ordering, aspect ratios, and segment card layout
 
@@ -52,10 +52,10 @@ Plans:
 **Success Criteria** (what must be TRUE):
   1. GPX download area text tells users to use the route selector to pick alternate routes before downloading
   2. No "View in route guide" button appears in any sector detail panel (all 7 sectors, all 3 routes)
-**Plans**: TBD
+**Plans**: 1 plan (complete)
 
 Plans:
-- [ ] 41-01: TBD
+- [x] 41-01-PLAN.md — Remove broken panel button and add download guidance text
 
 ### Phase 42: Photo Pipeline
 **Goal**: New photos are processed through the build pipeline and appear at their tagged locations on the map and in the gallery
@@ -93,6 +93,6 @@ Phases 40, 41, 42 can execute in parallel (no dependencies). Phase 43 follows Ph
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
 | 40. Map Simplification | v1.7 | 1/1 | ✓ Complete | 2026-04-07 |
-| 41. UX Cleanup | v1.7 | 0/TBD | Not started | - |
+| 41. UX Cleanup | v1.7 | 1/1 | ✓ Complete | 2026-04-07 |
 | 42. Photo Pipeline | v1.7 | 0/TBD | Not started | - |
 | 43. Gallery & Layout Polish | v1.7 | 0/TBD | Not started | - |

@@ -14,11 +14,11 @@ Requirements for UX Polish & Photo Pipeline milestone.
 
 ### Downloads
 
-- [ ] **DL-01**: GPX download area text directs users to route selector for alternate route downloads
+- [x] **DL-01**: GPX download area text directs users to route selector for alternate route downloads
 
 ### Panels
 
-- [ ] **PNL-01**: "View in route guide" button removed from sector detail panels
+- [x] **PNL-01**: "View in route guide" button removed from sector detail panels
 
 ### Photos
 
@@ -47,8 +47,8 @@ None deferred.
 |-------------|-------|--------|
 | MAP-01 | Phase 40 | Complete |
 | MAP-02 | Phase 40 | Complete |
-| DL-01 | Phase 41 | Pending |
-| PNL-01 | Phase 41 | Pending |
+| DL-01 | Phase 41 | Complete |
+| PNL-01 | Phase 41 | Complete |
 | PHT-01 | Phase 43 | Pending |
 | PHT-02 | Phase 42 | Pending |
 | PHT-03 | Phase 42 | Pending |
