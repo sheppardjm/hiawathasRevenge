@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-04-07)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive, visually stunning showcase that inspires them to ride it and support MBTN.
-**Current focus:** Phase 40 — Map Simplification
+**Current focus:** Phase 41 — UX Cleanup
 
 ## Current Position
 
-Phase: 40 of 43 (Map Simplification) — v1.7 UX Polish & Photo Pipeline
+Phase: 41 of 43 (UX Cleanup) — v1.7 UX Polish & Photo Pipeline
 Plan: 01 of 1 (complete)
 Status: Phase complete
-Last activity: 2026-04-07 — Completed 40-01-PLAN.md (two-color route rendering)
+Last activity: 2026-04-07 — Completed 41-01-PLAN.md (remove broken panel button, add download guidance)
 
-Progress: [█░░░░░░░░░░░░░░░░░░░] 25% (1/4 phases)
+Progress: [██░░░░░░░░░░░░░░░░░░] 50% (2/4 phases)
 
 ## Performance Metrics
 
@@ -36,6 +36,8 @@ Progress: [█░░░░░░░░░░░░░░░░░░░] 25% (1/
 |-------|----------|-----------|
 | 40-01 | Road base uses `forest900` directly (no new CSS var) | Already the fallback color in deleted drawSurfacePolyline(); visually tested against CyclOSM |
 | 40-01 | `surface-points.json` files left on disk | Scope is rendering only; dead data is harmless; cleanup deferred |
+| 41-01 | Guidance text as separate `<p>` below existing tagline | Keeps original tagline semantically intact; no content modification needed |
+| 41-01 | All four jump link artifacts removed together | Clean deletion with zero dead code; single traceable commit |
 
 ### Pending Todos
 
@@ -54,6 +56,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-07T16:07:55Z
-Stopped at: Completed 40-01-PLAN.md — two-color route rendering (forest900 base + amber500 sectors)
+Last session: 2026-04-07T16:27:05Z
+Stopped at: Completed 41-01-PLAN.md — remove broken panel button and add download guidance text
 Resume file: None
