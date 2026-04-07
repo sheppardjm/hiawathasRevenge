@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-04-07)
 ## Current Position
 
 Phase: 39 — Segment Description Rewrite
-Plan: Not started
-Status: Ready for planning
-Last activity: 2026-04-07 — Phase 38 complete
+Plan: 01 of 01 complete
+Status: Phase complete
+Last activity: 2026-04-07 — Completed 39-01-PLAN.md
 
-Progress: [████████████████████] v1.0-v1.5 complete | v1.6 [█████░░░░░] 1/2 phases
+Progress: [████████████████████] v1.0-v1.5 complete | v1.6 [██████████] 2/2 phases
 
 ## Performance Metrics
 
@@ -31,6 +31,8 @@ Progress: [████████████████████] v1.0-v1
 ### Decisions
 
 - Sector pill labels removed from map — labels obscured route at all tested sizes (user-directed)
+- Segment descriptions: "mature northern hardwoods" not "old-growth" for NF2266 — old-growth claim unverifiable from Forest Plan data
+- Segment descriptions: omit Bass Lake as named landmark; use "the lake corridor" — landscape-only rule
 (Full decision log in PROJECT.md Key Decisions table)
 
 ### Pending Todos
@@ -53,5 +55,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-04-07
-Stopped at: Phase 38 complete — ready to plan Phase 39
+Stopped at: Phase 39 complete — v1.6 Segment Editorial & Polish complete
 Resume file: None
