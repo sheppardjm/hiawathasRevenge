@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-04-07)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive, visually stunning showcase that inspires them to ride it and support MBTN.
-**Current focus:** Phase 41 — UX Cleanup
+**Current focus:** Phase 42 — Photo Pipeline
 
 ## Current Position
 
-Phase: 41 of 43 (UX Cleanup) — v1.7 UX Polish & Photo Pipeline
+Phase: 42 of 43 (Photo Pipeline) — v1.7 UX Polish & Photo Pipeline
 Plan: 01 of 1 (complete)
 Status: Phase complete
-Last activity: 2026-04-07 — Completed 41-01-PLAN.md (remove broken panel button, add download guidance)
+Last activity: 2026-04-07 — Completed 42-01-PLAN.md (add mileage sort, commit 5 new photos)
 
-Progress: [██░░░░░░░░░░░░░░░░░░] 50% (2/4 phases)
+Progress: [███░░░░░░░░░░░░░░░░░] 75% (3/4 phases)
 
 ## Performance Metrics
 
@@ -38,6 +38,8 @@ Progress: [██░░░░░░░░░░░░░░░░░░] 50% (2/
 | 40-01 | `surface-points.json` files left on disk | Scope is rendering only; dead data is harmless; cleanup deferred |
 | 41-01 | Guidance text as separate `<p>` below existing tagline | Keeps original tagline semantically intact; no content modification needed |
 | 41-01 | All four jump link artifacts removed together | Clean deletion with zero dead code; single traceable commit |
+| 42-01 | Sort appended to end of manifest.map() chain (not separate step) | Single-pass transform; intent clear; downstream consumers always get sorted output |
+| 42-01 | Single atomic commit for all photo artifacts | Plan treats staging as its own task; all artifacts logically related |
 
 ### Pending Todos
 
@@ -56,6 +58,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-07T16:27:05Z
-Stopped at: Completed 41-01-PLAN.md — remove broken panel button and add download guidance text
+Last session: 2026-04-07T17:05:00Z
+Stopped at: Completed 42-01-PLAN.md — add mileage sort to pipeline, commit 5 new photos
 Resume file: None
