@@ -166,18 +166,6 @@
     text-decoration: underline;
   }
 
-  .panel-jump-link {
-    display: block;
-    color: var(--color-lake-400);
-    font-size: 0.85rem;
-    text-decoration: none;
-    margin-top: 4px;
-  }
-
-  .panel-jump-link:hover {
-    text-decoration: underline;
-  }
-
   .panel-sparkline {
     display: block;
     width: 100%;
@@ -459,10 +447,6 @@
       const stravaHtml = details?.stravaLink
         ? `<a href="${details.stravaLink}" target="_blank" rel="noopener noreferrer" class="panel-strava-link">View on Strava \u2197</a>`
         : '';
-      const jumpHtml = details?.id
-        ? `<a href="#${details.id}" class="panel-jump-link">View in route guide \u2193</a>`
-        : '';
-
       const sparklineSvg = generateSparklineSvg(elevData);
       const eleRangeHtml = elevData
         ? `<div class="panel-ele-range">${Math.round(elevData.eleMin * 3.28084)} ft \u2013 ${Math.round(elevData.eleMax * 3.28084)} ft</div>`
@@ -475,12 +459,8 @@
         ${eleRangeHtml}
         <p class="panel-description">${description}</p>
         ${stravaHtml}
-        ${jumpHtml}
       `;
 
-      // Wire jump link to close panel on click (user scrolls to section)
-      const jumpLink = panel.querySelector('.panel-jump-link');
-      if (jumpLink) jumpLink.addEventListener('click', () => closePanel(), { once: true });
 
       // Open dialog (non-modal — map stays interactive while panel is open)
       if (!panel.open) panel.show();
