@@ -1,5 +1,33 @@
 # Project Milestones: Hiawatha's Revenge
 
+## v1.6 Segment Editorial & Polish (Shipped: 2026-04-07)
+
+**Delivered:** Concise ecological segment descriptions (35-55 words each) grounded in Hiawatha NF Forest Plan data, 520 segment hero photo via boundary adjustment, sector pill label removal, and production site URL configuration.
+
+**Phases completed:** 38-39 (2 plans total)
+
+**Key accomplishments:**
+
+- Rewrote all 7 segment descriptions as 35-55 word naturalist prose with three-clause structure: surface texture, named ecological species (sugar maple, jack pine, paper birch, etc.), and terrain character
+- Descriptions grounded in 2006 Hiawatha National Forest Plan ecological zone data — specific species per segment, no generic group names
+- Synced descriptions word-for-word across RouteExplainer.astro, generate-sector-details.js, and regenerated sector-details.json
+- 520 segment gains hero photo via boundary widening (endMi 5.0→5.6), NF2266 startMi adjusted to match
+- Sector pill labels removed from map — obscured route at all tested sizes (user-directed)
+- Production site URL set in astro.config.ts with TODO comment removed
+
+**Stats:**
+
+- 21 files modified (+2,412/-1,235)
+- 5,807 lines of Astro/TypeScript/JavaScript/CSS (total codebase)
+- 2 phases, 2 plans, ~4 tasks
+- 1 day (2026-04-07)
+
+**Git range:** `39d34e8` (docs: start milestone v1.6) → `1523a9a` (test(39): complete UAT)
+
+**What's next:** TBD — next milestone via `/gsd:new-milestone`
+
+---
+
 ## v1.5 Multi-Route Support (Shipped: 2026-04-07)
 
 **Delivered:** Three-distance route system (100mi/100k/50k) with map-based route selector, per-route elevation profiles, filtered sector display, GPX downloads, URL deep linking, route comparison sidebar, hero background video, and a self-healing multi-route build pipeline.

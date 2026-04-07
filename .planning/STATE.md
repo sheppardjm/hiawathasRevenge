@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-04-07)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive, visually stunning showcase that inspires them to ride it and support MBTN.
-**Current focus:** v1.6 Segment Editorial & Polish — Phase 39: Segment Description Rewrite
+**Current focus:** Planning next milestone
 
 ## Current Position
 
-Phase: 39 — Segment Description Rewrite
-Plan: 01 of 01 complete
-Status: Phase complete
-Last activity: 2026-04-07 — Completed 39-01-PLAN.md
+Phase: Next TBD
+Plan: Not started
+Status: Ready to plan
+Last activity: 2026-04-07 — v1.6 milestone complete
 
-Progress: [████████████████████] v1.0-v1.5 complete | v1.6 [██████████] 2/2 phases
+Progress: [████████████████████] v1.0-v1.6 complete | Next milestone TBD
 
 ## Performance Metrics
 
@@ -24,15 +24,12 @@ Progress: [████████████████████] v1.0-v1
 **v1.3 Summary:** 9 plans, 5 phases, 3 days
 **v1.4 Summary:** 7 plans, 5 phases, 7 days
 **v1.5 Summary:** 10 plans, 5 phases, 1 day
-**v1.6 Phase 38:** 1 plan, 1 phase, <1 day
+**v1.6 Summary:** 2 plans, 2 phases, <1 day
 
 ## Accumulated Context
 
 ### Decisions
 
-- Sector pill labels removed from map — labels obscured route at all tested sizes (user-directed)
-- Segment descriptions: "mature northern hardwoods" not "old-growth" for NF2266 — old-growth claim unverifiable from Forest Plan data
-- Segment descriptions: omit Bass Lake as named landmark; use "the lake corridor" — landscape-only rule
 (Full decision log in PROJECT.md Key Decisions table)
 
 ### Pending Todos
@@ -45,8 +42,6 @@ None.
 - Project requires Node >=22.12.0 -- use Volta (`/Users/Sheppardjm/.volta/bin/node`)
 - iOS Safari device testing deferred (requires physical device)
 - Elevation gains for 100k (~1,616 ft) and 50k (~809 ft) unverified against Strava/Garmin reference recordings
-- Confirm actual deployed URL before updating astro.config.ts (check Vercel/Netlify dashboard or DNS records — is `hiawathasrevenge.com` live?)
-- 520 segment photo: audit `images/` directory for any photo taken on CR-520 or near Munising Falls (mile 0-5.0) before committing to sourcing vs. accepting gradient fallback
 
 ### Tech Debt
 
@@ -55,5 +50,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-04-07
-Stopped at: Phase 39 complete — v1.6 Segment Editorial & Polish complete
+Stopped at: v1.6 milestone complete — ready for next milestone
 Resume file: None

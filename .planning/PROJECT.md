@@ -64,19 +64,16 @@ Visitors experience the beauty and scale of the Hiawatha's Revenge route through
 - ✓ Hero video (looping MP4) with image fallback and prefers-reduced-motion support — v1.5
 - ✓ Panel auto-close on route switch with shared-sector persistence (keepPanelSectorId) — v1.5
 - ✓ 7/7 Strava segment links (Ridge Rd segment 41188200 completing full coverage) — v1.5
+- ✓ All 7 segment descriptions rewritten as 35-55 word ecological prose with surface-first + ecology + experience structure — v1.6
+- ✓ Descriptions grounded in Hiawatha NF Forest Plan ecological zone data (named species per segment) — v1.6
+- ✓ Description sync across RouteExplainer.astro, generate-sector-details.js, and sector-details.json — v1.6
+- ✓ Sector pill labels removed from map (user-directed — obscured route at all tested sizes) — v1.6
+- ✓ 520 segment hero photo via boundary widening (endMi 5.0→5.6) — v1.6
+- ✓ Production site URL set in astro.config.ts (TODO comment removed) — v1.6
 
 ### Active
 
-#### Current Milestone: v1.6 Segment Editorial & Polish
-
-**Goal:** Finalize segment descriptions as concise trail-guide blurbs informed by LANDFIRE ecological zone data, fix the 520 missing photo, enlarge map sector labels, and set the production site URL.
-
-**Target features:**
-- Rewrite all 7 segment descriptions: short blurbs covering gravel type (loose/hardpack, fine/coarse), surrounding vegetation, tree cover, and ecological zones
-- Research LANDFIRE ecological zone data overlaid on route to inform descriptions
-- Fix 520 segment missing hero photo
-- Enlarge sector label pills on Leaflet map to fit full segment names
-- Set site URL to hiawathasrevenge.com in astro.config.ts
+(None — planning next milestone)
 
 ### Out of Scope
 
@@ -91,13 +88,13 @@ Visitors experience the beauty and scale of the Hiawatha's Revenge route through
 
 ## Context
 
-Shipped v1.0 through v1.5 with 5,667 LOC across Astro/TypeScript/JavaScript/CSS.
+Shipped v1.0 through v1.6 with 5,807 LOC across Astro/TypeScript/JavaScript/CSS.
 Tech stack: Astro 6, Tailwind 4, Vite 7, Leaflet, Chart.js, PhotoSwipe, leaflet.markercluster, chartjs-plugin-annotation, sharp, gpxparser.
 Build pipeline: 12-step pipeline.js running per-route (parse-gpx → generate-surface-points → resolve-annotations → generate-sector-details → compute-sector-elevations) then shared steps (generate-thumbnails → copy-images → generate-webp → process-historical → match-photos → copy-gpx → generate-og-image).
 3 route distances: 100mi (456 pts, 102mi, 2,258 ft), 100k (278 pts, 62mi, 1,616 ft), 50k (134 pts, 31mi, 809 ft).
 51 route photos with mileage-assigned manifest, 2 historical Remington illustrations (Met CC0).
-v1.5 added multi-route support with per-route JSON data, map-based route selector, dynamic elevation chart, route comparison, GPX downloads, URL deep linking, and hero video.
-Site URL configured as https://hiawathasrevenge.com (placeholder — update before deployment).
+v1.6 finalized segment editorial: all 7 descriptions are 35-55 word ecological naturalist prose grounded in Hiawatha NF Forest Plan data, synced across all rendering locations.
+Site URL configured as https://hiawathasrevenge.com.
 Reference implementation: github.com/sheppardjm/mkUltraGravel — same architecture, different visual identity.
 MBTN (mbtn.org) is the beneficiary — donate CTA links to their site.
 
@@ -151,7 +148,7 @@ MBTN (mbtn.org) is the beneficiary — donate CTA links to their site.
 | image-set() without -webkit- prefix | Baseline widely available since September 2023 | ✓ Good — clean CSS |
 | Fix NF2217 at source not output | Pipeline source truth prevents regression | ✓ Good — self-healing |
 | generate-og-image as final pipeline step | No data dependencies, safe ordering | ✓ Good — clean pipeline |
-| Placeholder domain in astro.config.ts | Deployment URL TBD; all chain logic correct | — Pending deployment |
+| Site URL set to hiawathasrevenge.com | Production URL configured, TODO removed | ✓ Good |
 | Subdirectory output: public/data/{routeId}/ | Enables lazy loading, avoids index collisions | ✓ Good — clean per-route data |
 | Coordinate-based haversine snapping | Eliminates drift from route length differences | ✓ Good — accurate sector mapping |
 | RidewithGPS proximity fallback (100m) for 100k/50k | No native rwgps JSON for shorter routes | ✓ Good — 100mi as reference |
@@ -163,6 +160,11 @@ MBTN (mbtn.org) is the beneficiary — donate CTA links to their site.
 | Panel close at step 1.5 before clearActiveRoute | clearActiveRoute nulls activeSector — check after is dead code | ✓ Good — bug fix |
 | keepPanelSectorId for shared-sector persistence | Save sector ID before clear, restore after rebuild | ✓ Good — smooth UX |
 | Mutate Chart.js annotations (not replace) | Replacing triggers Proxy Object.set infinite recursion | ✓ Good — fix for Chart.js v4 |
+| Sector pill labels removed (not resized) | Labels obscured route at all tested sizes — user-directed removal | ✓ Good — cleaner map |
+| 520 boundary widened to endMi 5.6 | Captures mile 5.51 photo for hero; NF2266 startMi adjusted to match | ✓ Good — no overlap |
+| "Mature northern hardwoods" not "old-growth" | Old-growth claim unverifiable from Forest Plan data for NF2266 | ✓ Good — accurate |
+| Named species not generic groups | Sugar maple, jack pine, paper birch vs. "hardwoods", "conifers" | ✓ Good — ecological specificity |
+| Landscape-only rule for descriptions | Omit named lakes/landmarks; use generic corridor references | ✓ Good — consistent voice |
 
 ---
-*Last updated: 2026-04-07 after v1.6 milestone started*
+*Last updated: 2026-04-07 after v1.6 milestone*
