@@ -66,10 +66,10 @@ Plans:
   2. New photos appear as markers on the map at their assigned mileage points, clustered appropriately
   3. New photos appear in the gallery and open correctly in the PhotoSwipe lightbox
   4. Build pipeline completes without errors after adding the new photos
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 42-01: TBD
+- [ ] 42-01-PLAN.md — Add mileage sort to pipeline, run pipeline, commit new photo artifacts
 
 ### Phase 43: Gallery & Layout Polish
 **Goal**: Gallery and segment card layouts display photos at correct proportions and in route order
