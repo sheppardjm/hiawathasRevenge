@@ -2,27 +2,7 @@
 import photosData from '../../public/data/photos.json';
 import ElevationSparkline from './ElevationSparkline.astro';
 import ShieldMotif from './ShieldMotif.astro';
-
-interface Segment {
-  name: string;
-  startMi: number;
-  endMi: number;
-  distFromStart: string;
-  length: string;
-  difficulty: number;
-  description: string;
-  stravaId?: string;
-}
-
-const SEGMENTS: Segment[] = [
-  { name: '520',                     startMi: 0,    endMi: 5.6,   distFromStart: '1.1mi', length: '1.3mi', difficulty: 2, stravaId: '28533709', description: 'Smooth asphalt rolls east past the Pictured Rocks corridor, where sugar maple and yellow birch hold the upland slopes above a flat glacial lake plain. Open and fast, this road section offers no resistance — a deceptively gentle threshold before the forest interior begins.' },
-  { name: 'NF2266',                  startMi: 5.6,  endMi: 18.0,  distFromStart: '6.7mi', length: '3.2mi', difficulty: 5, stravaId: '28533671', description: 'Deteriorating sand and gravel two-track cuts through mature northern hardwoods where sugar maple and beech dominate the canopy, with red maple, cherry, yellow birch, and basswood beneath, white pine and hemlock interspersed throughout. Deep sand, washboard ruts, and relentless climbing define every mile.' },
-  { name: 'Bass Lake Rd',            startMi: 18.0, endMi: 32.0,  distFromStart: '25.3mi', length: '4.8mi', difficulty: 2, stravaId: '31852807', description: 'Packed county gravel rolls south along the lake corridor, where paper birch colonizes productive upland sands and red maple and aspen fill the broader canopy; alder and cedar fringe the water margins. Rolling terrain, broad sight lines, and firm gravel make this the most forgiving stretch on the route.' },
-  { name: 'NF2217-2218',             startMi: 32.0, endMi: 50.0,  distFromStart: '36.8mi', length: '6.6mi', difficulty: 2, stravaId: '41149550', description: 'Compact gravel and hard-packed doubletrack thread across flat outwash plain through a red pine and white pine corridor, cedar and tamarack closing in along stream margins where the Indian River headwaters drain the interior. Long, level, and meditative — the route\'s quietest stretch.' },
-  { name: 'ND2225',                  startMi: 50.0, endMi: 70.0,  distFromStart: '55.7mi', length: '3.9mi', difficulty: 3, stravaId: '39343281', description: 'Loose gravel and sandy patches on an unmaintained forest road push through jack pine standing on dry outwash soils, with oak, aspen, and paper birch in the gaps and a low blueberry understory underfoot. Quiet and remote, the surface demands attention through every mile.' },
-  { name: 'Doe Lake',                startMi: 70.0, endMi: 92.0,  distFromStart: '84.8mi', length: '3.1mi', difficulty: 4, stravaId: '34543004', description: 'Deep sand and rugged two-track laced with roots and embedded rock runs through red pine and jack pine on morainal upland sands, cedar and tamarack gathering near the lake margins, aspen filling the cut-over gaps. Short, sharp climbs and technical footing define this stretch.' },
-  { name: 'Ridge Rd', startMi: 92.0, endMi: 110.0, distFromStart: '94.6mi', length: '6.3mi', difficulty: 2, stravaId: '41188200', description: 'Firm packed gravel on a USFS truck trail descends north through moraine topography where sugar maple, yellow birch, and beech reclaim the upper slopes, aspen flanking the ridges, white pine holding the crests. Long, sweeping descents carry the route back toward the Lake Superior plain.' },
-];
+import SEGMENTS from './segments.json';
 
 const DIFFICULTY_COLORS: Record<number, string> = {
   1: 'text-sun-400',      // easy — sun-yellow 9.46:1 contrast, text-safe
@@ -42,11 +22,15 @@ const SECTOR_IDS: Record<string, string> = {
   'Ridge Rd': 'sector-rapid-river',
 };
 
+function parseDims(filename: string): { w: number; h: number } {
+  const m = filename.match(/-(\d+)x(\d+)/);
+  return m ? { w: Number(m[1]), h: Number(m[2]) } : { w: 1536, h: 2048 };
+}
+
 const segmentsWithPhotos = SEGMENTS.map(seg => ({
   ...seg,
   photos: (photosData as any[])
-    .filter((p: any) => p.mile >= seg.startMi && p.mile < seg.endMi)
-    .slice(0, 2),
+    .filter((p: any) => p.mile >= seg.startMi && p.mile < seg.endMi),
 }));
 ---
 
@@ -58,36 +42,32 @@ const segmentsWithPhotos = SEGMENTS.map(seg => ({
     </p>
     {segmentsWithPhotos.map((seg) => (
       <article id={SECTOR_IDS[seg.name] ?? ''} class="segment-card-container">
-        {seg.photos.length > 0 ? (
-          <div class="segment-hero">
-            <img
-              src={seg.photos[0].thumb}
-              alt={`Route photo near mile ${seg.photos[0].mile.toFixed(1)}`}
-              loading="lazy"
-              decoding="async"
-            />
-            <div class="segment-hero-overlay">
-              <div class="flex items-center gap-2">
-                <ShieldMotif size={10} class={DIFFICULTY_COLORS[seg.difficulty] ?? 'text-amber-500'} />
-                <h3 class={`text-xl font-display ${DIFFICULTY_COLORS[seg.difficulty] ?? 'text-amber-500'}`}>
-                  {seg.name}
-                </h3>
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div class="segment-hero segment-hero-fallback">
-            <div class="segment-hero-overlay">
-              <div class="flex items-center gap-2">
-                <ShieldMotif size={10} class={DIFFICULTY_COLORS[seg.difficulty] ?? 'text-amber-500'} />
-                <h3 class={`text-xl font-display ${DIFFICULTY_COLORS[seg.difficulty] ?? 'text-amber-500'}`}>
-                  {seg.name}
-                </h3>
-              </div>
-            </div>
+        {seg.photos.length > 0 && (
+          <div class="segment-photo-grid">
+            {seg.photos.map((photo: any) => {
+              const dims = parseDims(photo.filename);
+              return (
+                <img
+                  src={photo.thumb}
+                  alt={`Route photo at mile ${photo.mile.toFixed(1)}`}
+                  loading="lazy"
+                  decoding="async"
+                  width={dims.w}
+                  height={dims.h}
+                  style={`aspect-ratio: ${dims.w} / ${dims.h};`}
+                  class="w-full h-auto block rounded-sm"
+                />
+              );
+            })}
           </div>
         )}
         <div class="segment-body">
+          <div class="flex items-center gap-2 mb-1">
+            <ShieldMotif size={10} class={DIFFICULTY_COLORS[seg.difficulty] ?? 'text-amber-500'} />
+            <h3 class={`text-xl font-display ${DIFFICULTY_COLORS[seg.difficulty] ?? 'text-amber-500'}`}>
+              {seg.name}
+            </h3>
+          </div>
           <div class="flex items-center gap-3 text-sm text-cream-200 mt-1 mb-2">
             <span>{seg.distFromStart} from start</span>
             <span>·</span>
@@ -176,46 +156,18 @@ const segmentsWithPhotos = SEGMENTS.map(seg => ({
     }
   }
 
-  /* Photo hero — full-width image with gradient overlay */
-  .segment-hero {
-    position: relative;
-    width: 100%;
-    height: 220px;
-    overflow: hidden;
+  /* Photo grid — responsive columns, each ≤400px wide */
+  .segment-photo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
+    gap: 0.375rem;
     border-radius: 0.5rem 0.5rem 0 0;
-  }
-
-  .segment-hero img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-  }
-
-  .segment-hero-overlay {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 1rem 1.25rem;
-    background: linear-gradient(transparent, rgba(13, 26, 13, 0.85));
-  }
-
-  /* Fallback hero for segments with no photos */
-  .segment-hero-fallback {
-    background: linear-gradient(135deg, var(--color-forest-800), var(--color-forest-700));
-    display: flex;
-    align-items: flex-end;
+    overflow: hidden;
   }
 
   /* Card body — padded content area */
   .segment-body {
     padding: 1.25rem;
-  }
-
-  /* Responsive: shorter hero on mobile */
-  @media (max-width: 640px) {
-    .segment-hero { height: 180px; }
   }
 
   /* Star rating — clip gradient technique with @supports progressive enhancement */
