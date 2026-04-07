@@ -23,9 +23,9 @@ Requirements for UX Polish & Photo Pipeline milestone.
 ### Photos
 
 - [ ] **PHT-01**: Segment card photos displayed in multi-column layout, each column ≤400px wide
-- [ ] **PHT-02**: New photos processed through build pipeline (WebP thumbnails, optimized)
-- [ ] **PHT-03**: New photos appear on map at tagged mileage points
-- [ ] **PHT-04**: New photos appear in gallery
+- [x] **PHT-02**: New photos processed through build pipeline (WebP thumbnails, optimized)
+- [x] **PHT-03**: New photos appear on map at tagged mileage points
+- [x] **PHT-04**: New photos appear in gallery
 - [ ] **PHT-05**: Gallery photos ordered by route mileage (start to finish)
 - [ ] **PHT-06**: Thumbnail aspect ratios preserved in all display contexts (no CSS stretching)
 
@@ -50,9 +50,9 @@ None deferred.
 | DL-01 | Phase 41 | Complete |
 | PNL-01 | Phase 41 | Complete |
 | PHT-01 | Phase 43 | Pending |
-| PHT-02 | Phase 42 | Pending |
-| PHT-03 | Phase 42 | Pending |
-| PHT-04 | Phase 42 | Pending |
+| PHT-02 | Phase 42 | Complete |
+| PHT-03 | Phase 42 | Complete |
+| PHT-04 | Phase 42 | Complete |
 | PHT-05 | Phase 43 | Pending |
 | PHT-06 | Phase 43 | Pending |
 
@@ -63,4 +63,4 @@ None deferred.
 
 ---
 *Requirements defined: 2026-04-07*
-*Last updated: 2026-04-07 after roadmap creation*
+*Last updated: 2026-04-07 after Phase 42 completion*

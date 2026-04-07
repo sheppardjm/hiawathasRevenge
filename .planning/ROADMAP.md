@@ -26,7 +26,7 @@ All prior milestone phases documented in .planning/MILESTONES.md.
 
 - [x] **Phase 40: Map Simplification** — Replace surface-type coloring with a clean two-color route track
 - [x] **Phase 41: UX Cleanup** — Remove broken panel button and update download text
-- [ ] **Phase 42: Photo Pipeline** — Process new photos and place them on map and gallery
+- [x] **Phase 42: Photo Pipeline** — Process new photos and place them on map and gallery
 - [ ] **Phase 43: Gallery & Layout Polish** — Fix gallery ordering, aspect ratios, and segment card layout
 
 ## Phase Details
@@ -66,10 +66,10 @@ Plans:
   2. New photos appear as markers on the map at their assigned mileage points, clustered appropriately
   3. New photos appear in the gallery and open correctly in the PhotoSwipe lightbox
   4. Build pipeline completes without errors after adding the new photos
-**Plans**: 1 plan
+**Plans**: 1 plan (complete)
 
 Plans:
-- [ ] 42-01-PLAN.md — Add mileage sort to pipeline, run pipeline, commit new photo artifacts
+- [x] 42-01-PLAN.md — Add mileage sort to pipeline, run pipeline, commit new photo artifacts
 
 ### Phase 43: Gallery & Layout Polish
 **Goal**: Gallery and segment card layouts display photos at correct proportions and in route order
@@ -94,5 +94,5 @@ Phases 40, 41, 42 can execute in parallel (no dependencies). Phase 43 follows Ph
 |-------|-----------|----------------|--------|-----------|
 | 40. Map Simplification | v1.7 | 1/1 | ✓ Complete | 2026-04-07 |
 | 41. UX Cleanup | v1.7 | 1/1 | ✓ Complete | 2026-04-07 |
-| 42. Photo Pipeline | v1.7 | 0/TBD | Not started | - |
+| 42. Photo Pipeline | v1.7 | 1/1 | ✓ Complete | 2026-04-07 |
 | 43. Gallery & Layout Polish | v1.7 | 0/TBD | Not started | - |
