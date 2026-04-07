@@ -600,6 +600,13 @@
         fetch(`/data/${routeId}/surface-points.json`).then(r => r.json()),
       ]);
 
+      // 1.5. Panel close-on-switch — MUST run before clearActiveRoute() nulls activeSector
+      // Close the panel if the open sector is not on the NEW route being loaded
+      const newRouteConfig = routesManifest.routes.find(r => r.id === routeId);
+      if (activeSector && newRouteConfig && !newRouteConfig.sectorIds.includes(activeSector.sectorId)) {
+        closePanel();
+      }
+
       // 2. Clear previous route layers
       clearActiveRoute();
 
@@ -715,19 +722,13 @@
       initialBounds = L.latLngBounds(latlngs);
       map.fitBounds(initialBounds, { paddingTopLeft: [20, 80], paddingBottomRight: [20, 20], animate: !prefersReducedMotion });
 
-      // 9. Panel close-on-switch — close if active sector not in new route
-      const routeConfig = routesManifest.routes.find(r => r.id === routeId);
-      if (activeSector && routeConfig && !routeConfig.sectorIds.includes(activeSector.sectorId)) {
-        closePanel();
-      }
-
-      // 10. Update active route tracking
+      // 9. Update active route tracking
       activeRouteId = routeId;
 
-      // 11. Update ghost polyline visibility — active route hidden (opacity 0), inactive at 0.2
+      // 10. Update ghost polyline visibility — active route hidden (opacity 0), inactive at 0.2
       updateGhostVisibility(routeId);
 
-      // 12. Notify downstream components (ElevationProfile) of route change
+      // 11. Notify downstream components (ElevationProfile) of route change
       window.__activeRouteId = routeId;
       window.dispatchEvent(new CustomEvent('route:change', {
         detail: { routeId }
