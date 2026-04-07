@@ -9,8 +9,8 @@ Requirements for UX Polish & Photo Pipeline milestone.
 
 ### Map
 
-- [ ] **MAP-01**: Route track displays two colors only — one for gravel sectors, one for all other road
-- [ ] **MAP-02**: Surface-type legend/coloring removed from map
+- [x] **MAP-01**: Route track displays two colors only — one for gravel sectors, one for all other road
+- [x] **MAP-02**: Surface-type legend/coloring removed from map
 
 ### Downloads
 
@@ -45,8 +45,8 @@ None deferred.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| MAP-01 | Phase 40 | Pending |
-| MAP-02 | Phase 40 | Pending |
+| MAP-01 | Phase 40 | Complete |
+| MAP-02 | Phase 40 | Complete |
 | DL-01 | Phase 41 | Pending |
 | PNL-01 | Phase 41 | Pending |
 | PHT-01 | Phase 43 | Pending |
