@@ -87,19 +87,21 @@ Plans:
 - [x] 43-01-PLAN.md — Replace segment hero with multi-column photo grid, verify gallery ordering
 
 ### Phase 44: Tech Debt Cleanup
-**Goal**: Clean up minor tech debt from v1.7 — dead files, stale comments, incorrect CLS placeholder
+**Goal**: Clean up minor tech debt from v1.7 — dead files, stale comments, incorrect CLS placeholder, and revert segment cards to single user-chosen hero photo
 **Depends on**: Phases 40-43 (cleanup of their artifacts)
 **Requirements**: None (tech debt only)
-**Gap Closure**: Closes 4 items from v1.7 milestone audit
+**Gap Closure**: Closes 4 items from v1.7 milestone audit + 1 UAT gap (multi-photo grid revert)
 **Success Criteria** (what must be TRUE):
   1. No `surface-points.json` files exist in `public/data/*/`
   2. RouteMap.astro comment at ~line 347 no longer references "surface-points"
   3. RouteMap.astro comment at ~line 442 no longer references "jump link"
   4. Photo `486608604_...n.jpg` gets correct landscape dimensions from parseDims (not portrait fallback)
-**Plans**: 1 plan
+  5. Each segment card displays exactly one user-chosen photo (not a multi-photo grid)
+**Plans**: 2 plans
 
 Plans:
 - [x] 44-01-PLAN.md — Delete dead files, fix stale comments, rename photo with dimension suffix
+- [ ] 44-02-PLAN.md — Revert segment cards to single hero photo with user-chosen cardPhoto field
 
 ## Progress
 
@@ -112,4 +114,4 @@ Phases 40, 41, 42 can execute in parallel (no dependencies). Phase 43 follows Ph
 | 41. UX Cleanup | v1.7 | 1/1 | ✓ Complete | 2026-04-07 |
 | 42. Photo Pipeline | v1.7 | 1/1 | ✓ Complete | 2026-04-07 |
 | 43. Gallery & Layout Polish | v1.7 | 1/1 | ✓ Complete | 2026-04-07 |
-| 44. Tech Debt Cleanup | v1.7 | 1/1 | ✓ Complete | 2026-04-07 |
+| 44. Tech Debt Cleanup | v1.7 | 1/2 | In Progress | — |
