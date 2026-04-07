@@ -38,6 +38,11 @@ See `.planning/milestones/` for archived roadmaps and requirements.
 
 **Requirements:** LABEL-01, PHOTO-01, DEPLOY-01
 
+**Plans:** 1 plan
+
+Plans:
+- [ ] 38-01-PLAN.md — Enlarge map labels, adjust 520 photo boundary, remove site URL TODO
+
 **Success Criteria:**
 
 1. Sector pill labels on the map display full segment names without truncation at zoom level 12 and above, with padding that does not clip the text.
