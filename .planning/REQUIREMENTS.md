@@ -45,22 +45,22 @@ None deferred.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| MAP-01 | — | Pending |
-| MAP-02 | — | Pending |
-| DL-01 | — | Pending |
-| PNL-01 | — | Pending |
-| PHT-01 | — | Pending |
-| PHT-02 | — | Pending |
-| PHT-03 | — | Pending |
-| PHT-04 | — | Pending |
-| PHT-05 | — | Pending |
-| PHT-06 | — | Pending |
+| MAP-01 | Phase 40 | Pending |
+| MAP-02 | Phase 40 | Pending |
+| DL-01 | Phase 41 | Pending |
+| PNL-01 | Phase 41 | Pending |
+| PHT-01 | Phase 43 | Pending |
+| PHT-02 | Phase 42 | Pending |
+| PHT-03 | Phase 42 | Pending |
+| PHT-04 | Phase 42 | Pending |
+| PHT-05 | Phase 43 | Pending |
+| PHT-06 | Phase 43 | Pending |
 
 **Coverage:**
 - v1.7 requirements: 10 total
-- Mapped to phases: 0
-- Unmapped: 10 ⚠️
+- Mapped to phases: 10
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-04-07*
-*Last updated: 2026-04-07 after initial definition*
+*Last updated: 2026-04-07 after roadmap creation*
