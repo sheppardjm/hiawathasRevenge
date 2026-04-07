@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-04-06)
 ## Current Position
 
 Phase: 37 of 37 (Panel Auto-Close & Sector Data Fix)
-Plan: 1 of 1 in current phase (awaiting checkpoint: human-verify)
-Status: In progress -- Tasks 1-2 complete, checkpoint at Task 3
-Last activity: 2026-04-07 -- Completed Tasks 1-2 of 37-01-PLAN.md; awaiting human verify
+Plan: 1 of 1 in current phase
+Status: Phase complete -- v1.5 milestone fully complete
+Last activity: 2026-04-06 -- Completed 37-01-PLAN.md (all tasks including checkpoint bug fix)
 
-Progress: [████████████████████] v1.0-v1.4 complete | v1.5 [█████████░] 9/10 plans (gap closure — checkpoint pending)
+Progress: [████████████████████] v1.0-v1.4 complete | v1.5 [██████████] 10/10 plans complete
 
 ## Performance Metrics
 
@@ -56,6 +56,7 @@ Progress: [████████████████████] v1.0-v1
 | 36-01 | initialRouteId const inside initMap() -- no module scope lift needed | Naturally in scope for selector loop, renderRoute(), updateGhostVisibility() calls |
 | 36-01 | GPX link default stays static (100mi); route:change updates it dynamically | route:change always fires before user can scroll to download section |
 | 37-01 | Panel close check at step 1.5 (before clearActiveRoute) | clearActiveRoute() nulls activeSector — any check after is dead code |
+| 37-01 | keepPanelSectorId pattern for shared-sector panel persistence | Save sector ID before clearActiveRoute(), restore activeSector reference + highlight after sector overlay rebuild |
 | 37-01 | route-config.js SECTOR_DEFS is canonical sector name source | Pipeline propagates to all generated JSON; single source of truth |
 
 ### Pending Todos
@@ -77,6 +78,6 @@ All tech debt items from v1.0-v1.4 resolved. No outstanding items.
 
 ## Session Continuity
 
-Last session: 2026-04-07
-Stopped at: 37-01 Tasks 1-2 complete, awaiting checkpoint:human-verify (Task 3)
-Resume file: .planning/phases/37-panel-autoclose-sector-fix/37-01-PLAN.md
+Last session: 2026-04-06
+Stopped at: 37-01 fully complete (all tasks including checkpoint bug fix)
+Resume file: None
