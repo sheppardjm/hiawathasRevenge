@@ -9,7 +9,7 @@ import ShieldMotif from './ShieldMotif.astro';
 
 <section data-reveal class="hiawatha-section py-[--spacing-block]">
   <div class="max-w-5xl mx-auto px-4">
-    <h2 class="text-3xl mb-[--spacing-element]">The Poem, the Forest, the Ride</h2>
+    <h2 class="py-10 text-3xl mb-[--spacing-element]">The Poem, the Forest, the Ride</h2>
 
     <div class="editorial-grid">
 
@@ -22,49 +22,15 @@ import ShieldMotif from './ShieldMotif.astro';
           In 1855, Henry Wadsworth Longfellow committed one of American literature's
           most spectacular acts of geographic and cultural confusion. He published
           <em>The Song of Hiawatha</em>, an epic poem in the meter of the Finnish
-          <em>Kalevala</em>, drawing heavily on Ojibwe oral traditions that ethnographer
-          Henry Rowe Schoolcraft had collected along the shores of Lake Superior.
+          <em>Kalevala</em> (drawing heavily on Ojibwe oral traditions that ethnographer
+          Henry Rowe Schoolcraft had collected along the shores of Lake Superior).
           Longfellow set the whole thing in Michigan's Upper Peninsula, peopled it with
           Ojibwe figures and Ojibwe landscape, and then — for reasons that remain a
           testament to the perils of desk-bound scholarship — named his hero after
           someone else entirely.
         </p>
 
-        <h3 class="text-2xl font-display text-turquoise-400 section-heading section-heading--gap mb-4 tracking-wide">The Confusion</h3>
-
-        <p class="drop-cap">
-          Hiawatha was a real historical figure, but he had nothing to do with the
-          Ojibwe, Lake Superior, or Michigan. He was a Mohawk chief — a
-          <em>Haudenosaunee</em> (Iroquois) statesman from present-day southern Ontario
-          and upper New York who, alongside the prophet Deganawida, helped unite the
-          Five Nations — Seneca, Cayuga, Onondaga, Oneida, and Kanyen'kehà:ka — into
-          one of the most sophisticated political confederacies in the precolonial world.
-          As the primary carrier of Deganawida's message of peace, Hiawatha was an
-          agent of diplomacy and reconciliation, subordinating himself to former enemies
-          in the name of unity. He was, in other words, precisely the kind of figure
-          you would not confuse with Nanabozho: the shape-shifting, endlessly scheming
-          Ojibwe trickster-hero who actually lived in Schoolcraft's stories.
-        </p>
-
-        <p>
-          Longfellow apparently found the names interchangeable. He took Nanabozho's
-          adventures, Nanabozho's landscape, Nanabozho's Ojibwe world — and published
-          the whole thing under Hiawatha's name. Scholars have spent the better part of
-          two centuries untangling the wreckage. As one assessment put it, the poem
-          ultimately became
-        </p>
-
-        <blockquote class="pull-quote breakout">
-          <p>"a romanticized conflation of disparate Indian tribes, their traditions, and
-          their legends" — one that presented Native American culture as doomed, a relic
-          of the past inevitably making way for Euro-American expansion.</p>
-          <footer class="pull-quote-attribution">
-            — <cite><a href="https://www.american.edu/arts/hiawatha-in-context.cfm" target="_blank" rel="noopener noreferrer">American University, "Hiawatha in Context"</a></cite>
-          </footer>
-          <ShieldMotif size={12} class="pull-quote-ornament" />
-        </blockquote>
-
-        {historicalPhotos.length > 0 && (
+                {historicalPhotos.length > 0 && (
           <figure class="museum-plate breakout">
             <img
               src={historicalPhotos[0].thumb}
@@ -77,6 +43,40 @@ import ShieldMotif from './ShieldMotif.astro';
             </figcaption>
           </figure>
         )}
+
+        <h3 class="text-2xl font-display text-turquoise-400 section-heading section-heading--gap mb-4 tracking-wide">The Confusion</h3>
+
+        <p class="drop-cap">
+          Hiawatha was a real historical figure, but he had nothing to do with the
+          Ojibwe, Lake Superior, or Michigan. He was a Mohawk chief — a
+          <em>Haudenosaunee</em> (Iroquois) statesman from present-day southern Ontario
+          and upper New York who, alongside the prophet Deganawida, helped unite the
+          Five Nations (Seneca, Cayuga, Onondaga, Oneida, and Kanyen'kehà:ka) into
+          one of the most sophisticated political confederacies in the precolonial world.
+          As the primary carrier of Deganawida's message of peace, Hiawatha was an
+          agent of diplomacy and reconciliation, subordinating himself to former enemies
+          in the name of unity. He was, in other words, precisely the kind of figure
+          you would not confuse with Nanabozho: the shape-shifting, endlessly scheming
+          Ojibwe trickster-hero who <em>actually</em> lived in Schoolcraft's stories.
+        </p>
+
+        <p>
+          Longfellow apparently found the names interchangeable. He took Nanabozho's
+          adventures, Nanabozho's landscape, Nanabozho's Ojibwe world — and published
+          the whole thing under Hiawatha's name. Scholars have spent the better part of
+          two centuries untangling the wreckage. As one assessment put it, the poem
+          ultimately became
+        </p>
+
+        <blockquote class="pull-quote breakout">
+          <p>"A romanticized conflation of disparate Indian tribes, their traditions, and
+          their legends" — one that presented Native American culture as doomed, a relic
+          of the past inevitably making way for Euro-American expansion.</p>
+          <footer class="pull-quote-attribution">
+            — <cite><a href="https://www.american.edu/arts/hiawatha-in-context.cfm" target="_blank" rel="noopener noreferrer">American University, "Hiawatha in Context"</a></cite>
+          </footer>
+          <ShieldMotif size={12} class="pull-quote-ornament" />
+        </blockquote>
 
       </div>
 
@@ -219,46 +219,6 @@ import ShieldMotif from './ShieldMotif.astro';
     padding-bottom: 0;
   }
 
-  /* VIS-04: Three independent parallax backgrounds */
-  .subsection-bg::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    opacity: 0;
-    transition: opacity 1.2s ease-in-out;
-    z-index: 0;
-    pointer-events: none;
-  }
-
-  /* Each section gets its own background image from /images/ — WebP preferred, JPEG fallback */
-  .poem-section::before {
-    background-image: image-set(
-      url('/images/Eo6Lpv5a2onA-EMkS4BGrkQOHMQb4rwDbey7kfJDAZc-1536x2048.webp') type("image/webp"),
-      url('/images/Eo6Lpv5a2onA-EMkS4BGrkQOHMQb4rwDbey7kfJDAZc-1536x2048.jpg') type("image/jpeg")
-    );
-  }
-
-  .forest-section::before {
-    background-image: image-set(
-      url('/images/K9zNeD_N2ikOKXNlKHc1dGUY7N6W3cGWVevoXlB49aI-1536x2048.webp') type("image/webp"),
-      url('/images/K9zNeD_N2ikOKXNlKHc1dGUY7N6W3cGWVevoXlB49aI-1536x2048.jpg') type("image/jpeg")
-    );
-  }
-
-  .ride-section::before {
-    background-image: image-set(
-      url('/images/Gw-ZiugqoNyWNNMHZ-n65VcO7XjnipWnDWQz77mE2kQ-1536x2048.webp') type("image/webp"),
-      url('/images/Gw-ZiugqoNyWNNMHZ-n65VcO7XjnipWnDWQz77mE2kQ-1536x2048.jpg') type("image/jpeg")
-    );
-  }
-
-  .subsection-bg.bg-visible::before {
-    opacity: 0.06;
-  }
-
   /* prefers-reduced-motion: static backgrounds, no transition */
   @media (prefers-reduced-motion: reduce) {
     .subsection-bg::before {
@@ -294,7 +254,7 @@ import ShieldMotif from './ShieldMotif.astro';
     background: var(--color-cream-200);
     padding: 1.25rem;
     border-radius: 0.25rem;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 0px 2px var(--color-amber-300), 0 0 0 12px var(--color-cream-200), 0 0 0 16px var(--color-amber-300);
     max-width: 560px;
     margin-top: 2rem;
     margin-bottom: 2rem;
