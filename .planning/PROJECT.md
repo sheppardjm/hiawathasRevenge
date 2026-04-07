@@ -54,20 +54,20 @@ Visitors experience the beauty and scale of the Hiawatha's Revenge route through
 - ✓ OpenGraph, Twitter Card, canonical URL, Schema.org Event JSON-LD for June 6, 2026 — v1.4
 - ✓ Tech debt resolved: Spectral serif font, NF2217-2218 naming at source, Firefox @supports gradient guard — v1.4
 - ✓ Self-healing 12-step build pipeline with generate-webp and generate-og-image steps — v1.4
+- ✓ Multi-route pipeline: route-config.js, per-route subdirectories, routes.json manifest, coordinate-based haversine sector snapping — v1.5
+- ✓ Route selector segmented control (100mi/100k/50k) with 52px touch targets, arrow key navigation, route-specific colors — v1.5
+- ✓ Atomic route switching: initMap()+renderRoute() with activeRouteGroup, surface-colored polylines, ghost polylines — v1.5
+- ✓ Elevation profile and route stats update dynamically on route:change, lazy-init race condition fix — v1.5
+- ✓ Route comparison sidebar showing all 3 routes' stats side by side — v1.5
+- ✓ GPX download link updates per selected route — v1.5
+- ✓ URL hash deep linking (#route=100k) with history.replaceState — v1.5
+- ✓ Hero video (looping MP4) with image fallback and prefers-reduced-motion support — v1.5
+- ✓ Panel auto-close on route switch with shared-sector persistence (keepPanelSectorId) — v1.5
+- ✓ 7/7 Strava segment links (Ridge Rd segment 41188200 completing full coverage) — v1.5
 
 ### Active
 
-#### Current Milestone: v1.5 Multi-Route Support
-
-**Goal:** Add 100k and 50k route variants alongside the existing 100-mile route with a map-based route selector, per-route elevation profiles, filtered sector display, and GPX downloads for all three distances.
-
-**Target features:**
-- Pipeline expansion to process 3 GPX files and produce per-route data (route points, sectors, elevations, surface coloring)
-- Route selector UI on the map to toggle between 100mi / 100k / 50k
-- Elevation profile swaps dynamically when the selected route changes
-- Sector overlays, labels, and detail panels filter to show only sectors on the selected route
-- GPX download links for all three route distances
-- Route stats (distance, elevation gain) update per selection
+(No active milestone — next via `/gsd:new-milestone`)
 
 ### Out of Scope
 
@@ -82,11 +82,12 @@ Visitors experience the beauty and scale of the Hiawatha's Revenge route through
 
 ## Context
 
-Shipped v1.0 through v1.4 with 4,802 LOC across Astro/TypeScript/JavaScript/CSS.
-Tech stack: Astro 6, Tailwind 4, Vite 7, Leaflet, Chart.js, PhotoSwipe, sharp, gpxparser.
-Build pipeline: 12-step pipeline.js (parse-gpx → generate-surface-points → resolve-annotations → generate-sector-details → compute-sector-elevations → generate-thumbnails → copy-images → generate-webp → process-historical → match-photos → copy-gpx → generate-og-image).
-51 route photos with mileage-assigned manifest, 2 historical Remington illustrations (Met CC0), 456 simplified route points, 2,258 ft elevation gain.
-v1.4 added WebP image optimization (hero srcset, parallax image-set), SEO/social sharing (OG, Twitter Card, JSON-LD), WCAG AA accessibility, and pipeline source fixes.
+Shipped v1.0 through v1.5 with 5,667 LOC across Astro/TypeScript/JavaScript/CSS.
+Tech stack: Astro 6, Tailwind 4, Vite 7, Leaflet, Chart.js, PhotoSwipe, leaflet.markercluster, chartjs-plugin-annotation, sharp, gpxparser.
+Build pipeline: 12-step pipeline.js running per-route (parse-gpx → generate-surface-points → resolve-annotations → generate-sector-details → compute-sector-elevations) then shared steps (generate-thumbnails → copy-images → generate-webp → process-historical → match-photos → copy-gpx → generate-og-image).
+3 route distances: 100mi (456 pts, 102mi, 2,258 ft), 100k (278 pts, 62mi, 1,616 ft), 50k (134 pts, 31mi, 809 ft).
+51 route photos with mileage-assigned manifest, 2 historical Remington illustrations (Met CC0).
+v1.5 added multi-route support with per-route JSON data, map-based route selector, dynamic elevation chart, route comparison, GPX downloads, URL deep linking, and hero video.
 Site URL configured as https://hiawathasrevenge.com (placeholder — update before deployment).
 Reference implementation: github.com/sheppardjm/mkUltraGravel — same architecture, different visual identity.
 MBTN (mbtn.org) is the beneficiary — donate CTA links to their site.
@@ -142,6 +143,17 @@ MBTN (mbtn.org) is the beneficiary — donate CTA links to their site.
 | Fix NF2217 at source not output | Pipeline source truth prevents regression | ✓ Good — self-healing |
 | generate-og-image as final pipeline step | No data dependencies, safe ordering | ✓ Good — clean pipeline |
 | Placeholder domain in astro.config.ts | Deployment URL TBD; all chain logic correct | — Pending deployment |
+| Subdirectory output: public/data/{routeId}/ | Enables lazy loading, avoids index collisions | ✓ Good — clean per-route data |
+| Coordinate-based haversine snapping | Eliminates drift from route length differences | ✓ Good — accurate sector mapping |
+| RidewithGPS proximity fallback (100m) for 100k/50k | No native rwgps JSON for shorter routes | ✓ Good — 100mi as reference |
+| routes.json manifest with shortName, color, sectorIds | Everything route switcher needs without extra lookups | ✓ Good — single fetch |
+| RouteSelector as plain DOM (not L.Control) | Enables true top-center positioning | ✓ Good — not confined to corners |
+| Ghost polylines on map directly (not activeRouteGroup) | Persist across route switches | ✓ Good — no re-creation |
+| ElevationProfile chart.update('none') | Instant data swap without animation | ✓ Good — seamless switch |
+| history.replaceState (not location.hash) | Prevents hashchange event cascade | ✓ Good — no reload loop |
+| Panel close at step 1.5 before clearActiveRoute | clearActiveRoute nulls activeSector — check after is dead code | ✓ Good — bug fix |
+| keepPanelSectorId for shared-sector persistence | Save sector ID before clear, restore after rebuild | ✓ Good — smooth UX |
+| Mutate Chart.js annotations (not replace) | Replacing triggers Proxy Object.set infinite recursion | ✓ Good — fix for Chart.js v4 |
 
 ---
-*Last updated: 2026-04-06 after v1.5 milestone started*
+*Last updated: 2026-04-07 after v1.5 milestone complete*

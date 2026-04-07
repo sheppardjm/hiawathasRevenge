@@ -1,5 +1,34 @@
 # Project Milestones: Hiawatha's Revenge
 
+## v1.5 Multi-Route Support (Shipped: 2026-04-07)
+
+**Delivered:** Three-distance route system (100mi/100k/50k) with map-based route selector, per-route elevation profiles, filtered sector display, GPX downloads, URL deep linking, route comparison sidebar, hero background video, and a self-healing multi-route build pipeline.
+
+**Phases completed:** 33-37 (10 plans total)
+
+**Key accomplishments:**
+
+- Multi-route data pipeline: route-config.js canonical source, parameterized pipeline producing per-route subdirectories (100mi/100k/50k), routes.json manifest, coordinate-based haversine sector snapping with RidewithGPS proximity fallback
+- Atomic route switching: initMap()+renderRoute() refactor with activeRouteGroup L.layerGroup, run-flush surface-colored polylines (paved/gravel/dirt/unknown), persistent ghost polylines at 0.2 opacity for geographic context
+- Cross-component synchronization: route:change CustomEvent wiring across elevation chart, route stats, GPX download link, and URL hash — all UI zones update atomically on route switch
+- URL deep linking: #route=100k pre-selection on page load, history.replaceState without reload cascade, all route states bookmarkable and shareable
+- Complete sector coverage: 7/7 Strava segments (Ridge Rd segment 41188200 added), panel auto-close on route switch with shared-sector persistence via keepPanelSectorId pattern
+- Hero video: looping MP4 background with image poster/fallback, CSS + JS prefers-reduced-motion support
+- Chart.js annotation fix: resolved Proxy infinite loop (Object.set recursion) in annotation updates during route switching
+
+**Stats:**
+
+- 64 files created/modified (+28,494/-448)
+- 5,667 lines of Astro/TypeScript/JavaScript/CSS (total codebase)
+- 5 phases, 10 plans, 48 commits
+- 1 day (2026-04-06)
+
+**Git range:** `525df3a` (feat(33-01): create route-config.js) → `e4b2c3f` (fix: mutate Chart.js annotations)
+
+**What's next:** TBD — next milestone via `/gsd:new-milestone`
+
+---
+
 ## v1.4 Performance & Polish (Shipped: 2026-04-06)
 
 **Delivered:** Ship-ready polish with WebP image optimization (hero srcset, gallery, parallax), full SEO/social sharing metadata (OpenGraph, Twitter Card, canonical, Event JSON-LD), WCAG AA accessibility hardening (focus indicators, alt text, contrast, reduced-motion), tech debt cleanup (font, naming, cross-browser), and self-healing build pipeline.
