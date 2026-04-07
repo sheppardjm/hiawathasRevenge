@@ -52,18 +52,18 @@ Requirements for segment editorial rewrite and polish. Each maps to roadmap phas
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DESC-01 | TBD | Pending |
-| DESC-02 | TBD | Pending |
-| DESC-03 | TBD | Pending |
-| LABEL-01 | TBD | Pending |
-| PHOTO-01 | TBD | Pending |
-| DEPLOY-01 | TBD | Pending |
+| LABEL-01 | Phase 38 | Pending |
+| PHOTO-01 | Phase 38 | Pending |
+| DEPLOY-01 | Phase 38 | Pending |
+| DESC-01 | Phase 39 | Pending |
+| DESC-02 | Phase 39 | Pending |
+| DESC-03 | Phase 39 | Pending |
 
 **Coverage:**
 - v1.6 requirements: 6 total
-- Mapped to phases: 0 (pending roadmap)
-- Unmapped: 6
+- Mapped to phases: 6
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-04-07*
-*Last updated: 2026-04-07 after initial definition*
+*Last updated: 2026-04-07 — traceability updated after roadmap creation*

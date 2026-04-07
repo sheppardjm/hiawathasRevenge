@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-04-07)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive, visually stunning showcase that inspires them to ride it and support MBTN.
-**Current focus:** v1.6 Segment Editorial & Polish
+**Current focus:** v1.6 Segment Editorial & Polish — Phase 38: UI & Config Quick Fixes
 
 ## Current Position
 
-Phase: Not started (defining requirements)
-Plan: —
-Status: Defining requirements
-Last activity: 2026-04-07 — Milestone v1.6 started
+Phase: 38 — UI & Config Quick Fixes
+Plan: Not started
+Status: Ready for planning
+Last activity: 2026-04-07 — v1.6 roadmap created
 
-Progress: [████████████████████] v1.0-v1.5 complete | v1.6 [░░░░░░░░░░] defining
+Progress: [████████████████████] v1.0-v1.5 complete | v1.6 [░░░░░░░░░░] 0/2 phases
 
 ## Performance Metrics
 
@@ -41,6 +41,8 @@ None.
 - Project requires Node >=22.12.0 -- use Volta (`/Users/Sheppardjm/.volta/bin/node`)
 - iOS Safari device testing deferred (requires physical device)
 - Elevation gains for 100k (~1,616 ft) and 50k (~809 ft) unverified against Strava/Garmin reference recordings
+- Confirm actual deployed URL before updating astro.config.ts (check Vercel/Netlify dashboard or DNS records — is `hiawathasrevenge.com` live?)
+- 520 segment photo: audit `images/` directory for any photo taken on CR-520 or near Munising Falls (mile 0-5.0) before committing to sourcing vs. accepting gradient fallback
 
 ### Tech Debt
 
@@ -49,5 +51,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-04-07
-Stopped at: Defining v1.6 milestone requirements
+Stopped at: v1.6 roadmap created — ready to plan Phase 38
 Resume file: None
