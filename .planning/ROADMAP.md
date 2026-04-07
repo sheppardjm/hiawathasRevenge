@@ -7,7 +7,7 @@
 - ✅ **v1.2 Cultural Maximalism** - Phases 18-22 (shipped 2026-04-02)
 - ✅ **v1.3 Interactive Map** - Phases 23-27 (shipped 2026-04-02)
 - ✅ **v1.4 Performance & Polish** - Phases 28-32 (shipped 2026-04-06)
-- 🔧 **v1.5 Multi-Route Support** - Phases 33-37 (gap closure in progress)
+- ✅ **v1.5 Multi-Route Support** - Phases 33-37 (shipped 2026-04-06)
 
 ## Phases
 
@@ -18,7 +18,7 @@ All v1.0-v1.4 phases shipped. See `.planning/MILESTONES.md` for full history.
 
 </details>
 
-### v1.5 Multi-Route Support (In Progress)
+### v1.5 Multi-Route Support (Complete)
 
 **Milestone Goal:** Add 100k and 50k route variants alongside the existing 100-mile route with a map-based route selector, per-route elevation profiles, filtered sector display, and GPX downloads for all three distances.
 
@@ -30,7 +30,7 @@ All v1.0-v1.4 phases shipped. See `.planning/MILESTONES.md` for full history.
 - [x] **Phase 34: Route Selector & Map Switching** - Users toggle between routes on the map with full visual feedback
 - [x] **Phase 35: Elevation Profile & Route Stats** - Chart and stats stay synchronized with the selected route
 - [x] **Phase 36: Downloads, Deep Linking & Hero Video** - GPX downloads, URL-based route sharing, and hero video replacement
-- [ ] **Phase 37: Panel Auto-Close & Sector Data Fix** - Fix MAP-05 dead code bug, rename Rapid River segment, add Strava link
+- [x] **Phase 37: Panel Auto-Close & Sector Data Fix** - Fix MAP-05 dead code bug, rename Ridge Rd segment, add Strava link
 
 ## Phase Details
 
@@ -112,7 +112,7 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
-- [ ] 37-01-PLAN.md -- Fix panel close ordering, rename sector, add Strava link, regenerate pipeline
+- [x] 37-01-PLAN.md -- Fix panel close ordering, rename sector, add Strava link, regenerate pipeline
 
 ## Progress
 
@@ -125,7 +125,7 @@ Phases execute in numeric order: 33 -> 34 -> 35 -> 36
 | 34. Route Selector & Map Switching | v1.5 | 2/2 | Complete | 2026-04-06 |
 | 35. Elevation Profile & Route Stats | v1.5 | 2/2 | Complete | 2026-04-06 |
 | 36. Downloads, Deep Linking & Hero Video | v1.5 | 2/2 | Complete | 2026-04-06 |
-| 37. Panel Auto-Close & Sector Data Fix | v1.5 | 0/1 | Not Started | — |
+| 37. Panel Auto-Close & Sector Data Fix | v1.5 | 1/1 | Complete | 2026-04-06 |
 
 ---
 *Roadmap created: 2026-04-06*
