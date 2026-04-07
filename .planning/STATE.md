@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-04-06)
 ## Current Position
 
 Phase: 37 of 37 (Panel Auto-Close & Sector Data Fix)
-Plan: 0 of 1 in current phase
-Status: NOT STARTED -- gap closure phase created from audit
-Last activity: 2026-04-06 -- Created Phase 37 from v1.5 milestone audit gaps
+Plan: 1 of 1 in current phase (awaiting checkpoint: human-verify)
+Status: In progress -- Tasks 1-2 complete, checkpoint at Task 3
+Last activity: 2026-04-07 -- Completed Tasks 1-2 of 37-01-PLAN.md; awaiting human verify
 
-Progress: [████████████████████] v1.0-v1.4 complete | v1.5 [█████████░] 9/10 plans (gap closure)
+Progress: [████████████████████] v1.0-v1.4 complete | v1.5 [█████████░] 9/10 plans (gap closure — checkpoint pending)
 
 ## Performance Metrics
 
@@ -55,6 +55,8 @@ Progress: [████████████████████] v1.0-v1
 | 36-01 | history.replaceState (not location.hash) for hash writes | Prevents hashchange event cascade on every route switch |
 | 36-01 | initialRouteId const inside initMap() -- no module scope lift needed | Naturally in scope for selector loop, renderRoute(), updateGhostVisibility() calls |
 | 36-01 | GPX link default stays static (100mi); route:change updates it dynamically | route:change always fires before user can scroll to download section |
+| 37-01 | Panel close check at step 1.5 (before clearActiveRoute) | clearActiveRoute() nulls activeSector — any check after is dead code |
+| 37-01 | route-config.js SECTOR_DEFS is canonical sector name source | Pipeline propagates to all generated JSON; single source of truth |
 
 ### Pending Todos
 
@@ -64,7 +66,7 @@ None.
 
 - Ojibwe community consultation recommended (cultural sensitivity review)
 - Project requires Node >=22.12.0 -- use Volta (`/Users/Sheppardjm/.volta/bin/node`)
-- Strava IDs populated for 6/7 segments (Ridge Rd segment 41188200 ready — Phase 37 will wire it)
+- Strava IDs: all 7/7 segments complete (Ridge Rd segment 41188200 wired in Phase 37)
 - iOS Safari device testing deferred to v1.5+ (requires physical device)
 - astro.config.ts site URL is placeholder -- update before deployment
 - Elevation gains for 100k (~1,616 ft) and 50k (~809 ft) unverified against Strava/Garmin reference recordings
@@ -75,6 +77,6 @@ All tech debt items from v1.0-v1.4 resolved. No outstanding items.
 
 ## Session Continuity
 
-Last session: 2026-04-06
-Stopped at: Phase 37 created from audit gaps -- ready for planning
-Resume file: None
+Last session: 2026-04-07
+Stopped at: 37-01 Tasks 1-2 complete, awaiting checkpoint:human-verify (Task 3)
+Resume file: .planning/phases/37-panel-autoclose-sector-fix/37-01-PLAN.md
