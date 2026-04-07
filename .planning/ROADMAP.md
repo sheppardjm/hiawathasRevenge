@@ -40,10 +40,10 @@ All prior milestone phases documented in .planning/MILESTONES.md.
   2. No surface-type legend or color key appears on or near the map
   3. The two-color scheme applies consistently across all three routes (100mi, 100k, 50k)
   4. Ghost polylines for inactive routes remain visible and visually subordinate
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 40-01: TBD
+- [ ] 40-01-PLAN.md — Replace surface-colored polyline with single-color road base
 
 ### Phase 41: UX Cleanup
 **Goal**: Minor UX friction points are resolved — broken buttons removed, download guidance updated
