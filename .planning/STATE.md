@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-04-06)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive, visually stunning showcase that inspires them to ride it and support MBTN.
-**Current focus:** v1.5 Multi-Route Support -- Phase 35 COMPLETE, ready for Phase 36
+**Current focus:** v1.5 Multi-Route Support -- COMPLETE (Phase 36 done)
 
 ## Current Position
 
 Phase: 36 of 36 (Downloads, Deep Linking, Hero Video)
 Plan: 2 of 2 in current phase
-Status: In progress -- at checkpoint (awaiting human verification)
-Last activity: 2026-04-06 -- Completed 36-02-PLAN Task 1 (hero video added, awaiting visual verify)
+Status: COMPLETE -- all phases and plans finished
+Last activity: 2026-04-06 -- Completed 36-02-PLAN (hero video approved, v1.5 milestone done)
 
-Progress: [████████████████████] v1.0-v1.4 complete | v1.5 [█████████░] 8/9 plans (36-02 in progress)
+Progress: [████████████████████] v1.0-v1.4 complete | v1.5 [██████████] 9/9 plans COMPLETE
 
 ## Performance Metrics
 
@@ -75,6 +75,6 @@ All tech debt items from v1.0-v1.4 resolved. No outstanding items.
 
 ## Session Continuity
 
-Last session: 2026-04-06T23:54:47Z
-Stopped at: 36-02-PLAN Task 1 complete (0fcec9c) -- hero video added, at checkpoint:human-verify
+Last session: 2026-04-06
+Stopped at: 36-02-PLAN COMPLETE -- hero video approved, v1.5 milestone fully complete
 Resume file: None
