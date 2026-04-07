@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-04-07)
 ## Current Position
 
 Phase: 40 of 43 (Map Simplification) — v1.7 UX Polish & Photo Pipeline
-Plan: —
-Status: Ready to plan
-Last activity: 2026-04-07 — Roadmap created for v1.7
+Plan: 01 of 1 (complete)
+Status: Phase complete
+Last activity: 2026-04-07 — Completed 40-01-PLAN.md (two-color route rendering)
 
-Progress: [░░░░░░░░░░░░░░░░░░░░] 0% (0/4 phases)
+Progress: [█░░░░░░░░░░░░░░░░░░░] 25% (1/4 phases)
 
 ## Performance Metrics
 
@@ -31,6 +31,11 @@ Progress: [░░░░░░░░░░░░░░░░░░░░] 0% (0/4
 ### Decisions
 
 (Full decision log in PROJECT.md Key Decisions table)
+
+| Phase | Decision | Rationale |
+|-------|----------|-----------|
+| 40-01 | Road base uses `forest900` directly (no new CSS var) | Already the fallback color in deleted drawSurfacePolyline(); visually tested against CyclOSM |
+| 40-01 | `surface-points.json` files left on disk | Scope is rendering only; dead data is harmless; cleanup deferred |
 
 ### Pending Todos
 
@@ -49,6 +54,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-07
-Stopped at: Roadmap created for v1.7 milestone
+Last session: 2026-04-07T16:07:55Z
+Stopped at: Completed 40-01-PLAN.md — two-color route rendering (forest900 base + amber500 sectors)
 Resume file: None
