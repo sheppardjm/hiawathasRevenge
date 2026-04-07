@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-04-07)
 ## Current Position
 
 Phase: 44 of 44 (Tech Debt Cleanup) — v1.7 UX Polish & Photo Pipeline
-Plan: 0 of 0 (not yet planned)
-Status: Pending planning
-Last activity: 2026-04-07 — Added Phase 44 gap closure phase from milestone audit
+Plan: 1 of 1 complete
+Status: Phase complete
+Last activity: 2026-04-07 — Completed 44-01-PLAN.md (tech debt cleanup)
 
-Progress: [████████████████░░░░] 80% (4/5 phases)
+Progress: [████████████████████] 100% (5/5 phases)
 
 ## Performance Metrics
 
@@ -42,6 +42,8 @@ Progress: [████████████████░░░░] 80% (4/
 | 42-01 | Single atomic commit for all photo artifacts | Plan treats staging as its own task; all artifacts logically related |
 | 43-01 | Replace segment hero entirely with multi-column grid (not hero + grid) | Cleaner layout; PHT-06 requires no fixed-height cropping; avoids redundancy |
 | 43-01 | 280px minmax minimum (not 400px) for grid columns | Parent container max-w-4xl = 896px; 280px gives 3 cols at desktop, all ≤400px wide |
+| 44-01 | Removed generate-surface-points from pipeline.js | prebuild regenerated dead files on every build; no consumers remain in codebase |
+| 44-01 | Renamed photo with -2048x1536 suffix (not modify parseDims fallback) | Correct fix matches established naming convention; parseDims extracts dims from filename |
 
 ### Pending Todos
 
@@ -60,6 +62,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-07T17:27:00Z
-Stopped at: Completed 43-01-PLAN.md — multi-column segment photo grid, all phases complete
+Last session: 2026-04-07T18:57:00Z
+Stopped at: Completed 44-01-PLAN.md — tech debt cleanup, v1.7 milestone fully clean
 Resume file: None
