@@ -39,12 +39,12 @@ Requirements for multi-route support. Each maps to roadmap phases.
 
 ### Downloads & Links
 
-- [ ] **DL-01**: GPX download link updates href and label text to match the selected route
-- [ ] **LINK-01**: URL hash deep linking (`#route=100k`) pre-selects the specified route on page load and updates on route change via `history.replaceState`
+- [x] **DL-01**: GPX download link updates href and label text to match the selected route
+- [x] **LINK-01**: URL hash deep linking (`#route=100k`) pre-selects the specified route on page load and updates on route change via `history.replaceState`
 
 ### Hero Video
 
-- [ ] **HERO-01**: Hero section plays a `<video>` element (Stationary_Hero_Video_With_Motion.mp4) with the existing hero image as `<img>` poster/fallback for unsupported browsers or slow connections
+- [x] **HERO-01**: Hero section plays a `<video>` element (Stationary_Hero_Video_With_Motion.mp4) with the existing hero image as `<img>` poster/fallback for unsupported browsers or slow connections
 
 ## Future Requirements
 
@@ -93,9 +93,9 @@ Requirements for multi-route support. Each maps to roadmap phases.
 | ELEV-03 | Phase 35 | Complete |
 | STAT-01 | Phase 35 | Complete |
 | STAT-02 | Phase 35 | Complete |
-| DL-01 | Phase 36 | Pending |
-| LINK-01 | Phase 36 | Pending |
-| HERO-01 | Phase 36 | Pending |
+| DL-01 | Phase 36 | Complete |
+| LINK-01 | Phase 36 | Complete |
+| HERO-01 | Phase 36 | Complete |
 
 **Coverage:**
 - v1.5 requirements: 21 total
@@ -104,4 +104,4 @@ Requirements for multi-route support. Each maps to roadmap phases.
 
 ---
 *Requirements defined: 2026-04-06*
-*Last updated: 2026-04-06 after Phase 35 completion*
+*Last updated: 2026-04-06 after Phase 36 completion*

@@ -7,7 +7,7 @@
 - ✅ **v1.2 Cultural Maximalism** - Phases 18-22 (shipped 2026-04-02)
 - ✅ **v1.3 Interactive Map** - Phases 23-27 (shipped 2026-04-02)
 - ✅ **v1.4 Performance & Polish** - Phases 28-32 (shipped 2026-04-06)
-- 🚧 **v1.5 Multi-Route Support** - Phases 33-36 (in progress)
+- ✅ **v1.5 Multi-Route Support** - Phases 33-36 (shipped 2026-04-06)
 
 ## Phases
 
@@ -94,8 +94,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 36-01-PLAN.md -- GPX download link switching and URL hash deep linking
-- [ ] 36-02-PLAN.md -- Hero video with image fallback and reduced-motion handling
+- [x] 36-01-PLAN.md -- GPX download link switching and URL hash deep linking
+- [x] 36-02-PLAN.md -- Hero video with image fallback and reduced-motion handling
 
 ## Progress
 
@@ -107,7 +107,7 @@ Phases execute in numeric order: 33 -> 34 -> 35 -> 36
 | 33. Pipeline & Route Data | v1.5 | 3/3 | Complete | 2026-04-06 |
 | 34. Route Selector & Map Switching | v1.5 | 2/2 | Complete | 2026-04-06 |
 | 35. Elevation Profile & Route Stats | v1.5 | 2/2 | Complete | 2026-04-06 |
-| 36. Downloads, Deep Linking & Hero Video | v1.5 | 0/2 | Not started | - |
+| 36. Downloads, Deep Linking & Hero Video | v1.5 | 2/2 | Complete | 2026-04-06 |
 
 ---
 *Roadmap created: 2026-04-06*
