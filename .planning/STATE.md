@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-04-07)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive, visually stunning showcase that inspires them to ride it and support MBTN.
-**Current focus:** Phase 42 — Photo Pipeline
+**Current focus:** Phase 43 — Gallery Layout Polish
 
 ## Current Position
 
-Phase: 42 of 43 (Photo Pipeline) — v1.7 UX Polish & Photo Pipeline
+Phase: 43 of 43 (Gallery Layout Polish) — v1.7 UX Polish & Photo Pipeline
 Plan: 01 of 1 (complete)
 Status: Phase complete
-Last activity: 2026-04-07 — Completed 42-01-PLAN.md (add mileage sort, commit 5 new photos)
+Last activity: 2026-04-07 — Completed 43-01-PLAN.md (multi-column segment photo grid)
 
-Progress: [███░░░░░░░░░░░░░░░░░] 75% (3/4 phases)
+Progress: [████████████████████] 100% (4/4 phases)
 
 ## Performance Metrics
 
@@ -40,6 +40,8 @@ Progress: [███░░░░░░░░░░░░░░░░░] 75% (3/
 | 41-01 | All four jump link artifacts removed together | Clean deletion with zero dead code; single traceable commit |
 | 42-01 | Sort appended to end of manifest.map() chain (not separate step) | Single-pass transform; intent clear; downstream consumers always get sorted output |
 | 42-01 | Single atomic commit for all photo artifacts | Plan treats staging as its own task; all artifacts logically related |
+| 43-01 | Replace segment hero entirely with multi-column grid (not hero + grid) | Cleaner layout; PHT-06 requires no fixed-height cropping; avoids redundancy |
+| 43-01 | 280px minmax minimum (not 400px) for grid columns | Parent container max-w-4xl = 896px; 280px gives 3 cols at desktop, all ≤400px wide |
 
 ### Pending Todos
 
@@ -58,6 +60,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-07T17:05:00Z
-Stopped at: Completed 42-01-PLAN.md — add mileage sort to pipeline, commit 5 new photos
+Last session: 2026-04-07T17:27:00Z
+Stopped at: Completed 43-01-PLAN.md — multi-column segment photo grid, all phases complete
 Resume file: None
