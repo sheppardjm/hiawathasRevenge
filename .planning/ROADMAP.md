@@ -9,7 +9,7 @@
 - ✅ **v1.4 Performance & Polish** - Phases 28-32 (shipped 2026-04-06)
 - ✅ **v1.5 Multi-Route Support** - Phases 33-37 (shipped 2026-04-06)
 - ✅ **v1.6 Segment Editorial & Polish** - Phases 38-39 (shipped 2026-04-07)
-- 🚧 **v1.7 UX Polish & Photo Pipeline** - Phases 40-43 (in progress)
+- ✅ **v1.7 UX Polish & Photo Pipeline** - Phases 40-43 (shipped 2026-04-07)
 
 ## Phases
 
@@ -20,14 +20,14 @@ All prior milestone phases documented in .planning/MILESTONES.md.
 
 </details>
 
-### 🚧 v1.7 UX Polish & Photo Pipeline (In Progress)
+### ✅ v1.7 UX Polish & Photo Pipeline (Shipped 2026-04-07)
 
 **Milestone Goal:** Simplify the map to a clean two-color route track, add new photos to the pipeline, fix gallery layout issues, and clean up minor UX rough edges.
 
 - [x] **Phase 40: Map Simplification** — Replace surface-type coloring with a clean two-color route track
 - [x] **Phase 41: UX Cleanup** — Remove broken panel button and update download text
 - [x] **Phase 42: Photo Pipeline** — Process new photos and place them on map and gallery
-- [ ] **Phase 43: Gallery & Layout Polish** — Fix gallery ordering, aspect ratios, and segment card layout
+- [x] **Phase 43: Gallery & Layout Polish** — Fix gallery ordering, aspect ratios, and segment card layout
 
 ## Phase Details
 
@@ -80,10 +80,10 @@ Plans:
   2. Gallery photos are ordered by route mileage from start to finish (not random or alphabetical)
   3. All thumbnails in gallery and segment cards preserve their original aspect ratios — no CSS stretching or distortion
   4. Multi-column segment card layout is responsive across mobile (375px), tablet (768px), and desktop (1280px)
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 43-01: TBD
+- [x] 43-01-PLAN.md — Replace segment hero with multi-column photo grid, verify gallery ordering
 
 ## Progress
 
@@ -95,4 +95,4 @@ Phases 40, 41, 42 can execute in parallel (no dependencies). Phase 43 follows Ph
 | 40. Map Simplification | v1.7 | 1/1 | ✓ Complete | 2026-04-07 |
 | 41. UX Cleanup | v1.7 | 1/1 | ✓ Complete | 2026-04-07 |
 | 42. Photo Pipeline | v1.7 | 1/1 | ✓ Complete | 2026-04-07 |
-| 43. Gallery & Layout Polish | v1.7 | 0/TBD | Not started | - |
+| 43. Gallery & Layout Polish | v1.7 | 1/1 | ✓ Complete | 2026-04-07 |
