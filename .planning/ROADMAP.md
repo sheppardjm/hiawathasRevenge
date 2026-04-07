@@ -7,7 +7,7 @@
 - ✅ **v1.2 Cultural Maximalism** - Phases 18-22 (shipped 2026-04-02)
 - ✅ **v1.3 Interactive Map** - Phases 23-27 (shipped 2026-04-02)
 - ✅ **v1.4 Performance & Polish** - Phases 28-32 (shipped 2026-04-06)
-- ✅ **v1.5 Multi-Route Support** - Phases 33-36 (shipped 2026-04-06)
+- 🔧 **v1.5 Multi-Route Support** - Phases 33-37 (gap closure in progress)
 
 ## Phases
 
@@ -29,7 +29,8 @@ All v1.0-v1.4 phases shipped. See `.planning/MILESTONES.md` for full history.
 - [x] **Phase 33: Pipeline & Route Data** - Build-time pipeline produces per-route JSON data for all 3 distances
 - [x] **Phase 34: Route Selector & Map Switching** - Users toggle between routes on the map with full visual feedback
 - [x] **Phase 35: Elevation Profile & Route Stats** - Chart and stats stay synchronized with the selected route
-- [ ] **Phase 36: Downloads, Deep Linking & Hero Video** - GPX downloads, URL-based route sharing, and hero video replacement
+- [x] **Phase 36: Downloads, Deep Linking & Hero Video** - GPX downloads, URL-based route sharing, and hero video replacement
+- [ ] **Phase 37: Panel Auto-Close & Sector Data Fix** - Fix MAP-05 dead code bug, rename Rapid River segment, add Strava link
 
 ## Phase Details
 
@@ -97,6 +98,22 @@ Plans:
 - [x] 36-01-PLAN.md -- GPX download link switching and URL hash deep linking
 - [x] 36-02-PLAN.md -- Hero video with image fallback and reduced-motion handling
 
+### Phase 37: Panel Auto-Close & Sector Data Fix
+**Goal**: Fix the MAP-05 panel auto-close dead code bug, rename "Rapid River Truck Trail" to "Ridge Rd", and add its Strava segment link — closing all v1.5 audit gaps
+**Depends on**: Phase 36 (all prior v1.5 work complete)
+**Requirements**: MAP-05 (gap closure)
+**Gap Closure**: Closes requirement MAP-05, integration #12 (clearActiveRoute ordering), flow #5 (panel stays open with stale content)
+**Success Criteria** (what must be TRUE):
+  1. Switching routes while a sector panel is open closes the panel if that sector is not on the new route
+  2. The sector formerly called "Rapid River Truck Trail" displays as "Ridge Rd" everywhere (map labels, detail panels, route explainer, elevation chart)
+  3. The Ridge Rd sector has a working Strava link (https://www.strava.com/segments/41188200) in the detail panel and route explainer
+  4. All 7/7 sectors now have Strava segment links (previously 6/7)
+  5. Pipeline regenerates clean data with updated sector name and Strava link
+**Plans**: 1 plan
+
+Plans:
+- [ ] 37-01-PLAN.md -- Fix panel close ordering, rename sector, add Strava link, regenerate pipeline
+
 ## Progress
 
 **Execution Order:**
@@ -108,6 +125,7 @@ Phases execute in numeric order: 33 -> 34 -> 35 -> 36
 | 34. Route Selector & Map Switching | v1.5 | 2/2 | Complete | 2026-04-06 |
 | 35. Elevation Profile & Route Stats | v1.5 | 2/2 | Complete | 2026-04-06 |
 | 36. Downloads, Deep Linking & Hero Video | v1.5 | 2/2 | Complete | 2026-04-06 |
+| 37. Panel Auto-Close & Sector Data Fix | v1.5 | 0/1 | Not Started | — |
 
 ---
 *Roadmap created: 2026-04-06*

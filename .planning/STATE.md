@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-04-06)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive, visually stunning showcase that inspires them to ride it and support MBTN.
-**Current focus:** v1.5 Multi-Route Support -- COMPLETE (Phase 36 done)
+**Current focus:** v1.5 Multi-Route Support -- gap closure (Phase 37 added)
 
 ## Current Position
 
-Phase: 36 of 36 (Downloads, Deep Linking, Hero Video)
-Plan: 2 of 2 in current phase
-Status: COMPLETE -- all phases and plans finished
-Last activity: 2026-04-06 -- Completed 36-02-PLAN (hero video approved, v1.5 milestone done)
+Phase: 37 of 37 (Panel Auto-Close & Sector Data Fix)
+Plan: 0 of 1 in current phase
+Status: NOT STARTED -- gap closure phase created from audit
+Last activity: 2026-04-06 -- Created Phase 37 from v1.5 milestone audit gaps
 
-Progress: [████████████████████] v1.0-v1.4 complete | v1.5 [██████████] 9/9 plans COMPLETE
+Progress: [████████████████████] v1.0-v1.4 complete | v1.5 [█████████░] 9/10 plans (gap closure)
 
 ## Performance Metrics
 
@@ -64,7 +64,7 @@ None.
 
 - Ojibwe community consultation recommended (cultural sensitivity review)
 - Project requires Node >=22.12.0 -- use Volta (`/Users/Sheppardjm/.volta/bin/node`)
-- Strava IDs populated for 6/7 segments (Rapid River Truck Trail pending)
+- Strava IDs populated for 6/7 segments (Ridge Rd segment 41188200 ready — Phase 37 will wire it)
 - iOS Safari device testing deferred to v1.5+ (requires physical device)
 - astro.config.ts site URL is placeholder -- update before deployment
 - Elevation gains for 100k (~1,616 ft) and 50k (~809 ft) unverified against Strava/Garmin reference recordings
@@ -76,5 +76,5 @@ All tech debt items from v1.0-v1.4 resolved. No outstanding items.
 ## Session Continuity
 
 Last session: 2026-04-06
-Stopped at: 36-02-PLAN COMPLETE -- hero video approved, v1.5 milestone fully complete
+Stopped at: Phase 37 created from audit gaps -- ready for planning
 Resume file: None
