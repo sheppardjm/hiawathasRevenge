@@ -20,7 +20,6 @@ const projectRoot = join(__dirname, '..');
 // Route-specific steps — run once per route (3 times total)
 const routeSpecificSteps = [
   { name: 'parse-gpx',                 script: 'scripts/parse-gpx.js' },
-  { name: 'generate-surface-points',   script: 'scripts/generate-surface-points.js' },
   { name: 'resolve-annotations',       script: 'scripts/resolve-annotations.js' },
   { name: 'compute-sector-elevations', script: 'scripts/compute-sector-elevations.js' },
 ];
