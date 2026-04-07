@@ -601,10 +601,14 @@
       ]);
 
       // 1.5. Panel close-on-switch — MUST run before clearActiveRoute() nulls activeSector
-      // Close the panel if the open sector is not on the NEW route being loaded
       const newRouteConfig = routesManifest.routes.find(r => r.id === routeId);
-      if (activeSector && newRouteConfig && !newRouteConfig.sectorIds.includes(activeSector.sectorId)) {
-        closePanel();
+      let keepPanelSectorId = null;
+      if (activeSector && newRouteConfig) {
+        if (!newRouteConfig.sectorIds.includes(activeSector.sectorId)) {
+          closePanel();
+        } else {
+          keepPanelSectorId = activeSector.sectorId;
+        }
       }
 
       // 2. Clear previous route layers
@@ -649,6 +653,16 @@
           const elevData = sectorElevations.find(e => e.id === sector.id);
           openPanel({ sector, details, elevData });
         });
+      }
+
+      // 5.5. Restore active sector highlight if panel stayed open across route switch
+      if (keepPanelSectorId) {
+        const restored = sectorLayerEntries.find(e => e.sectorId === keepPanelSectorId);
+        if (restored) {
+          activeSector = restored;
+          restored.visiblePoly.setStyle({ weight: 8, opacity: 1.0 });
+          restored.visiblePoly.bringToFront();
+        }
       }
 
       // 6. Build sector labels — pill-shaped divIcon labels at each sector's geographic midpoint
