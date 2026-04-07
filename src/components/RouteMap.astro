@@ -309,14 +309,6 @@
     const LABEL_COLOR = amber500;
     const labelTextColor = getCSSColor('--color-forest-900');
 
-    // Surface color palette — distinct from sector overlay colors (lake, amber, rust, forest)
-    const SURFACE_COLORS = {
-      paved:   lake400,
-      gravel:  amber400,
-      dirt:    getCSSColor('--color-rust-600'),
-      unknown: getCSSColor('--color-forest-700'),
-    };
-
     // Dynamic import avoids SSR "window is undefined" error — Leaflet requires browser globals
     const L = (await import('leaflet')).default;
 
@@ -549,42 +541,13 @@
       sectorLabels = [];
     }
 
-    // ---- drawSurfacePolyline — run-flush algorithm for surface-colored polyline segments ----
-    // surfacePoints array must be same length as latlngs (one surface type per route point)
-    // Groups consecutive same-surface points into a single polyline segment
-    function drawSurfacePolyline(latlngs, surfacePoints, layerGroup) {
-      if (surfacePoints.length !== latlngs.length) {
-        console.warn(`Surface points (${surfacePoints.length}) != route points (${latlngs.length}), falling back to uniform color`);
-        layerGroup.addLayer(L.polyline(latlngs, { color: forest900, weight: 4, opacity: 0.9, smoothFactor: 1, interactive: false }));
-        return;
-      }
-      let prev = null;
-      let runStart = 0;
-      function flushRun(endIdx) {
-        if (prev === null) return;
-        const pts = latlngs.slice(runStart, endIdx + 1);
-        if (pts.length >= 2) {
-          layerGroup.addLayer(L.polyline(pts, {
-            color: SURFACE_COLORS[prev] || SURFACE_COLORS.unknown,
-            weight: 4, opacity: 0.9, smoothFactor: 1, interactive: false,
-          }));
-        }
-      }
-      for (let i = 0; i < surfacePoints.length; i++) {
-        const s = surfacePoints[i].surface;
-        if (s !== prev) { flushRun(i); runStart = i; prev = s; }
-      }
-      flushRun(surfacePoints.length - 1);
-    }
-
     // ---- renderRoute — fetches per-route data and rebuilds all route-specific layers ----
     async function renderRoute(routeId) {
       // 1. Fetch route-specific data in parallel
-      const [routeData, annotations, sectorElevations, surfacePoints] = await Promise.all([
+      const [routeData, annotations, sectorElevations] = await Promise.all([
         fetch(`/data/${routeId}/route-data.json`).then(r => r.json()),
         fetch(`/data/${routeId}/annotations.json`).then(r => r.json()),
         fetch(`/data/${routeId}/sector-elevations.json`).then(r => r.json()),
-        fetch(`/data/${routeId}/surface-points.json`).then(r => r.json()),
       ]);
 
       // 1.5. Panel close-on-switch — MUST run before clearActiveRoute() nulls activeSector
@@ -605,8 +568,14 @@
       const latlngs = routeData.points.map(pt => [pt.lat, pt.lon]);
       routePoints = routeData.points;
 
-      // 4. Draw surface-colored polyline (run-flush algorithm)
-      drawSurfacePolyline(latlngs, surfacePoints, activeRouteGroup);
+      // 4. Draw route base polyline (road color — sector overlays in step 5 supply gravel color)
+      activeRouteGroup.addLayer(L.polyline(latlngs, {
+        color: forest900,
+        weight: 4,
+        opacity: 0.9,
+        smoothFactor: 1,
+        interactive: false,
+      }));
 
       // 5. Build sector overlays (visible + ghost per sector)
       // Ghost+visible pattern: ghost handles events (20px hit target), visible handles styling
