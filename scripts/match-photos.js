@@ -93,7 +93,7 @@ const photos = manifest.map((entry) => {
     lon: snap.lon,
     ...(entry.featured ? { featured: true } : {}),
   };
-});
+}).sort((a, b) => a.mile - b.mile);
 
 // ---------------------------------------------------------------------------
 // Write output
