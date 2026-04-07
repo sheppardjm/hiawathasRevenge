@@ -28,7 +28,7 @@ All prior milestone phases documented in .planning/MILESTONES.md.
 - [x] **Phase 41: UX Cleanup** — Remove broken panel button and update download text
 - [x] **Phase 42: Photo Pipeline** — Process new photos and place them on map and gallery
 - [x] **Phase 43: Gallery & Layout Polish** — Fix gallery ordering, aspect ratios, and segment card layout
-- [ ] **Phase 44: Tech Debt Cleanup** — Delete dead files, fix stale comments, correct photo CLS placeholder
+- [x] **Phase 44: Tech Debt Cleanup** — Delete dead files, fix stale comments, correct photo CLS placeholder
 
 ## Phase Details
 
@@ -99,7 +99,7 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
-- [ ] 44-01-PLAN.md — Delete dead files, fix stale comments, rename photo with dimension suffix
+- [x] 44-01-PLAN.md — Delete dead files, fix stale comments, rename photo with dimension suffix
 
 ## Progress
 
@@ -112,4 +112,4 @@ Phases 40, 41, 42 can execute in parallel (no dependencies). Phase 43 follows Ph
 | 41. UX Cleanup | v1.7 | 1/1 | ✓ Complete | 2026-04-07 |
 | 42. Photo Pipeline | v1.7 | 1/1 | ✓ Complete | 2026-04-07 |
 | 43. Gallery & Layout Polish | v1.7 | 1/1 | ✓ Complete | 2026-04-07 |
-| 44. Tech Debt Cleanup | v1.7 | 0/1 | In Progress | — |
+| 44. Tech Debt Cleanup | v1.7 | 1/1 | ✓ Complete | 2026-04-07 |
