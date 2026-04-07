@@ -42,24 +42,17 @@ const segmentsWithPhotos = SEGMENTS.map(seg => ({
     </p>
     {segmentsWithPhotos.map((seg) => (
       <article id={SECTOR_IDS[seg.name] ?? ''} class="segment-card-container">
-        {seg.photos.length > 0 && (
-          <div class="segment-photo-grid">
-            {seg.photos.map((photo: any) => {
-              const dims = parseDims(photo.filename);
-              return (
-                <img
-                  src={photo.thumb}
-                  alt={`Route photo at mile ${photo.mile.toFixed(1)}`}
-                  loading="lazy"
-                  decoding="async"
-                  width={dims.w}
-                  height={dims.h}
-                  style={`aspect-ratio: ${dims.w} / ${dims.h};`}
-                  class="w-full h-auto block rounded-sm"
-                />
-              );
-            })}
-          </div>
+        {seg.cardPhoto && (
+          <img
+            src={seg.cardPhoto}
+            alt={`${seg.name} segment`}
+            loading="lazy"
+            decoding="async"
+            width={parseDims(seg.cardPhoto).w}
+            height={parseDims(seg.cardPhoto).h}
+            style={`aspect-ratio: ${parseDims(seg.cardPhoto).w} / ${parseDims(seg.cardPhoto).h};`}
+            class="segment-hero-photo"
+          />
         )}
         <div class="segment-body">
           <div class="flex items-center gap-2 mb-1">
@@ -156,13 +149,14 @@ const segmentsWithPhotos = SEGMENTS.map(seg => ({
     }
   }
 
-  /* Photo grid — responsive columns, each ≤400px wide */
-  .segment-photo-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
-    gap: 0.375rem;
+  /* Hero photo — single image per segment card */
+  .segment-hero-photo {
+    width: 100%;
+    height: auto;
+    display: block;
     border-radius: 0.5rem 0.5rem 0 0;
-    overflow: hidden;
+    object-fit: cover;
+    max-height: 400px;
   }
 
   /* Card body — padded content area */
