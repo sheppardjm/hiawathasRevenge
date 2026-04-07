@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-04-07)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive, visually stunning showcase that inspires them to ride it and support MBTN.
-**Current focus:** v1.6 Segment Editorial & Polish — Phase 38: UI & Config Quick Fixes
+**Current focus:** v1.6 Segment Editorial & Polish — Phase 39: Segment Description Rewrite
 
 ## Current Position
 
-Phase: 38 — UI & Config Quick Fixes
+Phase: 39 — Segment Description Rewrite
 Plan: Not started
 Status: Ready for planning
-Last activity: 2026-04-07 — v1.6 roadmap created
+Last activity: 2026-04-07 — Phase 38 complete
 
-Progress: [████████████████████] v1.0-v1.5 complete | v1.6 [░░░░░░░░░░] 0/2 phases
+Progress: [████████████████████] v1.0-v1.5 complete | v1.6 [█████░░░░░] 1/2 phases
 
 ## Performance Metrics
 
@@ -24,11 +24,13 @@ Progress: [████████████████████] v1.0-v1
 **v1.3 Summary:** 9 plans, 5 phases, 3 days
 **v1.4 Summary:** 7 plans, 5 phases, 7 days
 **v1.5 Summary:** 10 plans, 5 phases, 1 day
+**v1.6 Phase 38:** 1 plan, 1 phase, <1 day
 
 ## Accumulated Context
 
 ### Decisions
 
+- Sector pill labels removed from map — labels obscured route at all tested sizes (user-directed)
 (Full decision log in PROJECT.md Key Decisions table)
 
 ### Pending Todos
@@ -51,5 +53,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-04-07
-Stopped at: v1.6 roadmap created — ready to plan Phase 38
+Stopped at: Phase 38 complete — ready to plan Phase 39
 Resume file: None

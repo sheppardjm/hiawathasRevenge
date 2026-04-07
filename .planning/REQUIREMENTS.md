@@ -15,15 +15,15 @@ Requirements for segment editorial rewrite and polish. Each maps to roadmap phas
 
 ### Map Labels
 
-- [ ] **LABEL-01**: Sector pill labels enlarged (font-size, padding) to fit full segment names at zoom ≥ 12
+- [x] **LABEL-01**: Sector pill labels removed (user-directed — labels obscured route at all tested sizes)
 
 ### Photos
 
-- [ ] **PHOTO-01**: 520 segment has a hero photo in the RouteExplainer (either reassigned or sourced)
+- [x] **PHOTO-01**: 520 segment has a hero photo in the RouteExplainer (boundary widened to capture mile 5.51 photo)
 
 ### Deployment
 
-- [ ] **DEPLOY-01**: astro.config.ts site URL set to `https://hiawathasrevenge.com` (TODO comment removed)
+- [x] **DEPLOY-01**: astro.config.ts site URL set to `https://hiawathasrevenge.com` (TODO comment removed)
 
 ## Future Requirements
 
@@ -52,9 +52,9 @@ Requirements for segment editorial rewrite and polish. Each maps to roadmap phas
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| LABEL-01 | Phase 38 | Pending |
-| PHOTO-01 | Phase 38 | Pending |
-| DEPLOY-01 | Phase 38 | Pending |
+| LABEL-01 | Phase 38 | Complete |
+| PHOTO-01 | Phase 38 | Complete |
+| DEPLOY-01 | Phase 38 | Complete |
 | DESC-01 | Phase 39 | Pending |
 | DESC-02 | Phase 39 | Pending |
 | DESC-03 | Phase 39 | Pending |

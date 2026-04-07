@@ -41,7 +41,7 @@ See `.planning/milestones/` for archived roadmaps and requirements.
 **Plans:** 1 plan
 
 Plans:
-- [ ] 38-01-PLAN.md — Enlarge map labels, adjust 520 photo boundary, remove site URL TODO
+- [x] 38-01-PLAN.md — Enlarge map labels, adjust 520 photo boundary, remove site URL TODO
 
 **Success Criteria:**
 
@@ -72,10 +72,10 @@ Plans:
 
 | Phase | Name | Requirements | Status |
 |-------|------|--------------|--------|
-| 38 | UI & Config Quick Fixes | LABEL-01, PHOTO-01, DEPLOY-01 | Pending |
+| 38 | UI & Config Quick Fixes | LABEL-01, PHOTO-01, DEPLOY-01 | Complete |
 | 39 | Segment Description Rewrite | DESC-01, DESC-02, DESC-03 | Pending |
 
 ---
 
 *Roadmap created: 2026-04-06*
-*Last updated: 2026-04-07 — v1.6 phases added*
+*Last updated: 2026-04-07 — Phase 38 complete*
