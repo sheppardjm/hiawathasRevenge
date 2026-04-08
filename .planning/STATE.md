@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-04-07)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive, visually stunning showcase that inspires them to ride it and support MBTN.
-**Current focus:** v1.8 Navigation & Identity — Phase 47: History Light/Dark Mode
+**Current focus:** v1.8 Navigation & Identity — Milestone complete
 
 ## Current Position
 
 Phase: 47 of 47 (History Light/Dark Mode)
 Plan: 1 of 1 in current phase
-Status: Phase complete
-Last activity: 2026-04-07 — Completed 47-01-PLAN.md (History light/dark mode + Remington backgrounds)
+Status: Milestone complete
+Last activity: 2026-04-07 — v1.8 milestone complete (all 3 phases done)
 
-Progress: [█████░░░░░░░░░░░░░░] ~70% (v1.8, phase 47 of 47 done)
+Progress: [████████████████████] 100% (v1.8, all phases complete)
 
 ## Performance Metrics
 
@@ -26,6 +26,7 @@ Progress: [█████░░░░░░░░░░░░░░] ~70% (v1.8
 **v1.5 Summary:** 10 plans, 5 phases, 1 day
 **v1.6 Summary:** 2 plans, 2 phases, <1 day
 **v1.7 Summary:** 6 plans, 5 phases, 1 day
+**v1.8 Summary:** 3 plans, 3 phases, 1 day
 
 ## Accumulated Context
 
@@ -63,5 +64,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-04-07
-Stopped at: Completed 47-01-PLAN.md — History light/dark mode + Remington background images
+Stopped at: v1.8 milestone complete — all 3 phases (45-47) shipped
 Resume file: None

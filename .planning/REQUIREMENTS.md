@@ -29,14 +29,14 @@ Requirements for milestone v1.8 "Navigation & Identity." Each maps to roadmap ph
 
 ### History Light/Dark Mode
 
-- [ ] **MODE-01**: prefers-color-scheme CSS-only light/dark switching for history section (no JS toggle)
-- [ ] **MODE-02**: Light mode: beige/off-white background using existing cream tokens, dark text
-- [ ] **MODE-03**: Dark mode: current forest-950/white styling unchanged
-- [ ] **MODE-04**: Faded desaturated inspiration images as absolutely positioned backgrounds in both modes
-- [ ] **MODE-05**: Scroll-triggered fade in/out for inspiration images (using existing IntersectionObserver pattern)
-- [ ] **MODE-06**: WCAG AA contrast verified for all heading colors in light mode
-- [ ] **MODE-07**: Smooth CSS transition on filter property to avoid flicker between modes
-- [ ] **MODE-08**: prefers-reduced-motion respected — disable scroll-triggered animations when set
+- [x] **MODE-01**: prefers-color-scheme CSS-only light/dark switching for history section (no JS toggle)
+- [x] **MODE-02**: Light mode: beige/off-white background using existing cream tokens, dark text
+- [x] **MODE-03**: Dark mode: current forest-950/white styling unchanged
+- [x] **MODE-04**: Faded desaturated inspiration images as absolutely positioned backgrounds in both modes
+- [x] **MODE-05**: Scroll-triggered fade in/out for inspiration images (using existing IntersectionObserver pattern)
+- [x] **MODE-06**: WCAG AA contrast verified for all heading colors in light mode
+- [x] **MODE-07**: Smooth CSS transition on filter property to avoid flicker between modes
+- [x] **MODE-08**: prefers-reduced-motion respected — disable scroll-triggered animations when set
 
 ## Future Requirements
 
@@ -71,14 +71,14 @@ Deferred to later milestones.
 | ETHOS-03 | Phase 46 | Complete |
 | FOOT-01 | Phase 46 | Complete |
 | FOOT-02 | Phase 46 | Complete |
-| MODE-01 | Phase 47 | Pending |
-| MODE-02 | Phase 47 | Pending |
-| MODE-03 | Phase 47 | Pending |
-| MODE-04 | Phase 47 | Pending |
-| MODE-05 | Phase 47 | Pending |
-| MODE-06 | Phase 47 | Pending |
-| MODE-07 | Phase 47 | Pending |
-| MODE-08 | Phase 47 | Pending |
+| MODE-01 | Phase 47 | Complete |
+| MODE-02 | Phase 47 | Complete |
+| MODE-03 | Phase 47 | Complete |
+| MODE-04 | Phase 47 | Complete |
+| MODE-05 | Phase 47 | Complete |
+| MODE-06 | Phase 47 | Complete |
+| MODE-07 | Phase 47 | Complete |
+| MODE-08 | Phase 47 | Complete |
 
 **Coverage:**
 - v1.8 requirements: 19 total
@@ -87,4 +87,4 @@ Deferred to later milestones.
 
 ---
 *Requirements defined: 2026-04-07*
-*Last updated: 2026-04-07 after roadmap creation*
+*Last updated: 2026-04-07 after phase 47 completion*

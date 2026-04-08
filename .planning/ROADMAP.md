@@ -10,7 +10,7 @@
 - ✅ **v1.5 Multi-Route Support** - Phases 33-37 (shipped 2026-04-06)
 - ✅ **v1.6 Segment Editorial & Polish** - Phases 38-39 (shipped 2026-04-07)
 - ✅ **v1.7 UX Polish & Photo Pipeline** - Phases 40-44 (shipped 2026-04-07)
-- 🚧 **v1.8 Navigation & Identity** - Phases 45-47 (in progress)
+- ✅ **v1.8 Navigation & Identity** - Phases 45-47 (shipped 2026-04-07)
 
 ## Phases
 
@@ -28,7 +28,7 @@
 
 </details>
 
-### 🚧 v1.8 Navigation & Identity (In Progress)
+### ✅ v1.8 Navigation & Identity (Complete)
 
 **Milestone Goal:** Improve site navigation, communicate ride ethos, add brand attribution, and enhance history section readability with light/dark mode support.
 
@@ -71,10 +71,10 @@ Plans:
   3. Inspiration images fade in when a History subsection scrolls into view and fade out when it leaves the viewport.
   4. All heading text in the History section passes WCAG AA contrast against its background in light mode.
   5. When the OS has prefers-reduced-motion enabled, the scroll-triggered image fade animations are disabled.
-**Plans**: 1 plan
+**Plans**: 1 plan (complete)
 
 Plans:
-- [ ] 47-01: HiawathaExplainer light-mode CSS + ::before image system + reduced-motion guard
+- [x] 47-01: HiawathaExplainer light-mode CSS + ::before image system + reduced-motion guard
 
 ## Progress
 
@@ -90,4 +90,4 @@ Plans:
 | 40-44 | v1.7 | 6/6 | Complete | 2026-04-07 |
 | 45. Sticky Nav | v1.8 | 1/1 | Complete | 2026-04-07 |
 | 46. Ride Ethos + Brand Footer | v1.8 | 1/1 | Complete | 2026-04-07 |
-| 47. History Light/Dark Mode | v1.8 | 0/1 | Not started | - |
+| 47. History Light/Dark Mode | v1.8 | 1/1 | Complete | 2026-04-07 |
