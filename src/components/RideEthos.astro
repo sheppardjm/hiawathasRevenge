@@ -1,0 +1,89 @@
+---
+// RideEthos.astro
+// ETHOS-01, ETHOS-02, ETHOS-03
+// Compact declarative statement block: founding date, free, fellowship, all levels
+// Positioned in index.astro between <StickyNav /> and .gold-section (DonateCallout)
+// NOTE: Uses <span> elements (not headings) to avoid inheriting global text-shadow styles
+// NOTE: No data-reveal — always visible near top of page
+---
+
+<section class="ride-ethos" aria-label="About this ride">
+  <div class="ethos-inner">
+    <ul class="ethos-list">
+      <li class="ethos-item">
+        <span class="ethos-value">Since 2014</span>
+        <span class="ethos-label">Founded June 7, 2014</span>
+      </li>
+      <li class="ethos-item">
+        <span class="ethos-value">Always Free</span>
+        <span class="ethos-label">No entry fee, ever</span>
+      </li>
+      <li class="ethos-item">
+        <span class="ethos-value">Fellowship</span>
+        <span class="ethos-label">Not a race</span>
+      </li>
+      <li class="ethos-item">
+        <span class="ethos-value">All Levels</span>
+        <span class="ethos-label">50K · 100K · 100 Miles</span>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<style>
+  .ride-ethos {
+    background-color: var(--color-forest-900);
+    border-top: 1px solid var(--color-forest-700);
+    border-bottom: 1px solid var(--color-forest-700);
+    padding: 2rem 1rem;
+  }
+
+  .ethos-inner {
+    max-width: 64rem;
+    margin: 0 auto;
+  }
+
+  .ethos-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.5rem 3rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .ethos-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .ethos-value {
+    font-family: var(--font-display);
+    font-size: var(--font-size-2xl);
+    font-weight: 700;
+    color: var(--color-amber-500);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    line-height: 1.2;
+  }
+
+  .ethos-label {
+    font-family: var(--font-mono);
+    font-size: var(--font-size-xs);
+    color: var(--color-cream-200);
+    letter-spacing: 0.06em;
+    margin-top: 0.25rem;
+  }
+
+  @media (max-width: 480px) {
+    .ethos-list {
+      gap: 1.25rem 2rem;
+    }
+    .ethos-value {
+      font-size: var(--font-size-xl);
+    }
+  }
+</style>

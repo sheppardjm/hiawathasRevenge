@@ -1,0 +1,74 @@
+---
+// NeucadiaFooter.astro
+// FOOT-01, FOOT-02
+// "Powered by Neucadia" full-width footer line with local logo asset
+// Logo: /public/images/neucadia-logo.png (283x42 RGBA PNG, dark-bg wordmark)
+// Displayed at 142x21 (50% scale) with explicit dimensions for CLS prevention
+// Placed after </main> in BaseLayout.astro as a body-level <footer>
+---
+
+<footer class="neucadia-footer">
+  <a
+    href="https://neucadia.com"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="neucadia-link"
+    aria-label="Powered by Neucadia (opens in new tab)"
+  >
+    <span class="neucadia-text">Powered by</span>
+    <img
+      src="/images/neucadia-logo.png"
+      alt="Neucadia"
+      width="142"
+      height="21"
+      loading="lazy"
+      decoding="async"
+      class="neucadia-logo"
+    />
+  </a>
+</footer>
+
+<style>
+  .neucadia-footer {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    background-color: var(--color-forest-950);
+    border-top: 1px solid var(--color-forest-700);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .neucadia-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    text-decoration: none;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+  }
+
+  .neucadia-link:hover {
+    opacity: 1;
+  }
+
+  .neucadia-text {
+    font-family: var(--font-mono);
+    font-size: var(--font-size-xs);
+    color: var(--color-cream-200);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .neucadia-logo {
+    display: block;
+    height: 21px;
+    width: 142px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .neucadia-link {
+      transition: none;
+    }
+  }
+</style>
