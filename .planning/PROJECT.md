@@ -90,7 +90,15 @@ Visitors experience the beauty and scale of the Hiawatha's Revenge route through
 
 ### Active
 
-(None — all requirements through v1.9 validated. Next milestone defines new requirements.)
+**Current Milestone: v1.10 Section Background Imagery**
+
+**Goal:** Extend the scroll-triggered Ojibwe inspiration background imagery pattern from the History section to the Route Explainer and Gallery sections.
+
+**Target features:**
+- Inspiration background images on Route Explainer section (behind segment cards)
+- Inspiration background images on Gallery section (behind photo masonry)
+- Processed via existing process-inspiration-bg.js pipeline with 2 new image selections
+- Same ::before pseudo-element, sepia filter, IntersectionObserver fade, reduced-motion guard
 
 ### Out of Scope
 
@@ -201,4 +209,4 @@ MBTN (mbtn.org) is the beneficiary — donate CTA links to their site.
 | Ojibwe inspiration images (Option A) | Indigenous art focus matches site's cultural narrative | ✓ Good — consistent identity |
 
 ---
-*Last updated: 2026-04-08 after v1.9 milestone*
+*Last updated: 2026-04-08 after v1.10 milestone initialization*
