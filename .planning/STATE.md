@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-04-07)
 ## Current Position
 
 Phase: 47 of 47 (History Light/Dark Mode)
-Plan: 1 of 1 in current phase
+Plan: 2 of 2 in current phase
 Status: Milestone complete
-Last activity: 2026-04-07 — v1.8 milestone complete (all 3 phases done)
+Last activity: 2026-04-08 — Completed 47-02-PLAN.md (CSS source order fix for light-mode text)
 
 Progress: [████████████████████] 100% (v1.8, all phases complete)
 
@@ -40,6 +40,7 @@ Progress: [████████████████████] 100% (v
 - [v1.8 Phase 47]: Light-mode CSS scoped to .hiawatha-section only — global @theme static tokens must not be overridden
 - [v1.8 Phase 47]: ::before main rule inserted BEFORE prefers-reduced-motion block so cascade override works correctly
 - [v1.8 Phase 47]: poem-section and ride-section share remington-hiawatha-departure-1891.webp; forest-section uses remington-hiawatha-fasting-1891.webp
+- [v1.8 Phase 47-02]: Light-mode @media block must be LAST in style tag — source order determines winner at equal specificity; place prefers-color-scheme: light overrides after all defaults
 - [v1.8 Phase 46]: NeucadiaFooter placed after </main> in BaseLayout (not inside main) — body-level <footer> landmark
 - [v1.8 Phase 46]: RideEthos uses <span> elements not headings — avoids global text-shadow inheritance on h1-h4
 - [v1.8 Phase 46]: No data-reveal on RideEthos — near top of page, must be always visible
@@ -63,6 +64,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-07
-Stopped at: v1.8 milestone complete — all 3 phases (45-47) shipped
+Last session: 2026-04-08
+Stopped at: Completed 47-02-PLAN.md — CSS source order fix for History light-mode text readability
 Resume file: None
