@@ -1,0 +1,126 @@
+---
+// StickyNav.astro
+// NAV-01 through NAV-06: Sticky navigation bar with stuck detection and scroll-spy
+// z-index: 100 — sector panel uses z-index: 1000, must not collide
+---
+
+<nav class="sticky-nav" aria-label="Page navigation">
+  <ul class="nav-links">
+    <li><a href="#history" class="nav-link">History</a></li>
+    <li><a href="#route" class="nav-link">Route</a></li>
+    <li><a href="#gallery" class="nav-link">Gallery</a></li>
+    <li><a href="#sectors" class="nav-link">Sectors</a></li>
+  </ul>
+</nav>
+
+<style>
+  .sticky-nav {
+    position: sticky;
+    top: -1px; /* -1px enables stuck detection via IntersectionObserver threshold:[1] trick */
+    z-index: 100; /* sector panel is z-index 1000 — must not collide */
+    background-color: var(--color-forest-900);
+    border-bottom: 1px solid var(--color-forest-700);
+    transition: background-color 0.2s, box-shadow 0.2s;
+  }
+
+  /* NAV-05: Visual change when nav has scrolled past hero and become stuck */
+  .sticky-nav.is-stuck {
+    background-color: var(--color-forest-950);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  }
+
+  .nav-links {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0.625rem 1rem;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
+
+  .nav-link {
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-cream-200);
+    text-decoration: none;
+    padding: 0.375rem 0.5rem;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    transition: color 0.15s, border-color 0.15s;
+  }
+
+  /* NAV-06: Active link and hover state */
+  .nav-link.is-active,
+  .nav-link:hover {
+    color: var(--color-amber-500);
+    border-bottom-color: var(--color-amber-500);
+  }
+
+  /* Accessibility: disable transitions for users who prefer reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .sticky-nav,
+    .nav-link {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  const nav = document.querySelector('.sticky-nav') as HTMLElement | null;
+  if (!nav) {
+    console.warn('StickyNav: nav element not found');
+  } else {
+    // NAV-05: Detect stuck state using top:-1px sentinel trick
+    // When intersectionRatio < 1, the nav has slid 1px off-screen — it is now stuck.
+    // Source: https://davidwalsh.name/detect-sticky
+    const stuckObserver = new IntersectionObserver(
+      ([e]) => e.target.classList.toggle('is-stuck', e.intersectionRatio < 1),
+      { threshold: [1] }
+    );
+    stuckObserver.observe(nav);
+
+    // NAV-06: Scroll-spy — highlight nav link for currently visible section
+    const NAV_HEIGHT = nav.offsetHeight;
+    const SECTIONS = ['history', 'route', 'gallery', 'sectors'];
+
+    // Build a map of section id → nav link element
+    const links = SECTIONS.reduce<Record<string, Element | null>>((acc, id) => {
+      acc[id] = nav.querySelector(`a[href="#${id}"]`);
+      return acc;
+    }, {});
+
+    function setActive(id: string) {
+      SECTIONS.forEach(s => links[s]?.classList.toggle('is-active', s === id));
+    }
+
+    // Default: mark history as active on page load (before any scrolling)
+    setActive('history');
+
+    // Observe each section; mark its link active when the section enters the adjusted viewport.
+    // rootMargin top offset = nav height + 1px so sections "enter" only when visible below the nav.
+    // rootMargin bottom = -60% creates a narrow active zone near the top of the viewport.
+    const sectionObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            setActive(entry.target.id);
+          }
+        });
+      },
+      {
+        rootMargin: `-${NAV_HEIGHT + 1}px 0px -60% 0px`,
+        threshold: 0,
+      }
+    );
+
+    SECTIONS.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) sectionObserver.observe(el);
+    });
+  }
+</script>
