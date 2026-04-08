@@ -32,6 +32,11 @@
 - `public/data/sector-details.json`
 - `public/data/sector-elevations.json`
 
+**Plans:** 1 plan
+
+Plans:
+- [ ] 48-01-PLAN.md — Add Little Indian data to all source files, run pipeline, build and commit
+
 **Notes:**
 - GPS coordinates for sector start/end extracted from 100mi GPX at mile 65.8 and ~71.4
 - cardPhoto selected from existing photos in the mile range (candidates at mile 66.9, 68.8, 70.1)
