@@ -557,7 +557,7 @@ import ShieldMotif from './ShieldMotif.astro';
         entries.forEach(entry => {
           entry.target.classList.toggle('bg-visible', entry.isIntersecting);
         });
-      }, { threshold: 0.15 });
+      }, { threshold: 0.01 });
       sections.forEach(section => observer.observe(section));
     }
   }

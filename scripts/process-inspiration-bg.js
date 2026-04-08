@@ -52,9 +52,9 @@ const IMAGES = [
     label: 'route-map section (topo arrowheads)',
   },
   {
-    src: 'original-aafd7b2567bdcc068e17d93d44562fa7.webp',
+    src: 'original-116171370441ce4fcd033d6070c3fdf2.webp',
     out: 'gallery-bg.webp',
-    label: 'gallery section (Bogcore mushroom/nature woodcut)',
+    label: 'gallery section (Hiawatha scenes grid)',
   },
 ];
 
