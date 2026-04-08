@@ -18,14 +18,14 @@ Requirements for milestone v1.8 "Navigation & Identity." Each maps to roadmap ph
 
 ### Ride Ethos
 
-- [ ] **ETHOS-01**: Statement-format explainer with founding date (June 7, 2014), always free, fellowship over competition, all levels welcome
-- [ ] **ETHOS-02**: Positioned right after the hero, above the gold DonateCallout — values statement before any content
-- [ ] **ETHOS-03**: Visually distinct from body text — larger font, different color/styling, compact declarative format (not prose)
+- [x] **ETHOS-01**: Statement-format explainer with founding date (June 7, 2014), always free, fellowship over competition, all levels welcome
+- [x] **ETHOS-02**: Positioned right after the hero, above the gold DonateCallout — values statement before any content
+- [x] **ETHOS-03**: Visually distinct from body text — larger font, different color/styling, compact declarative format (not prose)
 
 ### Brand Footer
 
-- [ ] **FOOT-01**: "Powered by Neucadia" full-width single line at bottom of page
-- [ ] **FOOT-02**: Neucadia logo downloaded as local asset, displayed inline, linked to neucadia.com
+- [x] **FOOT-01**: "Powered by Neucadia" full-width single line at bottom of page
+- [x] **FOOT-02**: Neucadia logo downloaded as local asset, displayed inline, linked to neucadia.com
 
 ### History Light/Dark Mode
 
@@ -66,11 +66,11 @@ Deferred to later milestones.
 | NAV-04 | Phase 45 | Complete |
 | NAV-05 | Phase 45 | Complete |
 | NAV-06 | Phase 45 | Complete |
-| ETHOS-01 | Phase 46 | Pending |
-| ETHOS-02 | Phase 46 | Pending |
-| ETHOS-03 | Phase 46 | Pending |
-| FOOT-01 | Phase 46 | Pending |
-| FOOT-02 | Phase 46 | Pending |
+| ETHOS-01 | Phase 46 | Complete |
+| ETHOS-02 | Phase 46 | Complete |
+| ETHOS-03 | Phase 46 | Complete |
+| FOOT-01 | Phase 46 | Complete |
+| FOOT-02 | Phase 46 | Complete |
 | MODE-01 | Phase 47 | Pending |
 | MODE-02 | Phase 47 | Pending |
 | MODE-03 | Phase 47 | Pending |
