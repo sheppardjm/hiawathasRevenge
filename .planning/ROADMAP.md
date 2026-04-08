@@ -35,7 +35,7 @@
 **Plans:** 1 plan
 
 Plans:
-- [ ] 48-01-PLAN.md — Add Little Indian data to all source files, run pipeline, build and commit
+- [x] 48-01-PLAN.md — Add Little Indian data to all source files, run pipeline, build and commit ✓
 
 **Notes:**
 - GPS coordinates for sector start/end extracted from 100mi GPX at mile 65.8 and ~71.4

@@ -7,21 +7,21 @@
 
 ### Segment Data
 
-- [ ] **SEG-01**: Little Indian sector defined in segments.json with name, mile range, difficulty (2 stars), Strava link (34542982), and cardPhoto
-- [ ] **SEG-02**: Little Indian sector coordinates added to route-config.js SECTOR_DEFS with start/end lat/lon from GPX data
-- [ ] **SEG-03**: Little Indian included in 100mi and 100k sectorIds in route-config.js (not 50k)
-- [ ] **SEG-04**: Little Indian entry added to generate-sector-details.js SECTOR_DETAILS with surface label and Strava link
+- [x] **SEG-01**: Little Indian sector defined in segments.json with name, mile range, difficulty (2 stars), Strava link (34542982), and cardPhoto
+- [x] **SEG-02**: Little Indian sector coordinates added to route-config.js SECTOR_DEFS with start/end lat/lon from GPX data
+- [x] **SEG-03**: Little Indian included in 100mi and 100k sectorIds in route-config.js (not 50k)
+- [x] **SEG-04**: Little Indian entry added to generate-sector-details.js SECTOR_DETAILS with surface label and Strava link
 
 ### Display
 
-- [ ] **DISP-01**: Little Indian segment card rendered in RouteExplainer with photo, difficulty stars, Strava link, and elevation sparkline
-- [ ] **DISP-02**: Little Indian sector overlay appears on map for 100mi and 100k routes with amber500 gravel highlight
-- [ ] **DISP-03**: Little Indian sector detail panel accessible from map with elevation sparkline and description
+- [x] **DISP-01**: Little Indian segment card rendered in RouteExplainer with photo, difficulty stars, Strava link, and elevation sparkline
+- [x] **DISP-02**: Little Indian sector overlay appears on map for 100mi and 100k routes with amber500 gravel highlight
+- [x] **DISP-03**: Little Indian sector detail panel accessible from map with elevation sparkline and description
 
 ### Pipeline
 
-- [ ] **PIPE-01**: Build pipeline regenerates annotations.json, sector-details.json, and sector-elevations.json with Little Indian data for all applicable routes
-- [ ] **PIPE-02**: Photo-association mile ranges adjusted so Little Indian photos map correctly (no overlap with ND2225 or Doe Lake ranges)
+- [x] **PIPE-01**: Build pipeline regenerates annotations.json, sector-details.json, and sector-elevations.json with Little Indian data for all applicable routes
+- [x] **PIPE-02**: Photo-association mile ranges adjusted so Little Indian photos map correctly (no overlap with ND2225 or Doe Lake ranges)
 
 ### Polish
 
@@ -39,15 +39,15 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| SEG-01 | Phase 48 | Pending |
-| SEG-02 | Phase 48 | Pending |
-| SEG-03 | Phase 48 | Pending |
-| SEG-04 | Phase 48 | Pending |
-| DISP-01 | Phase 48 | Pending |
-| DISP-02 | Phase 48 | Pending |
-| DISP-03 | Phase 48 | Pending |
-| PIPE-01 | Phase 48 | Pending |
-| PIPE-02 | Phase 48 | Pending |
+| SEG-01 | Phase 48 | Complete |
+| SEG-02 | Phase 48 | Complete |
+| SEG-03 | Phase 48 | Complete |
+| SEG-04 | Phase 48 | Complete |
+| DISP-01 | Phase 48 | Complete |
+| DISP-02 | Phase 48 | Complete |
+| DISP-03 | Phase 48 | Complete |
+| PIPE-01 | Phase 48 | Complete |
+| PIPE-02 | Phase 48 | Complete |
 | FIX-01 | Phase 48 | Complete |
 
 **Coverage:**
