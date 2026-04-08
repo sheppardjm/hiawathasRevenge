@@ -25,13 +25,13 @@ v1.10 extends the scroll-triggered Ojibwe inspiration background imagery pattern
   3. A visitor using OS-level light mode sees appropriate contrast and opacity adjustments on both backgrounds (no washed-out or invisible imagery)
   4. A visitor with `prefers-reduced-motion: reduce` enabled sees both backgrounds at static low opacity with no fade transition
   5. Both processed images (route-bg.webp, gallery-bg.webp) exist in `public/thumbs/inspiration/` and are referenced by the CSS
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 49-01: Process images and implement section backgrounds
+- [ ] 49-01-PLAN.md — Process background images and implement scroll-triggered ::before CSS on Route Map and Gallery sections
 
 ## Progress
 
 | Phase | Plans Complete | Status | Completed |
 |-------|---------------|--------|-----------|
-| 49. Section Background Imagery | 0/TBD | Not started | - |
+| 49. Section Background Imagery | 0/1 | Not started | - |
