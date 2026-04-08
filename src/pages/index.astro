@@ -68,7 +68,7 @@ import RideEthos from '../components/RideEthos.astro';
 
   <OjibweBorderPattern class="px-4 py-3" />
 
-  <section data-reveal id="route" class="w-full py-[--spacing-block]">
+  <section data-reveal data-bg-fade id="route" class="w-full py-[--spacing-block]">
     <div class="max-w-4xl mx-auto px-4">
       <h2 class="text-3xl mb-[--spacing-element]">Explore the Route</h2>
       <RouteMap />
@@ -84,7 +84,7 @@ import RideEthos from '../components/RideEthos.astro';
 
   <WaterWavePattern class="my-4 opacity-60" />
 
-  <section id="gallery" class="w-full py-[--spacing-block]">
+  <section data-bg-fade id="gallery" class="w-full py-[--spacing-block]">
     <div class="max-w-4xl mx-auto px-4">
       <h2 class="text-3xl mb-[--spacing-element]">Photos</h2>
       <PhotoGallery />
@@ -235,6 +235,70 @@ import RideEthos from '../components/RideEthos.astro';
   @media (prefers-reduced-motion: reduce) {
     .gpx-download {
       transition: none;
+    }
+  }
+
+  /* Phase 49: Route Map + Gallery section background imagery
+     Extends Phase 47 History section ::before pattern.
+     Sections are w-full — ::before with inset: 0 fills full viewport width.
+     IntersectionObserver in HiawathaExplainer.astro toggles bg-visible
+     on ALL [data-bg-fade] elements globally — zero JS changes needed. */
+
+  :global(#route),
+  :global(#gallery) {
+    position: relative;
+  }
+
+  :global(#route)::before,
+  :global(#gallery)::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+    pointer-events: none;
+    z-index: 0;
+    filter: sepia(80%) saturate(20%) brightness(0.6);
+  }
+
+  :global(#route) > *,
+  :global(#gallery) > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  :global(#route.bg-visible)::before,
+  :global(#gallery.bg-visible)::before {
+    opacity: 0.08;
+  }
+
+  :global(#route)::before {
+    background-image: url('/thumbs/inspiration/route-bg.webp');
+  }
+
+  :global(#gallery)::before {
+    background-image: url('/thumbs/inspiration/gallery-bg.webp');
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :global(#route)::before,
+    :global(#gallery)::before {
+      transition: none;
+      opacity: 0.04;
+    }
+  }
+
+  @media (prefers-color-scheme: light) {
+    :global(#route)::before,
+    :global(#gallery)::before {
+      filter: sepia(80%) saturate(15%) brightness(1.2);
+    }
+
+    :global(#route.bg-visible)::before,
+    :global(#gallery.bg-visible)::before {
+      opacity: 0.12;
     }
   }
 
