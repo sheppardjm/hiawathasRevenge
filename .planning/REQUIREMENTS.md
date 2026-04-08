@@ -60,31 +60,31 @@ Deferred to later milestones.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| NAV-01 | — | Pending |
-| NAV-02 | — | Pending |
-| NAV-03 | — | Pending |
-| NAV-04 | — | Pending |
-| NAV-05 | — | Pending |
-| NAV-06 | — | Pending |
-| ETHOS-01 | — | Pending |
-| ETHOS-02 | — | Pending |
-| ETHOS-03 | — | Pending |
-| FOOT-01 | — | Pending |
-| FOOT-02 | — | Pending |
-| MODE-01 | — | Pending |
-| MODE-02 | — | Pending |
-| MODE-03 | — | Pending |
-| MODE-04 | — | Pending |
-| MODE-05 | — | Pending |
-| MODE-06 | — | Pending |
-| MODE-07 | — | Pending |
-| MODE-08 | — | Pending |
+| NAV-01 | Phase 45 | Pending |
+| NAV-02 | Phase 45 | Pending |
+| NAV-03 | Phase 45 | Pending |
+| NAV-04 | Phase 45 | Pending |
+| NAV-05 | Phase 45 | Pending |
+| NAV-06 | Phase 45 | Pending |
+| ETHOS-01 | Phase 46 | Pending |
+| ETHOS-02 | Phase 46 | Pending |
+| ETHOS-03 | Phase 46 | Pending |
+| FOOT-01 | Phase 46 | Pending |
+| FOOT-02 | Phase 46 | Pending |
+| MODE-01 | Phase 47 | Pending |
+| MODE-02 | Phase 47 | Pending |
+| MODE-03 | Phase 47 | Pending |
+| MODE-04 | Phase 47 | Pending |
+| MODE-05 | Phase 47 | Pending |
+| MODE-06 | Phase 47 | Pending |
+| MODE-07 | Phase 47 | Pending |
+| MODE-08 | Phase 47 | Pending |
 
 **Coverage:**
 - v1.8 requirements: 19 total
-- Mapped to phases: 0
-- Unmapped: 19 (pending roadmap creation)
+- Mapped to phases: 19
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-04-07*
-*Last updated: 2026-04-07 after initial definition*
+*Last updated: 2026-04-07 after roadmap creation*

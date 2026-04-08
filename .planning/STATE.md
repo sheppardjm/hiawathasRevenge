@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-04-07)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive, visually stunning showcase that inspires them to ride it and support MBTN.
-**Current focus:** v1.8 Navigation & Identity
+**Current focus:** v1.8 Navigation & Identity — Phase 45: Sticky Nav
 
 ## Current Position
 
-Phase: Not started (defining requirements)
-Plan: —
-Status: Defining requirements
-Last activity: 2026-04-07 — Milestone v1.8 started
+Phase: 45 of 47 (Sticky Nav)
+Plan: 0 of TBD in current phase
+Status: Ready to plan
+Last activity: 2026-04-07 — v1.8 roadmap created, phases 45-47 defined
 
-Progress: [░░░░░░░░░░░░░░░░░░░] 0%
+Progress: [░░░░░░░░░░░░░░░░░░░] 0% (v1.8)
 
 ## Performance Metrics
 
@@ -33,6 +33,9 @@ Progress: [░░░░░░░░░░░░░░░░░░░] 0%
 
 (Full decision log in PROJECT.md Key Decisions table)
 
+- [v1.8 Phase 45]: Nav z-index set to 100 (sector panel is z-index 1000 — must not collide)
+- [v1.8 Phase 47]: Light-mode CSS scoped to .hiawatha-section only — global @theme static tokens must not be overridden
+
 ### Pending Todos
 
 None.
@@ -43,6 +46,8 @@ None.
 - Project requires Node >=22.12.0 -- use Volta (`/Users/Sheppardjm/.volta/bin/node`)
 - iOS Safari device testing deferred (requires physical device)
 - Elevation gains for 100k (~1,616 ft) and 50k (~809 ft) unverified against Strava/Garmin reference recordings
+- [Phase 47]: Confirm inspiration images pipeline inclusion before writing CSS url() references
+- [Phase 47]: Audit amber/turquoise heading contrast ratios before writing light-mode CSS
 
 ### Tech Debt
 
@@ -51,5 +56,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-04-07
-Stopped at: v1.7 milestone archived
+Stopped at: v1.8 roadmap created — ready to plan Phase 45
 Resume file: None
