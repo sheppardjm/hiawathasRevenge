@@ -260,83 +260,6 @@ import ShieldMotif from './ShieldMotif.astro';
   }
 
   /* ============================================================
-     Light-mode overrides — scoped to .hiawatha-section to avoid leaking
-     ============================================================ */
-  @media (prefers-color-scheme: light) {
-    .hiawatha-section {
-      background-color: var(--color-cream-100);
-    }
-
-    .hiawatha-section h2 {
-      color: var(--color-forest-900);
-      text-shadow: none;
-    }
-
-    .hiawatha-section h3 {
-      text-shadow: none;
-    }
-
-    .hiawatha-section .text-amber-500 {
-      color: var(--color-rust-600);
-    }
-
-    .hiawatha-section .text-turquoise-400 {
-      color: var(--color-turquoise-700);
-    }
-
-    .hiawatha-section .text-sun-400 {
-      color: var(--color-rust-600);
-    }
-
-    .hiawatha-section .text-scarlet-400 {
-      color: var(--color-scarlet-700);
-    }
-
-    .editorial-grid p {
-      color: var(--color-forest-900);
-    }
-
-    .hiawatha-section a {
-      color: var(--color-forest-700);
-    }
-
-    .hiawatha-section a:hover {
-      color: var(--color-rust-600);
-    }
-
-    .pull-quote {
-      background: var(--color-cream-200);
-      border-left-color: var(--color-rust-600);
-    }
-
-    .pull-quote p {
-      color: var(--color-forest-900);
-    }
-
-    .pull-quote-attribution {
-      color: var(--color-forest-800);
-    }
-
-    .pull-quote-attribution cite a {
-      color: var(--color-forest-800);
-    }
-
-    .drop-cap::first-letter,
-    .pull-quote p::first-letter {
-      color: var(--color-rust-600);
-      text-shadow: none;
-    }
-
-    .subsection-bg::before {
-      filter: sepia(80%) saturate(15%) brightness(1.2);
-    }
-
-    .subsection-bg.bg-visible::before {
-      opacity: 0.12;
-    }
-  }
-
-  /* ============================================================
      Section Headings
      ============================================================ */
   .section-heading {
@@ -533,6 +456,85 @@ import ShieldMotif from './ShieldMotif.astro';
 
     .museum-plate {
       max-width: 100%;
+    }
+  }
+
+  /* ============================================================
+     Light-mode overrides — scoped to .hiawatha-section to avoid leaking
+     MUST be last block so it overrides all default (dark-mode) rules above
+     at equal specificity via source order.
+     ============================================================ */
+  @media (prefers-color-scheme: light) {
+    .hiawatha-section {
+      background-color: var(--color-cream-100);
+    }
+
+    .hiawatha-section h2 {
+      color: var(--color-forest-900);
+      text-shadow: none;
+    }
+
+    .hiawatha-section h3 {
+      text-shadow: none;
+    }
+
+    .hiawatha-section .text-amber-500 {
+      color: var(--color-rust-600);
+    }
+
+    .hiawatha-section .text-turquoise-400 {
+      color: var(--color-turquoise-700);
+    }
+
+    .hiawatha-section .text-sun-400 {
+      color: var(--color-rust-600);
+    }
+
+    .hiawatha-section .text-scarlet-400 {
+      color: var(--color-scarlet-700);
+    }
+
+    .editorial-grid p {
+      color: var(--color-forest-900);
+    }
+
+    .hiawatha-section a {
+      color: var(--color-forest-700);
+    }
+
+    .hiawatha-section a:hover {
+      color: var(--color-rust-600);
+    }
+
+    .pull-quote {
+      background: var(--color-cream-200);
+      border-left-color: var(--color-rust-600);
+    }
+
+    .pull-quote p {
+      color: var(--color-forest-900);
+    }
+
+    .pull-quote-attribution {
+      color: var(--color-forest-800);
+    }
+
+    .pull-quote-attribution cite a {
+      color: var(--color-forest-800);
+    }
+
+    .drop-cap::first-letter,
+    .pull-quote p::first-letter {
+      color: var(--color-rust-600);
+      text-shadow: none;
+    }
+
+    .subsection-bg::before {
+      filter: sepia(80%) saturate(15%) brightness(1.2);
+    }
+
+    .subsection-bg.bg-visible::before {
+      opacity: 0.12;
     }
   }
 </style>
