@@ -101,7 +101,7 @@ Plans:
 
 Plans:
 - [x] 44-01-PLAN.md — Delete dead files, fix stale comments, rename photo with dimension suffix
-- [ ] 44-02-PLAN.md — Revert segment cards to single hero photo with user-chosen cardPhoto field
+- [x] 44-02-PLAN.md — Revert segment cards to single hero photo with user-chosen cardPhoto field
 
 ## Progress
 
@@ -114,4 +114,4 @@ Phases 40, 41, 42 can execute in parallel (no dependencies). Phase 43 follows Ph
 | 41. UX Cleanup | v1.7 | 1/1 | ✓ Complete | 2026-04-07 |
 | 42. Photo Pipeline | v1.7 | 1/1 | ✓ Complete | 2026-04-07 |
 | 43. Gallery & Layout Polish | v1.7 | 1/1 | ✓ Complete | 2026-04-07 |
-| 44. Tech Debt Cleanup | v1.7 | 1/2 | In Progress | — |
+| 44. Tech Debt Cleanup | v1.7 | 2/2 | ✓ Complete | 2026-04-07 |

@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-04-07)
 ## Current Position
 
 Phase: 44 of 44 (Tech Debt Cleanup) — v1.7 UX Polish & Photo Pipeline
-Plan: 1 of 1 complete
-Status: Phase complete
-Last activity: 2026-04-07 — Completed 44-01-PLAN.md (tech debt cleanup)
+Plan: 2 of 2 complete
+Status: Phase complete, milestone complete
+Last activity: 2026-04-07 — Completed 44-02-PLAN.md (single hero photo with user-chosen cardPhoto)
 
 Progress: [████████████████████] 100% (5/5 phases)
 
@@ -44,6 +44,8 @@ Progress: [████████████████████] 100% (5
 | 43-01 | 280px minmax minimum (not 400px) for grid columns | Parent container max-w-4xl = 896px; 280px gives 3 cols at desktop, all ≤400px wide |
 | 44-01 | Removed generate-surface-points from pipeline.js | prebuild regenerated dead files on every build; no consumers remain in codebase |
 | 44-01 | Renamed photo with -2048x1536 suffix (not modify parseDims fallback) | Correct fix matches established naming convention; parseDims extracts dims from filename |
+| 44-02 | Full-res /images/ JPGs for segment card photos (not /thumbs/ WebP) | User reported 400px thumbnails grainy at card width; full-res provides crisp display |
+| 44-02 | Doe Lake uses user-provided image outside pipeline manifest | 75fe7837-fb1c-477a-a42c-2db3fbb5baad.jpg provided directly by user |
 
 ### Pending Todos
 
@@ -62,6 +64,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-07T18:57:00Z
-Stopped at: Completed 44-01-PLAN.md — tech debt cleanup, v1.7 milestone fully clean
+Last session: 2026-04-07T20:20:00Z
+Stopped at: Completed 44-02-PLAN.md — v1.7 milestone fully complete, all phases verified
 Resume file: None
