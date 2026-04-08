@@ -1,14 +1,16 @@
 /**
  * process-inspiration-bg.js
  *
- * Processes three selected Ojibwe-motif inspiration images for use as
- * full-bleed section backgrounds in HiawathaExplainer.astro.
+ * Processes five selected Ojibwe-motif inspiration images for use as
+ * full-bleed section backgrounds in HiawathaExplainer.astro and index.astro.
  *
  * Source: images/inspiration/ (specific files chosen for indigenous art focus)
  * Output: public/thumbs/inspiration/
  *   - poem-bg.webp    (Ojibwe motifs/symbols grid)
  *   - forest-bg.webp  (Bogcore nature pattern)
  *   - ride-bg.webp    (Stylized native profile silhouette)
+ *   - route-bg.webp   (Topo arrowheads — Route Map section)
+ *   - gallery-bg.webp (Bogcore mushroom/nature woodcut — Gallery section)
  *
  * Resizes to 1200px wide (full-bleed backgrounds need more resolution than 400px thumbs)
  * WebP quality 80.
@@ -26,7 +28,7 @@ const ROOT = join(__dirname, '..');
 const SRC_DIR = join(ROOT, 'images', 'inspiration');
 const OUT_DIR = join(ROOT, 'public', 'thumbs', 'inspiration');
 
-// Three chosen images (Option A: Indigenous art focus)
+// Five chosen images (Option A: Indigenous art focus)
 const IMAGES = [
   {
     src: 'original-0224278e4cf61770e3df248f5cd1f4bb.webp',
@@ -42,6 +44,17 @@ const IMAGES = [
     src: 'original-0ac1226989a12b196feeb9b3f9f6b47e.webp',
     out: 'ride-bg.webp',
     label: 'ride-section (Stylized native profile silhouette)',
+  },
+  // New entries for Phase 49 (Route Map + Gallery sections)
+  {
+    src: 'original-21cf144750c04b7d07af135578e70983.webp',
+    out: 'route-bg.webp',
+    label: 'route-map section (topo arrowheads)',
+  },
+  {
+    src: 'original-aafd7b2567bdcc068e17d93d44562fa7.webp',
+    out: 'gallery-bg.webp',
+    label: 'gallery section (Bogcore mushroom/nature woodcut)',
   },
 ];
 
