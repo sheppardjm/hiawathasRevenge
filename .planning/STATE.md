@@ -5,14 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-04-08)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive, visually stunning showcase that inspires them to ride it and support MBTN.
-**Current focus:** Planning next milestone
+**Current focus:** Phase 49 — Section Background Imagery
 
 ## Current Position
 
-Phase: Not started (defining requirements)
-Plan: —
-Status: Defining requirements
-Last activity: 2026-04-08 — Milestone v1.10 started
+Phase: 49 of 49 (Section Background Imagery)
+Plan: 0 of TBD in current phase
+Status: Ready to plan
+Last activity: 2026-04-08 — Roadmap created for v1.10
 
 Progress: [░░░░░░░░░░░░░░░░░░░░] 0%
 
@@ -35,6 +35,11 @@ Progress: [░░░░░░░░░░░░░░░░░░░░] 0%
 
 (Full decision log in PROJECT.md Key Decisions table)
 
+Recent decisions affecting current work:
+- Phase 47 (v1.8): CSS full-bleed breakout pattern (width:100vw + translateX(-50%)) on ::before escapes container — reuse for Route Map and Gallery
+- Phase 47 (v1.8): Ojibwe inspiration images (Option A) — indigenous art focus matches site's cultural narrative
+- Phase 47 (v1.8): Light-mode CSS scoped to .hiawatha-section — same scoping pattern needed for new sections
+
 ### Pending Todos
 
 None.
@@ -44,7 +49,6 @@ None.
 - Ojibwe community consultation recommended (cultural sensitivity review)
 - Project requires Node >=22.12.0 -- use Volta (`/Users/Sheppardjm/.volta/bin/node`)
 - iOS Safari device testing deferred (requires physical device)
-- Elevation gains for 100k (~1,616 ft) and 50k (~809 ft) unverified against Strava/Garmin reference recordings
 
 ### Tech Debt
 
@@ -53,5 +57,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-04-08
-Stopped at: v1.10 milestone initialized, proceeding to requirements
+Stopped at: Roadmap created for v1.10, ready for plan-phase 49
 Resume file: None
