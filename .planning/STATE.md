@@ -5,14 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-04-08)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive, visually stunning showcase that inspires them to ride it and support MBTN.
-**Current focus:** v1.9 Little Indian Segment
+**Current focus:** Planning next milestone
 
 ## Current Position
 
-Phase: 48-add-little-indian-segment
-Plan: 01 of 01
-Status: Phase verified ✓
-Last activity: 2026-04-08 — Phase 48 verified (6/6 must-haves passed)
+Phase: v1.9 complete — ready for next milestone
+Plan: N/A
+Status: Milestone shipped
+Last activity: 2026-04-08 — v1.9 Little Indian Segment milestone complete
 
 Progress: [████████████████████] 100%
 
@@ -27,17 +27,13 @@ Progress: [████████████████████] 100%
 **v1.6 Summary:** 2 plans, 2 phases, <1 day
 **v1.7 Summary:** 6 plans, 5 phases, 1 day
 **v1.8 Summary:** 5 plans, 3 phases, 2 days
+**v1.9 Summary:** 1 plan, 1 phase, <1 day
 
 ## Accumulated Context
 
 ### Decisions
 
 (Full decision log in PROJECT.md Key Decisions table)
-
-| Phase | Decision | Rationale |
-|-------|----------|-----------|
-| 48-01 | Little Indian included in 100mi and 100k only (not 50k) | Matches route geography — sector is on northern loop not traversed by 50k |
-| 48-01 | Photo range boundaries: ND2225 endMi=65.8, Little Indian 65.8–71.5, Doe Lake startMi=71.5 | Eliminates overlap/gap in photo range assignments around new segment |
 
 ### Pending Todos
 
@@ -52,10 +48,10 @@ None.
 
 ### Tech Debt
 
-None.
+- RouteExplainer.astro line 128 comment says "7 cards = 600ms max" but there are now 8 cards (stale comment, info-level only)
 
 ## Session Continuity
 
-Last session: 2026-04-08T17:47:40Z
-Stopped at: Completed 48-01-PLAN.md (Little Indian sector, all 3 routes, Astro build clean)
+Last session: 2026-04-08
+Stopped at: v1.9 milestone completed and archived
 Resume file: None

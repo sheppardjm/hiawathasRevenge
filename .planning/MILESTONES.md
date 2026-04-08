@@ -1,5 +1,33 @@
 # Project Milestones: Hiawatha's Revenge
 
+## v1.9 Little Indian Segment (Shipped: 2026-04-08)
+
+**Delivered:** Added Little Indian as the 8th and final gravel sector across the data pipeline, interactive map, and route explainer for 100mi and 100k routes — completing full sector coverage of the Hiawatha's Revenge route.
+
+**Phases completed:** 48 (1 plan total)
+
+**Key accomplishments:**
+
+- Little Indian added as 8th gravel sector across all 4 source files with editorial data, GPS coordinates, Strava segment 34542982, and 2-star difficulty
+- Pipeline regenerated — sector-little-indian snapped into 100mi/100k annotations, elevation data computed, 8-entry sector-details.json produced
+- Route-specific sector inclusion — Little Indian correctly included in 100mi and 100k routes, excluded from 50k
+- Photo range boundaries adjusted — contiguous coverage from ND2225 through Little Indian to Doe Lake with no gaps or overlaps
+- SVG wave background tiling fixed — seamless horizontal tiling at 400px boundaries
+- Full verification: 6/6 must-haves + 6/6 UAT tests + 5/5 integration flows passed
+
+**Stats:**
+
+- 17 files changed (+1,235/-54)
+- 4,401 lines of Astro/TypeScript/JavaScript/CSS (total codebase)
+- 1 phase, 1 plan, 7 commits
+- <1 day (2026-04-08, ~34 minutes)
+
+**Git range:** `59b44da` (docs(48): research phase domain) → `7c0accb` (test(48): complete UAT)
+
+**What's next:** TBD — next milestone via `/gsd:new-milestone`
+
+---
+
 ## v1.8 Navigation & Identity (Shipped: 2026-04-08)
 
 **Delivered:** Sticky navigation bar with scroll-spy active highlighting, ride ethos values statement, "Powered by Neucadia" brand footer, and History section light/dark mode with full-bleed Ojibwe inspiration background images and WCAG AA contrast compliance.
