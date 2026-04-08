@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-04-07)
 ## Current Position
 
 Phase: 45 of 47 (Sticky Nav)
-Plan: 0 of TBD in current phase
-Status: Ready to plan
-Last activity: 2026-04-07 — v1.8 roadmap created, phases 45-47 defined
+Plan: 1 of 1 in current phase
+Status: Phase complete
+Last activity: 2026-04-07 — Completed 45-01-PLAN.md (StickyNav component)
 
-Progress: [░░░░░░░░░░░░░░░░░░░] 0% (v1.8)
+Progress: [███░░░░░░░░░░░░░░░░] ~33% (v1.8, phase 45 of 47 done)
 
 ## Performance Metrics
 
@@ -34,6 +34,8 @@ Progress: [░░░░░░░░░░░░░░░░░░░] 0% (v1.8)
 (Full decision log in PROJECT.md Key Decisions table)
 
 - [v1.8 Phase 45]: Nav z-index set to 100 (sector panel is z-index 1000 — must not collide)
+- [v1.8 Phase 45]: scroll-margin-top uses :global() in index.astro to pierce Astro scoped styles on child components
+- [v1.8 Phase 45]: StickyNav uses top: -1px + IntersectionObserver threshold:[1] for stuck detection (no sentinel DOM node)
 - [v1.8 Phase 47]: Light-mode CSS scoped to .hiawatha-section only — global @theme static tokens must not be overridden
 
 ### Pending Todos
@@ -56,5 +58,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-04-07
-Stopped at: v1.8 roadmap created — ready to plan Phase 45
+Stopped at: Completed 45-01-PLAN.md — StickyNav component built and wired
 Resume file: None
