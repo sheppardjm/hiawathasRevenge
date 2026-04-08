@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-04-08)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive, visually stunning showcase that inspires them to ride it and support MBTN.
-**Current focus:** Planning next milestone
+**Current focus:** v1.9 Little Indian Segment
 
 ## Current Position
 
-Phase: None — between milestones
-Plan: N/A
-Status: v1.8 complete, ready for next milestone
-Last activity: 2026-04-08 — v1.8 Navigation & Identity milestone archived
+Phase: 48 (not yet planned)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-04-08 — Milestone v1.9 started
 
-Progress: [████████████████████] 100% (v1.0-v1.8 shipped)
+Progress: [░░░░░░░░░░░░░░░░░░░] 0%
 
 ## Performance Metrics
 
@@ -52,5 +52,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-04-08
-Stopped at: v1.8 milestone complete and archived
+Stopped at: v1.9 milestone requirements defined
 Resume file: None

@@ -88,7 +88,8 @@ Visitors experience the beauty and scale of the Hiawatha's Revenge route through
 
 ### Active
 
-(None — planning next milestone)
+- [ ] Little Indian segment (8th gravel sector) added to data pipeline and displayed on 100mi and 100k routes — v1.9
+- [ ] SVG wave background pattern tiles seamlessly in route explainer section — v1.9
 
 ### Out of Scope
 
@@ -103,7 +104,7 @@ Visitors experience the beauty and scale of the Hiawatha's Revenge route through
 
 ## Context
 
-Shipped v1.0 through v1.8 with 4,397 LOC across Astro/TypeScript/JavaScript/CSS.
+Shipped v1.0 through v1.8 with 4,397 LOC across Astro/TypeScript/JavaScript/CSS. 7 gravel sectors defined; adding 8th (Little Indian).
 Tech stack: Astro 6, Tailwind 4, Vite 7, Leaflet, Chart.js, PhotoSwipe, leaflet.markercluster, chartjs-plugin-annotation, sharp, gpxparser.
 Build pipeline: 11-step pipeline.js running per-route (parse-gpx → resolve-annotations → generate-sector-details → compute-sector-elevations) then shared steps (generate-thumbnails → copy-images → generate-webp → process-historical → match-photos → copy-gpx → generate-og-image). generate-surface-points removed in v1.7.
 3 route distances: 100mi (456 pts, 102mi, 2,258 ft), 100k (278 pts, 62mi, 1,616 ft), 50k (134 pts, 31mi, 809 ft).
@@ -199,4 +200,4 @@ MBTN (mbtn.org) is the beneficiary — donate CTA links to their site.
 | Ojibwe inspiration images (Option A) | Indigenous art focus matches site's cultural narrative | ✓ Good — consistent identity |
 
 ---
-*Last updated: 2026-04-08 after v1.8 milestone completion*
+*Last updated: 2026-04-08 after v1.9 milestone start*
