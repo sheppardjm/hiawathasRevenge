@@ -1,5 +1,33 @@
 # Project Milestones: Hiawatha's Revenge
 
+## v1.7 UX Polish & Photo Pipeline (Shipped: 2026-04-07)
+
+**Delivered:** Clean two-color route map, expanded photo pipeline (56 photos mileage-sorted), user-chosen segment card hero photos, resolved gallery layout and download UX friction, and full tech debt cleanup addressing all milestone audit items.
+
+**Phases completed:** 40-44 (6 plans total)
+
+**Key accomplishments:**
+
+- Two-color route map replacing four-color surface-type polyline with forest900 base + amber500 gravel sector overlays; surface-points infrastructure fully removed
+- UX friction resolved: broken "View in route guide" jump links removed from sector panels; route selector guidance added to GPX download section
+- Photo pipeline expansion: 5 new photos processed (56 total), mileage-sorted output, WebP thumbnails generated, map markers and gallery updated
+- Gallery layout polish: multi-column CSS Grid for segment cards (280px min, responsive 1-3 cols), mileage-ordered gallery, aspect ratios preserved via parseDims
+- Tech debt cleanup: deleted 4 dead surface-points.json files, removed generate-surface-points from pipeline, fixed stale comments, corrected landscape CLS placeholder
+- User-chosen segment card photos: reverted multi-photo grid to single hero image per card with full-res JPGs and cardPhoto field in segments.json
+
+**Stats:**
+
+- 51 files changed (+4,041/-5,742)
+- 5,718 lines of Astro/TypeScript/JavaScript/CSS (total codebase)
+- 5 phases, 6 plans, 35 commits
+- 1 day (2026-04-07)
+
+**Git range:** `30a9447` (docs: start milestone v1.7) → `5e3b8f4` (docs(44): complete phase)
+
+**What's next:** TBD — next milestone via `/gsd:new-milestone`
+
+---
+
 ## v1.6 Segment Editorial & Polish (Shipped: 2026-04-07)
 
 **Delivered:** Concise ecological segment descriptions (35-55 words each) grounded in Hiawatha NF Forest Plan data, 520 segment hero photo via boundary adjustment, sector pill label removal, and production site URL configuration.

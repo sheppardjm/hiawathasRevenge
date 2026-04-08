@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-04-07)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive, visually stunning showcase that inspires them to ride it and support MBTN.
-**Current focus:** Phase 44 — Tech Debt Cleanup
+**Current focus:** Planning next milestone
 
 ## Current Position
 
-Phase: 44 of 44 (Tech Debt Cleanup) — v1.7 UX Polish & Photo Pipeline
-Plan: 2 of 2 complete
-Status: Phase complete, milestone complete
-Last activity: 2026-04-07 — Completed 44-02-PLAN.md (single hero photo with user-chosen cardPhoto)
+Phase: 44 of 44 — all milestones through v1.7 complete
+Plan: N/A
+Status: Ready to plan next milestone
+Last activity: 2026-04-07 — v1.7 milestone archived
 
-Progress: [████████████████████] 100% (5/5 phases)
+Progress: [████████████████████] 100% (8 milestones shipped)
 
 ## Performance Metrics
 
@@ -25,27 +25,13 @@ Progress: [████████████████████] 100% (5
 **v1.4 Summary:** 7 plans, 5 phases, 7 days
 **v1.5 Summary:** 10 plans, 5 phases, 1 day
 **v1.6 Summary:** 2 plans, 2 phases, <1 day
+**v1.7 Summary:** 6 plans, 5 phases, 1 day
 
 ## Accumulated Context
 
 ### Decisions
 
 (Full decision log in PROJECT.md Key Decisions table)
-
-| Phase | Decision | Rationale |
-|-------|----------|-----------|
-| 40-01 | Road base uses `forest900` directly (no new CSS var) | Already the fallback color in deleted drawSurfacePolyline(); visually tested against CyclOSM |
-| 40-01 | `surface-points.json` files left on disk | Scope is rendering only; dead data is harmless; cleanup deferred |
-| 41-01 | Guidance text as separate `<p>` below existing tagline | Keeps original tagline semantically intact; no content modification needed |
-| 41-01 | All four jump link artifacts removed together | Clean deletion with zero dead code; single traceable commit |
-| 42-01 | Sort appended to end of manifest.map() chain (not separate step) | Single-pass transform; intent clear; downstream consumers always get sorted output |
-| 42-01 | Single atomic commit for all photo artifacts | Plan treats staging as its own task; all artifacts logically related |
-| 43-01 | Replace segment hero entirely with multi-column grid (not hero + grid) | Cleaner layout; PHT-06 requires no fixed-height cropping; avoids redundancy |
-| 43-01 | 280px minmax minimum (not 400px) for grid columns | Parent container max-w-4xl = 896px; 280px gives 3 cols at desktop, all ≤400px wide |
-| 44-01 | Removed generate-surface-points from pipeline.js | prebuild regenerated dead files on every build; no consumers remain in codebase |
-| 44-01 | Renamed photo with -2048x1536 suffix (not modify parseDims fallback) | Correct fix matches established naming convention; parseDims extracts dims from filename |
-| 44-02 | Full-res /images/ JPGs for segment card photos (not /thumbs/ WebP) | User reported 400px thumbnails grainy at card width; full-res provides crisp display |
-| 44-02 | Doe Lake uses user-provided image outside pipeline manifest | 75fe7837-fb1c-477a-a42c-2db3fbb5baad.jpg provided directly by user |
 
 ### Pending Todos
 
@@ -64,6 +50,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-07T20:20:00Z
-Stopped at: Completed 44-02-PLAN.md — v1.7 milestone fully complete, all phases verified
+Last session: 2026-04-07
+Stopped at: v1.7 milestone archived
 Resume file: None

@@ -70,19 +70,19 @@ Visitors experience the beauty and scale of the Hiawatha's Revenge route through
 - ✓ Sector pill labels removed from map (user-directed — obscured route at all tested sizes) — v1.6
 - ✓ 520 segment hero photo via boundary widening (endMi 5.0→5.6) — v1.6
 - ✓ Production site URL set in astro.config.ts (TODO comment removed) — v1.6
+- ✓ Two-color route map — forest900 base + amber500 gravel sector overlays, surface-points infrastructure removed — v1.7
+- ✓ GPX download guidance directing users to route selector for alternate routes — v1.7
+- ✓ "View in route guide" jump link removed from all sector detail panels — v1.7
+- ✓ 5 new photos processed through pipeline (56 total), mileage-sorted output — v1.7
+- ✓ Gallery photos ordered by route mileage (start to finish) — v1.7
+- ✓ Segment card photos with preserved aspect ratios via parseDims CLS prevention — v1.7
+- ✓ User-chosen single hero photo per segment card with full-res JPGs and cardPhoto field — v1.7
+- ✓ Dead surface-points.json files deleted, generate-surface-points removed from pipeline — v1.7
+- ✓ Landscape photo CLS placeholder corrected via -WxH dimension suffix naming — v1.7
 
 ### Active
 
-#### Current Milestone: v1.7 UX Polish & Photo Pipeline
-
-**Goal:** Simplify the map, fix photo layout, add new photos, and clean up download UX.
-
-- [ ] Two-color route map — sectors one color, rest another; drop surface-type coloring
-- [ ] GPX download text updated to direct users to route selector for alternate routes
-- [ ] Remove broken "View in route guide" button from sector panels
-- [ ] Segment card photos in multi-column layout (not stretched beyond 400px)
-- [ ] New photos optimized and added to gallery and map with mileage tags
-- [ ] Gallery photos ordered by route mileage (start to finish)
+(None — next milestone requirements defined via `/gsd:new-milestone`)
 
 ### Out of Scope
 
@@ -97,12 +97,12 @@ Visitors experience the beauty and scale of the Hiawatha's Revenge route through
 
 ## Context
 
-Shipped v1.0 through v1.6 with 5,807 LOC across Astro/TypeScript/JavaScript/CSS.
+Shipped v1.0 through v1.7 with 5,718 LOC across Astro/TypeScript/JavaScript/CSS.
 Tech stack: Astro 6, Tailwind 4, Vite 7, Leaflet, Chart.js, PhotoSwipe, leaflet.markercluster, chartjs-plugin-annotation, sharp, gpxparser.
-Build pipeline: 12-step pipeline.js running per-route (parse-gpx → generate-surface-points → resolve-annotations → generate-sector-details → compute-sector-elevations) then shared steps (generate-thumbnails → copy-images → generate-webp → process-historical → match-photos → copy-gpx → generate-og-image).
+Build pipeline: 11-step pipeline.js running per-route (parse-gpx → resolve-annotations → generate-sector-details → compute-sector-elevations) then shared steps (generate-thumbnails → copy-images → generate-webp → process-historical → match-photos → copy-gpx → generate-og-image). generate-surface-points removed in v1.7.
 3 route distances: 100mi (456 pts, 102mi, 2,258 ft), 100k (278 pts, 62mi, 1,616 ft), 50k (134 pts, 31mi, 809 ft).
-51 route photos with mileage-assigned manifest, 2 historical Remington illustrations (Met CC0).
-v1.6 finalized segment editorial: all 7 descriptions are 35-55 word ecological naturalist prose grounded in Hiawatha NF Forest Plan data, synced across all rendering locations.
+56 route photos with mileage-assigned manifest (mileage-sorted output), 2 historical Remington illustrations (Met CC0).
+v1.7 map simplified to two-color scheme (forest900 road + amber500 gravel sectors). Segment cards display user-chosen single hero photos via cardPhoto field.
 Site URL configured as https://hiawathasrevenge.com.
 Reference implementation: github.com/sheppardjm/mkUltraGravel — same architecture, different visual identity.
 MBTN (mbtn.org) is the beneficiary — donate CTA links to their site.
@@ -174,6 +174,14 @@ MBTN (mbtn.org) is the beneficiary — donate CTA links to their site.
 | "Mature northern hardwoods" not "old-growth" | Old-growth claim unverifiable from Forest Plan data for NF2266 | ✓ Good — accurate |
 | Named species not generic groups | Sugar maple, jack pine, paper birch vs. "hardwoods", "conifers" | ✓ Good — ecological specificity |
 | Landscape-only rule for descriptions | Omit named lakes/landmarks; use generic corridor references | ✓ Good — consistent voice |
+| forest900 road base (no new CSS var) | Already fallback color in deleted drawSurfacePolyline(); visually tested | ✓ Good — clean two-color map |
+| Removed generate-surface-points from pipeline | prebuild regenerated dead files; no consumers remain | ✓ Good — permanent cleanup |
+| Photo -WxH suffix (not parseDims fallback) | Correct fix matches established naming convention | ✓ Good — consistent CLS |
+| Full-res /images/ JPGs for segment cards | 400px thumbnails grainy at card width; full-res provides crisp display | ✓ Good — quality improvement |
+| cardPhoto field in segments.json | User control over which photo displays per segment card | ✓ Good — intentional curation |
+| Doe Lake uses image outside pipeline manifest | 75fe7837 provided directly by user; not in photos-manifest.json | ✓ Good — user preference |
+| 280px minmax minimum for grid columns | 896px container / 400px = only 2 cols; 280px gives 3 cols at desktop | ✓ Good — responsive layout |
+| Mileage sort in match-photos.js output chain | All downstream consumers get mileage-ordered photo data automatically | ✓ Good — single source of truth |
 
 ---
-*Last updated: 2026-04-07 after v1.7 milestone start*
+*Last updated: 2026-04-07 after v1.7 milestone completion*
