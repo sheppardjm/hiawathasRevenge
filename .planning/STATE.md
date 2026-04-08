@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-04-07)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive, visually stunning showcase that inspires them to ride it and support MBTN.
-**Current focus:** v1.8 Navigation & Identity — Phase 45: Sticky Nav
+**Current focus:** v1.8 Navigation & Identity — Phase 46: Ride Ethos + Brand Footer
 
 ## Current Position
 
-Phase: 45 of 47 (Sticky Nav)
+Phase: 46 of 47 (Ride Ethos + Brand Footer)
 Plan: 1 of 1 in current phase
 Status: Phase complete
-Last activity: 2026-04-07 — Completed 45-01-PLAN.md (StickyNav component)
+Last activity: 2026-04-07 — Completed 46-01-PLAN.md (RideEthos + NeucadiaFooter)
 
-Progress: [███░░░░░░░░░░░░░░░░] ~33% (v1.8, phase 45 of 47 done)
+Progress: [████░░░░░░░░░░░░░░░] ~66% (v1.8, phase 46 of 47 done)
 
 ## Performance Metrics
 
@@ -37,6 +37,9 @@ Progress: [███░░░░░░░░░░░░░░░░] ~33% (v1.8
 - [v1.8 Phase 45]: scroll-margin-top uses :global() in index.astro to pierce Astro scoped styles on child components
 - [v1.8 Phase 45]: StickyNav uses top: -1px + IntersectionObserver threshold:[1] for stuck detection (no sentinel DOM node)
 - [v1.8 Phase 47]: Light-mode CSS scoped to .hiawatha-section only — global @theme static tokens must not be overridden
+- [v1.8 Phase 46]: NeucadiaFooter placed after </main> in BaseLayout (not inside main) — body-level <footer> landmark
+- [v1.8 Phase 46]: RideEthos uses <span> elements not headings — avoids global text-shadow inheritance on h1-h4
+- [v1.8 Phase 46]: No data-reveal on RideEthos — near top of page, must be always visible
 
 ### Pending Todos
 
@@ -58,5 +61,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-04-07
-Stopped at: Completed 45-01-PLAN.md — StickyNav component built and wired
+Stopped at: Completed 46-01-PLAN.md — RideEthos + NeucadiaFooter built and wired
 Resume file: None
