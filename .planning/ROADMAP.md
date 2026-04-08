@@ -71,7 +71,7 @@ Plans:
   3. Inspiration images fade in when a History subsection scrolls into view and fade out when it leaves the viewport.
   4. All heading text in the History section passes WCAG AA contrast against its background in light mode.
   5. When the OS has prefers-reduced-motion enabled, the scroll-triggered image fade animations are disabled.
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
 - [ ] 47-01: HiawathaExplainer light-mode CSS + ::before image system + reduced-motion guard
@@ -90,4 +90,4 @@ Plans:
 | 40-44 | v1.7 | 6/6 | Complete | 2026-04-07 |
 | 45. Sticky Nav | v1.8 | 1/1 | Complete | 2026-04-07 |
 | 46. Ride Ethos + Brand Footer | v1.8 | 1/1 | Complete | 2026-04-07 |
-| 47. History Light/Dark Mode | v1.8 | 0/TBD | Not started | - |
+| 47. History Light/Dark Mode | v1.8 | 0/1 | Not started | - |
