@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-04-08)
 
 ## Current Position
 
-Phase: 48 (not yet planned)
-Plan: —
-Status: Defining requirements
-Last activity: 2026-04-08 — Milestone v1.9 started
+Phase: 48-add-little-indian-segment
+Plan: 01 of 01
+Status: Phase complete
+Last activity: 2026-04-08 — Completed 48-01-PLAN.md
 
-Progress: [░░░░░░░░░░░░░░░░░░░] 0%
+Progress: [█░░░░░░░░░░░░░░░░░░] 5%
 
 ## Performance Metrics
 
@@ -34,6 +34,11 @@ Progress: [░░░░░░░░░░░░░░░░░░░] 0%
 
 (Full decision log in PROJECT.md Key Decisions table)
 
+| Phase | Decision | Rationale |
+|-------|----------|-----------|
+| 48-01 | Little Indian included in 100mi and 100k only (not 50k) | Matches route geography — sector is on northern loop not traversed by 50k |
+| 48-01 | Photo range boundaries: ND2225 endMi=65.8, Little Indian 65.8–71.5, Doe Lake startMi=71.5 | Eliminates overlap/gap in photo range assignments around new segment |
+
 ### Pending Todos
 
 None.
@@ -51,6 +56,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-08
-Stopped at: v1.9 milestone requirements defined
+Last session: 2026-04-08T17:47:40Z
+Stopped at: Completed 48-01-PLAN.md (Little Indian sector, all 3 routes, Astro build clean)
 Resume file: None
