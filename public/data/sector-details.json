@@ -2,8 +2,8 @@
   {
     "id": "sector-520",
     "name": "520",
-    "description": "Smooth asphalt rolls east past the Pictured Rocks corridor, where sugar maple and yellow birch hold the upland slopes above a flat glacial lake plain. Open and fast, this road section offers no resistance — a deceptively gentle threshold before the forest interior begins.",
-    "surface": "smooth asphalt",
+    "description": "Snowmobile trail peppered with small stones where sugar maple and yellow birch create an enclosed canopy. Tight, sandy, and all uphill; you'll be carrying pieces of this section in your shoes the rest of the day.",
+    "surface": "snowmobile trail",
     "stars": 2,
     "stravaLink": "https://www.strava.com/segments/28533709",
     "startMile": 1.03,
@@ -12,7 +12,7 @@
   {
     "id": "sector-nf2266",
     "name": "NF2266",
-    "description": "Deteriorating sand and gravel two-track cuts through mature northern hardwoods where sugar maple and beech dominate the canopy, with red maple, cherry, yellow birch, and basswood beneath, white pine and hemlock interspersed throughout. Deep sand, washboard ruts, and relentless climbing define every mile.",
+    "description": "Deteriorating sand and gravel two-track cuts through mature northern hardwoods where sugar maple and beech dominate the canopy, with red maple, cherry, yellow birch, and basswood beneath, white pine and hemlock interspersed throughout. Some deep sand, washboard ruts, and relentless fist-sized nuggets.",
     "surface": "sand and gravel two-track",
     "stars": 5,
     "stravaLink": "https://www.strava.com/segments/28533671",
@@ -22,7 +22,7 @@
   {
     "id": "sector-bass-lake",
     "name": "Bass Lake Rd",
-    "description": "Packed county gravel rolls south along the lake corridor, where paper birch colonizes productive upland sands and red maple and aspen fill the broader canopy; alder and cedar fringe the water margins. Rolling terrain, broad sight lines, and firm gravel make this the most forgiving stretch on the route.",
+    "description": "Packed county gravel rolls south along the lake corridor, where paper birch colonizes productive upland sands and red maple and aspen fill the broader canopy; alder and cedar fringe the water margins. Rolling terrain, broad sight lines, and firm gravel make this the most forgiving stretch on the route if it weren't for the constant hills.",
     "surface": "packed gravel, county-maintained",
     "stars": 2,
     "stravaLink": "https://www.strava.com/segments/31852807",
@@ -32,7 +32,7 @@
   {
     "id": "sector-nf2217",
     "name": "NF2217-2218",
-    "description": "Compact gravel and hard-packed doubletrack thread across flat outwash plain through a red pine and white pine corridor, cedar and tamarack closing in along stream margins where the Indian River headwaters drain the interior. Long, level, and meditative — the route's quietest stretch.",
+    "description": "Compact gravel thread across flat outwash plain through a red pine and white pine corridor, cedar and tamarack closing in along stream margins where the Indian River headwaters drain the interior. Long, level, and meditative — the route's quietest stretch. Makes it worth doing the 100 to get here.",
     "surface": "compact gravel and hard-packed dirt",
     "stars": 2,
     "stravaLink": "https://www.strava.com/segments/41149550",
@@ -42,7 +42,7 @@
   {
     "id": "sector-nd2225",
     "name": "ND2225",
-    "description": "Loose gravel and sandy patches on an unmaintained forest road push through jack pine standing on dry outwash soils, with oak, aspen, and paper birch in the gaps and a low blueberry understory underfoot. Quiet and remote, the surface demands attention through every mile.",
+    "description": "Loose gravel and sandy patches on an unmaintained forest road push through jack pine standing on dry outwash soils, with oak, aspen, and paper birch in the gaps and a low blueberry understory underfoot. Quiet and remote, the surface demands attention through every mile. Features the route's most technical descent.",
     "surface": "loose gravel transitioning to sandy patches",
     "stars": 3,
     "stravaLink": "https://www.strava.com/segments/39343281",
@@ -50,10 +50,20 @@
     "endMile": 59.58
   },
   {
+    "id": "sector-little-indian",
+    "name": "Little Indian",
+    "description": "Forest road gravel rolls through second-growth hardwoods between ND2225 and Doe Lake. Firm surface with occasional sandy wash; the terrain is gentle but relentless, a quiet stretch where the route's northern character begins to reassert itself.",
+    "surface": "forest road gravel",
+    "stars": 2,
+    "stravaLink": "https://www.strava.com/segments/34542982",
+    "startMile": 65.71,
+    "endMile": 71.23
+  },
+  {
     "id": "sector-doe-lake",
     "name": "Doe Lake",
-    "description": "Deep sand and rugged two-track laced with roots and embedded rock runs through red pine and jack pine on morainal upland sands, cedar and tamarack gathering near the lake margins, aspen filling the cut-over gaps. Short, sharp climbs and technical footing define this stretch.",
-    "surface": "deep sand and rugged two-track",
+    "description": "Deep, loose gravel through red pine and jack pine on morainal upland sands, cedar and tamarack gathering near the lake margins, aspen filling the cut-over gaps. Most people's least favorite section.",
+    "surface": "deep, loose gravel",
     "stars": 4,
     "stravaLink": "https://www.strava.com/segments/34543004",
     "startMile": 84.66,
@@ -62,7 +72,7 @@
   {
     "id": "sector-rapid-river",
     "name": "Ridge Rd",
-    "description": "Firm packed gravel on a USFS truck trail descends north through moraine topography where sugar maple, yellow birch, and beech reclaim the upper slopes, aspen flanking the ridges, white pine holding the crests. Long, sweeping descents carry the route back toward the Lake Superior plain.",
+    "description": "Firm packed gravel on a USFS road descends north through moraine topography where sugar maple, yellow birch, and beech reclaim the upper slopes, aspen flanking the ridges, white pine holding the crests. Long, sweeping descents carry the route back toward the Lake Superior plain.",
     "surface": "firm packed gravel, USFS-maintained",
     "stars": 2,
     "stravaLink": "https://www.strava.com/segments/41188200",

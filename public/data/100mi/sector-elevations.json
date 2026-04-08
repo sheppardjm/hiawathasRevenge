@@ -453,6 +453,131 @@
     "eleLossMeters": 40
   },
   {
+    "id": "sector-little-indian",
+    "name": "Little Indian",
+    "difficulty": "easy",
+    "startMile": 65.71,
+    "endMile": 71.23,
+    "elevationPoints": [
+      {
+        "miles": 65.7,
+        "ele": 230.4
+      },
+      {
+        "miles": 65.9,
+        "ele": 230.5
+      },
+      {
+        "miles": 66.1,
+        "ele": 231
+      },
+      {
+        "miles": 66.3,
+        "ele": 230.3
+      },
+      {
+        "miles": 66.6,
+        "ele": 229.2
+      },
+      {
+        "miles": 66.8,
+        "ele": 228.4
+      },
+      {
+        "miles": 66.9,
+        "ele": 230.7
+      },
+      {
+        "miles": 67.1,
+        "ele": 231.1
+      },
+      {
+        "miles": 67.2,
+        "ele": 230.3
+      },
+      {
+        "miles": 67.4,
+        "ele": 230.3
+      },
+      {
+        "miles": 67.4,
+        "ele": 230.1
+      },
+      {
+        "miles": 67.7,
+        "ele": 228.4
+      },
+      {
+        "miles": 68,
+        "ele": 232.6
+      },
+      {
+        "miles": 68.3,
+        "ele": 232.2
+      },
+      {
+        "miles": 68.5,
+        "ele": 234
+      },
+      {
+        "miles": 68.8,
+        "ele": 236.2
+      },
+      {
+        "miles": 68.9,
+        "ele": 236.4
+      },
+      {
+        "miles": 68.9,
+        "ele": 239.6
+      },
+      {
+        "miles": 69,
+        "ele": 239.1
+      },
+      {
+        "miles": 69.1,
+        "ele": 239.9
+      },
+      {
+        "miles": 69.2,
+        "ele": 235.4
+      },
+      {
+        "miles": 69.6,
+        "ele": 237.9
+      },
+      {
+        "miles": 70.1,
+        "ele": 235.4
+      },
+      {
+        "miles": 70.8,
+        "ele": 241.1
+      },
+      {
+        "miles": 70.8,
+        "ele": 246.5
+      },
+      {
+        "miles": 71,
+        "ele": 247.8
+      },
+      {
+        "miles": 71.1,
+        "ele": 247.6
+      },
+      {
+        "miles": 71.2,
+        "ele": 236.2
+      }
+    ],
+    "eleMin": 228.4,
+    "eleMax": 247.8,
+    "eleGainMeters": 31,
+    "eleLossMeters": 25
+  },
+  {
     "id": "sector-doe-lake",
     "name": "Doe Lake",
     "difficulty": "easy",

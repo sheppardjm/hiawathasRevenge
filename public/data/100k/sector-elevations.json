@@ -102,6 +102,127 @@
     "eleLossMeters": 28
   },
   {
+    "id": "sector-little-indian",
+    "name": "Little Indian",
+    "difficulty": "easy",
+    "startMile": 25.34,
+    "endMile": 30.84,
+    "elevationPoints": [
+      {
+        "miles": 25.3,
+        "ele": 229.5
+      },
+      {
+        "miles": 25.5,
+        "ele": 230.3
+      },
+      {
+        "miles": 25.7,
+        "ele": 230.8
+      },
+      {
+        "miles": 26,
+        "ele": 230
+      },
+      {
+        "miles": 26.2,
+        "ele": 228.3
+      },
+      {
+        "miles": 26.4,
+        "ele": 228.9
+      },
+      {
+        "miles": 26.7,
+        "ele": 231.1
+      },
+      {
+        "miles": 26.8,
+        "ele": 230.2
+      },
+      {
+        "miles": 27,
+        "ele": 230.2
+      },
+      {
+        "miles": 27.1,
+        "ele": 230.1
+      },
+      {
+        "miles": 27.3,
+        "ele": 229.3
+      },
+      {
+        "miles": 27.6,
+        "ele": 232.3
+      },
+      {
+        "miles": 27.9,
+        "ele": 232.2
+      },
+      {
+        "miles": 28.1,
+        "ele": 233.8
+      },
+      {
+        "miles": 28.4,
+        "ele": 235.5
+      },
+      {
+        "miles": 28.5,
+        "ele": 235.5
+      },
+      {
+        "miles": 28.5,
+        "ele": 238.1
+      },
+      {
+        "miles": 28.6,
+        "ele": 238.7
+      },
+      {
+        "miles": 28.7,
+        "ele": 239.3
+      },
+      {
+        "miles": 28.8,
+        "ele": 235.4
+      },
+      {
+        "miles": 29.1,
+        "ele": 237.7
+      },
+      {
+        "miles": 29.7,
+        "ele": 235.3
+      },
+      {
+        "miles": 30.4,
+        "ele": 242.4
+      },
+      {
+        "miles": 30.5,
+        "ele": 247.7
+      },
+      {
+        "miles": 30.6,
+        "ele": 247.8
+      },
+      {
+        "miles": 30.7,
+        "ele": 246.6
+      },
+      {
+        "miles": 30.8,
+        "ele": 236.2
+      }
+    ],
+    "eleMin": 228.3,
+    "eleMax": 247.8,
+    "eleGainMeters": 29,
+    "eleLossMeters": 22
+  },
+  {
     "id": "sector-doe-lake",
     "name": "Doe Lake",
     "difficulty": "easy",

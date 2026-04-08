@@ -32,6 +32,22 @@
     "stars": 5
   },
   {
+    "id": "sector-little-indian",
+    "type": "sector",
+    "name": "Little Indian",
+    "startMile": 25.34,
+    "endMile": 30.84,
+    "lengthMiles": 5.5,
+    "startLat": 46.19103,
+    "startLon": -86.51466,
+    "endLat": 46.16808,
+    "endLon": -86.58982,
+    "startIdx": 108,
+    "endIdx": 134,
+    "difficulty": "easy",
+    "stars": 2
+  },
+  {
     "id": "sector-doe-lake",
     "type": "sector",
     "name": "Doe Lake",
