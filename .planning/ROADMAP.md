@@ -7,11 +7,11 @@ v1.10 extends the scroll-triggered Ojibwe inspiration background imagery pattern
 ## Milestones
 
 - v1.0 through v1.9: See .planning/MILESTONES.md
-- **v1.10 Section Background Imagery** - Phase 49 (current)
+- **v1.10 Section Background Imagery** - Phase 49 (complete)
 
 ## Phases
 
-- [ ] **Phase 49: Section Background Imagery** - Route Map and Gallery sections gain scroll-triggered inspiration backgrounds matching the History section pattern
+- [x] **Phase 49: Section Background Imagery** - Route Map and Gallery sections gain scroll-triggered inspiration backgrounds matching the History section pattern
 
 ## Phase Details
 
@@ -21,17 +21,17 @@ v1.10 extends the scroll-triggered Ojibwe inspiration background imagery pattern
 **Requirements**: BG-01, BG-02, BG-03, BG-04, BG-05, BG-06, BG-07
 **Success Criteria** (what must be TRUE):
   1. When a visitor scrolls to the Route Map section, a sepia-toned topo arrowheads background image fades in behind the segment cards
-  2. When a visitor scrolls to the Gallery section, a sepia-toned morel woodcut background image fades in behind the photo masonry
+  2. When a visitor scrolls to the Gallery section, a sepia-toned Hiawatha scenes background image fades in (tiling) behind the photo masonry
   3. A visitor using OS-level light mode sees appropriate contrast and opacity adjustments on both backgrounds (no washed-out or invisible imagery)
   4. A visitor with `prefers-reduced-motion: reduce` enabled sees both backgrounds at static low opacity with no fade transition
   5. Both processed images (route-bg.webp, gallery-bg.webp) exist in `public/thumbs/inspiration/` and are referenced by the CSS
 **Plans**: 1 plan
 
 Plans:
-- [ ] 49-01-PLAN.md — Process background images and implement scroll-triggered ::before CSS on Route Map and Gallery sections
+- [x] 49-01-PLAN.md — Process background images and implement scroll-triggered ::before CSS on Route Map and Gallery sections
 
 ## Progress
 
 | Phase | Plans Complete | Status | Completed |
 |-------|---------------|--------|-----------|
-| 49. Section Background Imagery | 0/1 | Not started | - |
+| 49. Section Background Imagery | 1/1 | Complete | 2026-04-08 |

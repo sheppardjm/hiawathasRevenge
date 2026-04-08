@@ -7,13 +7,13 @@
 
 ### Background Imagery
 
-- [ ] **BG-01**: Route map section displays topo arrowheads inspiration image as subtle scroll-triggered background
-- [ ] **BG-02**: Gallery section displays morel woodcut inspiration image as subtle scroll-triggered background
-- [ ] **BG-03**: Both backgrounds use `::before` pseudo-element with sepia filter matching History section pattern
-- [ ] **BG-04**: Both backgrounds fade in via IntersectionObserver when section enters viewport
-- [ ] **BG-05**: Both backgrounds respect `prefers-reduced-motion` (static low opacity, no transition)
-- [ ] **BG-06**: Both backgrounds have light-mode overrides via `@media (prefers-color-scheme: light)`
-- [ ] **BG-07**: Two new images processed via `process-inspiration-bg.js` (route-bg.webp, gallery-bg.webp)
+- [x] **BG-01**: Route map section displays topo arrowheads inspiration image as subtle scroll-triggered background
+- [x] **BG-02**: Gallery section displays Hiawatha scenes inspiration image as subtle scroll-triggered tiling background
+- [x] **BG-03**: Both backgrounds use `::before` pseudo-element with sepia filter matching History section pattern
+- [x] **BG-04**: Both backgrounds fade in via IntersectionObserver when section enters viewport
+- [x] **BG-05**: Both backgrounds respect `prefers-reduced-motion` (static low opacity, no transition)
+- [x] **BG-06**: Both backgrounds have light-mode overrides via `@media (prefers-color-scheme: light)`
+- [x] **BG-07**: Two new images processed via `process-inspiration-bg.js` (route-bg.webp, gallery-bg.webp)
 
 ## Future Requirements
 
@@ -32,13 +32,13 @@ None — focused milestone.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| BG-01 | Phase 49 | Pending |
-| BG-02 | Phase 49 | Pending |
-| BG-03 | Phase 49 | Pending |
-| BG-04 | Phase 49 | Pending |
-| BG-05 | Phase 49 | Pending |
-| BG-06 | Phase 49 | Pending |
-| BG-07 | Phase 49 | Pending |
+| BG-01 | Phase 49 | Complete |
+| BG-02 | Phase 49 | Complete |
+| BG-03 | Phase 49 | Complete |
+| BG-04 | Phase 49 | Complete |
+| BG-05 | Phase 49 | Complete |
+| BG-06 | Phase 49 | Complete |
+| BG-07 | Phase 49 | Complete |
 
 **Coverage:**
 - v1.10 requirements: 7 total
