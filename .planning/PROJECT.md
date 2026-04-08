@@ -82,7 +82,15 @@ Visitors experience the beauty and scale of the Hiawatha's Revenge route through
 
 ### Active
 
-(None — next milestone requirements defined via `/gsd:new-milestone`)
+**Current Milestone: v1.8 Navigation & Identity**
+
+**Goal:** Improve site navigation, communicate ride ethos, add brand attribution, and enhance history section readability with light/dark mode support.
+
+**Target features:**
+- Sticky navigation bar below hero (History, Route, Gallery, Sectors) — visible on all screen sizes, fixed on scroll
+- Ride ethos explainer above MBTN callout — since June 7, 2014, always free, fellowship over competition, all levels
+- "Powered by Neucadia" footer — full-width single line with logo from neucadia.com
+- History section light/dark mode via prefers-color-scheme — light mode beige/off-white bg, faded desaturated inspiration images in both modes with scroll-triggered fade
 
 ### Out of Scope
 
@@ -184,4 +192,4 @@ MBTN (mbtn.org) is the beneficiary — donate CTA links to their site.
 | Mileage sort in match-photos.js output chain | All downstream consumers get mileage-ordered photo data automatically | ✓ Good — single source of truth |
 
 ---
-*Last updated: 2026-04-07 after v1.7 milestone completion*
+*Last updated: 2026-04-07 after v1.8 milestone start*

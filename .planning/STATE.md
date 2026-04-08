@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-04-07)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive, visually stunning showcase that inspires them to ride it and support MBTN.
-**Current focus:** Planning next milestone
+**Current focus:** v1.8 Navigation & Identity
 
 ## Current Position
 
-Phase: 44 of 44 — all milestones through v1.7 complete
-Plan: N/A
-Status: Ready to plan next milestone
-Last activity: 2026-04-07 — v1.7 milestone archived
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-04-07 — Milestone v1.8 started
 
-Progress: [████████████████████] 100% (8 milestones shipped)
+Progress: [░░░░░░░░░░░░░░░░░░░] 0%
 
 ## Performance Metrics
 
