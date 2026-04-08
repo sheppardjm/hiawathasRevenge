@@ -1,6 +1,7 @@
 ---
 import { Font } from 'astro:assets';
 import '../styles/global.css';
+import NeucadiaFooter from '../components/NeucadiaFooter.astro';
 
 interface Props {
   title: string;
@@ -111,5 +112,6 @@ const eventSchema = {
     <main>
       <slot />
     </main>
+    <NeucadiaFooter />
   </body>
 </html>
