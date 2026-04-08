@@ -146,6 +146,7 @@ import ShieldMotif from './ShieldMotif.astro';
   .hiawatha-section {
     background-color: var(--color-forest-950);
     position: relative;
+    overflow: hidden;
   }
 
   /* ============================================================
@@ -225,7 +226,11 @@ import ShieldMotif from './ShieldMotif.astro';
   .subsection-bg::before {
     content: '';
     position: absolute;
-    inset: 0;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 100vw;
+    transform: translateX(-50%);
     background-size: cover;
     background-position: center;
     opacity: 0;
@@ -240,15 +245,15 @@ import ShieldMotif from './ShieldMotif.astro';
   }
 
   .poem-section::before {
-    background-image: url('/thumbs/historical/remington-hiawatha-departure-1891.webp');
+    background-image: url('/thumbs/inspiration/poem-bg.webp');
   }
 
   .forest-section::before {
-    background-image: url('/thumbs/historical/remington-hiawatha-fasting-1891.webp');
+    background-image: url('/thumbs/inspiration/forest-bg.webp');
   }
 
   .ride-section::before {
-    background-image: url('/thumbs/historical/remington-hiawatha-departure-1891.webp');
+    background-image: url('/thumbs/inspiration/ride-bg.webp');
   }
 
   /* prefers-reduced-motion: static backgrounds, no transition */
