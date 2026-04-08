@@ -22,6 +22,7 @@ export const ROUTES = [
       'sector-bass-lake',
       'sector-nf2217',
       'sector-nd2225',
+      'sector-little-indian',
       'sector-doe-lake',
       'sector-rapid-river',
     ],
@@ -36,7 +37,7 @@ export const ROUTES = [
     color: '#5b9279',
     // Verified: Bass Lake (2,171m away), NF2217 (12,818m), ND2225 (1,446m) are NOT on this route.
     // Doe Lake (17m) and Rapid River (4m) ARE on this route.
-    sectorIds: ['sector-520', 'sector-nf2266', 'sector-doe-lake', 'sector-rapid-river'],
+    sectorIds: ['sector-520', 'sector-nf2266', 'sector-little-indian', 'sector-doe-lake', 'sector-rapid-river'],
     restockIds: ['restock-midway'], // Midway is 9m from route; Camp 7 is 11,512m away
     elevationTargetRange: null, // No verified reference — use fixed 2m threshold
   },
@@ -113,6 +114,16 @@ export const SECTOR_DEFS = [
     endLon: -86.54050,
     difficulty: 'moderate',
     stars: 3,
+  },
+  {
+    id: 'sector-little-indian',
+    name: 'Little Indian',
+    startLat: 46.19103,
+    startLon: -86.51472,
+    endLat: 46.16807,
+    endLon: -86.58981,
+    difficulty: 'easy',
+    stars: 2,
   },
   {
     id: 'sector-doe-lake',

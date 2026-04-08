@@ -46,7 +46,7 @@
   {
     "name": "ND2225",
     "startMi": 50.0,
-    "endMi": 70.0,
+    "endMi": 65.8,
     "distFromStart": "55.7mi",
     "length": "3.9mi",
     "difficulty": 3,
@@ -55,8 +55,19 @@
     "cardPhoto": "/images/6b6EdbzC6u6jsULOoH2gXvs4CC-V-Q6F7u9FCneTFlM-1536x2048.jpg"
   },
   {
+    "name": "Little Indian",
+    "startMi": 65.8,
+    "endMi": 71.5,
+    "distFromStart": "65.7mi",
+    "length": "5.5mi",
+    "difficulty": 2,
+    "stravaId": "34542982",
+    "description": "Forest road gravel rolls through second-growth hardwoods between ND2225 and Doe Lake. Firm surface with occasional sandy wash; the terrain is gentle but relentless, a quiet stretch where the route's northern character begins to reassert itself.",
+    "cardPhoto": "/images/uehdzvb4t9NxBDD02kCd53JLSdn1A6INGoMoqm9lJfA-2048x1536.jpg"
+  },
+  {
     "name": "Doe Lake",
-    "startMi": 70.0,
+    "startMi": 71.5,
     "endMi": 92.0,
     "distFromStart": "84.8mi",
     "length": "3.1mi",

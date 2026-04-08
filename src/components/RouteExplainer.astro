@@ -18,6 +18,7 @@ const SECTOR_IDS: Record<string, string> = {
   'Bass Lake Rd': 'sector-bass-lake',
   'NF2217-2218': 'sector-nf2217',
   'ND2225': 'sector-nd2225',
+  'Little Indian': 'sector-little-indian',
   'Doe Lake': 'sector-doe-lake',
   'Ridge Rd': 'sector-rapid-river',
 };
@@ -38,7 +39,7 @@ const segmentsWithPhotos = SEGMENTS.map(seg => ({
   <div class="py-10 max-w-4xl mx-auto px-4">
     <h2 class="text-3xl mb-[--spacing-element]">The Route, Segment by Segment</h2>
     <p class="max-w-prose text-cream-200 mb-8">
-      100 miles of forest roads, two-track, and singletrack. Seven segments, each with its own character. Here's what to expect.
+      100 miles of forest roads, two-track, and singletrack. Eight segments, each with its own character. Here's what to expect.
     </p>
     {segmentsWithPhotos.map((seg) => (
       <article id={SECTOR_IDS[seg.name] ?? ''} class="segment-card-container">
@@ -99,7 +100,7 @@ const segmentsWithPhotos = SEGMENTS.map(seg => ({
 <style>
   .route-explainer-section {
     background-color: var(--color-forest-950);
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="120"><path d="M0 20 Q50 8 100 20 Q150 32 200 20 Q250 8 300 20 Q350 32 400 20" stroke="%233d6b3d" stroke-width="1.5" fill="none"/><path d="M0 50 Q60 38 120 50 Q180 62 240 50 Q300 38 360 50 Q400 56 400 56" stroke="%233d6b3d" stroke-width="1" fill="none" opacity="0.6"/><path d="M0 85 Q80 73 160 85 Q240 97 320 85 Q380 77 400 85" stroke="%233d6b3d" stroke-width="0.75" fill="none" opacity="0.35"/></svg>');
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="120"><path d="M0 20 Q50 8 100 20 Q150 32 200 20 Q250 8 300 20 Q350 32 400 20" stroke="%233d6b3d" stroke-width="1.5" fill="none"/><path d="M0 50 Q100 38 200 50 Q300 62 400 50" stroke="%233d6b3d" stroke-width="1" fill="none" opacity="0.6"/><path d="M0 85 Q100 77 200 85 Q300 93 400 85" stroke="%233d6b3d" stroke-width="0.75" fill="none" opacity="0.35"/></svg>');
     background-repeat: repeat;
     background-size: 400px 120px;
     border-top: 1px solid var(--color-forest-700);
@@ -132,6 +133,7 @@ const segmentsWithPhotos = SEGMENTS.map(seg => ({
   .segment-card-container:nth-child(5) { transition-delay: 400ms; }
   .segment-card-container:nth-child(6) { transition-delay: 500ms; }
   .segment-card-container:nth-child(7) { transition-delay: 600ms; }
+  .segment-card-container:nth-child(8) { transition-delay: 700ms; }
 
   /* Cards become visible when parent section is revealed */
   .route-explainer-section.is-visible .segment-card-container {
