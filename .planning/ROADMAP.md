@@ -45,7 +45,7 @@
 **Plans**: TBD
 
 Plans:
-- [ ] 45-01: StickyNav component, anchor IDs, scroll-margin-top, z-index budget
+- [x] 45-01: StickyNav component, anchor IDs, scroll-margin-top, z-index budget
 
 #### Phase 46: Ride Ethos + Brand Footer
 **Goal**: Visitors immediately understand what kind of ride Hiawatha's Revenge is and see brand attribution at the bottom of the page.
@@ -88,6 +88,6 @@ Plans:
 | 33-37 | v1.5 | 10/10 | Complete | 2026-04-06 |
 | 38-39 | v1.6 | 2/2 | Complete | 2026-04-07 |
 | 40-44 | v1.7 | 6/6 | Complete | 2026-04-07 |
-| 45. Sticky Nav | v1.8 | 0/TBD | Not started | - |
+| 45. Sticky Nav | v1.8 | 1/1 | Complete | 2026-04-07 |
 | 46. Ride Ethos + Brand Footer | v1.8 | 0/TBD | Not started | - |
 | 47. History Light/Dark Mode | v1.8 | 0/TBD | Not started | - |

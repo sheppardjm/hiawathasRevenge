@@ -9,12 +9,12 @@ Requirements for milestone v1.8 "Navigation & Identity." Each maps to roadmap ph
 
 ### Navigation
 
-- [ ] **NAV-01**: Sticky navigation bar below hero with 4 links: History, Route, Gallery, Sectors
-- [ ] **NAV-02**: Section anchor IDs added to all target sections (#history, #route, #gallery, #sectors)
-- [ ] **NAV-03**: scroll-margin-top on all anchor targets so sticky nav does not cover section headings
-- [ ] **NAV-04**: Nav visible on all screen sizes including 375px mobile — no hamburger menu, inline links only
-- [ ] **NAV-05**: Visual distinction when nav becomes stuck (drop shadow or background shift)
-- [ ] **NAV-06**: Active section highlighting in nav as user scrolls through the page
+- [x] **NAV-01**: Sticky navigation bar below hero with 4 links: History, Route, Gallery, Sectors
+- [x] **NAV-02**: Section anchor IDs added to all target sections (#history, #route, #gallery, #sectors)
+- [x] **NAV-03**: scroll-margin-top on all anchor targets so sticky nav does not cover section headings
+- [x] **NAV-04**: Nav visible on all screen sizes including 375px mobile — no hamburger menu, inline links only
+- [x] **NAV-05**: Visual distinction when nav becomes stuck (drop shadow or background shift)
+- [x] **NAV-06**: Active section highlighting in nav as user scrolls through the page
 
 ### Ride Ethos
 
@@ -60,12 +60,12 @@ Deferred to later milestones.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| NAV-01 | Phase 45 | Pending |
-| NAV-02 | Phase 45 | Pending |
-| NAV-03 | Phase 45 | Pending |
-| NAV-04 | Phase 45 | Pending |
-| NAV-05 | Phase 45 | Pending |
-| NAV-06 | Phase 45 | Pending |
+| NAV-01 | Phase 45 | Complete |
+| NAV-02 | Phase 45 | Complete |
+| NAV-03 | Phase 45 | Complete |
+| NAV-04 | Phase 45 | Complete |
+| NAV-05 | Phase 45 | Complete |
+| NAV-06 | Phase 45 | Complete |
 | ETHOS-01 | Phase 46 | Pending |
 | ETHOS-02 | Phase 46 | Pending |
 | ETHOS-03 | Phase 46 | Pending |
