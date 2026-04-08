@@ -15,11 +15,14 @@ import TurtleMotif from '../components/TurtleMotif.astro';
 import HiawathaExplainer from '../components/HiawathaExplainer.astro';
 import RouteExplainer from '../components/RouteExplainer.astro';
 import ScrollReveal from '../components/ScrollReveal.astro';
+import StickyNav from '../components/StickyNav.astro';
 ---
 
 <BaseLayout title="Hiawatha's Revenge | 100 Miles Through the Hiawatha National Forest">
 
   <HeroSection />
+
+  <StickyNav />
 
   <section class="gold-section w-full py-16">
     <div class="max-w-4xl mx-auto px-4 flex justify-center">
@@ -79,7 +82,7 @@ import ScrollReveal from '../components/ScrollReveal.astro';
 
   <WaterWavePattern class="my-4 opacity-60" />
 
-  <section class="w-full py-[--spacing-block]">
+  <section id="gallery" class="w-full py-[--spacing-block]">
     <div class="max-w-4xl mx-auto px-4">
       <h2 class="text-3xl mb-[--spacing-element]">Photos</h2>
       <PhotoGallery />
@@ -231,6 +234,17 @@ import ScrollReveal from '../components/ScrollReveal.astro';
     .gpx-download {
       transition: none;
     }
+  }
+
+  /* NAV-03: Offset anchor targets so section headings are not obscured by sticky nav.
+     :global() is required because #history and #sectors are rendered by child components
+     (HiawathaExplainer.astro and RouteExplainer.astro) and would not match Astro's
+     scoped data-attribute selector without it. */
+  :global(#history),
+  :global(#route),
+  :global(#gallery),
+  :global(#sectors) {
+    scroll-margin-top: 52px;
   }
 </style>
 
