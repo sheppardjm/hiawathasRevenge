@@ -1,1000 +1,288 @@
-# Architecture Research: v1.5 Multi-Route Support
+# Architecture Research: v1.8 Navigation & Identity
 
-**Domain:** Multi-route GPX processing, route-keyed JSON data, and client-side route switching for an existing Astro 6 + Leaflet + Chart.js showcase site
-**Researched:** 2026-04-06
-**Confidence:** HIGH -- based on direct analysis of all 12 pipeline scripts, both frontend components (RouteMap.astro, ElevationProfile.astro), all 3 GPX files, existing JSON output schemas, and Astro content collection configuration
-
----
-
-## Executive Summary
-
-The v1.5 milestone adds 100k (~62 miles) and 50k (~31 miles) route variants alongside the existing 100-mile route. All three routes start and end in Munising (within ~500 ft of each other) but take different paths through the Hiawatha National Forest. The 100-mile route passes through all 7 gravel sectors; the 100k and 50k routes share a shorter loop that passes through only 4 sectors (520, NF2266, Doe Lake, Rapid River Truck Trail), skipping the interior sectors (Bass Lake Rd, NF2217-2218, ND2225).
-
-The central architectural decision is **separate JSON files per route** (not a combined file with route keys). This recommendation is driven by four factors:
-
-1. **Index coupling** -- Sector annotations use `startIdx`/`endIdx` referencing the route's point array. These indices are completely different per route (Doe Lake is at index ~379 on the 100-mile route but at a completely different index on the 100k). Combining routes into one file would require namespaced indices that add complexity for zero benefit.
-2. **Fetch efficiency** -- Only the active route's data is needed at any time. Separate files allow fetching only the selected route's data (~46KB for 100mi, likely ~28KB for 100k, ~14KB for 50k). A combined file would always transfer all three.
-3. **Pipeline simplicity** -- The existing pipeline scripts produce flat files from a single GPX. Running the pipeline in a loop over 3 routes, writing to `public/data/{routeId}/`, requires minimal script changes compared to merging outputs into combined structures.
-4. **Component simplicity** -- The existing `fetch('/data/route-data.json')` pattern changes to `fetch(\`/data/${routeId}/route-data.json\`)`. No JSON key navigation, no data reshaping at runtime.
-
-The pipeline runs 3 times (once per route) writing to route-specific subdirectories. Frontend components add a route selector that re-fetches data and rebuilds visualizations. The CustomEvent bus gains route context. Shared content (sector editorial, photos) remains in the existing flat files.
+**Domain:** Integrating sticky nav, ride ethos explainer, Neucadia footer, and light/dark history section into an existing Astro 6 + Tailwind 4 static site
+**Researched:** 2026-04-07
+**Confidence:** HIGH — based on direct analysis of all components, index.astro, BaseLayout.astro, global.css, HiawathaExplainer.astro, ScrollReveal.astro, and the 49 existing inspiration images
 
 ---
 
-## System Overview
+## Existing Architecture Snapshot
 
-### Current Data Flow (Single Route)
-
-```
-Munising_Hiawatha_s_Revenge.gpx
-         |
-    pipeline.js (12 steps, sequential)
-         |
-    public/data/
-    +-- route-data.json        (456 points + meta)
-    +-- annotations.json       (7 sectors + 2 restocks, with startIdx/endIdx)
-    +-- sector-details.json    (7 sectors with editorial content)
-    +-- sector-elevations.json (7 sectors with elevation point arrays)
-    +-- surface-points.json    (456 entries, mile -> surface type)
-    +-- photos.json            (shared, not route-specific)
-    +-- historical-photos.json (shared)
-    +-- photos-manifest.json   (shared)
-```
-
-### Proposed Data Flow (Multi-Route)
+The site is a single `src/pages/index.astro` that imports all components. Layout flow (sequential):
 
 ```
-GPX files (3):
-  Munising_Hiawatha_s_Revenge.gpx  (100mi, 1927 pts)
-  Hiawatha_s_Revenge_100k.gpx       (100k,  2780 pts)
-  Hiawatha_s_Revenge_50K_.gpx       (50k,    954 pts)
-         |
-    pipeline.js (runs route-specific steps for each of 3 routes)
-         |
-    public/data/
-    +-- routes.json                  (NEW: route manifest)
-    +-- 100mi/
-    |   +-- route-data.json          (456 points + meta, SAME as current)
-    |   +-- annotations.json         (7 sectors + 2 restocks)
-    |   +-- sector-elevations.json   (7 sectors)
-    |   +-- surface-points.json      (456 entries)
-    +-- 100k/
-    |   +-- route-data.json          (~300 points + meta)
-    |   +-- annotations.json         (4 sectors, route-specific mile/idx)
-    |   +-- sector-elevations.json   (4 sectors)
-    |   +-- surface-points.json      (~300 entries)
-    +-- 50k/
-    |   +-- route-data.json          (~200 points + meta)
-    |   +-- annotations.json         (4 sectors, route-specific mile/idx)
-    |   +-- sector-elevations.json   (4 sectors)
-    |   +-- surface-points.json      (~200 entries)
-    +-- sector-details.json          (SHARED: 7 sectors, editorial content)
-    +-- photos.json                  (SHARED: not route-specific)
-    +-- historical-photos.json       (SHARED)
-    +-- photos-manifest.json         (SHARED)
+BaseLayout (html/head/body wrapper)
+  └── <main>
+        HeroSection              — full-viewport video/image hero
+        <section> DonateCallout  — gold-section (sun-500 bg)
+        FloralDivider
+        HiawathaExplainer        — hiawatha-section (forest-950 bg)
+        RouteExplainer           — route-explainer-section
+        AnimatedDivider (minimal)
+        <section> RouteStats     — amber-section
+        <section> GPX download   — bg-forest-800
+        AnimatedDivider (berry)
+        OjibweBorderPattern
+        <section id="route"> RouteMap  ← only section with id currently
+        <section> ElevationProfile
+        WaterWavePattern
+        <section> PhotoGallery
+        AnimatedDivider (floral)
+        <section> DonateCallout  — teal-section
+        <section> footer text    — bg-forest-950
+        ScrollReveal             — JS-only, no DOM output
 ```
 
-### Route Manifest (routes.json)
-
-```json
-{
-  "defaultRoute": "100mi",
-  "routes": [
-    {
-      "id": "100mi",
-      "name": "100 Mile",
-      "shortName": "100mi",
-      "gpxFile": "Munising_Hiawatha_s_Revenge.gpx",
-      "color": "#c8973e",
-      "sectors": ["sector-520", "sector-nf2266", "sector-bass-lake", "sector-nf2217", "sector-nd2225", "sector-doe-lake", "sector-rapid-river"]
-    },
-    {
-      "id": "100k",
-      "name": "100k",
-      "shortName": "100k",
-      "gpxFile": "Hiawatha_s_Revenge_100k.gpx",
-      "color": "#5b9279",
-      "sectors": ["sector-520", "sector-nf2266", "sector-doe-lake", "sector-rapid-river"]
-    },
-    {
-      "id": "50k",
-      "name": "50k",
-      "shortName": "50k",
-      "gpxFile": "Hiawatha_s_Revenge_50K_.gpx",
-      "color": "#4a90c4",
-      "sectors": ["sector-520", "sector-nf2266", "sector-doe-lake", "sector-rapid-river"]
-    }
-  ]
-}
-```
+Key architecture constraints established in prior milestones:
+- `@theme static` (not `@theme`) for Tailwind tokens — all tokens stay in `:root` for JS access via `getComputedStyle`
+- Scoped Astro styles + `:global()` pattern for cross-component overrides from parent
+- `[data-reveal]` + `ScrollReveal.astro` IntersectionObserver pattern for scroll animations
+- `[data-bg-fade]` + per-component IntersectionObserver for background parallax in HiawathaExplainer
+- `#route=100k` URL hash pattern used by RouteMap — scroll-fragment IDs must not collide with `#route`
+- Hero is `100svh` height — sticky nav must account for this when calculating scroll threshold
 
 ---
 
-## Data Architecture Decision: Separate Files Per Route
+## Component Integration Map: What Needs to Change
 
-### Why Not a Combined File?
+### New Components (create from scratch)
 
-The strongest argument against a combined file is the **index coupling problem**.
+**1. `StickyNav.astro`**
 
-Currently, `annotations.json` contains sector entries like:
-```json
-{
-  "id": "sector-doe-lake",
-  "startIdx": 379,
-  "endIdx": 389,
-  "startMile": 84.8,
-  "endMile": 87.9
-}
-```
+A new component, not a modification to any existing component. Placed in `index.astro` immediately after `<HeroSection />`, before the first `<section>`.
 
-These `startIdx`/`endIdx` values index into `route-data.json`'s `points` array. RouteMap.astro uses them directly:
-```javascript
-const sectorPts = latlngs.slice(sector.startIdx, sector.endIdx + 1);
-```
+Integration points:
+- Rendered between `<HeroSection />` and the gold `<section>` containing `DonateCallout` in `index.astro`
+- Links to 4 anchor IDs that must be added to existing sections: `#history`, `#route` (already exists), `#gallery`, `#sectors`
+- The nav starts in document flow (not fixed), becomes `position: fixed` at top when scrolled past the hero
+- Uses `IntersectionObserver` on `<HeroSection>` element to toggle the fixed class — consistent with the existing observer pattern already used by `ScrollReveal.astro` and `HiawathaExplainer.astro`
+- Does NOT use `[data-reveal]` (nav should appear immediately, not fade in)
+- Self-contained `<script>` inside the component, matching the Astro pattern
 
-On the 100k route, Doe Lake appears at a completely different mileage (~44.3 miles) and a completely different array index. A combined file would need either:
-- **Namespaced indices** like `startIdx_100mi`, `startIdx_100k`, `startIdx_50k` -- ugly and fragile
-- **Nested route objects** like `routes.100mi.annotations[...]` -- requires restructuring all consumer code
+Anchor IDs to add in `index.astro`:
+- `id="history"` — add to the `<section>` wrapping `<HiawathaExplainer />` (currently it has no wrapper section — `HiawathaExplainer` renders its own `<section>` element, so add `id="history"` as a prop or directly to `HiawathaExplainer`'s outer section)
+- `id="route"` — already exists on the RouteMap section
+- `id="gallery"` — add to the `<section>` that wraps `<PhotoGallery />` (line 82 in index.astro)
+- `id="sectors"` — add to the `<section>` wrapping `<RouteExplainer />` (RouteExplainer renders its own outer section, same pattern as HiawathaExplainer)
 
-Separate files per route avoid this entirely. Each route's `annotations.json` contains indices that match its own `route-data.json` point array.
+**2. `RideEthos.astro`**
 
-### What Stays Shared
+A new component placed in `index.astro` between `<FloralDivider />` and `<HiawathaExplainer />`. Per the brief, it goes "above the MBTN callout" — however the page has two MBTN callout placements. Based on needs.md ("above the Munising Bay Trail Network callout below the hero"), this means between the hero area and the history section. The most defensible placement: after `<FloralDivider />`, before `<HiawathaExplainer />`.
 
-Two files are NOT route-specific:
+Content: Since June 7, 2014. Always free. Ride your own pace. Fellowship over competition. All levels welcome.
 
-1. **`sector-details.json`** -- Editorial content (descriptions, surface labels, Strava links) is the same regardless of which route you're viewing. The sector names, descriptions, and star ratings don't change. This file stays at `public/data/sector-details.json`.
+Styling: Larger font, distinct color treatment to stand out. The existing `gold-section` (sun-500) is already used for the DonateCallout above this. Use a different color — the cream/parchment palette on forest-800 background would distinguish it, or a standalone cream bg with forest-950 text for contrast.
 
-2. **`photos.json`** -- Photos are geotagged by mile on the 100-mile route. For shorter routes, photo display could be filtered by proximity, but the photo data itself doesn't change. Stays shared.
+No data dependencies. Pure content + styling.
 
-### File Size Impact
+**3. `NeucadiaFooter.astro`**
 
-Current single-route totals (~97KB across 5 files). Per-route estimates:
+A new component replacing the existing informal footer text in `index.astro` (lines 98–112), or added after it. The current "footer" section contains the shield/turtle motif and Ojibwe attribution text — that should be preserved. The Neucadia footer is a separate, distinct element: full-width, single line, "Powered by Neucadia" with logo.
 
-| File | 100mi | 100k (est.) | 50k (est.) |
-|------|-------|-------------|------------|
-| route-data.json | 46KB | ~28KB | ~14KB |
-| annotations.json | 2.7KB | ~1.5KB | ~1.5KB |
-| sector-elevations.json | 10.5KB | ~6KB | ~6KB |
-| surface-points.json | 23.7KB | ~14KB | ~7KB |
-| **Total per route** | **83KB** | **~50KB** | **~29KB** |
+The logo at `https://neucadia.com/assets/neucadia_logo.png` is an external PNG. For a static site, the options are:
+- Fetch and bundle the PNG in the build pipeline
+- `<img src="https://neucadia.com/assets/neucadia_logo.png">` with external reference
+- Text-only fallback if image unavailable
 
-Initial page load fetches only the default route (100mi, 83KB -- same as today). Route switching fetches ~29-50KB per switch. This is excellent for a static site.
+Recommended: `<img>` with external src, `loading="lazy"`, explicit `width`/`height` for CLS prevention, `alt="Neucadia"`. This is a footer element — not LCP-critical. No pipeline change needed.
 
----
+Placement: After the existing `bg-forest-950` attribution section in `index.astro`. A new `<footer>` HTML element (not `<section>`) for semantic correctness. Full-width, visually distinct from the Ojibwe attribution above it.
 
-## Pipeline Changes
+### Modified Components
 
-### Route Configuration
+**4. `HiawathaExplainer.astro` — Light/Dark Mode**
 
-A new configuration file defines the three routes and their sector membership:
+This is the most architecturally complex change. The component currently has a hardcoded dark background (`background-color: var(--color-forest-950)`).
 
-**`scripts/route-config.js`** (NEW)
+The requirement: `prefers-color-scheme` light mode gets a beige/off-white background. Both modes get faded desaturated inspiration images with scroll-triggered fade in/out.
 
-```javascript
-export const ROUTES = [
-  {
-    id: '100mi',
-    name: '100 Mile',
-    gpxFile: 'Munising_Hiawatha_s_Revenge.gpx',
-    rwgpsJson: 'hiawathasRevenge.json',    // RidewithGPS surface data
-    sectors: [
-      'sector-520', 'sector-nf2266', 'sector-bass-lake',
-      'sector-nf2217', 'sector-nd2225', 'sector-doe-lake',
-      'sector-rapid-river'
-    ],
-    restocks: ['restock-camp7', 'restock-midway'],
-    elevationTargetRange: [2123, 2411],  // ft, for noise filter calibration
-  },
-  {
-    id: '100k',
-    name: '100k',
-    gpxFile: 'Hiawatha_s_Revenge_100k.gpx',
-    rwgpsJson: null,  // No RidewithGPS export (Strava GPX)
-    sectors: ['sector-520', 'sector-nf2266', 'sector-doe-lake', 'sector-rapid-river'],
-    restocks: [],  // No restock points on 100k route
-    elevationTargetRange: null,  // No verified target
-  },
-  {
-    id: '50k',
-    name: '50k',
-    gpxFile: 'Hiawatha_s_Revenge_50K_.gpx',
-    rwgpsJson: null,  // RidewithGPS GPX but no JSON export with S-field
-    sectors: ['sector-520', 'sector-nf2266', 'sector-doe-lake', 'sector-rapid-river'],
-    restocks: [],
-    elevationTargetRange: null,
-  },
-];
+Three sub-problems:
 
-export const DEFAULT_ROUTE = '100mi';
-```
+**A. Color scheme switching via CSS media query**
 
-### Script-by-Script Changes
-
-#### 1. pipeline.js -- Orchestrator (MODIFY)
-
-**Current:** Runs 12 steps sequentially, each operating on a single implicit route.
-**Change:** Add a route loop around the 5 route-specific steps. Non-route steps run once.
-
-```
-ROUTE-SPECIFIC steps (run per route):
-  1. parse-gpx          -- reads GPX, writes route-data.json
-  2. generate-surface-points -- maps surface types
-  3. resolve-annotations -- snaps sectors to route points
-  4. compute-sector-elevations -- extracts per-sector elevation arrays
-
-SHARED steps (run once):
-  5. generate-sector-details -- editorial content, reads from 100mi annotations
-  6. generate-thumbnails
-  7. copy-images
-  8. generate-webp
-  9. process-historical
-  10. match-photos
-  11. copy-gpx  (expanded to copy all 3 GPX files)
-  12. generate-og-image
-  13. generate-routes-manifest (NEW)
-```
-
-The pipeline passes the route ID as a command-line argument to route-specific scripts:
-```javascript
-for (const route of ROUTES) {
-  for (const step of routeSpecificSteps) {
-    execFileSync(process.execPath, [step.script, route.id], { ... });
+Add to the existing `.hiawatha-section` style block:
+```css
+@media (prefers-color-scheme: light) {
+  .hiawatha-section {
+    background-color: #f5f0e8; /* --color-cream-100 */
+    color: var(--color-forest-950);
   }
+  /* Override text colors for light mode readability */
 }
 ```
 
-#### 2. parse-gpx.js (MODIFY)
+The existing typography uses hardcoded color variables (cream-100 text, amber-500/turquoise-400/sun-400/scarlet-400 headings). In light mode on a cream background, `--color-cream-100` text becomes invisible — it must be overridden. Each heading color (amber-500, turquoise-400, sun-400, scarlet-400) needs contrast checking against the light background. Most will be too light — will need darker variants from the existing palette.
 
-**Current:** Hardcodes `Munising_Hiawatha_s_Revenge.gpx`, writes to `public/data/route-data.json`.
-**Change:**
-- Accept route ID from `process.argv[2]`
-- Look up GPX filename from route-config.js
-- Write to `public/data/{routeId}/route-data.json`
-- Make elevation threshold configurable per route (100mi has calibrated range, others use default 2m)
+The museum plate, pull quote, and drop cap colors all need light mode overrides. This is the most CSS-intensive change in the milestone.
 
-Key change:
-```javascript
-const routeId = process.argv[2] || '100mi';
-const routeConfig = ROUTES.find(r => r.id === routeId);
-const gpxContent = readFileSync(join(ROOT, routeConfig.gpxFile), 'utf-8');
-const outDir = join(ROOT, 'public', 'data', routeId);
-mkdirSync(outDir, { recursive: true });
-writeFileSync(join(outDir, 'route-data.json'), JSON.stringify(output, null, 2));
-```
+**B. Inspiration images as faded backgrounds**
 
-#### 3. generate-surface-points.js (MODIFY)
+49 inspiration images exist in `images/inspiration/`. These are `.webp` and `.jpg` files. They need to be served from `public/` — check if they're already copied by the pipeline. If not, a pipeline step or a direct `public/inspiration/` copy is needed.
 
-**Current:** Reads `hiawathasRevenge.json` (RidewithGPS JSON with S-field), maps to surface types.
-**Change:**
-- Accept route ID from `process.argv[2]`
-- For 100mi: use existing `hiawathasRevenge.json` lookup (unchanged behavior)
-- For 100k and 50k: **derive surface from proximity to 100-mile surface data** since no RidewithGPS JSON exists for these routes
+The `.subsection-bg::before` pseudo-element currently exists in `HiawathaExplainer.astro` (see `prefers-reduced-motion: reduce` rule at line 222 targeting `.subsection-bg::before`). This is the hook for background images — the parallax background was planned but appears partially stubbed. The pseudo-element already exists in reduced-motion fallback, meaning the full implementation was begun but the `background-image` rules were removed or never added for the three sub-sections.
 
-**Surface data challenge:** The 100k GPX is from Strava (no surface data). The 50k GPX is from RidewithGPS but we don't have the JSON export with S-field values. The pragmatic approach:
+Architecture for inspiration images:
+- Three `subsection-bg` divs (poem-section, forest-section, ride-section) each get a `::before` pseudo-element with `background-image`, `background-size: cover`, `filter: grayscale(100%) brightness(0.3)` (dark mode) or `filter: grayscale(100%) brightness(0.85) saturate(0)` (light mode)
+- The `bg-visible` class toggle (already wired in the existing `data-bg-fade` IntersectionObserver script) controls opacity fade in/out
+- Image assignment: pick one inspiration image per sub-section — forest/wilderness for poem-section, forest landscape for forest-section, trail/bike image for ride-section
 
-**Proximity-based surface inheritance:** For each point on the 100k/50k route, find the nearest point on the 100-mile route (by geographic distance) and inherit its surface type. Since all three routes share significant road segments, this produces accurate surface coloring on shared sections. For divergent sections, the nearest 100-mile point will typically be on a parallel or nearby road with similar surface characteristics.
+**C. Scroll-triggered fade**
 
-This is medium confidence -- accuracy degrades on route sections that diverge significantly from the 100-mile route. An alternative is to source RidewithGPS JSON exports for the 100k and 50k routes if available. Flag this for validation during implementation.
+The `[data-bg-fade]` + `bg-visible` class mechanism is already fully implemented in `HiawathaExplainer.astro` (lines 430–443). The observer fires at `threshold: 0.15`. This is the mechanism to use — no new JS needed. Adding the `::before` background image CSS and opacity transition is the only remaining work.
 
-#### 4. resolve-annotations.js (MODIFY)
+**5. `index.astro` — Anchor ID additions**
 
-**Current:** Hardcodes all 7 sectors and 2 restock points, snaps to `route-data.json` points.
-**Change:**
-- Accept route ID from `process.argv[2]`
-- Filter `GRAVEL_SECTORS` and `RESTOCK_POINTS` to only those in the route's config
-- Read from `public/data/{routeId}/route-data.json`
-- Write to `public/data/{routeId}/annotations.json`
+Not a component change — four `id=` attributes added to existing section elements. However, `HiawathaExplainer` and `RouteExplainer` both render their own outer `<section>` tag inside the component. Two options:
 
-The sector definitions (startMile, lengthMiles) in the current hardcoded array are **100-mile specific**. For the 100k and 50k routes, the same physical sectors exist at different mile markers. The script must:
-1. Find each sector's geographic start/end coordinates (lat/lon -- already in the sector definition via the 100mi annotations)
-2. For each route: snap those geographic coordinates to the nearest point on that route's point array
-3. Compute route-specific `startMile`, `endMile`, `startIdx`, `endIdx`
+Option A: Pass `id` as a prop to those components and apply it to their outer section.
+Option B: Wrap the `<HiawathaExplainer />` and `<RouteExplainer />` invocations in a `<div id="history">` / `<div id="sectors">` wrapper in `index.astro`.
 
-This means changing from mile-based snapping to **coordinate-based snapping** for the shorter routes:
+Option B is simpler — no component modification needed, and a wrapper div with just an `id` has no visual effect. It's a valid anchor target. Use this approach.
 
-```javascript
-// Instead of snapByMileage(sector.startMile, routePoints)
-// Use snapByCoordinate(sector.startLat, sector.startLon, routePoints)
-function snapByCoordinate(targetLat, targetLon, points) {
-  let bestIdx = 0;
-  let bestDist = Infinity;
-  for (let i = 0; i < points.length; i++) {
-    const dist = haversineMeters(
-      { latitude: targetLat, longitude: targetLon },
-      { latitude: points[i].lat, longitude: points[i].lon }
-    );
-    if (dist < bestDist) { bestDist = dist; bestIdx = i; }
-  }
-  return { ...points[bestIdx], snapIdx: bestIdx, snapDist: bestDist };
-}
-```
+**6. `BaseLayout.astro` — No changes expected**
 
-The sector start/end coordinates come from the master sector definition (which can be extracted from the current 100mi annotations or defined in route-config.js by lat/lon).
-
-#### 5. compute-sector-elevations.js (MODIFY)
-
-**Current:** Reads `route-data.json` and `annotations.json`, extracts per-sector elevation arrays.
-**Change:** Read from `public/data/{routeId}/` paths. Otherwise unchanged -- the logic is already generic.
-
-#### 6. generate-sector-details.js (NO CHANGE)
-
-Editorial content is route-independent. The current script merges hardcoded descriptions with annotation geometry from the 100mi route. The output stays at `public/data/sector-details.json` (shared).
-
-Note: The panel display logic in RouteMap.astro already does a `sectorDetails.find(d => d.id === sector.id)` lookup, so it naturally shows details only for sectors present in the active route's annotations.
-
-#### 7. copy-gpx.js (MODIFY)
-
-**Current:** Copies single GPX to `public/`.
-**Change:** Copy all 3 GPX files.
-
-#### 8. generate-routes-manifest.js (NEW)
-
-Writes `public/data/routes.json` from route-config.js with computed metadata (totalMiles, elevationGainFeet) pulled from each route's generated `route-data.json`.
+The `<main>` wrapper has no height constraint or overflow hidden that would interfere with a sticky nav. The `body` has `min-h-screen`. No changes needed.
 
 ---
 
-## Component Changes
+## Data Flow Changes
 
-### RouteMap.astro
+No new data pipeline steps. All four features are pure frontend/CSS:
 
-**Current state:** Fetches 6 JSON files at init, renders one route polyline, one set of sector overlays, one set of labels, one set of restock markers.
+| Feature | Data source | Pipeline impact |
+|---------|-------------|-----------------|
+| Sticky nav | Hardcoded links + scroll JS | None |
+| Ride ethos | Hardcoded content | None |
+| Neucadia footer | External URL for logo | None (external img) |
+| Light/dark history | CSS media query + existing inspiration images | Possibly: copy inspiration/ to public/inspiration/ if not already there |
 
-**Changes needed:**
-
-#### 1. Route Selector UI
-
-Add a control to the Leaflet map (custom L.Control, same pattern as the existing ResetControl):
-
-```
-+-----------------------------------+
-| [100mi] [100k] [50k]   [Reset]   |  <- top-left controls
-|                                   |
-|          Map canvas               |
-|                                   |
-+-----------------------------------+
-```
-
-Three pill-shaped buttons. Active route gets filled background; inactive routes get outline-only. Position: `topleft`, below zoom controls and above reset button.
-
-Implementation: L.Control subclass with three `<button>` elements. Click handlers dispatch `route:change` CustomEvent and call `switchRoute(routeId)`.
-
-#### 2. switchRoute() Function
-
-The core addition. When a new route is selected:
-
-```javascript
-async function switchRoute(routeId) {
-  // 1. Fetch new route data (parallel)
-  const [newRouteData, newAnnotations, newSectorElevations, newSurfacePoints] =
-    await Promise.all([
-      fetch(`/data/${routeId}/route-data.json`).then(r => r.json()),
-      fetch(`/data/${routeId}/annotations.json`).then(r => r.json()),
-      fetch(`/data/${routeId}/sector-elevations.json`).then(r => r.json()),
-      fetch(`/data/${routeId}/surface-points.json`).then(r => r.json()),
-    ]);
-
-  // 2. Remove existing route layers
-  clearRouteLayers();  // removes polyline, sector overlays, ghost polys, labels
-
-  // 3. Draw new route
-  const newLatlngs = newRouteData.points.map(pt => [pt.lat, pt.lon]);
-  drawRoutePolyline(newLatlngs);
-  drawSectorOverlays(newLatlngs, newAnnotations, newSectorElevations);
-  drawSectorLabels(newLatlngs, newAnnotations);
-
-  // 4. Update module-scope state
-  routePoints = newRouteData.points;
-  currentRouteId = routeId;
-
-  // 5. Refit map bounds
-  const newBounds = L.latLngBounds(newLatlngs);
-  map.fitBounds(newBounds, { padding: [20, 20], animate: !prefersReducedMotion });
-
-  // 6. Notify other components
-  window.dispatchEvent(new CustomEvent('route:change', {
-    detail: { routeId, routeData: newRouteData }
-  }));
-
-  // 7. Close any open sector panel
-  closePanel();
-}
-```
-
-#### 3. Layer Management
-
-Currently, layers are created once and never removed. Multi-route requires tracking and removing layers:
-
-```javascript
-// Module-scope layer groups
-let routeLayerGroup = null;  // L.LayerGroup for polyline + surface segments
-let sectorLayerGroup = null; // L.LayerGroup for sector overlays + ghosts
-let labelLayerGroup = null;  // L.LayerGroup for sector labels
-
-function clearRouteLayers() {
-  if (routeLayerGroup) routeLayerGroup.clearLayers();
-  if (sectorLayerGroup) sectorLayerGroup.clearLayers();
-  if (labelLayerGroup) labelLayerGroup.clearLayers();
-  sectorLayers.length = 0;
-  sectorLabels.length = 0;
-}
-```
-
-This requires refactoring the current initMap() to use LayerGroups instead of directly adding layers to the map. Not complex but touches most of the layer creation code.
-
-#### 4. Restock Marker Filtering
-
-Restock points are in the route's annotations.json (only routes that pass through Camp 7 / Midway will have them). The existing `annotations.filter(a => a.type === 'restock')` pattern works unchanged -- the 100k/50k annotations files simply won't contain restock entries.
-
-However, restock markers also need layer management (remove old, add new on route switch). Add to the layer group pattern.
-
-#### 5. Photo Markers
-
-Photos are shared across routes and are not route-specific. Two options:
-- **Keep as-is:** Photo markers always visible regardless of route. Simple, no change.
-- **Filter by proximity:** Only show photos near the active route. More polished but adds complexity.
-
-Recommendation: Keep as-is for v1.5. Photos are geolocated to the 100-mile route; they add context regardless of which route is active.
-
-### ElevationProfile.astro
-
-**Current state:** Fetches `route-data.json` and `annotations.json`, builds one Chart.js chart.
-
-**Changes needed:**
-
-#### 1. Listen for route:change Event
-
-```javascript
-window.addEventListener('route:change', async (e) => {
-  const { routeId } = e.detail;
-  await rebuildChart(routeId);
-});
-```
-
-#### 2. rebuildChart() Function
-
-Chart.js does not support swapping data arrays cleanly on a line chart with LTTB decimation. The most reliable approach is to **destroy and recreate** the chart:
-
-```javascript
-async function rebuildChart(routeId) {
-  // Fetch new route data
-  const [routeData, annotations] = await Promise.all([
-    fetch(`/data/${routeId}/route-data.json`).then(r => r.json()),
-    fetch(`/data/${routeId}/annotations.json`).then(r => r.json()),
-  ]);
-
-  // Destroy old chart
-  if (chart) chart.destroy();
-
-  // Build new data and annotations
-  const data = routeData.points.map(pt => ({
-    x: pt.miles,
-    y: +(pt.ele * 3.28084).toFixed(1)
-  }));
-
-  const sectors = annotations.filter(a => a.type === 'sector');
-  // ... rebuild chart config ...
-
-  chart = new Chart(canvas, newConfig);
-}
-```
-
-The destroy+recreate pattern is standard for Chart.js when the entire dataset changes. It avoids edge cases with LTTB decimation state, annotation plugin state, and scale ranges.
-
-#### 3. Scale Range Update
-
-The x-axis `max` is currently set to `routeData.meta.totalMiles`. This MUST update when switching routes (101.98 for 100mi, ~61.7 for 100k, ~31.2 for 50k). The destroy+recreate approach handles this naturally.
-
-### RouteStats.astro
-
-**Current state:** Uses Astro content collection to read `route-data.json` at build time. Renders static stats (miles, elevation gain).
-
-**Change:** This component needs to become dynamic (client-side JavaScript) to update when the route changes. Two approaches:
-
-**Option A: Render all three, show/hide with CSS**
-Build-time: render three stat blocks with `data-route` attributes. Client-side: toggle visibility on `route:change`. Pros: No JS fetch, instant switching, works with Astro static. Cons: Requires pipeline to pre-compute all route metas.
-
-**Option B: Client-side fetch on route change**
-Build-time: render 100mi stats (default). Client-side: listen for `route:change`, fetch new route meta, update text content. Pros: Single render path. Cons: Flash of old content during fetch.
-
-Recommendation: **Option A** -- pre-render all three and toggle visibility. Aligns with Astro's static-first philosophy. The route manifest (routes.json) or individual route-data.json files provide the meta at build time via content collections.
-
-### GPX Download Section
-
-**Current state:** Single hardcoded download link.
-**Change:** Three download links, or a dynamic link that changes with route selection.
-
-Recommendation: Show all three download links always visible (users may want to download all routes). Each link serves the respective GPX file from `public/`.
-
-### RouteExplainer.astro (Sector-by-Segment Editorial)
-
-**Current state:** Static build-time render of all 7 sectors.
-**Change for v1.5:** Two options:
-
-**Option A: Show all 7 sectors always.** The editorial content is interesting regardless of which route the user is viewing. Add a small badge or note to sectors not on the current route: "This sector is on the 100-mile route only."
-
-**Option B: Filter sectors by active route.** Requires making the static section dynamic, which conflicts with Astro's SSG model.
-
-Recommendation: **Option A** -- keep all sectors visible. The editorial content is the site's primary value. Add a subtle visual indicator (e.g., a badge or reduced opacity) for sectors not on the selected route. This avoids making a static component dynamic.
+The inspiration images may need a pipeline step. Check: they exist at `images/inspiration/` but it's unclear if they're already in `public/`. The build pipeline's `copy-images` step copies from `images/` to `public/images/`. The `images/inspiration/` subfolder — if it's included in that copy step — is already available at `public/images/inspiration/`. Verify before adding a new pipeline step.
 
 ---
 
-## Event Bus Changes
+## Sticky Nav: Scroll Behavior Architecture
 
-### Current Events
+The standard approach for "nav that starts in flow, becomes fixed on scroll" has two sub-patterns:
 
-| Event | Dispatched By | Consumed By | Detail |
-|-------|--------------|-------------|--------|
-| `elevation:hover` | ElevationProfile | RouteMap | `{ miles }` |
-| `elevation:leave` | ElevationProfile | RouteMap | (none) |
-| `map:photoClick` | RouteMap | PhotoGallery | `{ photoIndex }` |
-| `map:sectorClick` | RouteMap | (unused) | `{ sectorId }` |
+**Pattern A: IntersectionObserver on hero**
+- Place a sentinel element (or observe the `<HeroSection>` itself) at the bottom of the hero
+- When hero leaves viewport, add `.is-fixed` to nav; when it re-enters, remove it
+- Pro: No scroll event listener, consistent with existing site patterns
+- Con: Requires observing a specific element
 
-### New Events for v1.5
+**Pattern B: CSS `position: sticky`**
+- Nav is `position: sticky; top: 0` in normal flow
+- Becomes sticky automatically when parent scrolls
+- Pro: Zero JavaScript needed
+- Con: The nav needs to be inside a parent that is taller than the nav (it is — the entire page content follows)
 
-| Event | Dispatched By | Consumed By | Detail |
-|-------|--------------|-------------|--------|
-| `route:change` | RouteMap (selector) | ElevationProfile, RouteStats | `{ routeId, routeData }` |
+Recommendation: CSS `position: sticky; top: 0` with a high `z-index`. This is the simplest, most reliable approach and requires no JavaScript at all. The only case where the IntersectionObserver is needed is if the nav should be visually different (e.g., transparent → opaque background) when it sticks — a CSS scroll-driven animation or `@supports` sticky check can handle that too.
 
-The `elevation:hover` and `elevation:leave` events already work correctly without route context because:
-- `elevation:hover` sends `{ miles }` which is a distance-along-current-route value
-- `snapByMiles()` in RouteMap searches the module-scope `routePoints` array
-- When `switchRoute()` updates `routePoints`, the snap function automatically uses the new route's points
-
-No changes needed to the elevation sync events. The bike marker will correctly track the active route's polyline.
+If a "background appears on stick" effect is wanted: use `position: sticky` + a CSS custom property updated on scroll, or use the IntersectionObserver on the hero sentinel. Both patterns are zero-dependency additions.
 
 ---
 
-## Critical Integration Points
+## URL Hash Collision Risk
 
-### 1. Sector Coordinate Snapping (HIGHEST RISK)
+The RouteMap uses `#route=100k` URL hash format (not a plain fragment ID). The sticky nav links use plain fragment IDs (`#history`, `#route`, `#gallery`, `#sectors`).
 
-The current pipeline snaps sectors by **mileage** (`snapByMileage(sector.startMile, routePoints)`). This works because sector mile markers are defined on the 100-mile route.
+**Collision:** `#route` in the nav links to the RouteMap section (already has `id="route"`). The RouteMap hash pattern is `#route=100k` (with `=` separator). The plain `#route` fragment will not match the RouteMap's regex `/^#route=(.+)$/` — it requires an `=` sign. So `href="#route"` in the nav is safe and will not trigger the route-switching logic.
 
-For 100k and 50k routes, the same physical road segment appears at a different mileage. The pipeline must snap by **geographic coordinates** instead.
-
-**Implementation approach:**
-- Define sector geographic anchors (lat/lon of start and end) in route-config.js
-- Extract these from the existing 100mi annotations (they're already computed)
-- For each route: find nearest route point to each sector anchor
-- Validate: snap distance should be < 200 feet (our proximity analysis showed 0-212 ft for matching sectors)
-- Sectors that snap at > 1000 ft are NOT on this route (safety check)
-
-### 2. Surface Points Without RidewithGPS Data (MEDIUM RISK)
-
-The 100k GPX is from Strava (no surface data). The 50k is from RidewithGPS but we lack the JSON export with S-field values.
-
-**Mitigation options (in order of preference):**
-1. Source RidewithGPS JSON exports for 100k and 50k if available
-2. Use proximity-based surface inheritance from the 100-mile route data
-3. Use sector boundaries to infer surface type (within a gravel sector = gravel, outside = paved)
-4. Mark all non-100mi surface data as "unknown" and skip surface coloring
-
-Option 2 is the recommended default. Option 1 would be ideal if the data exists.
-
-### 3. Content Collection Schema Update
-
-`src/content.config.ts` currently defines a single `routeData` collection loading from `public/data/route-data.json`. With per-route subdirectories, this needs updating:
-
-```typescript
-// Option: Multiple collections
-const routeData100mi = defineCollection({
-  loader: file('public/data/100mi/route-data.json', { ... }),
-  schema: routeDataSchema,
-});
-
-// Or: Dynamic loading at build time with a shared parser
-```
-
-This only affects `RouteStats.astro` (the only component using content collections for route data). If RouteStats switches to Option A (pre-render all three), it needs build-time access to all three route metas.
-
-### 4. Map Bounds and Zoom
-
-All three routes are in the same geographic region (Munising area). However:
-- 100-mile route spans a much larger area (south to ~46.07 lat)
-- 100k and 50k routes stay closer to Munising
-
-When switching routes, the map should `fitBounds()` to the new route's extent. The ResetControl should also reset to the active route's bounds.
-
-### 5. Elevation Chart X-Axis Range
-
-The x-axis max must update per route (102mi, 62mi, 31mi). The destroy+recreate approach handles this, but the sector band annotations also need updating (different sectors at different mile ranges per route).
+**Scroll offset issue:** When the sticky nav is fixed at the top (~48–56px), clicking `#route` will scroll such that the section heading is hidden behind the nav. This is the standard "sticky nav scroll offset" problem. Fix: add `scroll-margin-top: 56px` (or whatever the nav height is) to `#history`, `#route`, `#gallery`, `#sectors` via CSS. This is a single CSS rule in `global.css` or in `StickyNav.astro`'s style block.
 
 ---
 
-## Suggested Build Order
+## Light/Dark Mode: CSS Scoping
 
-The dependencies between changes dictate a natural build order:
+The `prefers-color-scheme` media query in Astro scoped styles works correctly. Astro's scoped style compiler adds a unique hash attribute to elements — `@media` queries inside scoped `<style>` blocks work identically to standard CSS. No special handling needed.
 
-### Phase 1: Pipeline Infrastructure
+The risk: the editorial content uses many explicit color variable references (`var(--color-cream-100)`, etc.) that are theme-agnostic (not dark-mode-aware). The light mode overrides need to be comprehensive. The `.hiawatha-section` class is the scope boundary — a single `@media (prefers-color-scheme: light) { .hiawatha-section { ... } }` block covering all nested selectors is the right approach.
 
-**Must come first -- all downstream work depends on this.**
-
-1. Create `scripts/route-config.js` with route definitions
-2. Modify `pipeline.js` to loop route-specific steps
-3. Modify `parse-gpx.js` to accept routeId, write to subdirectory
-4. Modify `resolve-annotations.js` with coordinate-based snapping
-5. Modify `compute-sector-elevations.js` to read from subdirectory
-6. Modify `generate-surface-points.js` with proximity fallback
-7. Modify `copy-gpx.js` to copy all 3 GPX files
-8. Create `generate-routes-manifest.js`
-9. Verify: run pipeline, confirm 3 route subdirectories with valid JSON
-
-**Validation gate:** All JSON files parseable, sector startIdx < endIdx for all routes, surface-points arrays match route-data point counts.
-
-### Phase 2: Route Selector + Map Switching
-
-**Depends on Phase 1 (needs per-route JSON to exist).**
-
-1. Add route selector L.Control to RouteMap.astro
-2. Refactor initMap() to use LayerGroups for route/sector/label layers
-3. Implement switchRoute() with fetch + layer rebuild
-4. Update restock marker handling for layer groups
-5. Verify: click selector buttons, map redraws with correct route
-
-### Phase 3: Elevation Profile + Stats Switching
-
-**Depends on Phase 1 (needs per-route JSON). Can partially parallel Phase 2.**
-
-1. Add `route:change` listener to ElevationProfile.astro
-2. Implement chart destroy+recreate in rebuildChart()
-3. Update RouteStats to pre-render all three routes (content collection update)
-4. Add CSS toggle for RouteStats visibility on route change
-5. Verify: route switch updates chart, stats, and sector bands correctly
-
-### Phase 4: Polish + Downloads
-
-**Depends on Phases 2-3 being functional.**
-
-1. Update GPX download section with three download links
-2. Add route context to RouteExplainer sector badges
-3. Test elevation:hover sync after route switch
-4. Test sector panel content for shorter routes
-5. End-to-end UAT across all three routes
+The `pull-quote` background (`var(--color-forest-800)`) on a light beige page will appear as a dark green box — which may actually be a desirable contrast element. Evaluate visually.
 
 ---
 
-## Anti-Patterns to Avoid
+## Component Build Order
 
-### Anti-Pattern 1: Monolithic Combined JSON
+Dependencies between the four features:
 
-**What:** Merging all three routes into single JSON files with route keys.
-**Why bad:** Forces every consumer to navigate `data.routes[routeId].points` instead of a flat array. Bloats initial fetch. Makes index references ambiguous.
-**Instead:** Separate files per route in subdirectories.
+1. **Anchor IDs** (`index.astro` wrapper divs) — must be done before or alongside sticky nav, since the nav links to them. No external dependency.
 
-### Anti-Pattern 2: Runtime Route Computation
+2. **Sticky nav** (`StickyNav.astro`) — depends on anchor IDs existing. Can be built and tested with placeholder anchors. No other dependencies.
 
-**What:** Shipping all 3 GPX files to the client and parsing them in the browser.
-**Why bad:** GPX parsing is expensive (2780 points for 100k). Contradicts the build-time pipeline philosophy. Increases bundle size.
-**Instead:** All computation at build time. Client fetches pre-computed JSON.
+3. **Ride ethos** (`RideEthos.astro`) — fully independent. No anchor needed. Can be built in any order.
 
-### Anti-Pattern 3: Chart.js Data Mutation
+4. **Neucadia footer** (`NeucadiaFooter.astro`) — fully independent. No anchor needed. Can be built in any order.
 
-**What:** Trying to update Chart.js datasets in-place when switching routes.
-**Why bad:** LTTB decimation plugin caches internal state. Annotation plugin doesn't reliably update x-ranges. Results in visual artifacts.
-**Instead:** Destroy and recreate the chart on route change.
+5. **Light/dark history** (`HiawathaExplainer.astro` modification) — independent of other three features. Depends on inspiration images being available in public/. Most complex — should be built last or in a dedicated phase.
 
-### Anti-Pattern 4: Global State for Active Route
-
-**What:** Using a global variable or localStorage for the active route, with multiple components polling it.
-**Why bad:** Race conditions when multiple components react at different speeds. No clear ownership of state transitions.
-**Instead:** Single `route:change` CustomEvent dispatched by the route selector. Each consumer handles its own state update.
-
-### Anti-Pattern 5: Hardcoded Mile Ranges for Multi-Route
-
-**What:** Defining sector mile ranges for 100k/50k by manual inspection.
-**Why bad:** Fragile. If GPX files are updated, hardcoded miles break silently.
-**Instead:** Use coordinate-based snapping. The geographic locations of sectors are fixed; their mile positions are computed dynamically per route.
+Recommended phase order:
+1. Sticky nav + anchor IDs (coupled — one phase)
+2. Ride ethos explainer (standalone — can be its own small phase or bundled with footer)
+3. Neucadia footer (standalone — bundle with ride ethos)
+4. History light/dark mode (most complex — dedicated phase)
 
 ---
 
-## Scalability Considerations
+## Inspiration Images: Pipeline Status
 
-| Concern | 3 Routes (v1.5) | 5+ Routes (Future) |
-|---------|-----------------|---------------------|
-| Pipeline runtime | ~3x current (~3s total) | Linear, acceptable |
-| JSON file count | 13 per-route + shared | Manageable with manifest |
-| Fetch on switch | 4 parallel fetches, ~50KB | Same pattern, similar size |
-| Map layer count | ~30 layers (polylines, sectors, labels) | May need lazy sector loading |
-| Chart rebuilds | <100ms destroy+recreate | No concern |
+The `images/inspiration/` directory contains 49 images (mix of `.webp` and `.jpg`). The build pipeline has a `copy-images` step. Whether inspiration images are included in that copy depends on what path pattern `copy-images` uses.
 
-The architecture scales cleanly to additional routes. The manifest-driven approach means adding a 4th route requires only:
-1. Add GPX file
-2. Add entry to route-config.js
-3. Re-run pipeline
+If `copy-images` copies all of `images/` recursively, then `public/images/inspiration/*.webp` already exists after a build. If it copies specific files or skips subdirectories, a new pipeline entry is needed.
 
-No component code changes needed.
+Check the pipeline's `copy-images` step before writing any `background-image: url('/images/inspiration/...')` references. If images aren't served, the background will silently fail.
 
 ---
 
-## Sources
-
-- **RouteMap.astro** (692 lines): Direct analysis of layer creation, event handling, panel logic
-- **ElevationProfile.astro** (203 lines): Direct analysis of Chart.js configuration, event dispatch
-- **pipeline.js + 5 route-specific scripts**: Direct analysis of data flow, file I/O, dependencies
-- **content.config.ts**: Direct analysis of Astro content collection schemas
-- **GPX file analysis**: Python haversine computation confirming route distances and sector proximity
-- **Leaflet 1.9.4 LayerGroup API**: Used L.LayerGroup for layer management pattern (well-established API)
-- **Chart.js 4.x destroy/create pattern**: Standard approach for full dataset replacement with LTTB decimation
-
-All findings are based on direct source file analysis of the current codebase. Confidence: HIGH.
-
----
-
-## Milestone: Map Label Sizing, 520 Photo Fix, and Site URL Update
-
-**Researched:** 2026-04-06
-**Scope:** Three targeted fixes identified via codebase analysis. All findings are based on direct file reading with exact line numbers. Confidence: HIGH.
-
----
-
-### Fix 1: Map Sector Label Sizing
-
-#### Problem
-
-The sector labels are `L.divIcon` pill-shaped markers rendered with inline CSS. With `white-space: nowrap` in effect, the label box width is determined by the longest text content. The current font-size of `11px` and padding of `3px 8px` are too small for names like "NF2217-2218" (11 chars) and "Bass Lake Rd" (11 chars). The stars row uses `9px` which compounds the cramped appearance.
-
-#### Exact Location
-
-**File:** `src/components/RouteMap.astro`
-
-The entire label HTML is built inline at **lines 676–694**:
+## New Component Signatures
 
 ```
-676:        const labelIcon = L.divIcon({
-677:          className: 'sector-label',
-678:          html: `<div style="
-679:            background: ${bgColor};
-680:            color: ${labelTextColor};
-681:            border: 2px solid ${labelTextColor};
-682:            border-radius: 12px;
-683:            padding: 3px 8px;          <-- line 683: CHANGE THIS
-684:            font-family: var(--font-display);
-685:            font-size: 11px;           <-- line 685: CHANGE THIS
-686:            font-weight: 700;
-687:            white-space: nowrap;
-688:            transform: translate(-50%, -50%);
-689:            box-shadow: 2px 2px 0px rgba(0,0,0,0.4);
-690:            line-height: 1.3;
-691:            text-align: center;
-692:          ">${sector.name}<br><span style="font-size: 9px; letter-spacing: 1px;">${stars}</span></div>`,
-                                         ^^ line 692: stars font-size also CHANGE
+StickyNav.astro
+  Props: none
+  Renders: <nav> with 4 anchor links
+  Script: IntersectionObserver on hero sentinel OR relies on CSS position:sticky
+  Output CSS class: .sticky-nav (base), .sticky-nav--fixed (when scrolled)
+
+RideEthos.astro
+  Props: none
+  Renders: <section> with ethos content
+  No script needed
+
+NeucadiaFooter.astro
+  Props: none
+  Renders: <footer> with "Powered by" text and <img> logo
+  No script needed
+
+HiawathaExplainer.astro (modified)
+  New CSS: @media (prefers-color-scheme: light) overrides
+  New CSS: .subsection-bg::before { background-image, opacity, transition }
+  New CSS: .bg-visible { opacity change for ::before }
+  Existing script: unchanged (already handles bg-visible toggle)
 ```
-
-#### Current Values
-
-| Property | Current | Location |
-|----------|---------|----------|
-| `padding` | `3px 8px` | line 683 |
-| `font-size` (name) | `11px` | line 685 |
-| `font-size` (stars) | `9px` | line 692, inline on `<span>` |
-| `border-radius` | `12px` | line 682 |
-| `letter-spacing` (stars) | `1px` | line 692 |
-
-#### Recommended New Values
-
-| Property | Recommended | Rationale |
-|----------|-------------|-----------|
-| `padding` | `4px 10px` | More breathing room; matches the 4px 8px used in `.route-selector__btn` area (line 120) |
-| `font-size` (name) | `12px` | One step up from 11px; "Bass Lake Rd" at 12px with 10px padding fits comfortably |
-| `font-size` (stars) | `10px` | Proportional increase; keeps stars subordinate but readable |
-| `border-radius` | `12px` | No change — already appropriate for a pill |
-| `letter-spacing` (stars) | `1px` | No change |
-
-The `white-space: nowrap` is correct; labels should not wrap. The fix is purely increasing the font-size and padding so the text has room to breathe at full render size.
-
-#### Why Not CSS Class Instead of Inline?
-
-The label HTML is built dynamically with JavaScript template literals inside an Astro `<script>` block. The Astro scoped CSS (lines 42–45) only applies `background: transparent` and `border: none` to `.sector-label` (the outer Leaflet wrapper div). The inner `<div>` containing the pill styling is generated JavaScript — Astro's scoped CSS cannot reach it. Inline styles are the correct approach here, matching the established pattern in this file.
 
 ---
 
-### Fix 2: 520 Segment Missing Photo
+## Confidence Assessment
 
-#### Problem
-
-The `520` segment is defined in `RouteExplainer.astro` with:
-- `startMi: 0`
-- `endMi: 5.0`
-
-The photo filter in `RouteExplainer.astro` lines 46–50:
-
-```javascript
-const segmentsWithPhotos = SEGMENTS.map(seg => ({
-  ...seg,
-  photos: (photosData as any[])
-    .filter((p: any) => p.mile >= seg.startMi && p.mile < seg.endMi)
-    .slice(0, 2),
-}));
-```
-
-This filters `photos.json` for entries where `mile >= 0 AND mile < 5.0`.
-
-The earliest photo mile in `photos.json` is **5.51** (line 6 of photos.json). No photos fall in the `[0, 5.0)` range. The 520 segment therefore always hits the fallback branch (lines 79–88 of RouteExplainer.astro) which renders a gradient background instead of a photo.
-
-#### Confirmed Gap
-
-All photo mile values from `photos.json` sorted ascending:
-- 5.51 (first entry — just outside 520's range)
-- 8.25
-- 9.09
-- 10.84
-- 13.39
-- 13.63
-- 14.38
-- (continues above 17.5...)
-
-There are zero photos with `mile < 5.0`. The gap is confirmed.
-
-#### Strategy Options
-
-**Option A: Widen the 520 segment's photo range (code change, no new data)**
-
-Change `endMi: 5.0` to `endMi: 10.0` in the `SEGMENTS` array in `RouteExplainer.astro` (line 18). This would pick up the 5.51-mile photo.
-
-Risk: The 5.51-mile photo is geographically in the NF2266 segment (which starts at 5.0). Showing it under the 520 card is mislabeling — it would show a forest road photo on the "paved warm-up" card.
-
-**Option B: Add a photo with mile < 5.0 to photos.json (data addition)**
-
-Identify an existing image that was taken within the first 5 miles (on or near County Road 520) and add it to `photos.json` with the correct `mile`, `lat`, and `lon`. This is the correct fix but requires sourcing a suitable image.
-
-**Option C: Use the 5.51-mile photo with an adjusted alt text (pragmatic)**
-
-Add a special case: for the 520 segment, look for photos in `[0, 6.0)` with the note in the alt text that the photo is "near the start of NF2266". This is a hack.
-
-**Option D: Accept the fallback (no fix needed)**
-
-The fallback hero (lines 79–88 of RouteExplainer.astro) renders a forest-green gradient with the segment name overlaid. It is intentional and functional. If no suitable photo of the 520 pavement exists, this is acceptable.
-
-#### Recommendation
-
-**Option B is ideal but requires sourcing an image.** The correct architectural fix is to get a photo taken on County Road 520 (or near Munising Falls / Pictured Rocks visitor center, both of which the description mentions as landmarks) and add it to `photos.json` with a mile value between 0 and 5.0.
-
-If no such image is available in the existing `images/` directory, **Option D (accept the fallback)** is the correct short-term answer. The fallback is styled and intentional. Do not widen the mile range (Option A) — it would show the wrong photo for the wrong terrain.
-
-#### How to Add a New Photo (if Option B is chosen)
-
-1. Place the image file in `/images/`
-2. Run the existing thumbnail and WebP pipeline steps:
-   - `node scripts/generate-thumbnails.js` (creates `/public/thumbs/*.webp`)
-   - `node scripts/copy-images.js`
-3. Add an entry to `public/data/photos.json`:
-   ```json
-   {
-     "id": "YOUR_FILENAME.jpg",
-     "filename": "YOUR_FILENAME.jpg",
-     "thumb": "/thumbs/YOUR_FILENAME.webp",
-     "mile": 2.5,
-     "lat": 46.XXXXX,
-     "lon": -86.XXXXX
-   }
-   ```
-4. The `match-photos.js` script (`scripts/match-photos.js`) automates step 3 by geolocating images. Run it if the image has EXIF GPS data.
-
-#### File Locations for 520 Photo Fix
-
-| File | Line | Change |
-|------|------|--------|
-| `RouteExplainer.astro` | 18 | `endMi` for 520 segment (only if widening range — not recommended) |
-| `public/data/photos.json` | end of array | Add new photo entry (if sourcing new image) |
-| `scripts/match-photos.js` | — | Run to auto-ingest if image has EXIF GPS |
+| Area | Confidence | Notes |
+|------|------------|-------|
+| Component placement | HIGH | Direct codebase analysis — exact line numbers verified |
+| Sticky nav scroll behavior | HIGH | CSS position:sticky is well-established; observer pattern matches existing site code |
+| URL hash collision | HIGH | RouteMap regex requires `=` separator — `#route` plain fragment is safe |
+| Light/dark color overrides | MEDIUM | CSS structure is clear; specific color values for light mode need visual validation |
+| Inspiration image availability | MEDIUM | Files exist in images/inspiration/ — pipeline copy behavior needs verification before implementation |
+| Neucadia logo format | MEDIUM | PNG at /assets/neucadia_logo.png confirmed via WebFetch; dimensions unknown |
 
 ---
 
-### Fix 3: Site URL in astro.config.ts
+## Open Questions
 
-#### Exact Location
+1. **Does `copy-images` include `images/inspiration/` subdirectory?** — Check `scripts/pipeline.js` copy-images step before writing background-image CSS paths.
 
-**File:** `astro.config.ts`
+2. **Which inspiration images map to which sub-section?** — Three sub-sections (poem, forest, ride) need one image each. Curatorial decision for implementation phase.
 
-**Line 5:**
-```typescript
-site: 'https://hiawathasrevenge.com', // TODO: update to actual deployed URL
-```
+3. **Sticky nav height for scroll-margin-top** — Final nav height determines the CSS offset value. Measure after building.
 
-#### Current Value
+4. **Neucadia logo dimensions** — No width/height known from research. Set `width` and `height` attributes after inspecting the actual PNG to prevent CLS.
 
-```typescript
-site: 'https://hiawathasrevenge.com', // TODO: update to actual deployed URL
-```
-
-The URL `https://hiawathasrevenge.com` is a placeholder with a `// TODO` comment. The comment suggests the actual deployed URL was not known at authoring time.
-
-#### Change Required
-
-1. Determine the actual deployed URL (Vercel, Netlify, GitHub Pages, or custom domain).
-2. Replace the placeholder and remove the TODO comment:
-   ```typescript
-   site: 'https://ACTUAL-DEPLOYED-URL.com',
-   ```
-
-This value is used by Astro for:
-- Generating canonical `<link rel="canonical">` tags
-- Building absolute URLs for sitemap.xml (if `@astrojs/sitemap` is added)
-- The `Astro.site` variable in any components that use it
-
-If the site is deployed at `hiawathasrevenge.com` (exactly as written, minus the placeholder comment), then the only change is removing the `// TODO` comment. If the actual domain is different, update accordingly.
-
----
-
-### Fix 4: Description Authoring Locations
-
-The editorial descriptions for each segment exist in **two files** that must be kept in sync. Both files contain identical description text.
-
-#### File 1: RouteExplainer.astro (Primary Authoring Location)
-
-**File:** `src/components/RouteExplainer.astro`
-**Lines:** 18–25 (the `SEGMENTS` const array)
-
-Each segment object has a `description` field. These are the descriptions rendered in the RouteExplainer section cards. Example:
-
-```javascript
-// Line 18 — 520 segment
-{ name: '520', startMi: 0, endMi: 5.0, ..., description: 'A brief paved warm-up...' }
-
-// Line 19 — NF2266 segment
-{ name: 'NF2266', ..., description: "The route's crucible..." }
-
-// Line 20 — Bass Lake Rd
-// Line 21 — NF2217-2218
-// Line 22 — ND2225
-// Line 23 — Doe Lake
-// Line 24 — Ridge Rd
-```
-
-All 7 descriptions span lines 18–25 of this file.
-
-#### File 2: scripts/generate-sector-details.js (Must Be Kept in Sync)
-
-**File:** `scripts/generate-sector-details.js`
-**Lines:** 26–69 (the `SECTOR_DETAILS` const array)
-
-The script header (line 8) explicitly states:
-> "Descriptions are extracted verbatim from RouteExplainer.astro SEGMENTS const."
-
-Each sector entry has a `description` field that must match RouteExplainer.astro:
-
-```javascript
-// Lines 28–32 — sector-520
-{ id: 'sector-520', description: "A brief paved warm-up...", surface: 'smooth asphalt', ... }
-
-// Lines 34–38 — sector-nf2266
-// Lines 40–44 — sector-bass-lake
-// Lines 46–50 — sector-nf2217
-// Lines 52–56 — sector-nd2225
-// Lines 58–62 — sector-doe-lake
-// Lines 64–68 — sector-rapid-river (Ridge Rd)
-```
-
-After editing `generate-sector-details.js`, the build script must be run to regenerate `public/data/sector-details.json`:
-
-```bash
-node scripts/generate-sector-details.js
-```
-
-This writes to `public/data/sector-details.json`, which is consumed by the map's sector detail panels.
-
-#### Description Sync Protocol
-
-When rewriting any segment description:
-1. Edit `src/components/RouteExplainer.astro` lines 18–25 (the display source)
-2. Edit `scripts/generate-sector-details.js` lines 26–69 (the panel data source)
-3. Run `node scripts/generate-sector-details.js` to regenerate `public/data/sector-details.json`
-4. Both files must contain identical text for each segment
-
-The `surface` field in `generate-sector-details.js` is separate from the description — it is a short editorial label (e.g., "smooth asphalt") displayed in the sector panel. Update it if the description rewrite changes how the surface is characterized.
-
----
-
-### Summary Change Table
-
-| Fix | File | Lines | Change |
-|-----|------|-------|--------|
-| Label font-size | `src/components/RouteMap.astro` | 685 | `11px` → `12px` |
-| Label padding | `src/components/RouteMap.astro` | 683 | `3px 8px` → `4px 10px` |
-| Stars font-size | `src/components/RouteMap.astro` | 692 | `9px` → `10px` |
-| 520 photo (Option B) | `public/data/photos.json` | append | Add photo entry with `mile < 5.0` |
-| 520 photo (Option D) | (no change) | — | Accept fallback gradient |
-| Site URL | `astro.config.ts` | 5 | Remove `// TODO` comment; confirm/update URL |
-| Descriptions (display) | `src/components/RouteExplainer.astro` | 18–25 | Rewrite 7 `description` fields |
-| Descriptions (panel data) | `scripts/generate-sector-details.js` | 26–69 | Mirror description changes; re-run script |
-
+5. **Light mode text colors** — Specific color token choices for body text, headings, and accents on the cream-100 background need visual review. The existing WCAG contrast annotations in global.css (documented per token vs forest-900/forest-950) won't apply to a light background — new contrast calculations needed for the relevant tokens.
