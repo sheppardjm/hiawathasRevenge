@@ -56,10 +56,10 @@ Plans:
   2. The ethos statement is visually distinct from body prose — larger, differently styled, not a paragraph.
   3. A "Powered by Neucadia" footer line appears at the very bottom of every page with an inline Neucadia logo linked to neucadia.com.
   4. The Neucadia logo loads from a local asset (not an external URL) and has no layout shift.
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 46-01: RideEthos component + NeucadiaFooter component
+- [ ] 46-01: RideEthos component + NeucadiaFooter component + logo download + wiring
 
 #### Phase 47: History Light/Dark Mode
 **Goal**: The History section is readable and visually rich in both light and dark OS color scheme preferences, with inspiration images fading in as the user scrolls.
