@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-04-08)
 ## Current Position
 
 Phase: 49 of 49 (Section Background Imagery)
-Plan: 0 of TBD in current phase
-Status: Ready to plan
-Last activity: 2026-04-08 — Roadmap created for v1.10
+Plan: 1 of 1 in current phase
+Status: In progress — paused at human-verify checkpoint
+Last activity: 2026-04-08 — Completed tasks 1+2 of 49-01-PLAN.md, awaiting visual verification
 
-Progress: [░░░░░░░░░░░░░░░░░░░░] 0%
+Progress: [░░░░░░░░░░░░░░░░░░░░] ~90% (tasks complete, checkpoint pending)
 
 ## Performance Metrics
 
@@ -36,9 +36,11 @@ Progress: [░░░░░░░░░░░░░░░░░░░░] 0%
 (Full decision log in PROJECT.md Key Decisions table)
 
 Recent decisions affecting current work:
-- Phase 47 (v1.8): CSS full-bleed breakout pattern (width:100vw + translateX(-50%)) on ::before escapes container — reuse for Route Map and Gallery
+- Phase 47 (v1.8): CSS full-bleed breakout pattern (width:100vw + translateX(-50%)) on ::before escapes container — NOT needed for Route Map and Gallery (w-full sections, inset:0 is correct)
 - Phase 47 (v1.8): Ojibwe inspiration images (Option A) — indigenous art focus matches site's cultural narrative
-- Phase 47 (v1.8): Light-mode CSS scoped to .hiawatha-section — same scoping pattern needed for new sections
+- Phase 47 (v1.8): Light-mode CSS scoped to .hiawatha-section — for new sections use :global() in index.astro
+- Phase 49 (v1.10): data-bg-fade on any element auto-enrolls in HiawathaExplainer.astro global IntersectionObserver — zero JS changes needed
+- Phase 49 (v1.10): gallery-bg uses bogcore mushroom/nature woodcut (original-aafd7b2567bdcc068e17d93d44562fa7.webp) — standalone morel woodcut not found in inspiration library
 
 ### Pending Todos
 
@@ -56,6 +58,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-08
-Stopped at: Roadmap created for v1.10, ready for plan-phase 49
+Last session: 2026-04-08T19:16:26Z
+Stopped at: Checkpoint human-verify after tasks 1+2 of 49-01-PLAN.md
 Resume file: None
