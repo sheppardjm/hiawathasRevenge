@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-04-08)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive, visually stunning showcase that inspires them to ride it and support MBTN.
-**Current focus:** v1.10 complete — Section Background Imagery
+**Current focus:** Planning next milestone
 
 ## Current Position
 
-Phase: 49 of 49 (Section Background Imagery)
-Plan: 1 of 1 in current phase
-Status: Complete — all phases in v1.10 done
-Last activity: 2026-04-08 — Phase 49 executed and verified
+Phase: 49 of 49 (all milestones through v1.10 complete)
+Plan: N/A
+Status: Ready to plan next milestone
+Last activity: 2026-04-08 — v1.10 milestone complete
 
-Progress: [████████████████████] 100%
+Progress: [████████████████████] 100% (v1.10)
 
 ## Performance Metrics
 
@@ -36,12 +36,6 @@ Progress: [████████████████████] 100%
 
 (Full decision log in PROJECT.md Key Decisions table)
 
-Recent decisions affecting current work:
-- Phase 49 (v1.10): Gallery bg uses Hiawatha scenes illustration grid with tiling repeat (user chose over bogcore mushroom)
-- Phase 49 (v1.10): Gallery ::before uses background-size: 400px + background-repeat: repeat (tall section needs tiling)
-- Phase 49 (v1.10): IntersectionObserver threshold lowered from 0.15 to 0.01 (fixes tall sections never triggering)
-- Phase 49 (v1.10): data-bg-fade on any element auto-enrolls in HiawathaExplainer.astro global IntersectionObserver
-
 ### Pending Todos
 
 None.
@@ -59,5 +53,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-04-08
-Stopped at: v1.10 milestone complete
+Stopped at: v1.10 milestone archived and tagged
 Resume file: None

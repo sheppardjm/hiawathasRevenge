@@ -87,18 +87,15 @@ Visitors experience the beauty and scale of the Hiawatha's Revenge route through
 - ✓ Full-bleed Ojibwe inspiration background images with scroll-triggered fade and reduced-motion guard — v1.8
 - ✓ Little Indian segment (8th and final gravel sector) added to data pipeline and displayed on 100mi and 100k routes — v1.9
 - ✓ SVG wave background pattern tiles seamlessly in route explainer section — v1.9
+- ✓ Route Map section displays scroll-triggered topo arrowheads background via ::before pseudo-element with sepia filter — v1.10
+- ✓ Gallery section displays scroll-triggered tiling Hiawatha scenes background (400px repeat) via ::before pseudo-element — v1.10
+- ✓ Both new backgrounds respect prefers-reduced-motion (static 0.04 opacity) and prefers-color-scheme: light (brightness 1.2, opacity 0.12) — v1.10
+- ✓ IntersectionObserver threshold lowered to 0.01 for reliable triggering on tall sections — v1.10
+- ✓ Two new processed inspiration images (route-bg.webp 49KB, gallery-bg.webp 30KB) via process-inspiration-bg.js — v1.10
 
 ### Active
 
-**Current Milestone: v1.10 Section Background Imagery**
-
-**Goal:** Extend the scroll-triggered Ojibwe inspiration background imagery pattern from the History section to the Route Explainer and Gallery sections.
-
-**Target features:**
-- Inspiration background images on Route Explainer section (behind segment cards)
-- Inspiration background images on Gallery section (behind photo masonry)
-- Processed via existing process-inspiration-bg.js pipeline with 2 new image selections
-- Same ::before pseudo-element, sepia filter, IntersectionObserver fade, reduced-motion guard
+(No active milestone — run `/gsd:new-milestone` to start next)
 
 ### Out of Scope
 
@@ -113,12 +110,13 @@ Visitors experience the beauty and scale of the Hiawatha's Revenge route through
 
 ## Context
 
-Shipped v1.0 through v1.9 with 4,401 LOC across Astro/TypeScript/JavaScript/CSS. All 8 gravel sectors defined (520, NF2266, Bass Lake Rd, NF2217-2218, ND2225, Little Indian, Doe Lake, Ridge Rd).
+Shipped v1.0 through v1.10 with 6,143 LOC across Astro/TypeScript/JavaScript/CSS. All 8 gravel sectors defined (520, NF2266, Bass Lake Rd, NF2217-2218, ND2225, Little Indian, Doe Lake, Ridge Rd).
 Tech stack: Astro 6, Tailwind 4, Vite 7, Leaflet, Chart.js, PhotoSwipe, leaflet.markercluster, chartjs-plugin-annotation, sharp, gpxparser.
 Build pipeline: 11-step pipeline.js running per-route (parse-gpx → resolve-annotations → generate-sector-details → compute-sector-elevations) then shared steps (generate-thumbnails → copy-images → generate-webp → process-historical → match-photos → copy-gpx → generate-og-image). generate-surface-points removed in v1.7.
 3 route distances: 100mi (456 pts, 102mi, 2,258 ft), 100k (278 pts, 62mi, 1,616 ft), 50k (134 pts, 31mi, 809 ft).
-56 route photos with mileage-assigned manifest (mileage-sorted output), 2 historical Remington illustrations (Met CC0).
+56 route photos with mileage-assigned manifest (mileage-sorted output), 2 historical Remington illustrations (Met CC0), 5 processed inspiration background images.
 v1.7 map simplified to two-color scheme (forest900 road + amber500 gravel sectors). Segment cards display user-chosen single hero photos via cardPhoto field.
+v1.10 completed scroll-triggered atmospheric backgrounds across History, Route Map, and Gallery sections using ::before pseudo-elements with sepia filters and IntersectionObserver fade.
 Site URL configured as https://hiawathasrevenge.com.
 Reference implementation: github.com/sheppardjm/mkUltraGravel — same architecture, different visual identity.
 MBTN (mbtn.org) is the beneficiary — donate CTA links to their site.
@@ -207,6 +205,11 @@ MBTN (mbtn.org) is the beneficiary — donate CTA links to their site.
 | CSS source order for light-mode | @media block last in style tag wins at equal specificity | ✓ Good — bug fix |
 | CSS full-bleed breakout pattern | width:100vw + translateX(-50%) on ::before escapes container | ✓ Good — zero HTML changes |
 | Ojibwe inspiration images (Option A) | Indigenous art focus matches site's cultural narrative | ✓ Good — consistent identity |
+| Hiawatha scenes grid for gallery bg | Tiling illustration works across 5000+ px tall section; bogcore mushroom too detailed | ✓ Good — seamless tiling |
+| Gallery bg tiling repeat at 400px | background-size: cover stretched poorly on tall section; repeat creates wallpaper effect | ✓ Good — visual consistency |
+| Observer threshold 0.15→0.01 | 15% of 5000px gallery exceeds viewport; observer never fired | ✓ Good — reliable triggering |
+| data-bg-fade auto-enrollment | Any element with data-bg-fade auto-enrolls in global observer — zero JS additions | ✓ Good — extensible pattern |
+| inset:0 (not left:50%/100vw breakout) for bg | #route and #gallery are w-full sections, not max-w constrained | ✓ Good — correct for layout |
 
 ---
-*Last updated: 2026-04-08 after v1.10 milestone initialization*
+*Last updated: 2026-04-08 after v1.10 milestone completion*

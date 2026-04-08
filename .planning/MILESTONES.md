@@ -1,5 +1,32 @@
 # Project Milestones: Hiawatha's Revenge
 
+## v1.10 Section Background Imagery (Shipped: 2026-04-08)
+
+**Delivered:** Extended scroll-triggered Ojibwe inspiration background imagery to the Route Map and Gallery sections — topo arrowheads behind segment cards and tiling Hiawatha scenes behind the photo masonry — completing the atmospheric background treatment across the site.
+
+**Phases completed:** 49 (1 plan total)
+
+**Key accomplishments:**
+
+- Extended process-inspiration-bg.js from 3 to 5 entries; processed route-bg.webp (49KB) and gallery-bg.webp (30KB)
+- Added scroll-triggered ::before sepia backgrounds to Route Map (#route) and Gallery (#gallery) sections
+- Gallery uses tiling repeat pattern (400px tiles) for the 5000+ px tall 56-photo masonry section
+- Fixed IntersectionObserver threshold (0.15 to 0.01) to reliably trigger on tall sections
+- Full accessibility: prefers-reduced-motion static fallback + prefers-color-scheme: light overrides on both sections
+
+**Stats:**
+
+- 13 files changed (+1,219/-14)
+- 6,143 lines of Astro/TypeScript/JavaScript/CSS (total codebase)
+- 1 phase, 1 plan, 3 tasks
+- <1 day (2026-04-08, ~1 hour)
+
+**Git range:** `435fdf1` (docs: start milestone v1.10) → `57e5c00` (test(49): complete UAT)
+
+**What's next:** TBD — next milestone via `/gsd:new-milestone`
+
+---
+
 ## v1.9 Little Indian Segment (Shipped: 2026-04-08)
 
 **Delivered:** Added Little Indian as the 8th and final gravel sector across the data pipeline, interactive map, and route explainer for 100mi and 100k routes — completing full sector coverage of the Hiawatha's Revenge route.
