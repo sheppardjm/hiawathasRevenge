@@ -79,18 +79,16 @@ Visitors experience the beauty and scale of the Hiawatha's Revenge route through
 - ✓ User-chosen single hero photo per segment card with full-res JPGs and cardPhoto field — v1.7
 - ✓ Dead surface-points.json files deleted, generate-surface-points removed from pipeline — v1.7
 - ✓ Landscape photo CLS placeholder corrected via -WxH dimension suffix naming — v1.7
+- ✓ Sticky navigation bar with IntersectionObserver scroll-spy, stuck-state detection, scroll-margin-top anchors — v1.8
+- ✓ Active section highlighting in nav as user scrolls through the page — v1.8
+- ✓ RideEthos declarative kicker section (founding date, always free, fellowship, all levels) — v1.8
+- ✓ "Powered by Neucadia" body-level footer with local logo, CLS-safe dimensions — v1.8
+- ✓ History section CSS-only light/dark mode via prefers-color-scheme with WCAG AA contrast — v1.8
+- ✓ Full-bleed Ojibwe inspiration background images with scroll-triggered fade and reduced-motion guard — v1.8
 
 ### Active
 
-**Current Milestone: v1.8 Navigation & Identity**
-
-**Goal:** Improve site navigation, communicate ride ethos, add brand attribution, and enhance history section readability with light/dark mode support.
-
-**Target features:**
-- Sticky navigation bar below hero (History, Route, Gallery, Sectors) — visible on all screen sizes, fixed on scroll
-- Ride ethos explainer above MBTN callout — since June 7, 2014, always free, fellowship over competition, all levels
-- "Powered by Neucadia" footer — full-width single line with logo from neucadia.com
-- History section light/dark mode via prefers-color-scheme — light mode beige/off-white bg, faded desaturated inspiration images in both modes with scroll-triggered fade
+(None — planning next milestone)
 
 ### Out of Scope
 
@@ -105,7 +103,7 @@ Visitors experience the beauty and scale of the Hiawatha's Revenge route through
 
 ## Context
 
-Shipped v1.0 through v1.7 with 5,718 LOC across Astro/TypeScript/JavaScript/CSS.
+Shipped v1.0 through v1.8 with 4,397 LOC across Astro/TypeScript/JavaScript/CSS.
 Tech stack: Astro 6, Tailwind 4, Vite 7, Leaflet, Chart.js, PhotoSwipe, leaflet.markercluster, chartjs-plugin-annotation, sharp, gpxparser.
 Build pipeline: 11-step pipeline.js running per-route (parse-gpx → resolve-annotations → generate-sector-details → compute-sector-elevations) then shared steps (generate-thumbnails → copy-images → generate-webp → process-historical → match-photos → copy-gpx → generate-og-image). generate-surface-points removed in v1.7.
 3 route distances: 100mi (456 pts, 102mi, 2,258 ft), 100k (278 pts, 62mi, 1,616 ft), 50k (134 pts, 31mi, 809 ft).
@@ -190,6 +188,15 @@ MBTN (mbtn.org) is the beneficiary — donate CTA links to their site.
 | Doe Lake uses image outside pipeline manifest | 75fe7837 provided directly by user; not in photos-manifest.json | ✓ Good — user preference |
 | 280px minmax minimum for grid columns | 896px container / 400px = only 2 cols; 280px gives 3 cols at desktop | ✓ Good — responsive layout |
 | Mileage sort in match-photos.js output chain | All downstream consumers get mileage-ordered photo data automatically | ✓ Good — single source of truth |
+| Nav z-index 100 (not 1000) | Sector panel uses z-index 1000; collision avoidance | ✓ Good — no z-index conflict |
+| top: -1px stuck detection | IntersectionObserver threshold:[1] fires when nav leaves flow — no sentinel DOM | ✓ Good — clean pattern |
+| :global() for scroll-margin-top | Astro scoped styles can't reach child component section IDs | ✓ Good — necessary escape hatch |
+| NeucadiaFooter after </main> | Brand attribution is not main content — body-level footer landmark | ✓ Good — semantic HTML |
+| RideEthos uses <span> not headings | Avoids global text-shadow inheritance on h1-h4 | ✓ Good — no visual artifacts |
+| Light-mode CSS scoped to .hiawatha-section | Global @theme static tokens must not be overridden | ✓ Good — isolated |
+| CSS source order for light-mode | @media block last in style tag wins at equal specificity | ✓ Good — bug fix |
+| CSS full-bleed breakout pattern | width:100vw + translateX(-50%) on ::before escapes container | ✓ Good — zero HTML changes |
+| Ojibwe inspiration images (Option A) | Indigenous art focus matches site's cultural narrative | ✓ Good — consistent identity |
 
 ---
-*Last updated: 2026-04-07 after v1.8 milestone start*
+*Last updated: 2026-04-08 after v1.8 milestone completion*

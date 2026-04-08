@@ -1,5 +1,32 @@
 # Project Milestones: Hiawatha's Revenge
 
+## v1.8 Navigation & Identity (Shipped: 2026-04-08)
+
+**Delivered:** Sticky navigation bar with scroll-spy active highlighting, ride ethos values statement, "Powered by Neucadia" brand footer, and History section light/dark mode with full-bleed Ojibwe inspiration background images and WCAG AA contrast compliance.
+
+**Phases completed:** 45-47 (5 plans total)
+
+**Key accomplishments:**
+
+- Sticky navigation bar with IntersectionObserver scroll-spy active highlighting, stuck-state detection (top:-1px trick), and scroll-margin-top anchor offsets for all 4 sections
+- RideEthos declarative kicker section communicating founding date (June 7, 2014), always free, fellowship over competition, and all-levels welcome
+- "Powered by Neucadia" body-level footer with locally-hosted logo, CLS-safe dimensions, and external link safety
+- History section CSS-only light/dark mode via prefers-color-scheme — cream/forest palette with WCAG AA heading contrast
+- Full-bleed Ojibwe inspiration background images via CSS breakout pattern (width:100vw + translateX) with scroll-triggered fade and reduced-motion guard
+
+**Stats:**
+
+- 86 files changed (+3,627/-66)
+- 4,397 lines of Astro/TypeScript/JavaScript/CSS (total codebase)
+- 3 phases, 5 plans, 27 commits
+- 2 days (2026-04-07 → 2026-04-08)
+
+**Git range:** `11fe6b2` (docs(45): research phase sticky nav domain) → `788452d` (docs(47): complete history light/dark mode phase)
+
+**What's next:** TBD — next milestone via `/gsd:new-milestone`
+
+---
+
 ## v1.7 UX Polish & Photo Pipeline (Shipped: 2026-04-07)
 
 **Delivered:** Clean two-color route map, expanded photo pipeline (56 photos mileage-sorted), user-chosen segment card hero photos, resolved gallery layout and download UX friction, and full tech debt cleanup addressing all milestone audit items.
