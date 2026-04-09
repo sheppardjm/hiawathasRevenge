@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-04-09)
 ## Current Position
 
 Phase: 50 of 53 (Meta Tags & Structured Data)
-Plan: —
-Status: Ready to plan
-Last activity: 2026-04-09 — Roadmap created for v1.11
+Plan: 01 of 01
+Status: Phase complete
+Last activity: 2026-04-09 — Completed 50-01-PLAN.md (meta tags & structured data)
 
-Progress: [░░░░░░░░░░░░░░░░░░░] 0% (v1.11)
+Progress: [████░░░░░░░░░░░░░░░] 25% (v1.11)
 
 ## Performance Metrics
 
@@ -36,6 +36,13 @@ Progress: [░░░░░░░░░░░░░░░░░░░] 0% (v1.11)
 
 (Full decision log in PROJECT.md Key Decisions table)
 
+**Phase 50-01 (Meta Tags & Structured Data):**
+- og:locale uses underscore format `en_US` (not hyphen `en-US`)
+- theme-color hardcoded as `#1a2e1a` — CSS custom properties don't work in content attribute
+- Event startDate timezone is CDT (-05:00) for Michigan UP in June
+- offers.isAccessibleForFree is boolean true (not string); offers.price is string "0" (not number)
+- admin.astro canonical gap accepted as won't-fix (redirects to / in prod, never crawled)
+
 ### Pending Todos
 
 None.
@@ -52,6 +59,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-09
-Stopped at: Roadmap created for v1.11 SEO & Social Sharing
+Last session: 2026-04-09T15:38:52Z
+Stopped at: Completed 50-01-PLAN.md — meta tags & structured data
 Resume file: None
