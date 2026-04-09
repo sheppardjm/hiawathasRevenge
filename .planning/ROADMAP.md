@@ -36,7 +36,9 @@ See .planning/MILESTONES.md for full history.
   3. Mobile browser chrome (address bar, task switcher) reflects the site's forest-green identity via theme-color
   4. Google Rich Results Test passes the Event JSON-LD without errors -- street address, timezone-aware startDate, free-event offers block, geo coordinates, and URL all present
   5. Canonical URL is correct and present on every page
-**Plans**: TBD
+**Plans:** 1 plan
+Plans:
+- [ ] 50-01-PLAN.md — Add missing meta tags and upgrade Event JSON-LD schema
 
 ### Phase 51: Favicon & Icons
 **Goal**: Browser tabs, bookmarks, and iOS home screen show the branded shield badge instead of a tree emoji
@@ -77,7 +79,7 @@ See .planning/MILESTONES.md for full history.
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
-| 50. Meta Tags & Structured Data | v1.11 | 0/TBD | Not started | - |
+| 50. Meta Tags & Structured Data | v1.11 | 0/1 | Planned | - |
 | 51. Favicon & Icons | v1.11 | 0/TBD | Not started | - |
 | 52. OG Image Redesign | v1.11 | 0/TBD | Not started | - |
 | 53. Crawlability | v1.11 | 0/TBD | Not started | - |
