@@ -95,7 +95,16 @@ Visitors experience the beauty and scale of the Hiawatha's Revenge route through
 
 ### Active
 
-(No active milestone — run `/gsd:new-milestone` to start next)
+**Current Milestone: v1.11 SEO & Social Sharing**
+
+**Goal:** Ensure the site looks compelling and accurate when shared on social platforms or found via search — badge logo, proper descriptions, structured data, and crawlability.
+
+**Target features:**
+- Social share tags + image — OG + Twitter Card meta tags with badge-based share image for iMessage, Slack, Facebook, X, Discord
+- Structured data (Event) — JSON-LD Event schema for Google rich results (date, location, free event)
+- robots.txt + sitemap.xml — help search engines crawl and index the site
+- Canonical URL — authoritative URL for each page
+- Favicon + Apple touch icon — generated from the shield badge design
 
 ### Out of Scope
 
@@ -212,4 +221,4 @@ MBTN (mbtn.org) is the beneficiary — donate CTA links to their site.
 | inset:0 (not left:50%/100vw breakout) for bg | #route and #gallery are w-full sections, not max-w constrained | ✓ Good — correct for layout |
 
 ---
-*Last updated: 2026-04-08 after v1.10 milestone completion*
+*Last updated: 2026-04-09 after v1.11 milestone start*
