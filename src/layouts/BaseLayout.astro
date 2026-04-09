@@ -20,21 +20,37 @@ const eventSchema = {
   "@context": "https://schema.org",
   "@type": "Event",
   "name": "Hiawatha's Revenge",
-  "description": "A 100-mile cycling adventure through Michigan's Hiawatha National Forest supporting the Munising Bay Trail Network.",
-  "startDate": "2026-06-06",
+  "description": "A 100-mile gravel cycling adventure through Michigan's Hiawatha National Forest, supporting the Munising Bay Trail Network.",
+  "startDate": "2026-06-06T08:00:00-05:00",
   "endDate": "2026-06-06",
   "eventStatus": "https://schema.org/EventScheduled",
   "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
   "location": {
     "@type": "Place",
-    "name": "Munising, Michigan",
+    "name": "Valley Spur Trailhead",
     "address": {
       "@type": "PostalAddress",
+      "streetAddress": "Valley Spur Trailhead, M-94",
       "addressLocality": "Munising",
       "addressRegion": "MI",
+      "postalCode": "49862",
       "addressCountry": "US"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 46.36331,
+      "longitude": -86.71216
     }
   },
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD",
+    "isAccessibleForFree": true,
+    "availability": "https://schema.org/InStock",
+    "url": "https://hiawathasrevenge.com"
+  },
+  "url": "https://hiawathasrevenge.com",
   "organizer": {
     "@type": "Organization",
     "name": "Munising Bay Trail Network",
