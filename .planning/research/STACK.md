@@ -1,265 +1,323 @@
-# Technology Stack: Navigation & Identity (v1.8)
+# Technology Stack: SEO & Social Sharing Polish
 
-**Project:** Hiawatha's Revenge v1.8
-**Researched:** 2026-04-07
-**Scope:** Stack additions/changes for sticky nav, light/dark history section, scroll-triggered image fading, and Neucadia brand footer
+**Project:** Hiawatha's Revenge
+**Researched:** 2026-04-09
+**Scope:** OG image redesign, robots.txt + sitemap.xml, favicon generation, meta/structured data audit
 **Overall confidence:** HIGH
-**Core constraint:** No new npm dependencies. All four features are solved by the existing stack plus native browser APIs.
+**Core constraint:** Two new dependencies total. Everything else uses existing sharp + hand-written code.
 
 ---
 
 ## Executive Summary
 
-Zero new dependencies. Every v1.8 feature is handled by the existing stack plus native CSS/browser capabilities that are already in use or baseline-available:
-
-1. **Sticky nav** — `position: sticky` CSS (97% global support, MDN Baseline)
-2. **Light/dark history section** — `@media (prefers-color-scheme: dark)` (MDN Baseline since 2020); Tailwind v4's `dark:` variant works automatically via OS preference with no configuration
-3. **Scroll-triggered image fading** — `IntersectionObserver` already in the codebase (ScrollReveal.astro, HiawathaExplainer.astro); same pattern extended
-4. **Neucadia footer logo** — `<img>` pointing to `https://neucadia.com/assets/neucadia_logo.png` (5.1KB PNG confirmed publicly accessible)
-
-The tempting alternatives — CSS scroll-driven animations (`animation-timeline: view()`), JavaScript-managed dark mode toggles, inline SVG for the external logo — are either not yet baseline or add unnecessary complexity for the requirements as stated.
+This milestone needs two new dependencies: `@astrojs/sitemap` (official Astro integration for sitemap.xml generation) and `png-to-ico` (lightweight ICO file generator for legacy favicon). Everything else -- OG image redesign, favicon PNG generation, robots.txt, meta tag improvements -- is handled by the existing `sharp` library and static file placement. The build pipeline gets one new step (`generate-favicons`) and one modified step (`generate-og-image`).
 
 ---
 
-## Recommended Stack (No Changes)
+## Recommended Stack Additions
 
-### Core — KEEP AS-IS
+### 1. Sitemap Generation
 
-| Technology | Installed Version | Relevant Capability | Status |
-|------------|------------------|---------------------|--------|
-| Astro | 6.1.2 | Component authoring, scoped styles, `<style>` blocks | No change |
-| Tailwind CSS | 4.2.2 | `dark:` variant uses `prefers-color-scheme` automatically | No change |
-| `@tailwindcss/vite` | 4.2.2 | Tailwind build pipeline | No change |
-| TypeScript | 5.9.3 | Astro frontmatter typing | No change |
+| Technology | Version | Purpose | Why |
+|------------|---------|---------|-----|
+| `@astrojs/sitemap` | ^3.7.2 | Automatic sitemap.xml generation at build time | Official Astro integration. Zero-config for static output mode. Already has `site` configured in `astro.config.ts`. Generates `sitemap-index.xml` + `sitemap-0.xml` into `dist/`. No reason to use a third-party alternative. |
 
-### Browser APIs in Use — EXTEND, DON'T REPLACE
-
-| API | Current Use | v1.8 Extension |
-|-----|------------|----------------|
-| `IntersectionObserver` | ScrollReveal.astro (data-reveal), HiawathaExplainer.astro (data-bg-fade) | History section image fade in/out — same pattern, same thresholds |
-| `@media (prefers-reduced-motion: reduce)` | global.css, HiawathaExplainer.astro, index.astro | Guard all v1.8 transitions |
-| CSS custom properties | @theme static tokens throughout | Light mode color overrides within history section via `@media (prefers-color-scheme: light)` |
-| `position: sticky` | Not currently used | New sticky nav — CSS-only, no JS needed |
-
----
-
-## Feature-by-Feature Stack Decisions
-
-### 1. Sticky Navigation Bar
-
-**Decision: `position: sticky` + `top: 0` in CSS. No JavaScript.**
-
-`position: sticky` is MDN Baseline, 97.21% global support (caniuse.com). It requires no JavaScript, no scroll event listeners, no libraries. The nav sits below the hero and sticks at `top: 0` once the hero scrolls past.
-
-No `-webkit-sticky` prefix needed for current browser targets — unprefixed support covers all major browsers since 2017-2018. The site already targets the same audience bracket.
-
-**Shadow-on-scroll enhancement (optional):** A small `box-shadow` can appear when the nav is stuck to communicate elevation. Two approaches:
-
-- CSS-only via `:stuck` pseudo-class — NOT YET BASELINE (CSS Scrolled State, Chrome 132+ only, no Firefox). Do not use.
-- IntersectionObserver sentinel — observe a 1px element just above the nav; when it leaves viewport, add `.is-stuck` class. This is the established pattern and uses the existing IntersectionObserver infrastructure. Zero new dependencies.
-
-**Verdict:** CSS `position: sticky` for the core behavior. IntersectionObserver sentinel for the stuck-shadow enhancement if needed.
-
----
-
-### 2. History Section Light/Dark Mode
-
-**Decision: Native CSS `@media (prefers-color-scheme: light/dark)` scoped to the history section component. No JavaScript. No Tailwind `dark:` utilities needed.**
-
-The v1.8 requirement is targeted: light/dark mode applies to the **History section only** (HiawathaExplainer.astro), not the whole site. The rest of the site remains dark-only (forest-900 base). This scoped approach is cleaner than toggling a site-wide dark class.
-
-**Why not Tailwind `dark:` utilities:**
-
-Tailwind v4's `dark:` variant is activated automatically by `@media (prefers-color-scheme: dark)` — no configuration needed. However, the existing design system uses `@theme static` CSS custom properties, not Tailwind color utilities, for all color values. HiawathaExplainer.astro already uses `var(--color-forest-950)` CSS variables, not `class="bg-forest-950"` Tailwind utilities. Mixing approaches (Tailwind `dark:` utilities alongside CSS var overrides) would create inconsistency. Use the same CSS-var approach throughout.
-
-**Implementation pattern:**
-
-```css
-/* Within HiawathaExplainer.astro <style> block */
-
-.hiawatha-section {
-  /* Default (dark) — already existing values */
-  --section-bg: var(--color-forest-950);
-  --prose-bg: transparent;
-  --text-primary: var(--color-cream-100);
-  --text-secondary: var(--color-cream-200);
-}
-
-@media (prefers-color-scheme: light) {
-  .hiawatha-section {
-    --section-bg: #f5f0e8;   /* beige/off-white — same as --color-cream-100 */
-    --text-primary: var(--color-forest-900);
-    --text-secondary: var(--color-forest-800);
-  }
-}
+**Installation:**
+```bash
+npx astro add sitemap
 ```
 
-This pattern is already proven in the codebase: `global.css` uses the same approach for `prefers-reduced-motion`. Scoped to `.hiawatha-section`, it doesn't touch the rest of the page.
+**Configuration change to `astro.config.ts`:**
+```typescript
+import sitemap from '@astrojs/sitemap';
 
-**Confidence: HIGH.** `prefers-color-scheme` is MDN Baseline Widely Available since January 2020. CSS-only, zero JavaScript, zero dependencies.
+export default defineConfig({
+  site: 'https://hiawathasrevenge.com', // already present
+  integrations: [sitemap()],
+  // ... rest of existing config unchanged
+});
+```
+
+The integration hooks into `astro build` automatically. No pipeline.js change needed -- sitemap generation happens during the Astro build step, not the pre-build pipeline.
+
+**Confidence:** HIGH -- Verified via official Astro docs. Version 3.7.2 confirmed compatible with Astro 6.
 
 ---
 
-### 3. Scroll-Triggered Image Fading (History Section)
+### 2. robots.txt -- Static File, No Dependency
 
-**Decision: `IntersectionObserver` with CSS opacity transitions. Same pattern as `data-bg-fade` in HiawathaExplainer.astro. No new libraries.**
+| Technology | Version | Purpose | Why |
+|------------|---------|---------|-----|
+| Static file | N/A | `public/robots.txt` hand-written | For a single-page static site, a robots.txt integration is overkill. A 4-line static file in `public/` gets copied to `dist/` automatically by Astro. No dependency needed. |
 
-The existing `data-bg-fade` mechanism in HiawathaExplainer already does exactly this: observes subsections, toggles a `bg-visible` class, CSS handles the opacity transition. The v1.8 requirement ("faded desaturated inspiration images with scroll-triggered fade in/out") is an extension of this pattern to the `<figure class="museum-plate">` elements.
+**Content for `public/robots.txt`:**
+```
+User-agent: *
+Allow: /
 
-The key distinction from `ScrollReveal.astro` (data-reveal): ScrollReveal fires once and unobserves (fade in, stay visible). The history section requirement says "fade in/out" — images fade as they enter/leave viewport. This matches the `data-bg-fade` pattern exactly (no `obs.unobserve()`, persistent observation).
+Sitemap: https://hiawathasrevenge.com/sitemap-index.xml
+```
 
-**Implementation:**
+**Why not `astro-robots-txt` or `astro-robots` (npm packages):** These integrations add build-time configuration, verified-bots lists, and AI scraper blocking. None of that is needed for a simple cycling event site that wants to be fully crawlable. A static file is deterministic, version-controlled, has zero build-time cost, and is trivially auditable.
 
+**Confidence:** HIGH -- Standard web practice. No library needed.
+
+---
+
+### 3. OG Image Redesign (Shield Badge + Tagline)
+
+| Technology | Version | Purpose | Why |
+|------------|---------|---------|-----|
+| `sharp` (existing) | ^0.34.5 | Compose OG image: background photo + badge SVG overlay + text tagline | Already in devDependencies. Supports SVG input, PNG/JPEG output, `composite()` for layering, and SVG-based text overlays. No new dependency needed. |
+
+**Current state:** `scripts/generate-og-image.js` crops a hero photo to 1200x630 JPEG. Simple crop, no compositing.
+
+**Redesigned approach -- three-layer composite:**
+
+1. **Background:** Hero photo cropped to 1200x630 (existing logic), optionally with a semi-transparent dark overlay for contrast
+2. **Badge:** `public/images/badge.svg` rendered to PNG via `sharp(badgeSvgBuffer).resize(width).png().toBuffer()`, then composited at center
+3. **Tagline text:** Rendered as an inline SVG string with explicit font styling, converted to `Buffer.from(svgString)`, composited below badge
+
+**Text rendering: use inline SVG overlay via `composite()`, NOT sharp's constructor `text` option.**
+
+Rationale:
+- Sharp's constructor `text` option uses Pango/libvips text rendering, which depends on system-installed fonts and has documented performance issues (>7 seconds for SVG `<text>` elements per sharp issue #2987)
+- The inline SVG overlay pattern is the established approach in the Node.js ecosystem: construct an SVG string with `<text>` elements, convert to Buffer, composite onto the base image
+- This approach is portable across build environments (CI, local dev) because the SVG specifies fonts as CSS `font-family` with fallbacks
+
+**Example pattern:**
 ```javascript
-// Same JS pattern as existing data-bg-fade, applied to museum-plate figures
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    entry.target.classList.toggle('is-visible', entry.isIntersecting);
-  });
-}, { threshold: 0.15 });
+// 1. Background with dark overlay
+const bg = await sharp(heroPath)
+  .resize(1200, null)
+  .extract({ left: 0, top: cropTop, width: 1200, height: 630 })
+  .composite([{
+    input: {
+      create: { width: 1200, height: 630, channels: 4,
+                background: { r: 0, g: 0, b: 0, alpha: 0.4 } }
+    },
+    blend: 'over'
+  }])
+  .toBuffer();
 
-document.querySelectorAll('.museum-plate[data-fade]').forEach(el => observer.observe(el));
+// 2. Badge SVG -> PNG buffer
+const badge = await sharp(badgeSvgPath)
+  .resize(200, null)
+  .png()
+  .toBuffer();
+
+// 3. Tagline as inline SVG -> buffer
+const taglineSvg = `<svg width="800" height="60" xmlns="http://www.w3.org/2000/svg">
+  <text x="400" y="40" text-anchor="middle"
+        font-family="Georgia, 'Times New Roman', serif"
+        font-size="28" fill="white" letter-spacing="2">
+    A 100-Mile Gravel Ride Through the Hiawatha
+  </text>
+</svg>`;
+const tagline = Buffer.from(taglineSvg);
+
+// 4. Composite all layers
+await sharp(bg)
+  .composite([
+    { input: badge, top: 140, left: 500 },
+    { input: tagline, top: 440, left: 200 },
+  ])
+  .jpeg({ quality: 80 })
+  .toFile(outputPath);
 ```
 
-```css
-.museum-plate[data-fade] {
-  opacity: 0;
-  transition: opacity 0.6s ease;
-}
-.museum-plate[data-fade].is-visible {
-  opacity: 1;
-}
-@media (prefers-reduced-motion: reduce) {
-  .museum-plate[data-fade] {
-    opacity: 1;
-    transition: none;
-  }
-}
-```
+**Critical risk -- badge SVG rendering:** The badge SVG is 21KB, exported from Adobe Illustrator 30.3.0 (viewBox="0 0 1294 966"), with complex path data. Sharp uses librsvg for SVG rendering, which handles most Illustrator exports but can occasionally misrender complex artwork. **Mitigation:** Test the badge rendering early in implementation. If it renders poorly, pre-export a high-resolution PNG of the badge (e.g., 512x wide) and composite that instead. This fallback requires zero additional dependencies.
 
-**Why not CSS scroll-driven animations (`animation-timeline: view()`):**
-
-MDN explicitly marks `animation-timeline` as "Limited availability — not Baseline because it does not work in some of the most widely-used browsers." As of April 2026, Firefox does not support it. This site has no analytics data to justify excluding Firefox users. The IntersectionObserver pattern works in all browsers the site already supports.
+**Confidence:** HIGH for the composite approach (well-documented sharp API). MEDIUM for direct rendering of this specific Illustrator SVG (21KB of path data may challenge librsvg).
 
 ---
 
-### 4. "Powered by Neucadia" Footer
+### 4. Favicon Generation from Shield Badge SVG
 
-**Decision: `<img>` tag pointing to `https://neucadia.com/assets/neucadia_logo.png`. No inline SVG. No new dependencies.**
+| Technology | Version | Purpose | Why |
+|------------|---------|---------|-----|
+| `sharp` (existing) | ^0.34.5 | Generate PNG favicons (180, 192, 512px) from badge SVG | Already available. Handles SVG-to-PNG conversion and resize natively. |
+| `png-to-ico` | ^3.0.1 | Convert 32x32 PNG to `favicon.ico` | Lightweight, pure JavaScript, single-purpose. Only needed because sharp cannot output ICO format. |
 
-The Neucadia logo exists at `https://neucadia.com/assets/neucadia_logo.png` (5.1KB PNG, confirmed accessible). An external `<img>` is the correct approach for a third-party brand logo:
+**Installation:**
+```bash
+npm install -D png-to-ico
+```
 
-- No build-time SVG fetch/embedding needed
-- Neucadia controls their own logo appearance — an `<img>` picks up any future brand updates automatically
-- No CORS issues for a `<img src>` load
-- `loading="lazy"` keeps it off the critical path (footer, below fold)
+**Modern favicon file set (per Evil Martians "How to Favicon" guide, updated 2026):**
 
-**Why not inline SVG fetched from neucadia.com at build time:** The logo is a PNG, not an SVG. Even if an SVG existed, embedding third-party SVG inline risks their symbol IDs conflicting with the site's own `<defs>` (the shield motif symbol is already defined in BaseLayout.astro). Inline embedding also couples the build to an external URL — a network failure during `astro build` would break the build.
+| File | Size | Format | Generation Method | Purpose |
+|------|------|--------|-------------------|---------|
+| `favicon.ico` | 32x32 | ICO | sharp SVG->PNG 32x32, then `png-to-ico` | Legacy browsers, RSS readers, PDF tab display |
+| `favicon.svg` | vector | SVG | Manual: simplified version of badge.svg (or keep current emoji version) | Modern browsers, supports dark mode CSS |
+| `apple-touch-icon.png` | 180x180 | PNG | sharp SVG->PNG, resize to 180, add solid background | iOS home screen shortcut |
+| `icon-192.png` | 192x192 | PNG | sharp SVG->PNG, resize to 192 | Android home screen |
+| `icon-512.png` | 512x512 | PNG | sharp SVG->PNG, resize to 512 | PWA splash (future-proofing) |
 
-**Image inversion for light mode:** The PNG logo is dark on transparent (assumption — typical for brand logos). In the history section light mode, inversion may be needed. CSS `filter: invert(1)` or a `@media (prefers-color-scheme: light)` filter rule handles this without needing a second logo asset. Confirm logo colors after first implementation.
+**Current state:** The project has `public/favicon.svg` which is a tree emoji (`<text x="4" y="26" font-size="28">tree-emoji</text>`). This should be replaced with the shield badge.
 
-**Markup pattern:**
-
+**Updated HTML tags for `BaseLayout.astro`:**
 ```html
-<footer class="neucadia-footer">
-  <a href="https://neucadia.com" rel="noopener noreferrer" target="_blank">
-    <img
-      src="https://neucadia.com/assets/neucadia_logo.png"
-      alt="Neucadia"
-      width="120"
-      height="auto"
-      loading="lazy"
-      decoding="async"
-    />
-  </a>
-</footer>
+<!-- Replace existing single favicon link -->
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 ```
 
----
+**Apple touch icon note:** Apple touch icons must have a solid background (no transparency). The badge SVG has transparent background, so the generation script should composite the badge onto a solid-color canvas (e.g., forest-900 / `#1a2e1a` to match the site's dark theme).
 
-## Tailwind v4 Dark Mode: What Works, What Doesn't
+**Why `png-to-ico` over alternatives:**
 
-The project uses `@theme static` — CSS custom properties compiled to static `:root` values. This is **orthogonal** to Tailwind's dark mode variant.
+| Package | Why Not (if not chosen) |
+|---------|------------------------|
+| `png-to-ico` (chosen) | Pure JS, 3.0.1 stable, single purpose, no native deps |
+| `sharp-ico` | Wrapper around sharp; unnecessary indirection when we only need one ICO conversion |
+| `favicons` | Heavyweight generator (30+ variants, manifests, HTML snippets). Massive overkill for 5 files. |
+| `to-ico` | Older, less maintained. Similar approach but `png-to-ico` has more adoption. |
+| `icon-gen` | Multi-platform icon generator (Windows .ico, macOS .icns). More than needed. |
 
-| Approach | Works with this project? | Verdict |
-|----------|--------------------------|---------|
-| `dark:bg-forest-950` Tailwind utility | YES — `dark:` variant works automatically with OS preference | Not used; project uses CSS vars not utility classes |
-| `@media (prefers-color-scheme: dark)` in CSS | YES — always works | Use this directly |
-| `@custom-variant dark` override | Not needed — no manual toggle required | Skip |
-| `color-scheme: dark light` meta | Useful for browser chrome (scrollbar, form inputs) | Optional enhancement |
-
-**Recommendation:** Use raw `@media (prefers-color-scheme: light)` directly in the component's `<style>` block. This is consistent with the existing codebase pattern and requires no Tailwind-specific configuration.
-
----
-
-## What NOT to Add
-
-| Library/Tool | Why People Suggest It | Why NOT for This Project |
-|--------------|----------------------|--------------------------|
-| **next-themes / color-mode** | User-controlled dark mode toggle | Requirement is OS-preference only (prefers-color-scheme). No toggle UI specified. These libraries add a JS runtime bundle for a feature that CSS handles natively. |
-| **CSS scroll-driven animations** (`animation-timeline`) | Modern no-JS scroll effects | Not Baseline. Firefox does not support it. IntersectionObserver achieves the same effect with wider support. |
-| **headless-ui / radix-ui** | Accessible nav bar components | A 4-link nav bar does not need an accessible component library. Four `<a>` tags with `aria-current` is the correct pattern. |
-| **@astrojs/react or similar** | Framework for nav/footer components | The site's established pattern is Astro components + vanilla JS. No framework island needed for static nav links. |
-| **CSS `:stuck` pseudo-class** | Nav shadow when sticky | Chrome 132+ only. No Firefox support. Use IntersectionObserver sentinel instead. |
-| **motion / framer-motion** | Animation library for fades | IntersectionObserver + CSS `transition` already handles fades. Site already uses this pattern in two existing components. |
-| **Intersection Observer polyfill** | IE 11 support | IE 11 < 1% global usage. The site does not target IE. Not needed. |
-| **astro-icon** | Icon library for nav icons | Nav links are text-only (History, Route, Gallery, Sectors). No icon library needed. |
+**Confidence:** HIGH for PNG generation via sharp. HIGH for `png-to-ico` (pure JS, no native deps, stable).
 
 ---
 
-## Version Verification
+### 5. Meta Tags & Structured Data Audit -- No New Dependencies
 
-All versions verified against installed `node_modules/*/package.json` on 2026-04-07:
+| Technology | Version | Purpose | Why |
+|------------|---------|---------|-----|
+| No new dependencies | N/A | Audit/improve `<head>` in BaseLayout.astro | All meta tag and JSON-LD changes are pure HTML/JSON template edits. No library needed. |
 
-| Package | Installed Version | v1.8 Status |
-|---------|------------------|-------------|
-| astro | 6.1.2 | No change needed |
-| tailwindcss | 4.2.2 | `dark:` variant works automatically — no config change |
-| @tailwindcss/vite | 4.2.2 | No change needed |
-| typescript | 5.9.3 | No change needed |
+**What exists and works (from BaseLayout.astro):**
+- `og:type`, `og:url`, `og:title`, `og:description`, `og:image` with width/height -- GOOD
+- `twitter:card` (summary_large_image), `twitter:title`, `twitter:description`, `twitter:image` -- GOOD
+- `<link rel="canonical">` using `Astro.url.pathname` + `Astro.site` -- GOOD
+- Schema.org Event JSON-LD with name, description, startDate, endDate, eventStatus, location, organizer, image -- GOOD
 
-**No version bumps required for v1.8.**
+**Improvements to make (pure template edits):**
+
+| Addition | Tag | Value | Why |
+|----------|-----|-------|-----|
+| Site name | `<meta property="og:site_name">` | "Hiawatha's Revenge" | Displayed by Facebook/LinkedIn alongside the page title |
+| Locale | `<meta property="og:locale">` | "en_US" | Explicit locale declaration for OG parsers |
+| Image alt | `<meta property="og:image:alt">` | Descriptive alt text | Accessibility for social card previews |
+| Theme color | `<meta name="theme-color">` | "#1a2e1a" (forest-900) | Mobile browser chrome color on Android/iOS |
+| Image type | `<meta property="og:image:type">` | "image/jpeg" | Explicit content type for the OG image |
+
+**Structured data audit areas:**
+
+| Field | Status | Action |
+|-------|--------|--------|
+| `name` | Present | No change |
+| `description` | Present | No change |
+| `startDate` / `endDate` | Present (2026-06-06) | Verify still accurate |
+| `eventStatus` | `EventScheduled` | No change |
+| `location` | Place with address | Consider adding geo coordinates |
+| `organizer` | Organization with URL | No change |
+| `image` | OG image URL | Will auto-update with redesigned OG image |
+| `offers` | MISSING | Consider adding if registration link exists |
+| `performer` | N/A | Not applicable to cycling event |
+| `url` | MISSING | Add canonical URL to event schema |
+| `eventAttendanceMode` | `OfflineEventAttendanceMode` | Correct, no change |
+
+**Confidence:** HIGH -- Pure template changes in BaseLayout.astro.
 
 ---
 
-## Installation
+## What NOT to Add (and Why)
+
+| Rejected Technology | Why Not |
+|---------------------|---------|
+| `astro-robots-txt` / `astro-robots` | Overkill for a single-page fully-crawlable site. Static file is simpler, more predictable, zero build cost. |
+| `astro-seo` (npm) | Wrapper component for meta tags. Project already has working hand-written meta tags in BaseLayout. Adds indirection without value for a single-page site. |
+| `favicons` (npm) | Generates 30+ icon variants, HTML, manifests. We need 5 files. |
+| `@astrojs/sitemap` custom options | No need for `filter`, `customPages`, `i18n`, `serialize`. One-page site means default config produces exactly what's needed. |
+| `manifest.webmanifest` | Only needed for PWA installability. This is an informational event site, not an installable app. Skip unless explicitly requested. |
+| Sharp constructor `text` option | Uses Pango/libvips, depends on OS fonts, documented performance issues. SVG text overlay via `composite()` is more portable and predictable. |
+| `@vercel/og` or `satori` | SSR-oriented OG image generators. This is a static build-time pipeline; sharp composite is the right tool. |
+| SVGO (for badge optimization) | The badge SVG is complex Illustrator output. Automated optimization risks breaking intricate path data. For favicon SVG, manual simplification is safer and a one-time effort. |
+
+---
+
+## Integration with Existing Build Pipeline
+
+**Current `scripts/pipeline.js` shared steps:**
+1. generate-routes-manifest
+2. generate-sector-details
+3. generate-thumbnails
+4. copy-images
+5. generate-webp
+6. process-historical
+7. match-photos
+8. copy-gpx
+9. generate-og-image
+
+**Changes needed:**
+
+| Change | Type | Pipeline Impact |
+|--------|------|-----------------|
+| Modify `generate-og-image.js` | Edit existing step (step 9) | Add badge + tagline composite layers. Same input/output path. |
+| Add `generate-favicons.js` | New step (insert as step 10) | Reads `public/images/badge.svg`, outputs `public/favicon.ico`, `public/apple-touch-icon.png`, `public/icon-192.png`, `public/icon-512.png`. Runs once. |
+| Add `robots.txt` | Static file in `public/` | No pipeline change. Astro copies `public/` to `dist/` automatically. |
+| Sitemap generation | Automatic via `@astrojs/sitemap` | Runs during `astro build`, not in pipeline.js. No pipeline change. |
+| Update BaseLayout.astro | Template edit | Favicon `<link>` tags, additional meta tags. No pipeline change. |
+| Update `favicon.svg` | Replace static file | Replace emoji SVG with simplified badge SVG. No pipeline change. |
+
+**Updated pipeline shared steps after changes:**
+1. generate-routes-manifest
+2. generate-sector-details
+3. generate-thumbnails
+4. copy-images
+5. generate-webp
+6. process-historical
+7. match-photos
+8. copy-gpx
+9. generate-og-image (modified)
+10. **generate-favicons (new)**
+
+---
+
+## Complete Installation Summary
 
 ```bash
-# Nothing to install. All v1.8 features use existing stack + native browser APIs.
+# Sitemap integration (hooks into astro build)
+npx astro add sitemap
+
+# ICO generation utility (dev dependency)
+npm install -D png-to-ico
 ```
+
+**Total new dependencies: 2** (`@astrojs/sitemap` + `png-to-ico`). Everything else leverages existing `sharp` (^0.34.5) and static file patterns.
+
+**No version bumps needed for existing packages.**
 
 ---
 
 ## Sources
 
-### HIGH Confidence (Official Documentation, MDN Baseline)
+### HIGH Confidence (Official Documentation)
 
-- [Tailwind CSS v4 Dark Mode docs](https://tailwindcss.com/docs/dark-mode) — `dark:` variant uses `prefers-color-scheme` automatically; `@custom-variant dark` only needed for manual class toggle
-- [MDN: prefers-color-scheme](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme) — Baseline Widely Available since January 2020; CSS-only, no JS
-- [MDN: animation-timeline (scroll-driven)](https://developer.mozilla.org/en-US/docs/Web/CSS/animation-timeline) — "Limited availability" warning; not Baseline; Firefox unsupported as of April 2026
-- [caniuse: position sticky](https://caniuse.com/css-sticky) — 97.21% global support, Baseline March 2022
-- Codebase analysis 2026-04-07: HiawathaExplainer.astro (data-bg-fade pattern, IntersectionObserver toggle via bg-visible class), ScrollReveal.astro (data-reveal once-fire pattern), global.css (prefers-reduced-motion guards, @theme static token structure), BaseLayout.astro (shield symbol defs, no dark mode)
+- [Astro Sitemap Integration Official Docs](https://docs.astro.build/en/guides/integrations-guide/sitemap/) -- Version 3.7.2, zero-config for static mode, requires `site` in astro.config (already present)
+- [Sharp Composite API](https://sharp.pixelplumbing.com/api-composite/) -- Overlay positioning via `top`/`left`, `gravity`, blend modes, SVG buffer compositing, `create` option for blank overlays
+- [Sharp Constructor API](https://sharp.pixelplumbing.com/api-constructor/) -- SVG input support ("SVG input becomes PNG output"), `text` option with Pango markup, `create` option for blank images
+- [Sharp Output API](https://sharp.pixelplumbing.com/api-output/) -- PNG/JPEG/WebP output confirmed; ICO format NOT supported (justifies `png-to-ico` dependency)
 
-### MEDIUM Confidence (WebFetch confirmed, single official source)
+### MEDIUM Confidence (Verified via Multiple Sources)
 
-- `https://neucadia.com/assets/neucadia_logo.png` — PNG logo confirmed accessible (5.1KB, successful HTTP fetch 2026-04-07). Path discovered via WebFetch of neucadia.com homepage HTML.
+- [How to Favicon in 2026 -- Evil Martians](https://evilmartians.com/chronicles/how-to-favicon-in-2021-six-files-that-fit-most-needs) -- Minimal favicon set: `.ico` (32x32) + `.svg` + `apple-touch-icon.png` (180x180) + manifest icons. ICO still needed for RSS readers and PDF tab display.
+- [Favicon Best Practices 2025-2026](https://browserux.com/blog/guides/web-icons/favicons-best-practices.html) -- SVG as primary format for modern browsers, PNG as fallback baseline, 180x180 apple-touch-icon mandatory for iOS
+- [Sharp SVG text performance issue #2987](https://github.com/lovell/sharp/issues/2987) -- SVG `<text>` element rendering can take >7 seconds; inline SVG Buffer composite is preferred over constructor text option
 
----
+### Codebase Analysis (2026-04-09)
 
-## Summary for Roadmap
-
-All four v1.8 features are CSS/HTML work, no new dependencies:
-
-1. **Sticky nav** — New Astro component, CSS `position: sticky`, optional IntersectionObserver sentinel for stuck-shadow
-2. **Ethos explainer** — New Astro component, static HTML + existing CSS patterns (no dark mode needed here)
-3. **Light/dark history** — `@media (prefers-color-scheme: light)` block added to HiawathaExplainer.astro's existing `<style>`, CSS var overrides for section background and text
-4. **Image fading** — `data-fade` attribute + IntersectionObserver extension within HiawathaExplainer.astro, same toggle pattern as existing `data-bg-fade`
-5. **Neucadia footer** — New Astro component or inline in index.astro, `<img>` tag pointing to external PNG
-
-No pipeline changes. No build tool changes. No dependency additions. The implementation sequence is order-independent — each feature is isolated to its component.
+- `scripts/generate-og-image.js`: Current implementation is a simple crop (sharp resize + extract to 1200x630 JPEG). No compositing. Uses `sharp` already.
+- `public/images/badge.svg`: 21KB Adobe Illustrator export (viewBox 1294x966). Complex path data. Single `<path>` element with `class="st0"`.
+- `public/favicon.svg`: 116 bytes, tree emoji in SVG text element. Placeholder, not branded.
+- `astro.config.ts`: `site: 'https://hiawathasrevenge.com'` already configured. No integrations array yet.
+- `src/layouts/BaseLayout.astro`: Complete OG/Twitter Card/canonical/JSON-LD implementation. Single `<link rel="icon">` pointing to `favicon.svg`.
+- `scripts/pipeline.js`: 9 shared steps + 3 route-specific steps. `generate-og-image` is the final shared step.
+- `dist/`: Flat static output. No existing `robots.txt` or `sitemap.xml`.
 
 ---
 
-*Stack research for: Hiawatha's Revenge v1.8 — Navigation & Identity*
-*Researched: 2026-04-07*
-*Previous: v1.5 stack research (2026-04-06) — multi-route support milestone*
+*Stack research for: Hiawatha's Revenge -- SEO & Social Sharing Polish*
+*Researched: 2026-04-09*
+*Previous: v1.8 stack research (2026-04-07) -- Navigation & Identity*

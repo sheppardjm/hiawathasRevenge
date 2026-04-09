@@ -1,177 +1,181 @@
 # Project Research Summary
 
-**Project:** Hiawatha's Revenge v1.8 — Navigation & Identity
-**Domain:** Static editorial cycling site — nav, identity, and light/dark theming additions
-**Researched:** 2026-04-07
+**Project:** Hiawatha's Revenge -- SEO & Social Sharing Polish (v1.11)
+**Domain:** SEO, structured data, social sharing for a static cycling event site
+**Researched:** 2026-04-09
 **Confidence:** HIGH
 
 ## Executive Summary
 
-v1.8 adds four features to an existing Astro 6 + Tailwind 4 single-page editorial site: a sticky navigation bar below the hero, a ride ethos explainer section, a "Powered by Neucadia" footer, and light/dark mode for the History section via `prefers-color-scheme`. All four are purely CSS/HTML work. Zero new npm dependencies are required. Every feature is implemented using native browser APIs already in use in the codebase or baseline-available since 2020. The recommended approach is additive: new Astro components for nav, ethos, and footer; a CSS `@media` block added to the existing `HiawathaExplainer.astro` for light/dark switching.
+This milestone closes the gap between a site that technically works for search engines and one that looks professional when shared. The existing Astro 6 single-page site already has foundational OG tags, Twitter Card tags, canonical URLs, and Event JSON-LD from v1.4 -- but the OG image is a raw photo crop with no branding, the favicon is a tree emoji, there is no robots.txt or sitemap, and the Event schema is missing properties Google requires for rich result eligibility (most critically: a street-level address and an `offers` block for the free event). The fix requires only two new dependencies (`@astrojs/sitemap` and `png-to-ico`), with all other work handled by the existing `sharp` library and template edits to `BaseLayout.astro`.
 
-The critical architectural constraint is scope. Light/dark mode applies only to the History section — not the whole site. The existing `@theme static` token system is a dark-site design and must not be overridden globally. All `prefers-color-scheme: light` rules must be scoped to `.hiawatha-section`. The scroll-triggered image fade in the History section builds directly on an existing `IntersectionObserver` + `bg-visible` class mechanism that is already partially implemented (observer fires, `::before` CSS not yet wired).
+The recommended approach is four focused phases: (1) meta tag and structured data fixes in BaseLayout.astro, which are pure template edits with the highest SEO impact per effort; (2) favicon and apple-touch-icon generation via a new pipeline script using the simplified shield motif path already in the codebase; (3) redesigning the OG share image as a badge+tagline composite over a dark background using sharp's SVG compositing API; and (4) adding robots.txt via an Astro page endpoint plus the `@astrojs/sitemap` integration. This ordering front-loads the changes that affect Google rich result eligibility and back-loads the lowest-impact items.
 
-The top risks are: (1) CSS contrast failures when existing amber/turquoise heading colors render on a cream background in light mode — every heading color needs a contrast audit before marking the phase complete; (2) silently broken background images if inspiration images are not confirmed present in `public/images/` before CSS `url()` references are written; (3) z-index collision between the sticky nav and the sector panel (z-index 1000) — assign the nav z-index 100 and document a budget. Two items need requirement clarification before build: the exact placement of the ethos explainer ("above MBTN callout" is ambiguous between two DonateCallout instances) and whether the Neucadia logo should be fetched locally or remain as an external reference.
-
----
+The key risks are OG image cache poisoning across social platforms (mitigated by using a new filename instead of overwriting the existing one), text illegibility at thumbnail rendering sizes (mitigated by designing for 300x158 display), and the badge SVG's 21KB Illustrator complexity potentially rendering poorly through librsvg (mitigated by falling back to a pre-exported PNG). One content dependency exists: the Event schema requires a street-level address for the ride start location, which is a user-input question, not a technical one.
 
 ## Key Findings
 
 ### Recommended Stack
 
-No changes to the stack. Astro 6.1.2, Tailwind CSS 4.2.2, and TypeScript 5.9.3 are all that is needed. `position: sticky` replaces any JS-driven scroll-fix approach (97% global support, MDN Baseline). `@media (prefers-color-scheme)` is Baseline Widely Available since January 2020. `IntersectionObserver` is already used in three existing components and handles the scroll-triggered fade. CSS scroll-driven animations (`animation-timeline: view()`) are explicitly ruled out — not Baseline, Firefox unsupported as of April 2026. No animation libraries, no color-mode libraries, no framework islands.
+Two new dependencies total. Everything else uses existing sharp (0.34.5) and hand-written code.
 
 **Core technologies:**
-- Astro 6.1.2: component authoring, scoped `<style>` blocks — no change
-- Tailwind 4.2.2: `dark:` variant available but not used; `@theme static` CSS vars are the project's established pattern
-- `position: sticky` CSS: sticky nav behavior, zero JS, 97.21% global support
-- `@media (prefers-color-scheme: light)`: scoped to `.hiawatha-section`, CSS-only, no localStorage
-- `IntersectionObserver` (existing): extended to `::before` pseudo-element opacity toggling for image fade
+- `@astrojs/sitemap` (^3.7.2): auto-generates sitemap at Astro build time -- official integration, zero-config for static output, `site` already configured in `astro.config.ts`
+- `png-to-ico` (^3.0.1): converts 32x32 PNG to favicon.ico -- pure JS, no native deps, needed only because sharp cannot output ICO format
+- `sharp` (existing ^0.34.5): handles OG image compositing (badge + tagline overlay) and favicon PNG generation from SVG -- no version bump needed
+
+**Explicitly rejected:** `astro-robots-txt` (overkill for static file), `favicons` npm (30+ variants, massive overkill), `@vercel/og`/`satori` (SSR-oriented, wrong for static build), SVGO (risks breaking complex badge SVG paths), `astro-seo` (unnecessary wrapper for single-page site).
 
 ### Expected Features
 
-All four v1.8 features are correctly scoped and should ship together. No deferral recommended.
-
 **Must have (table stakes):**
-- Sticky nav links scroll to correct sections — requires adding `id="history"`, `id="gallery"`, `id="sectors"` to existing sections (`id="route"` already exists)
-- `scroll-margin-top` on all four anchor targets — without this, sticky nav covers section headings on link click
-- Nav visible on all screen sizes, no hamburger collapse — 4 short labels fit at 375px with compact sizing
-- History light mode background = `--color-cream-100` (#f5f0e8), not pure white
-- History images desaturated via CSS filter, not `filter: invert()` — photographic inversion produces film-negative artifacts
-- `prefers-reduced-motion` guard on all new scroll animations — site-wide contract already established
+- TS-1: Branded OG share image with badge, event name, date, tagline (1200x630 JPEG) -- current raw photo crop is unrecognizable when shared
+- TS-2: robots.txt with Sitemap directive
+- TS-3: sitemap.xml via `@astrojs/sitemap`
+- TS-4: Apple touch icon (180x180 PNG from shield motif) -- iOS home screen currently shows ugly screenshot
+- TS-5: favicon.ico fallback (32x32) -- currently 404s on direct request
+- TS-6: Missing OG meta tags (`og:site_name`, `og:locale`, `og:image:alt`, `og:image:type`, `twitter:image:alt`)
+- TS-7: Event schema enrichment -- street address (required for rich results), `offers` with `price: "0"`, `isAccessibleForFree`, `url`, `geo` coordinates, ISO 8601 datetimes with timezone
 
 **Should have (differentiators):**
-- Nav gains visual weight when stuck (subtle `box-shadow` via IntersectionObserver sentinel)
-- Ethos section uses founding date ("Since June 7, 2014") as typographically emphasized statement format
-- History image filter transitions smoothly between light and dark mode (CSS `transition: filter`)
-- Neucadia logo stored locally in `public/images/` rather than as external `<img src>` — prevents silent failure
+- D-1: Designed share card with visual hierarchy (goes beyond TS-1 with proper design craft)
+- D-3: `theme-color` meta tag for mobile browser chrome
+- D-5: SVG favicon with dark mode support via `prefers-color-scheme`
 
-**Defer (v2+):**
-- Active section highlighting (scroll-spy) in nav — requires a sixth IntersectionObserver; scoped as a separate sub-task
-- Hamburger or bottom-bar mobile nav — anti-feature for this site
-- Site-wide dark/light toggle — OS preference only is correct for a static editorial site
-- CSS `:stuck` pseudo-class for nav shadow — Chrome 132+ only, no Firefox
+**Defer (v2+ or skip):**
+- D-2: Web manifest / PWA icons -- this is an informational event site, not an installable app
+- D-4: SportsEvent schema type -- incorrect for a non-competitive ride; keep `Event`
+
+**Anti-features (do NOT build):**
+- Do NOT use `og:type` "event" (Facebook-specific, deprecated event protocol; keep "website")
+- Do NOT use WebP/AVIF for OG image (LinkedIn and older iMessage clients silently fail)
+- Do NOT create separate pages for SEO (dilutes single-page link equity)
+- Do NOT add `SportsEvent` schema (semantically wrong for a non-competitive ride)
+- Do NOT keyword-stuff the meta description (Google rewrites these; write naturally)
 
 ### Architecture Approach
 
-The site is a single `index.astro` that imports all components in sequence. Three new Astro components are created (`StickyNav.astro`, `RideEthos.astro`, `NeucadiaFooter.astro`). One existing component is modified (`HiawathaExplainer.astro`). DOM insertion order in `index.astro` is the only coordination point. No data pipeline changes are required for nav, ethos, or footer. The History light/dark mode requires a pipeline verification step to confirm inspiration images are present in `public/images/inspiration/` before CSS `url()` references are written.
+The build pipeline already handles image generation before Astro build via `scripts/pipeline.js`. The OG image redesign modifies the existing `generate-og-image.js` step (step 9/11). Favicon generation adds a new `generate-favicons.js` step. The sitemap plugs into Astro's build process via integration (not the pipeline -- it needs to know what pages Astro generates). The robots.txt is best implemented as a `src/pages/robots.txt.ts` endpoint that reads `site` from Astro config, keeping the sitemap URL DRY. All meta tag and structured data changes are template edits in `BaseLayout.astro`.
 
 **Major components:**
-1. `StickyNav.astro` (new) — `position: sticky; top: 0`, four anchor links, z-index 100, `scroll-margin-top` CSS var, optional IntersectionObserver sentinel for stuck-shadow
-2. `RideEthos.astro` (new) — static statement section, no script, inserted after `<FloralDivider />` before `<HiawathaExplainer />`
-3. `NeucadiaFooter.astro` (new) — semantic `<footer>` element added to `BaseLayout.astro` outside `<main>`, `<img>` logo with `loading="lazy"`, full-width single line
-4. `HiawathaExplainer.astro` (modified) — `@media (prefers-color-scheme: light)` block scoped to `.hiawatha-section`; `::before` pseudo-element background images wired to existing `bg-visible` class toggle; heading color overrides for light-mode contrast
+1. `scripts/generate-og-image.js` (modified) -- badge+tagline composite replacing center-crop; uses sharp SVG compositing with inline SVG text overlay pattern
+2. `scripts/generate-favicons.js` (new) -- generates favicon.svg (shield motif with dark mode), apple-touch-icon.png (180x180), and optionally favicon.ico (32x32 via png-to-ico) from the simplified shield path
+3. `src/pages/robots.txt.ts` (new) -- Astro endpoint generating robots.txt with sitemap reference, disallowing /admin and /api/
+4. `astro.config.ts` (modified) -- adds `@astrojs/sitemap` integration
+5. `src/layouts/BaseLayout.astro` (modified) -- adds missing OG tags, enriches Event JSON-LD, updates favicon link tags
 
-**Anchor IDs strategy:** wrap `<HiawathaExplainer />` and `<RouteExplainer />` in `<div id="history">` / `<div id="sectors">` in `index.astro` — simpler than passing as props, no component modification needed.
+**Key boundary principle:** Image/asset generation belongs in the pipeline (pre-build, uses sharp). Page/route generation belongs in Astro (build-time). The sitemap runs during Astro build, not in the pipeline.
 
 ### Critical Pitfalls
 
-1. **Global `@theme static` token override breaks the whole site in light mode** — scope all `prefers-color-scheme: light` CSS to `.hiawatha-section` only. Leaflet popups, the sector panel (z-index 1000, `position: fixed`), and all other sections reference `--color-forest-9xx` tokens globally.
+1. **OG image cache poisoning** -- Social platforms cache OG images for days/weeks. Updating the image at the same URL means stale previews everywhere, with zero cache-purge mechanism for iMessage. **Avoid by:** using a new filename (e.g., `og-hiawatha-badge.jpg`) and updating the meta tag to match. Deploy well before any social media push.
 
-2. **Sticky nav z-index collision with sector panel** — sector panel is z-index 1000; assign nav z-index 100 and document a z-index budget in `global.css`. Tailwind's reflexive `z-50` will be swallowed by the panel.
+2. **Event schema missing street address** -- Google requires `streetAddress` for Event rich results as of mid-2025. The current schema has city-level only ("Munising, MI"). Without a street address, the event will not appear in Google's event search results. **Avoid by:** adding the ride start location address (requires user input).
 
-3. **Background image opacity on container fades text** — inspiration images must use `::before` pseudo-elements with their own `opacity` transitions. The existing `.subsection-bg > *` already sets `z-index: 1`; `::before` at `z-index: 0` is the correct structure. The observer and `bg-visible` class are already wired — only the `::before` CSS is missing.
+3. **Free event missing `offers` block** -- Google expects `offers` with `price: "0"` even for free events. Without it, Google cannot determine pricing and may decline to show the event in enhanced results. **Avoid by:** adding `offers` with price "0", priceCurrency "USD", and `isAccessibleForFree: true`.
 
-4. **Amber/turquoise heading colors fail WCAG AA on cream background** — `--color-amber-500` (#c8973e) on `--color-cream-100` (#f5f0e8) is approximately 2.4:1. Every colored heading in HiawathaExplainer needs override values in the light-mode `@media` block before the phase is done.
+4. **OG image text illegible at thumbnail size** -- The image looks great at 1200x630 but renders at 300x158 in iMessage. Text becomes unreadable. **Avoid by:** designing for the smallest rendering size, using 3-5 bold words maximum, testing at 300x158 before finalizing.
 
-5. **External Neucadia logo fails silently** — `<img src="https://neucadia.com/...">` breaks on network failure with no fallback. Download and commit to `public/images/neucadia-logo.png` before shipping.
-
----
+5. **Sitemap filename mismatch in robots.txt** -- `@astrojs/sitemap` generates `sitemap-index.xml`, not `sitemap.xml`. A hand-written robots.txt pointing to the wrong filename silently breaks sitemap discovery. **Avoid by:** using the Astro page endpoint approach that reads from config, or verifying the exact filename after build.
 
 ## Implications for Roadmap
 
-All four features are implementation-independent of each other. Phases ordered by risk level, not feature dependency.
+Based on research, suggested phase structure:
 
-### Phase 1: Foundation — Sticky Nav + Section IDs
+### Phase 1: Meta Tags, Structured Data, and Canonical Audit
 
-**Rationale:** The nav is the highest structural change — it requires adding `id` attributes to existing sections and introducing the first `position: sticky` + z-index element in the project. Doing this first establishes the z-index budget and `scroll-margin-top` pattern that all subsequent phases inherit. The nav height CSS variable also sets the offset used by all anchor targets.
+**Rationale:** Highest SEO impact for the lowest effort. Pure template edits, no new files or dependencies. The Event schema street address gap is the single most impactful fix for Google rich result eligibility. Front-loading this ensures the site is eligible for event search results as early as possible before the June 6 event.
+**Delivers:** Complete OG tag set, enriched Event JSON-LD with all recommended properties, explicit `trailingSlash` config, verified canonical URL.
+**Addresses:** TS-6 (missing OG tags), TS-7 (event schema enrichment), D-3 (theme-color).
+**Avoids:** Pitfall 3 (missing offers), Pitfall 4 (SportsEvent misclassification), Pitfall 8 (trailing slash inconsistency), Pitfall 10 (missing recommended properties), Pitfall 15 (iMessage title truncation).
+**User input required:** Street address for the ride start location and event start/end times with timezone.
 
-**Delivers:** Fully functional sticky nav with four working anchor links, `scroll-margin-top` on all targets, z-index budget documented in `global.css`.
+### Phase 2: Favicon and Apple Touch Icon Generation
 
-**Addresses:** Table-stakes features — nav links scroll correctly, visible all screen sizes, nav below hero, no hamburger.
+**Rationale:** No dependency on other phases. Uses the simplified shield motif path already in BaseLayout.astro. Tests the pipeline script creation pattern (useful practice before the more complex OG image phase). Replaces the emoji favicon immediately for branded browser chrome.
+**Delivers:** `favicon.svg` (dark mode aware shield), `apple-touch-icon.png` (180x180), optionally `favicon.ico` (32x32), updated `<link>` tags in BaseLayout.astro.
+**Addresses:** TS-4 (apple touch icon), TS-5 (favicon.ico), D-5 (SVG favicon with dark mode).
+**Avoids:** Pitfall 5 (emoji favicon inconsistency), Pitfall 13 (double-rounded corners on apple-touch-icon), Pitfall 14 (invalid rel="shortcut icon").
+**Uses:** sharp (existing), png-to-ico (new dev dependency), shield motif path from BaseLayout symbol.
 
-**Avoids:** Pitfall 2 (z-index collision with sector panel), Pitfall 3 (wrong sticky transition point), Pitfall 9 (missing scroll-margin-top).
+### Phase 3: OG Image Redesign
 
-### Phase 2: Identity — Ride Ethos + Neucadia Footer
+**Rationale:** Most complex change -- requires SVG compositing with text rendering, font file management, and visual design decisions. Benefits from having simpler changes landed and validated first. The badge SVG rendering (21KB Illustrator export through librsvg) carries medium risk and needs early testing.
+**Delivers:** Branded OG share image (badge + tagline over dark background), updated meta tags to point to new filename.
+**Addresses:** TS-1 (branded OG image), D-1 (designed share card).
+**Avoids:** Pitfall 1 (cache poisoning via new filename), Pitfall 2 (WebP format trap -- JPEG only), Pitfall 6 (text illegibility at thumbnail size), Pitfall 9 (schema image vs OG image separation).
+**Uses:** sharp SVG compositing, scripts/fonts/ directory with National Park .ttf.
+**Design decision needed:** Whether to use the full 21KB badge.svg or the simplified shield motif. Whether the Event schema `image` should remain the scenic hero photo (separate from the badge-centric OG image).
 
-**Rationale:** Both are fully additive, touch no existing component logic, and carry zero implementation risk. Bundle them as a small identity phase. Requires one upfront clarification: confirm ethos placement ("above MBTN callout" is ambiguous — recommend after `<FloralDivider />`, before `<HiawathaExplainer />`).
+### Phase 4: robots.txt and Sitemap
 
-**Delivers:** `RideEthos.astro` in its correct DOM position; `NeucadiaFooter.astro` as a semantic `<footer>` in `BaseLayout.astro`; Neucadia logo committed as a local asset.
-
-**Addresses:** Neucadia footer feature; ride ethos feature; semantic HTML improvement (existing footer is a `<section>`, not `<footer>`).
-
-**Avoids:** Pitfall 8 (external logo failure), Pitfall 10 (ethos breaks section color rhythm), Pitfall 12 (double-footer confusion).
-
-### Phase 3: History Light/Dark Mode
-
-**Rationale:** Most complex change — modifies an existing component with established styles, requires a contrast audit on every heading color, involves the partially-implemented `::before` background system, and must verify inspiration image pipeline availability. Last to allow focused QA without blocking phases 1 and 2.
-
-**Delivers:** `HiawathaExplainer.astro` with `@media (prefers-color-scheme: light)` overrides scoped to `.hiawatha-section`; inspiration images wired to `::before` pseudo-elements with `grayscale + brightness` filter treatment; scroll-triggered fade in/out working; `prefers-reduced-motion` guards on all new transitions.
-
-**Addresses:** History light/dark mode feature; scroll-triggered image fade.
-
-**Avoids:** Pitfall 1 (global token bleed), Pitfall 4 (opacity fades text), Pitfall 5 (invert artifacts on photos), Pitfall 6 (missing reduced-motion guard), Pitfall 11 (heading contrast failures), Pitfall 15 (inspiration images not in public/).
+**Rationale:** Lowest priority for a single-page site -- search engines find single-page sites fine without these. But they close the final gaps in any SEO audit. robots.txt references the sitemap URL, so both should ship together. The `@astrojs/sitemap` integration is zero-config and the robots.txt endpoint is ~15 lines.
+**Delivers:** `robots.txt` (with /admin and /api/ disallowed), `sitemap-index.xml` and `sitemap-0.xml`.
+**Addresses:** TS-2 (robots.txt), TS-3 (sitemap.xml).
+**Avoids:** Pitfall 7 (hash fragments in sitemap, filename mismatch), Pitfall 11 (site URL mismatch).
+**Uses:** `@astrojs/sitemap` (new dependency), `src/pages/robots.txt.ts` endpoint pattern.
 
 ### Phase Ordering Rationale
 
-- Phase 1 first: establishes `index.astro` DOM order and the CSS var for nav height (`--nav-height`) that phases 2 and 3 inherit for precise `scroll-margin-top`
-- Phases 2 and 3 are independent of each other but both depend on Phase 1's `index.astro` DOM finalization
-- Phase 3 last: isolated to `HiawathaExplainer.astro` internals, most testing-intensive (two OS theme states + reduced-motion), benefits from knowing Phase 1 nav height for offset precision
+- **Phases 1 and 2 are independent** and could be done in parallel or in either order. Phase 1 is recommended first because the Event schema fixes have the highest SEO impact before the June 6 event date.
+- **Phase 3 depends on a design decision** (badge rendering approach) and font availability, making it the highest-risk item. Placing it third gives time to resolve the badge SVG rendering question.
+- **Phase 4 is genuinely lowest priority** for a single-page site but trivial to implement. It rounds out the milestone.
+- All phases should include a UAT step that tests with actual platform crawler tools (opengraph.xyz, Facebook Sharing Debugger, Google Rich Results Test).
 
 ### Research Flags
 
-Phases with standard patterns (skip deeper research):
-- **Phase 1 (Sticky Nav):** `position: sticky`, `scroll-margin-top`, and IntersectionObserver sentinel are textbook CSS + MDN Baseline. Codebase already uses this exact observer pattern. No research phase needed.
-- **Phase 2 (Identity):** Pure static content components. No research needed.
+Phases likely needing deeper research during planning:
+- **Phase 3 (OG Image Redesign):** Font rendering through librsvg needs testing. The 21KB badge SVG may not render cleanly -- test early and have a PNG fallback ready. The design composition (badge size, text placement, background treatment) needs visual iteration.
 
-Phases requiring pre-build implementation checks (not a full research-phase):
-- **Phase 3 (History Light/Dark):** Two mandatory pre-build checks — (1) run contrast calculations for every heading color before writing CSS; (2) verify `copy-images` pipeline step includes `images/inspiration/` before writing `url()` references. These are scoped implementation-time checks.
-
----
+Phases with standard patterns (skip research-phase):
+- **Phase 1 (Meta/Schema Audit):** Pure template edits with well-documented patterns from Google and OGP specs.
+- **Phase 2 (Favicons):** Standard sharp SVG-to-PNG pipeline. Shield motif is a simple path.
+- **Phase 4 (robots.txt + Sitemap):** Zero-config Astro integration + trivial endpoint. Fully documented in Astro docs.
 
 ## Confidence Assessment
 
 | Area | Confidence | Notes |
 |------|------------|-------|
-| Stack | HIGH | All decisions verified against installed package versions and MDN Baseline status. Direct codebase analysis confirms IntersectionObserver pattern reuse. Zero new dependencies confirmed. |
-| Features | HIGH | MDN, LogRocket UX analysis, CSS-Tricks guide, and live gravel site audits (SBT GRVL, Grasshopper, Grassroots Gravel) corroborate all table-stakes and differentiator calls. |
-| Architecture | HIGH | Based on direct code inspection of all relevant components with exact line numbers. Component placement and observer scoping verified against actual implementation state. |
-| Pitfalls | HIGH | All critical pitfalls derived from code inspection, not inference. Contrast ratio calculations use actual hex values. Z-index inventory from actual source values. |
+| Stack | HIGH | Only 2 new deps, both verified against official docs. sharp already in use. |
+| Features | HIGH | Verified against OGP spec, Google Event docs, Apple TN3156, Slack unfurling docs. Clear table-stakes vs differentiators. |
+| Architecture | HIGH | Pipeline pattern established by existing scripts. Sitemap integration is official Astro. robots.txt endpoint is standard Astro pattern. |
+| Pitfalls | HIGH | All critical pitfalls verified against official docs or direct codebase inspection. OG cache poisoning confirmed via Apple developer forums. |
 
 **Overall confidence:** HIGH
 
 ### Gaps to Address
 
-- **Ethos placement:** "Above the MBTN callout" has two possible interpretations. Architecture research recommends after `<FloralDivider />` (before `<HiawathaExplainer />`). Confirm with product owner before Phase 2.
-
-- **Specific inspiration image selection:** Three sub-sections (poem, forest, ride) each need one background image from the 49 available in `images/inspiration/`. Curatorial decision deferred to Phase 3 planning.
-
-- **Neucadia logo dimensions:** PNG confirmed accessible (5.1KB) but width/height are unknown. Set explicit `width` and `height` attributes after inspecting the asset to prevent CLS.
-
-- **Inspiration images pipeline status:** Whether `scripts/pipeline.js` `copy-images` step includes `images/inspiration/` is unverified. Must be checked before Phase 3 writes any CSS `url()` references.
-
-- **Light mode heading color palette:** Exact replacement tokens for amber/turquoise/sun/scarlet headings in light mode are unspecified. Forest-900 for `h2` and forest-800 for `h3` are the recommended defaults, but visual review is required before finalizing.
-
----
+- **Street address for ride start location:** Required for Event schema rich results. This is a content question for the site owner, not a technical decision. Must be resolved before Phase 1 can ship.
+- **Event start/end times with timezone:** Current schema has date-only (`2026-06-06`). Need actual ride start time and expected end time in Eastern timezone for ISO 8601 format.
+- **Badge SVG rendering quality:** The 21KB Illustrator badge may render poorly through librsvg at composite time. Test early in Phase 3. Fallback: pre-export a high-res PNG of the badge.
+- **Font availability for OG text:** National Park .ttf needs to be downloaded to `scripts/fonts/` for SVG text rendering. librsvg font resolution via `@font-face` in SVG `<defs>` needs validation.
+- **SportsEvent vs Event:** Research confirms `Event` is correct for a non-competitive ride. Do NOT change to `SportsEvent`. This is flagged because the FEATURES.md researcher suggested it as a differentiator, but the PITFALLS.md researcher correctly identified it as a misclassification risk.
 
 ## Sources
 
 ### Primary (HIGH confidence)
-- MDN Web Docs — `prefers-color-scheme`, `position: sticky`, `animation-timeline`, `scroll-margin-top` — Baseline status verified for all
-- caniuse.com — `position: sticky` 97.21% global support confirmed
-- Direct codebase inspection (2026-04-07): `HiawathaExplainer.astro`, `ScrollReveal.astro`, `RouteMap.astro`, `HeroSection.astro`, `BaseLayout.astro`, `global.css`, `index.astro`, `scripts/pipeline.js`
-- Tailwind CSS v4 dark mode documentation — `dark:` variant behavior with `prefers-color-scheme`
+- [Google: Event Structured Data](https://developers.google.com/search/docs/appearance/structured-data/event) -- required/recommended properties, 2025 physical location requirement, `offers` for free events
+- [Open Graph Protocol Specification](https://ogp.me/) -- required/optional OG properties
+- [Astro Sitemap Integration](https://docs.astro.build/en/guides/integrations-guide/sitemap/) -- version 3.7.2, zero-config for static output
+- [Sharp Composite API](https://sharp.pixelplumbing.com/api-composite/) -- SVG buffer compositing, overlay positioning
+- [Apple TN3156: Rich Previews for Messages](https://developer.apple.com/documentation/technotes/tn3156-create-rich-previews-for-messages) -- iMessage preview behavior, title truncation, no cache-purge mechanism
+- [X/Twitter Card Docs](https://developer.x.com/en/docs/x-for-websites/cards/overview/summary-card-with-large-image) -- card requirements
+- [Slack Link Unfurling](https://api.slack.com/reference/messaging/link-unfurling) -- 32KB head limit
 
 ### Secondary (MEDIUM confidence)
-- `https://neucadia.com/assets/neucadia_logo.png` — PNG confirmed accessible at 5.1KB via WebFetch 2026-04-07
-- LogRocket UX analysis — sticky vs. fixed navigation UX patterns
-- CSS-Tricks — complete guide to dark mode on the web
-- SBT GRVL, Grasshopper Adventure Series, Grassroots Gravel — live site audits for nav and ethos section patterns
+- [Evil Martians: How to Favicon in 2026](https://evilmartians.com/chronicles/how-to-favicon-in-2021-six-files-that-fit-most-needs) -- minimal favicon set (3-5 files)
+- [Sharp SVG text performance issue #2987](https://github.com/lovell/sharp/issues/2987) -- inline SVG Buffer composite preferred over constructor text option
+- [OG Preview: Why OG Images Not Updating](https://ogpreview.app/why-og-images-not-updating/) -- cache poisoning across platforms
+- [Ctrl Blog: WebP as OG Image](https://www.ctrl.blog/entry/webp-ogp.html) -- LinkedIn/iMessage WebP incompatibility
 
-### Tertiary (LOW confidence)
-- Webflow Blog — general navigation bar design best practices (not cycling-specific)
+### Codebase Inspection
+- `src/layouts/BaseLayout.astro` -- existing meta tags, JSON-LD, canonical URL, favicon link, shield-motif symbol
+- `scripts/generate-og-image.js` -- current simple crop implementation
+- `scripts/pipeline.js` -- 11 shared steps + 3 per-route steps
+- `public/images/badge.svg` -- 21KB Illustrator export, complex paths
+- `public/favicon.svg` -- 116-byte tree emoji placeholder
+- `astro.config.ts` -- site URL configured, no integrations array, no trailingSlash
 
 ---
-
-*Research completed: 2026-04-07*
+*Research completed: 2026-04-09*
 *Ready for roadmap: yes*

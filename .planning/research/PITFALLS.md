@@ -1,326 +1,442 @@
-# Domain Pitfalls: v1.8 Navigation & Identity
+# Domain Pitfalls: SEO & Social Sharing for a Static Event Site
 
-**Domain:** Adding sticky nav, ride-ethos explainer, "Powered by Neucadia" footer, and History section light/dark mode to an existing Astro 6 static site
-**Researched:** 2026-04-07
-**Confidence:** HIGH — all findings derived from direct code inspection of the existing codebase, supplemented by verified web sources
+**Domain:** SEO, OG images, favicons, Schema.org, sitemap for Astro 6 static cycling event site
+**Researched:** 2026-04-09
+**Confidence:** HIGH (verified against official Google docs, current project code, Apple developer documentation, and platform behavior)
 
 ---
 
 ## Critical Pitfalls
 
-Mistakes that cause rewrites, broken layouts, or broken accessibility.
+Mistakes that cause broken previews, invisible pages, or invalid structured data.
 
 ---
 
-### Pitfall 1: @theme static Tokens Are Not Light-Mode Tokens — They Are Dark-Mode Tokens
+### Pitfall 1: OG Image Cache Poisoning Across Platforms
 
-**What goes wrong:** The entire `@theme static` block in `global.css` was designed for a dark background (`--color-forest-900: #1a2e1a`). When light mode is introduced, the instinct is to add a `@media (prefers-color-scheme: light)` block that overrides specific tokens. But the mental model is backwards: the existing theme IS the dark theme. Light mode requires a full semantic alias layer, not scattered overrides.
+**What goes wrong:** You update the OG image (from the current cropped hero photo to the planned badge+tagline design) at the same URL (`/og-image.jpg`), but Facebook, iMessage, LinkedIn, Slack, and Discord all continue showing the OLD image for days or weeks. Every share of the site during that window looks wrong.
 
-**Why it happens:** The `static` keyword in `@theme static` sounds like it means "immutable," leading developers to think they cannot override these tokens. They can. `@theme static` only means "always emit all custom properties, even unused ones." The generated custom properties are regular CSS variables, fully overridable inside `@media (prefers-color-scheme: light)` blocks.
+**Why it happens:** Social platforms cache OG metadata aggressively. Facebook caches for 7-30 days. Apple's iMessage bot scraper has NO user-facing cache-clear mechanism -- there is no debugger tool, no "re-scrape" button. LinkedIn Post Inspector requires manual re-scraping per URL. Each platform has its own crawler with its own cache TTL, and none coordinate.
 
-**The real trap:** If light mode overrides are written ad-hoc (overriding `--color-forest-900` to beige in some selectors but not others), the History section will have beige backgrounds where expected but green text, green borders, and green card backgrounds where the raw tokens are used. Leaflet popups, the sector panel, and the map controls all directly reference `--color-forest-900` — they will turn beige unless the scope of light mode overrides is limited to the `hiawatha-section` subtree.
-
-**Prevention:** Scope light-mode CSS overrides to the History section only. Use `.hiawatha-section` as the root selector for all `@media (prefers-color-scheme: light)` rules. Do not override tokens globally unless you audit every consumer.
-
-**Warning signs:**
-- Leaflet popup backgrounds turning beige in light mode
-- The sector panel (`z-index: 1000`, `background: var(--color-forest-900)`) turning beige
-- Gold-section, amber-section, or teal-section text becoming unreadable because their inline color overrides were computed against the old token values
-
-**Phase guidance:** Light/dark mode scoped to History section only. Global token override is a future milestone concern.
-
----
-
-### Pitfall 2: Sticky Nav Z-Index Collision with the Sector Panel
-
-**What goes wrong:** The sector panel (`RouteMap.astro`) is `position: fixed` with `z-index: 1000`. A sticky nav bar also needs a high z-index. If the sticky nav is assigned `z-index: 50` (Tailwind default) or less, the sector panel will slide over the nav when opened. If assigned `z-index: 1001` or higher, the nav will cover the panel. Neither is obviously correct without coordination.
-
-**Existing z-index inventory (from code inspection):**
-- `.hero-video`: `z-index: 0`
-- `.hero-content`: `z-index: 1`
-- `.hiawatha-section .subsection-bg > *`: `z-index: 1`
-- `.route-map`: `z-index: 0` (the map container itself)
-- `.sector-panel`: `z-index: 1000` (slides over map section when open)
-
-There is no documented z-index budget in the codebase. The sticky nav will be the first element to need a z-index above 1 for an extended scroll duration.
-
-**Prevention:** Assign the sticky nav `z-index: 100`. This is above everything except the sector panel (1000). The sector panel intentionally slides over all content — it should slide over the nav too (the panel is a full-height overlay). Document the z-index budget in a comment:
-```
-z-index budget:
-  0   — positioned background layers (hero-video, route-map)
-  1   — foreground content layers (hero-content, section children)
-  100 — sticky nav
-  1000 — sector panel (intentional full-overlay)
-```
-
-**Warning signs:**
-- Sticky nav appears on top of the open sector panel on desktop (right-panel, 350px wide)
-- Sticky nav disappears behind hero video when user scrolls down slowly
-
-**Phase guidance:** Define the z-index budget as a comment in `global.css` before placing the nav. Do not reach for Tailwind's `z-50` (50) reflexively — it will be swallowed by the sector panel.
-
----
-
-### Pitfall 3: Sticky Nav Transition Breaks at the Hero Bottom Edge
-
-**What goes wrong:** The hero section is `height: 100svh; overflow: hidden`. The nav will be placed immediately below the hero. When the nav transitions from its natural in-flow position to `position: sticky` (or when a JS sentinel triggers a CSS class swap to `position: fixed`), the transition point must be the nav's own scroll position, not the hero's bottom edge. These are the same offset only if there is nothing between the hero and the nav in the DOM — which may not be true if a DonateCallout section precedes the nav.
-
-**Current DOM order** (from `index.astro`):
-1. `<HeroSection />`
-2. `<section class="gold-section">` (DonateCallout)
-3. `<FloralDivider />`
-4. `<HiawathaExplainer />`
-
-The nav must sit between HeroSection and the gold-section to read as "below the hero." If DonateCallout moves above the nav, the nav sticks immediately rather than after scrolling past the hero.
-
-**Prevention:** Use `position: sticky; top: 0` natively rather than a JavaScript-toggled `position: fixed` class. Native sticky avoids all offset calculation and fires off the browser's own scroll position. Add `id="history"`, `id="route"`, `id="gallery"`, `id="sectors"` to target sections before adding links.
-
-**Warning signs:**
-- Nav appears fixed before the user has scrolled past the hero on initial page load
-- Nav flashes into place on first scroll tick rather than smoothly becoming sticky
-
-**Phase guidance:** Native `position: sticky` is the correct mechanism. Avoid scroll listener + `position: fixed` toggle, which requires precise `offsetTop` calculation that breaks on viewport resize.
-
----
-
-### Pitfall 4: Background Image Opacity Applied to Container Fades the Text Too
-
-**What goes wrong:** The History section (`HiawathaExplainer.astro`) has three `[data-bg-fade]` subsections that already use `IntersectionObserver` to toggle a `bg-visible` CSS class. The class is defined in the component's `<style>` block — but as of the code inspection, no `::before` pseudo-element background is defined for the `bg-visible` state. The background fade is partially implemented (the observer exists, the class toggles) but the visual effect is not wired up.
-
-When adding faded inspiration images, the most common mistake is applying `opacity` to the `.subsection-bg` container itself rather than to a `::before` pseudo-element. Applying opacity to the container fades the text, pull quotes, museum plates, and all children along with the background.
-
-**Prevention:** Background images must live on `::before` pseudo-elements:
-```css
-.poem-section::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: url('/images/inspiration/...');
-  background-size: cover;
-  opacity: 0;
-  transition: opacity 0.6s ease;
-  z-index: 0; /* below the z-index: 1 children */
-}
-.poem-section.bg-visible::before {
-  opacity: 0.06; /* keep it faint — it's decorative backdrop */
-}
-```
-The existing `.subsection-bg > *` already sets `z-index: 1`, which correctly layers children above a `z-index: 0` pseudo-element. This structure is already correct — the pseudo-element just needs to be filled in.
-
-**Warning signs:**
-- Text, pull quotes, or museum plates fade along with the background during scroll
-- The page section temporarily becomes unreadable as users scroll through
-
-**Phase guidance:** Audit whether `bg-visible` has any active CSS when implementing. Fill in the `::before` pseudo-element rather than adding a new mechanism.
-
----
-
-### Pitfall 5: CSS filter: invert() on Inspiration Images Creates Unacceptable Dark-Mode Artifacts
-
-**What goes wrong:** The milestone spec says "CSS invert for dark mode" on the inspiration images. Applying `filter: invert(1)` to color landscape photographs does not produce a usable dark aesthetic — it produces color-negative images (green trees become magenta, blue sky becomes orange). For faint desaturated backgrounds at ~0.06 opacity, the visible difference between inverted and non-inverted may be acceptable, but the approach is fragile and breaks if opacity increases.
-
-**Prevention:** Use two separate image treatments:
-- **Dark mode:** desaturated, low-opacity image (`filter: grayscale(80%) brightness(0.7)`, opacity ~0.06)
-- **Light mode:** desaturated, slightly brighter image (`filter: grayscale(60%) brightness(0.9) sepia(20%)`, opacity ~0.08)
-
-Do not apply `filter: invert()` to photographic images. The existing museum plate treatment already does this correctly with `filter: sepia(80%) saturate(30%) brightness(0.9)`.
-
-**Warning signs:**
-- Any inspiration image with blue sky or green foliage looks strongly magenta/orange in dark mode
-- Switching OS theme causes a jarring visual flash as inverted colors snap in
-
-**Phase guidance:** Test both modes on actual inspiration images before committing to any `filter` approach. A side-by-side OS-theme toggle test at 100% opacity is required before opacity is reduced.
-
----
-
-### Pitfall 6: prefers-reduced-motion Not Applied to New Scroll Observers
-
-**What goes wrong:** This site already has three IntersectionObserver-driven animations: `ScrollReveal.astro` (reveal on enter), `HiawathaExplainer.astro` (bg-visible toggle), and `AnimatedDivider.astro` (SVG draw). Each of these guards with `window.matchMedia('(prefers-reduced-motion: reduce)').matches` before creating observers. New scroll-triggered fade animations for the inspiration background must follow the same pattern, otherwise the site violates its own established `prefers-reduced-motion` contract and the existing WCAG AA accessibility standard.
-
-**Prevention:** Wrap any new `IntersectionObserver` construction in:
-```js
-if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-  // observer setup
-}
-```
-Also add the CSS static fallback:
-```css
-@media (prefers-reduced-motion: reduce) {
-  .subsection-bg::before {
-    transition: none;
-    opacity: 0.04; /* show at fixed low opacity, no fade */
-  }
-}
-```
-
-**Warning signs:**
-- New scroll observers created unconditionally (no `matchMedia` guard)
-- CSS `transition` on `::before` pseudo-element has no `prefers-reduced-motion: reduce` override
-
-**Phase guidance:** The `prefers-reduced-motion` guard is a done-criteria requirement, not an optional polish step. Audit all new observer and transition code before marking the phase complete.
-
----
-
-### Pitfall 7: Multiple IntersectionObserver Instances Observing the Same Elements
-
-**What goes wrong:** `ScrollReveal.astro` queries `document.querySelectorAll('[data-reveal]')` globally. `HiawathaExplainer.astro` queries `document.querySelectorAll('[data-bg-fade]')`. If the new ride-ethos explainer section uses `data-reveal` for entry animation AND a new `data-bg-fade` for its background image, it will be observed by multiple observers simultaneously — the reveal observer fires and calls `obs.unobserve(entry.target)` on its own observer only; the bg-fade observer is unaffected. This is not a conflict — it is correct behavior, but it requires understanding that each observer is independent.
-
-**The real risk:** If a new background fade observer is added globally (in a new component that queries `[data-bg-fade]` without disconnecting the existing HiawathaExplainer observer), two observers fire on the same elements. Both toggle the same class. The class toggling becomes a race condition on very fast scroll.
-
-**Prevention:** Keep the `[data-bg-fade]` observer local to `HiawathaExplainer.astro`. Do not add a second global observer for the same selector. If the ride-ethos section needs a background fade, give it a distinct data attribute (e.g., `data-ethos-bg`) and its own scoped observer.
-
-**Warning signs:**
-- Two `IntersectionObserver` instances in the DevTools performance trace observing the same DOM node
-- Background class toggles with unexpected timing or flicker on medium-speed scroll
-
-**Phase guidance:** Before adding any new observer, grep for existing observers on the same target selector. The current observer inventory (ScrollReveal, HiawathaExplainer, AnimatedDivider, ElevationProfile, RouteMap) is all scoped differently — maintain that separation.
-
----
-
-### Pitfall 8: External Logo Fetch Fails at Static Site Deploy Time
-
-**What goes wrong:** The spec calls for fetching the Neucadia logo from neucadia.com. A static site has no server-side proxy. If the logo is fetched client-side with `<img src="https://neucadia.com/logo.svg">`, it will:
-1. Fail if neucadia.com is down (404, DNS, or timeout)
-2. Fail if neucadia.com sends a `Content-Security-Policy` or `X-Frame-Options` header blocking cross-origin use
-3. Load slowly on first paint because it is a cross-origin resource not in the browser cache
-4. Appear broken in the final rendered page (no fallback)
+**Consequences:**
+- Old hero photo shows instead of new designed badge image on every platform
+- Every iMessage, Facebook post, and Slack share looks outdated during the marketing window before the June 6 event
+- No way to force iMessage to refresh on recipients' devices -- Apple provides zero cache-purge tooling
+- LinkedIn may cache the old image for weeks even after Facebook is refreshed
 
 **Prevention:**
-- Download the logo at dev time and commit it to `public/images/neucadia-logo.svg`
-- Reference it as a local asset: `<img src="/images/neucadia-logo.svg">`
-- If the logo must stay remote (branding requirement), add `onerror` fallback and a text-only fallback: `<span>Neucadia</span>`
+- **Never reuse the OG image filename when replacing the image.** Use a new filename: `og-image-v2.jpg` or `og-hiawatha-badge.jpg`. Update the `og:image` meta tag to point to the new URL. A new URL forces a cache miss on every platform simultaneously.
+- After deploying the new image URL, immediately scrape with these platform tools:
+  - Facebook Sharing Debugger: https://developers.facebook.com/tools/debug/
+  - LinkedIn Post Inspector: https://www.linkedin.com/post-inspector/
+  - Twitter Card Validator (if still available)
+- For iMessage: the new-URL strategy is the ONLY reliable approach. Apple provides no cache-purge tool. The Apple Developer Technote TN3156 documents how iMessage fetches previews but provides no mechanism to invalidate cached ones.
+- Deploy the OG image change well before any planned social media push for the event.
 
-**Warning signs:**
-- `<img src="https://neucadia.com/...">` committed to the footer component
-- No `onerror` handler or fallback text
+**Detection:** After deploying the new OG image, share the URL in a private Facebook message and iMessage to yourself. If the old image appears, the cache is stale.
 
-**Phase guidance:** Treat the logo like any other asset. Download it, run it through the pipeline if it needs WebP conversion (it likely does not for an SVG), and commit the local copy. The "powered by" link can still point to neucadia.com — only the image needs to be local.
+**Which phase:** Address in the OG image redesign task. The filename change must happen in the same deployment as the meta tag update.
+
+**Sources:**
+- [OG Preview: Why OG Images Not Updating](https://ogpreview.app/why-og-images-not-updating/)
+- [Apple TN3156: Rich Previews for Messages](https://developer.apple.com/documentation/technotes/tn3156-create-rich-previews-for-messages)
+- [Apple Developer Forums: Messages showing old link preview](https://developer.apple.com/forums/thread/735324)
+
+---
+
+### Pitfall 2: OG Image Format Incompatibility (WebP/AVIF Trap)
+
+**What goes wrong:** The site uses WebP for all other images (hero preload, gallery). It is tempting to serve the new OG image as WebP too for file size savings. But LinkedIn does not reliably support WebP for OG images, and some older messaging platform clients silently fail -- showing no preview image at all, not an error.
+
+**Why it happens:** The rest of the site is optimized for WebP (the hero preload in BaseLayout.astro is `.webp`). Developers assume OG crawlers have the same format support as modern browsers. They do not. OG crawlers are not browsers -- they are lightweight HTTP fetchers that may only support JPEG/PNG.
+
+**Consequences:**
+- LinkedIn shares show no image (silent failure, no error message)
+- Some iMessage/WhatsApp clients on older iOS or Android may fail to render the preview image
+- No error signal -- just a blank or text-only link preview card
+
+**Current state:** The existing `og-image.jpg` is JPEG, 1200x630, 233KB. This is correct. The risk is during redesign when someone exports the new badge image in the wrong format.
+
+**Prevention:**
+- **Always use JPEG for the OG image.** JPEG is universally supported across all social platform crawlers.
+- Do NOT use WebP, AVIF, or SVG for `og:image`. Even though Facebook claims WebP support, LinkedIn and iMessage are not guaranteed.
+- Keep the file under 1MB (current 233KB is fine; Facebook limit is 8MB but smaller is faster for crawlers).
+- Add `og:image:type` meta tag: `<meta property="og:image:type" content="image/jpeg" />` to be explicit.
+
+**Detection:** Validate with https://www.opengraph.xyz/ which tests actual crawler behavior across platforms.
+
+**Which phase:** Enforce as a constraint during OG image redesign. Add to the design spec: "Export as JPEG only."
+
+**Sources:**
+- [Ctrl Blog: WebP as OG Image](https://www.ctrl.blog/entry/webp-ogp.html)
+- [OG Preview: Facebook OG Guide](https://ogpreview.app/guides/facebook-link-preview)
+
+---
+
+### Pitfall 3: Schema.org Event Missing `offers` for Free Event (Google Eligibility Loss)
+
+**What goes wrong:** The current Schema.org JSON-LD (in `BaseLayout.astro`, lines 19-44) has no `offers` property and no `isAccessibleForFree` flag. Google's Rich Results Test may not surface this as a hard error, but without `offers`, the event loses eligibility for Google's enhanced event search display. For a free event with no registration, the correct markup pattern is non-obvious.
+
+**Why it happens:** The event is free and has no registration or tickets, so the developer thinks "we have no tickets, so we don't need an `offers` block." But Google expects `offers` with `price: "0"` to understand event pricing. Without it, Google cannot determine whether the event is free or just missing pricing data, and may decline to show it in event search results.
+
+**Current state (from BaseLayout.astro):**
+```json
+{
+  "@type": "Event",
+  "name": "Hiawatha's Revenge",
+  "startDate": "2026-06-06",
+  "endDate": "2026-06-06",
+  "eventStatus": "https://schema.org/EventScheduled",
+  "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+  "location": { ... },
+  "organizer": { ... },
+  "image": "..."
+}
+```
+Missing: `offers`, `isAccessibleForFree`, `geo` coordinates, `description` (the standalone property, not just the meta description).
+
+**Consequences:**
+- Event may not appear in Google event search results for queries like "cycling events Michigan June 2026"
+- Google Search Console may flag warnings about missing recommended properties
+- Users searching for free outdoor events near Munising won't find the event through Google's event aggregation
+
+**Prevention:** Add the following to the Event JSON-LD:
+```json
+"offers": {
+  "@type": "Offer",
+  "price": "0",
+  "priceCurrency": "USD",
+  "availability": "https://schema.org/InStock",
+  "url": "https://hiawathasrevenge.com"
+},
+"isAccessibleForFree": true
+```
+- `price: "0"` signals a free event to Google
+- `priceCurrency` is required by Google even for free events -- omitting it can make the event ineligible
+- `availability: InStock` signals the event is open for participation
+- `url` points to the event page itself (not a ticket vendor, since there is none)
+- `isAccessibleForFree: true` is a Schema.org property that applies to Event (confirmed at schema.org/isAccessibleForFree, GitHub issue #900 on schemaorg/schemaorg)
+
+**Detection:** Run https://search.google.com/test/rich-results on the live URL. Check for warnings (yellow), not just errors (red).
+
+**Which phase:** Address in the Schema.org audit task.
+
+**Sources:**
+- [Google: Event Structured Data](https://developers.google.com/search/docs/appearance/structured-data/event) -- "If the event is available without payment, fees, or service charges, set the price to 0"
+- [Schema.org: isAccessibleForFree](https://schema.org/isAccessibleForFree)
+- [Google Search Central Community: Structured data for free events](https://support.google.com/webmasters/thread/101282079/structured-data-for-free-events)
+
+---
+
+### Pitfall 4: Using `SportsEvent` Instead of `Event` for a Non-Competitive Ride
+
+**What goes wrong:** Someone sees "cycling event" and upgrades `@type` from `Event` to `SportsEvent` during the Schema.org audit. But `SportsEvent` is specifically for competitive sporting events -- races, tournaments, matches with results/rankings. Using it for a non-competitive group ride is semantically incorrect.
+
+**Why it happens:** SportsEvent is a subtype of Event in Schema.org. Cycling is a sport. The upgrade seems like an improvement but is a misclassification. Schema.org describes SportsEvent as "Event type: Sports event" for "competitive fixtures."
+
+**Consequences:**
+- Google may misclassify the event or present it in wrong search contexts (competition/results oriented)
+- Semantic mismatch between the schema type and the actual nature of the event
+- May trigger Google guidelines violation for misrepresenting event type
+
+**Prevention:**
+- Keep `@type: "Event"` (which is already correct in the current codebase). Do NOT change it to `SportsEvent`.
+- The event description should use "ride" and "adventure" language, not "race" or "competition"
+- This is a "leave it alone" pitfall -- the current code is right, the risk is in "improving" it
+
+**Detection:** Review the `@type` field in JSON-LD after the audit. Should remain `"Event"`.
+
+**Which phase:** Validate during Schema.org audit. This is currently correct -- the pitfall is to avoid changing it.
+
+**Sources:**
+- [Schema.org: SportsEvent](https://schema.org/SportsEvent) -- "A sub-property of Event" for competitive fixtures
 
 ---
 
 ## Moderate Pitfalls
 
-Mistakes that cause visible bugs or delayed debugging.
+Mistakes that cause degraded previews, incomplete indexing, or technical debt.
 
 ---
 
-### Pitfall 9: Section IDs Missing or Conflicting with Existing Anchor Links
+### Pitfall 5: Favicon Emoji SVG (Missing ICO, Apple Touch Icon, and Proper SVG)
 
-**What goes wrong:** The sticky nav requires four anchor targets: `#history`, `#route`, `#gallery`, `#sectors`. The site already has `id="route"` on the Explore the Route section (line 66 in `index.astro`) and `id="gpx-download-link"` on the download anchor. There is no `#history`, `#gallery`, or `#sectors` id in the current DOM.
-
-**The conflict risk:** If `id="route"` is reused as-is, it works. But the existing `id="route"` is on the section wrapper that contains RouteMap — which places the nav link scroll target at the top of the map section with a `max-w-4xl` container, not at the top of the section's heading. With a sticky nav present, the heading will scroll behind the nav and appear clipped.
-
-**Prevention:** Use `scroll-margin-top` on all anchor target sections to offset for the sticky nav height. If the nav is 48px tall:
-```css
-section[id] {
-  scroll-margin-top: 48px;
-}
+**What goes wrong:** The current favicon is a 116-byte SVG containing only a tree emoji text element:
+```svg
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <text x="4" y="26" font-size="28">tree-emoji</text>
+</svg>
 ```
-Also audit whether `#route` is referenced anywhere else before adding nav links that depend on it.
+This has multiple problems:
+1. **Emoji rendering varies by OS/browser.** The tree emoji renders differently on macOS, Windows, Android, and Linux. Users on different platforms see different icons.
+2. **No `favicon.ico` fallback.** Legacy browsers, bookmarking tools, and some RSS readers request `/favicon.ico` directly. A 404 is returned.
+3. **No `apple-touch-icon.png`.** iOS users adding the site to their home screen see a generic page screenshot thumbnail instead of an icon.
+4. **No manifest icons.** Android "Add to Home Screen" has no icon to use.
+5. **The `rel="icon"` declaration in BaseLayout.astro lacks `sizes="32x32"`.** Without it, Chrome may download both the ICO and SVG, wasting a request.
+6. **The SVG is an emoji, not the badge design.** The site has a distinctive badge/shield motif that should be the favicon.
 
-**Warning signs:**
-- Clicking a nav link scrolls so that the section heading is partially hidden behind the nav
-- Missing `id` attributes cause nav links to jump to the top of the page
+**Consequences:**
+- iOS home screen shows ugly screenshot instead of badge icon
+- Windows/Android bookmark icons vary unpredictably
+- Browser tab icon is an inconsistent emoji across platforms
+- Site looks unfinished in browser chrome
 
-**Phase guidance:** Add `scroll-margin-top` to all four target sections as part of the same task that places the section IDs. Do not separate these steps.
+**Prevention:** Generate from the badge SVG, creating the minimal set recommended for 2026:
+```html
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+```
+- `favicon.ico`: 32x32 ICO format at site root (browsers auto-request `/favicon.ico`)
+- `icon.svg`: The badge design as proper SVG vector art (not emoji text). Can include `@media (prefers-color-scheme: dark)` CSS for dark mode support in browser tabs.
+- `apple-touch-icon.png`: 180x180 PNG with ~20px padding and a solid background color. iOS adds rounded corners automatically -- do NOT bake rounded corners into the source image (see Pitfall 13).
 
----
+**Detection:** Check browser tab icon on Windows. Check iOS "Add to Home Screen." Both should show the badge, not an emoji or screenshot.
 
-### Pitfall 10: Ride Ethos Section Breaks the DOM Order / Section Color Rhythm
+**Which phase:** Address in the favicon creation task.
 
-**What goes wrong:** `index.astro` has an established rhythm of section background colors: gold-section (DonateCallout), forest-950 (Hiawatha explainer), etc. The ride-ethos explainer is spec'd to appear "above the MBTN callout." The MBTN callout appears in two places: the gold-section at the top and the teal-section near the bottom. If the ride-ethos content is inserted above the gold-section, it must not share the gold background, which is hardcoded to that specific `<section class="gold-section">` element.
-
-If the ride-ethos section is inserted between HeroSection and gold-section (above the sticky nav), it will appear before the nav, which contradicts the spec (nav is below hero, ethos is above MBTN callout — and the MBTN callout is after the nav). The nav placement and the ethos placement must be coordinated.
-
-**Prevention:** Establish DOM insertion points for both the nav and the ethos section before writing component markup. The natural ordering is:
-1. HeroSection
-2. StickyNav (immediately after hero)
-3. RideEthosExplainer (new section)
-4. gold-section DonateCallout (MBTN callout)
-
-This places the ethos above MBTN while the nav is above the ethos. Verify this ordering against the spec before writing markup.
-
-**Warning signs:**
-- Ride ethos section appears above the sticky nav in the DOM
-- Gold background bleeds into the ethos section due to misplaced section wrapper
-
-**Phase guidance:** Write `index.astro` insertion points as a planning step before any component implementation.
-
----
-
-### Pitfall 11: Light Mode Contrast for Existing Amber/Gold Heading Colors on Beige Backgrounds
-
-**What goes wrong:** The History section headings use `--color-amber-500: #c8973e` for `<h2>` and `--color-amber-500` / `--color-turquoise-400` / `--color-sun-400` / `--color-scarlet-400` for `<h3>` sub-headings. These colors were chosen and WCAG-audited against `--color-forest-900` (#1a2e1a, dark green) and `--color-forest-950` (#0d1a0d, near-black).
-
-On a light beige background (e.g., `#f5f0e8`, `--color-cream-100`), these ratios change dramatically:
-- `--color-amber-500` (#c8973e) on `--color-cream-100` (#f5f0e8): approximately 2.4:1 — fails AA for all text
-- `--color-turquoise-400` (#4a9eca) on cream: approximately 2.6:1 — fails AA
-- `--color-scarlet-400` (#f87171) on cream: approximately 2.8:1 — fails AA
-
-Every colored heading in the History section will fail WCAG AA in light mode if left at their dark-mode values.
-
-**Prevention:** In the `@media (prefers-color-scheme: light)` block scoped to `.hiawatha-section`, override heading colors to dark values. Use forest-900 (#1a2e1a) for `h2` and forest-800 (#2d4a2d) for `h3` in light mode, or audit alternative color choices.
-
-**Warning signs:**
-- Browser accessibility audit (Lighthouse) returns contrast failures after light mode is added
-- Any heading in the History section that is amber, turquoise, sun-yellow, or scarlet fails AA on cream
-
-**Phase guidance:** Run a contrast check on every heading color used in `HiawathaExplainer.astro` against the proposed light-mode background before finalizing the palette. This is a done-criteria requirement, not post-merge polish.
+**Sources:**
+- [Evil Martians: How to Favicon in 2026](https://evilmartians.com/chronicles/how-to-favicon-in-2021-six-files-that-fit-most-needs)
 
 ---
 
-### Pitfall 12: The "Powered by Neucadia" Footer Must Not Break the Existing Footer Section
+### Pitfall 6: OG Image Text Illegible at Thumbnail Rendering Size
 
-**What goes wrong:** The current footer-like section in `index.astro` is a `<section>` with `class="bg-forest-950"` containing the shield motif, attribution note, and Ojibwe cultural acknowledgment. It is not a `<footer>` element. Adding a "Powered by Neucadia" full-width line requires deciding where it lives: inside the existing section (sharing the same dark background), or as a new `<footer>` element below it.
+**What goes wrong:** The new OG image is designed with badge logo + tagline text. It looks great at 1200x630 in Figma/design tool. But when rendered as a small thumbnail -- 300x158 in an iMessage bubble, ~476x249 in a Facebook mobile feed, or ~506x265 on Twitter mobile -- the tagline text becomes unreadable. The badge logo detail is lost.
 
-If placed inside the existing section, the Neucadia line may visually compete with the Ojibwe acknowledgment — both are small-print footer-style text. If placed as a new `<footer>` below, the page gains a second terminal section that may look like a double-footer on narrow screens.
+**Why it happens:** Designers view and approve the image at full 1200px resolution. Social platforms render it at 25-40% of that size. Text that is readable at 1200px wide becomes 4-5px tall at thumbnail rendering. Additionally, platforms crop differently: Facebook trims sides, iMessage may overlay its own title text atop the image, and LinkedIn crops to a different aspect ratio in some views.
 
-**Prevention:** Add a semantic `<footer>` element wrapping both the existing bottom section and the Neucadia line. This is correct HTML, improves document semantics, and provides a single visual container. The "Powered by Neucadia" line can be separated from the acknowledgment text by a border or spacing.
+**Consequences:**
+- Tagline text is illegible in most actual sharing contexts
+- Badge logo fine details merge into blur at small sizes
+- Text overlaps with platform-added title/description text overlays
+- The carefully designed image communicates nothing more than a color blob
 
-**Warning signs:**
-- Two visually distinct "footer" sections stacked with no separator
-- Neucadia line sharing the same visual weight as the Ojibwe acknowledgment text
+**Prevention:**
+- Design at 1200x630 but **test at 300x158** (smallest common rendering, iMessage compact bubble)
+- Keep text to 3-5 LARGE words maximum. The tagline must be extremely short and in bold, high-contrast type.
+- Place the badge and any text in the center 60% of the image. Platforms crop edges unpredictably.
+- Use bold, high-contrast text (light on dark or dark on light). No thin or decorative fonts.
+- Test with https://www.opengraph.xyz/ and https://ogpreview.app/ which render actual platform sizes.
+- Consider: the badge logo may work alone without text at small sizes. Sometimes an icon-only OG image is more effective than text that can't be read.
 
-**Phase guidance:** The BaseLayout `<main>` wraps the current slot. A `<footer>` should be added to `BaseLayout.astro` outside `<main>`, not as an additional section inside the `index.astro` slot.
+**Detection:** Share the URL in an iMessage to yourself and view on iPhone. If you squint to read the text, it's too small.
+
+**Which phase:** Address during OG image design. Build a review step that tests thumbnail rendering before finalizing.
+
+---
+
+### Pitfall 7: Sitemap Hash Fragments and Robots.txt Mismatches
+
+**What goes wrong:** Several related sub-pitfalls for a single-page site:
+
+**7a: Hash fragments in sitemap.** The site has hash-based deep links (`#route=100k`, `#route=100mi`, `#route=50k`). Including URLs like `https://hiawathasrevenge.com/#route=100k` in the sitemap is pointless -- Google ignores everything after `#` in URLs. These entries waste crawl budget and signal poor SEO understanding.
+
+**7b: Sitemap filename mismatch in robots.txt.** The `@astrojs/sitemap` integration generates `sitemap-index.xml` (not `sitemap.xml`). If a hand-written `robots.txt` references `Sitemap: https://hiawathasrevenge.com/sitemap.xml`, the reference is broken. Google will 404 trying to fetch it.
+
+**7c: Missing `site` config silently breaks sitemap.** The `@astrojs/sitemap` integration requires the `site` field in `astro.config.ts`. The current config has `site: 'https://hiawathasrevenge.com'` -- this is correct. But if someone removes it during a refactor, the sitemap silently fails to generate during build. No error, just no sitemap file in `dist/`.
+
+**7d: `changefreq` and `priority` are noise.** Google has explicitly stated it ignores these sitemap values. Including them adds XML bulk without value.
+
+**Prevention:**
+- For a single-page site, the sitemap should contain exactly ONE URL: `https://hiawathasrevenge.com/`
+- Do NOT include hash-fragment URLs in the sitemap
+- Install `@astrojs/sitemap` integration (not a hand-written file) to auto-generate. It reads the Astro routing automatically.
+- Create `robots.txt` referencing the actual generated filename. Verify after build that `dist/sitemap-index.xml` exists and `robots.txt` points to it correctly.
+- `lastmod` is the only useful optional sitemap field (Google uses it if it is consistently accurate)
+
+**Recommended robots.txt content:**
+```
+User-agent: *
+Allow: /
+
+Sitemap: https://hiawathasrevenge.com/sitemap-index.xml
+```
+
+**Detection:** After build, check that `dist/sitemap-index.xml` exists, contains only `https://hiawathasrevenge.com/`, and that `dist/robots.txt` references the correct filename.
+
+**Which phase:** Address in the robots.txt + sitemap task.
+
+**Sources:**
+- [Astro Docs: Sitemap Integration](https://docs.astro.build/en/guides/integrations-guide/sitemap/)
+- [Google: Build and Submit Sitemap](https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap)
+
+---
+
+### Pitfall 8: Canonical URL Trailing Slash Inconsistency
+
+**What goes wrong:** The current code computes canonical URL as:
+```js
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+```
+This produces `https://hiawathasrevenge.com/` for the index page. But Astro's `trailingSlash` config is not set in `astro.config.ts` (defaults to `'ignore'`). If some external links point to `https://hiawathasrevenge.com` (no slash) and the canonical is `https://hiawathasrevenge.com/` (with slash), Google may see these as two different URLs and split PageRank between them.
+
+For a single-page site this is unlikely to cause major damage, but it is an easy fix and prevents a class of edge cases.
+
+**Prevention:**
+- Set `trailingSlash: 'never'` or `trailingSlash: 'always'` explicitly in `astro.config.ts`
+- Verify the canonical URL in the built HTML matches exactly the URL submitted to Google Search Console
+- Verify the hosting provider's redirect behavior matches the chosen config (e.g., if `trailingSlash: 'never'`, the host should 301-redirect `/` to the bare domain or vice versa)
+
+**Detection:** View source of built HTML. Check `<link rel="canonical">` value. Compare to the URL in the address bar when visiting the live site.
+
+**Which phase:** Address in the canonical URL verification task.
+
+**Sources:**
+- [Google: Canonical URLs](https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls)
+
+---
+
+### Pitfall 9: Schema.org Event Image Requirements Stricter Than OG Image
+
+**What goes wrong:** Google has specific image requirements for Event structured data that are stricter and different from OG image requirements:
+- Minimum width: 720px (recommended: 1920px)
+- Google recommends providing images in multiple aspect ratios: 16:9, 4:3, and 1:1
+- The image must "clearly represent the event" -- Google specifically warns against using just a logo
+- Must be crawlable and indexable (not behind auth or robots.txt disallow)
+
+The current JSON-LD points `"image"` to the same OG image URL. If the OG image is redesigned to be primarily a badge/logo with text overlay, it may violate Google's guideline that event images should represent the event, not just be a logo.
+
+**Consequences:**
+- Google Rich Results Test may flag an image warning
+- Event may lose eligibility for the enhanced event experience in search results
+- Only providing one aspect ratio means Google cannot optimize display across surfaces
+
+**Prevention:**
+- The Schema.org Event `image` property can be a DIFFERENT URL than the `og:image`. Consider keeping the original event photo (the scenic hero shot) for structured data while using the designed badge image for social sharing.
+- Provide multiple image sizes: `"image": ["https://hiawathasrevenge.com/event-photo-16x9.jpg", "https://hiawathasrevenge.com/event-photo-4x3.jpg", "https://hiawathasrevenge.com/event-photo-1x1.jpg"]`
+- Ensure the event image is at least 720px wide (current 1200px is fine)
+- Do not point structured data `image` at a pure badge/logo
+
+**Detection:** Run Google Rich Results Test after the OG image is changed. Check specifically for image-related warnings.
+
+**Which phase:** Address during Schema.org audit. Decide whether structured data image should differ from OG image.
+
+**Sources:**
+- [Google: Event Structured Data](https://developers.google.com/search/docs/appearance/structured-data/event) -- "images that clearly represent the event"
+
+---
+
+### Pitfall 10: Schema.org Event Missing Recommended Properties
+
+**What goes wrong:** The current JSON-LD is missing several recommended properties that reduce the richness of the event listing in Google search results. While not blocking errors, each missing recommended property reduces the likelihood of Google showing the event in enhanced results.
+
+**Currently missing from the JSON-LD:**
+- `offers` and `isAccessibleForFree` (covered in Pitfall 3, Critical)
+- `description` as a standalone property in the JSON-LD (it only exists as meta description)
+- `geo` coordinates in the location (for map integration in search results)
+- Specific street address (current address is city-level only: "Munising, MI" -- no street)
+- Multiple `image` aspect ratios (covered in Pitfall 9)
+
+**Prevention:**
+- Add `description` directly in the JSON-LD object (can match the meta description):
+  ```json
+  "description": "A 100-mile cycling adventure through Michigan's Hiawatha National Forest supporting the Munising Bay Trail Network."
+  ```
+- Add `geo` coordinates to the location for map integration:
+  ```json
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 46.4111,
+    "longitude": -86.6489
+  }
+  ```
+- Add a more specific location if the start/finish point is known (trailhead, park, town square)
+- Optionally add `duration` if the event has an expected timeframe
+
+**Detection:** Rich Results Test shows recommended (yellow) warnings, not just required (red) errors. Each yellow warning is a missed opportunity.
+
+**Which phase:** Address during Schema.org audit. Bundle all missing recommended properties into one task.
 
 ---
 
 ## Minor Pitfalls
 
----
-
-### Pitfall 13: Sticky Nav Active State Cannot Use scroll-spy Without JavaScript
-
-**What goes wrong:** Marking the active section in the nav (bold or highlighted link for the section currently in the viewport) requires either JavaScript scroll-spy or the newer CSS Scroll-Driven Animations API. If active state is a nice-to-have, it should be deferred — attempting it adds a non-trivial observer-based system that needs to coordinate with the five existing IntersectionObservers.
-
-**Prevention:** Design the nav without active state highlighting for the first implementation. The four links are sufficient without it. Add active state as a separate sub-task with explicit scope.
-
-**Warning signs:**
-- Nav implementation adds a sixth IntersectionObserver that queries all four section IDs simultaneously
-- Scroll-spy logic tied to the same observer as the background-fade observers
+Mistakes that cause annoyance or inconsistency but are quickly fixable.
 
 ---
 
-### Pitfall 14: Nav Accessibility — Missing aria-label on nav Element
+### Pitfall 11: Astro `site` Config URL Mismatch (www vs non-www, HTTP vs HTTPS)
 
-**What goes wrong:** If the page has more than one `<nav>` element (unlikely now, but possible if `BaseLayout.astro` grows), the nav bar needs an `aria-label` to distinguish it from other nav regions. Even with a single nav, screen readers announce "navigation" without a label — "Main navigation" or "Section navigation" is more descriptive.
+**What goes wrong:** The `site` in `astro.config.ts` is `https://hiawathasrevenge.com`. All generated URLs (canonical, sitemap, OG image absolute paths) derive from this. If the actual production domain differs -- `www.hiawathasrevenge.com`, or if HTTP is not redirected to HTTPS -- every generated URL is technically wrong.
 
-**Prevention:** `<nav aria-label="Section navigation">` on the sticky nav bar. This costs nothing to add and is correct from the start.
+**Prevention:**
+- Verify `https://hiawathasrevenge.com` is the actual canonical production URL
+- Ensure the hosting provider redirects `www` to non-www (or vice versa) with a 301
+- Ensure HTTPS is enforced (HTTP requests 301 to HTTPS)
+- These redirects should be verified before the SEO milestone, not after
 
-**Warning signs:**
-- `<nav>` element with no `aria-label` or `aria-labelledby`
+**Detection:** Visit `http://www.hiawathasrevenge.com`, `http://hiawathasrevenge.com`, and `https://www.hiawathasrevenge.com`. All three should 301-redirect to `https://hiawathasrevenge.com`.
+
+**Which phase:** Verify as a pre-flight check before deploying any SEO changes.
 
 ---
 
-### Pitfall 15: Inspiration Image Pipeline Integration Forgotten
+### Pitfall 12: Deploying OG Changes Without Testing Actual Platform Crawlers
 
-**What goes wrong:** The image pipeline (`pipeline.js`) runs `generate-thumbnails`, `copy-images`, `generate-webp`, and `process-historical` in sequence. Inspiration images currently live in `/images/inspiration/` as raw uploaded files. If they are referenced directly from that path in CSS background-image declarations, they will not be optimized. More importantly, they will not be present in `public/images/` where the build serves them from — `copy-images.js` copies from a source directory to `public/images/`, and inspiration images may not be in that source path.
+**What goes wrong:** Developers test OG tags by viewing page source or browser dev tools. Everything looks correct in HTML. But social platform crawlers may behave differently: they may timeout on slow images, fail on redirects, or render different results than what the HTML suggests. Astro generates static HTML so JS rendering is not a concern, but image accessibility and redirect chains are.
 
-**Prevention:** Before referencing inspiration images in CSS, run `ls /images/inspiration/` and verify the images are copied to `public/images/` by the pipeline. If they are not, add a pipeline step or manually copy them. Verify the final `public/images/` path matches the CSS `url()` reference.
+**Prevention:**
+After every deployment that touches meta tags or OG images, test with ACTUAL platform crawler tools:
+- https://www.opengraph.xyz/ (multi-platform preview, shows rendering from real crawlers)
+- https://developers.facebook.com/tools/debug/ (Facebook Sharing Debugger)
+- https://www.linkedin.com/post-inspector/ (LinkedIn)
+- https://search.google.com/test/rich-results (Google structured data)
 
-**Warning signs:**
-- CSS references `url('/images/inspiration/some-file.jpg')` but the file does not exist in `public/images/`
-- Background images appear broken in the built site but work in dev (dev serves from the source tree, build serves from `public/`)
+Add these validation URLs to the UAT checklist for the milestone.
+
+**Detection:** If any platform tool shows different data than what's in the HTML, there is a crawling/caching issue.
+
+**Which phase:** Add as a UAT step for every task that modifies meta tags, OG images, or structured data.
+
+---
+
+### Pitfall 13: Apple Touch Icon with Baked-In Rounded Corners
+
+**What goes wrong:** When creating `apple-touch-icon.png` from the badge SVG, the developer adds rounded corners to the PNG file. iOS applies its own corner rounding mask automatically at render time. The result is double-rounded corners with visible white or transparent artifacts at the corners.
+
+**Prevention:**
+- Export `apple-touch-icon.png` as a perfect square (180x180) with NO rounded corners
+- Add approximately 20px padding around the icon content
+- Fill the background with a solid color (the forest green `#1a2e1a` from the site theme would work well)
+- iOS handles ALL masking and corner rounding automatically
+
+**Detection:** "Add to Home Screen" on an iOS device. Look for double-rounding or white corner artifacts.
+
+**Which phase:** Address during favicon creation.
+
+**Sources:**
+- [Evil Martians: How to Favicon in 2026](https://evilmartians.com/chronicles/how-to-favicon-in-2021-six-files-that-fit-most-needs) -- "Apple will handle cropping itself"
+
+---
+
+### Pitfall 14: Using `rel="shortcut icon"` (Invalid Legacy Markup)
+
+**What goes wrong:** Many favicon guides recommend `rel="shortcut icon"`. The `shortcut` keyword is not a valid link relation type per the HTML spec. Modern browsers ignore it and parse `icon`, but it signals outdated practices and causes HTML validation warnings.
+
+**Current state:** The codebase uses `rel="icon" type="image/svg+xml"` which is correct syntax. The risk is in copy-pasting from outdated guides during the favicon expansion.
+
+**Prevention:** Use `rel="icon"` (correct). Never `rel="shortcut icon"`.
+
+**Which phase:** Validate during favicon implementation.
+
+---
+
+### Pitfall 15: iMessage Title Truncation at ~44 Characters
+
+**What goes wrong:** iMessage link previews truncate `og:title` text at approximately 44 characters, replacing the rest with an ellipsis. If the OG title is long ("Hiawatha's Revenge - A 100-Mile Gravel Cycling Adventure Through Michigan's Upper Peninsula"), the preview shows only "Hiawatha's Revenge - A 100-Mile Grav..."
+
+**Prevention:**
+- Keep `og:title` under 44 characters for iMessage compatibility
+- "Hiawatha's Revenge" (19 chars) or "Hiawatha's Revenge | June 6, 2026" (33 chars) both fit
+- The longer description belongs in `og:description`, not the title
+
+**Detection:** Share the URL in iMessage and check if the title is truncated.
+
+**Which phase:** Verify during OG tag audit.
+
+**Sources:**
+- [Apple TN3156: Rich Previews for Messages](https://developer.apple.com/documentation/technotes/tn3156-create-rich-previews-for-messages) -- title text truncation behavior
 
 ---
 
@@ -328,38 +444,63 @@ If placed inside the existing section, the Neucadia line may visually compete wi
 
 | Phase Topic | Likely Pitfall | Mitigation |
 |---|---|---|
-| Sticky nav placement in DOM | Wrong position relative to hero, missing `scroll-margin-top` | Pitfall 3, 9 — native sticky, add scroll-margin-top |
-| Sticky nav z-index | Collision with sector panel (z-index 1000) | Pitfall 2 — assign z-index 100, document budget |
-| Ride ethos section insertion | Breaks section color rhythm, wrong DOM order | Pitfall 10 — plan insertion points before markup |
-| Light mode for History section | Breaking existing heading contrast ratios | Pitfall 1, 11 — scope to `.hiawatha-section`, audit all heading colors |
-| Inspiration images as backgrounds | Opacity fades text content | Pitfall 4 — use `::before` pseudo-element only |
-| CSS filter for dark-mode images | Photographic inversion looks like film negatives | Pitfall 5 — use `grayscale + brightness`, not `invert` |
-| New scroll-triggered animations | Missing `prefers-reduced-motion` guard | Pitfall 6 — required, not optional |
-| Multiple IntersectionObservers | Race condition if two observe same elements | Pitfall 7 — keep observers scoped, use distinct data attributes |
-| Neucadia logo | Remote image fails silently | Pitfall 8 — download and commit locally |
-| Neucadia footer placement | Double-footer confusion, wrong semantic element | Pitfall 12 — add `<footer>` to BaseLayout |
-| Inspiration images pipeline | Images not copied to public/images | Pitfall 15 — verify pipeline paths before CSS references |
+| OG Image Redesign | Cache poisoning -- old image persists across all platforms | Use new filename, not same URL. Scrape with platform debuggers immediately after deploy. |
+| OG Image Redesign | Text illegible at thumbnail rendering size | Design at 1200x630, test at 300x158. Keep text to 3-5 bold words max. |
+| OG Image Redesign | WebP format used accidentally (matches rest of site) | Export as JPEG only. Never WebP/AVIF/SVG for og:image. |
+| Schema.org Audit | Missing `offers` block for free event | Add `offers` with `price: "0"` + `priceCurrency: "USD"` + `isAccessibleForFree: true`. |
+| Schema.org Audit | Upgrading to SportsEvent (incorrect for a ride) | Keep as `Event`. This is a ride, not a race. |
+| Schema.org Audit | Event image mismatch (logo badge vs scenic event photo) | Consider separate image for structured data vs og:image. |
+| Schema.org Audit | Missing recommended properties (geo, description, offers) | Bundle all missing properties into one audit pass. |
+| Robots.txt + Sitemap | Hash fragments in sitemap URLs | Only include `https://hiawathasrevenge.com/`. Zero hash URLs. |
+| Robots.txt + Sitemap | Sitemap filename mismatch in robots.txt | Reference `sitemap-index.xml` (what @astrojs/sitemap actually generates). |
+| Favicon Creation | Missing ICO fallback and apple-touch-icon | Generate full set: .ico (32x32), .svg (vector badge), apple-touch-icon.png (180x180). |
+| Favicon Creation | Double-rounded corners on iOS home screen | Export apple-touch-icon as square with NO corner rounding. iOS masks automatically. |
+| Favicon Creation | Emoji SVG varies across platforms | Replace emoji with actual badge vector art. |
+| Canonical URL | Trailing slash inconsistency | Set `trailingSlash` explicitly in astro.config.ts. |
+| All Tasks | Not testing with actual platform crawlers | Add crawler-tool validation (opengraph.xyz, FB debugger, Rich Results Test) to UAT. |
+
+---
+
+## Current Project State Reference
+
+| Asset | Current State | Issues to Address |
+|-------|---------------|-------------------|
+| `og-image.jpg` | JPEG, 1200x630, 233KB | Correct format/size. Content is hero photo crop -- planned for badge+tagline redesign. |
+| `og:image` meta tag | Points to `/og-image.jpg` with width/height | Correct implementation. Missing `og:image:type`. |
+| `og:title` | Dynamic from page `title` prop | Verify length under 44 chars for iMessage. |
+| `twitter:card` | `summary_large_image` | Correct. |
+| `canonical` URL | Computed from `Astro.url.pathname` + `Astro.site` | Works. `trailingSlash` not set explicitly. |
+| `favicon.svg` | 116-byte emoji SVG (tree emoji as text element) | Placeholder. Needs complete replacement with badge vector art. |
+| `favicon.ico` | Missing (404 on direct request) | Needs creation as 32x32 ICO. |
+| `apple-touch-icon.png` | Missing | Needs creation as 180x180 PNG. |
+| Schema.org JSON-LD | `Event` type with name, dates, location, organizer, image | Missing: `offers`, `isAccessibleForFree`, `geo`, `description` (standalone), specific street address. |
+| `robots.txt` | Missing entirely | Needs creation. |
+| `sitemap.xml` | Missing entirely | Needs `@astrojs/sitemap` integration. |
+| `site` config | `https://hiawathasrevenge.com` | Correct. Required for sitemap and canonical URL generation. |
+| `trailingSlash` config | Not set (defaults to `'ignore'`) | Should be set explicitly. |
 
 ---
 
 ## Sources
 
-Confidence: HIGH on all critical pitfalls — derived from direct code inspection.
+All critical pitfalls verified against official documentation or direct code inspection:
 
-**Code-inspected files:**
-- `src/styles/global.css` — `@theme static` token definitions, layer order
-- `src/components/HeroSection.astro` — hero z-index (0, 1), video overlay structure
-- `src/components/HiawathaExplainer.astro` — `[data-bg-fade]` observer, subsection z-index (1), existing `prefers-reduced-motion` guard
-- `src/components/ScrollReveal.astro` — global `[data-reveal]` observer, `prefers-reduced-motion` guard
-- `src/components/RouteMap.astro` — sector panel z-index (1000), `position: fixed`
-- `src/components/ElevationProfile.astro` — IntersectionObserver lazy-init pattern
-- `src/pages/index.astro` — DOM order, section IDs, existing `id="route"`
-- `src/layouts/BaseLayout.astro` — `<main>` wrapper structure (no `<footer>` currently)
-- `scripts/pipeline.js` — pipeline step order and image processing scope
+**Official Documentation (HIGH confidence):**
+- [Google: Event Structured Data Requirements](https://developers.google.com/search/docs/appearance/structured-data/event)
+- [Schema.org: isAccessibleForFree](https://schema.org/isAccessibleForFree)
+- [Schema.org: SportsEvent](https://schema.org/SportsEvent)
+- [Apple TN3156: Rich Previews for Messages](https://developer.apple.com/documentation/technotes/tn3156-create-rich-previews-for-messages)
+- [Google: Canonical URLs](https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls)
+- [Google: Build and Submit Sitemap](https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap)
+- [Astro Docs: Sitemap Integration](https://docs.astro.build/en/guides/integrations-guide/sitemap/)
 
-**Web sources (verified against code):**
-- Tailwind CSS v4 theme docs: `@theme static` generates regular CSS custom properties, fully overridable in media queries
-- CSS `position: sticky` stacking context behavior: sticky creates stacking context only when `z-index` is not `auto`
-- `opacity` creates new stacking context: applying `opacity` to container affects all children including text
-- `prefers-reduced-motion` best practices: guard IntersectionObserver creation AND provide CSS fallback
-- `filter: invert()` on photographs: produces film-negative effect, not viable for photographic backgrounds
+**Verified Community Sources (MEDIUM confidence):**
+- [Evil Martians: How to Favicon in 2026](https://evilmartians.com/chronicles/how-to-favicon-in-2021-six-files-that-fit-most-needs)
+- [OG Preview: Why OG Images Not Updating](https://ogpreview.app/why-og-images-not-updating/)
+- [Ctrl Blog: WebP as OG Image](https://www.ctrl.blog/entry/webp-ogp.html)
+
+**Project Code Inspection (HIGH confidence):**
+- `src/layouts/BaseLayout.astro` -- existing meta tags, JSON-LD, canonical URL computation
+- `astro.config.ts` -- site URL, missing trailingSlash config
+- `public/og-image.jpg` -- JPEG 1200x630 233KB (verified via `sips` and `file`)
+- `public/favicon.svg` -- 116-byte emoji placeholder (verified via read)

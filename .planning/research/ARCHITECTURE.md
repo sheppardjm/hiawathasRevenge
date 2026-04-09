@@ -1,263 +1,437 @@
-# Architecture Research: v1.8 Navigation & Identity
+# Architecture Patterns: SEO & Social Sharing Integration
 
-**Domain:** Integrating sticky nav, ride ethos explainer, Neucadia footer, and light/dark history section into an existing Astro 6 + Tailwind 4 static site
-**Researched:** 2026-04-07
-**Confidence:** HIGH — based on direct analysis of all components, index.astro, BaseLayout.astro, global.css, HiawathaExplainer.astro, ScrollReveal.astro, and the 49 existing inspiration images
+**Domain:** SEO improvements for Astro 6 static cycling event site
+**Researched:** 2026-04-09
+**Overall confidence:** HIGH
 
----
-
-## Existing Architecture Snapshot
-
-The site is a single `src/pages/index.astro` that imports all components. Layout flow (sequential):
+## Current Architecture Snapshot
 
 ```
-BaseLayout (html/head/body wrapper)
-  └── <main>
-        HeroSection              — full-viewport video/image hero
-        <section> DonateCallout  — gold-section (sun-500 bg)
-        FloralDivider
-        HiawathaExplainer        — hiawatha-section (forest-950 bg)
-        RouteExplainer           — route-explainer-section
-        AnimatedDivider (minimal)
-        <section> RouteStats     — amber-section
-        <section> GPX download   — bg-forest-800
-        AnimatedDivider (berry)
-        OjibweBorderPattern
-        <section id="route"> RouteMap  ← only section with id currently
-        <section> ElevationProfile
-        WaterWavePattern
-        <section> PhotoGallery
-        AnimatedDivider (floral)
-        <section> DonateCallout  — teal-section
-        <section> footer text    — bg-forest-950
-        ScrollReveal             — JS-only, no DOM output
+Build Flow:
+  npm run build
+    -> prebuild hook -> node scripts/pipeline.js (11 shared steps + 3 per-route steps)
+    -> astro build -> dist/
+
+Pipeline Step 11 (final shared step):
+  generate-og-image.js
+    - Reads: public/images/irrVhAXHnnFzslJGVemLiPEy5iQFbqZF6VzqxYOHL1o-2048x1536.jpg
+    - Outputs: public/og-image.jpg (1200x630 center-crop, JPEG quality 75)
+    - Uses: sharp 0.34.5
+
+Head Section (BaseLayout.astro):
+  - <meta> OG tags (type, url, title, description, image, dimensions)
+  - <meta> Twitter/X card tags (summary_large_image)
+  - <link rel="canonical">
+  - <link rel="icon" type="image/svg+xml" href="/favicon.svg"> (emoji tree)
+  - <script type="application/ld+json"> Event schema
+  - No robots.txt, no sitemap, no apple-touch-icon
+
+Badge Assets:
+  - images/badge.svg (source, fill #0d1a0d / forest green, 21KB Illustrator export)
+  - public/images/badge.svg (deployed copy, fill #3b2412 / brown variant)
+  - HeroSection.astro inline SVG (shield shape with text arcs + inner HTML overlay)
+  - BaseLayout.astro <symbol id="shield-motif"> (simplified arrowhead path)
+  - ShieldMotif.astro component (references #shield-motif via <use>)
+
+Pages: index.astro (single page), admin.astro, api/save-manifest.ts
 ```
 
-Key architecture constraints established in prior milestones:
-- `@theme static` (not `@theme`) for Tailwind tokens — all tokens stay in `:root` for JS access via `getComputedStyle`
-- Scoped Astro styles + `:global()` pattern for cross-component overrides from parent
-- `[data-reveal]` + `ScrollReveal.astro` IntersectionObserver pattern for scroll animations
-- `[data-bg-fade]` + per-component IntersectionObserver for background parallax in HiawathaExplainer
-- `#route=100k` URL hash pattern used by RouteMap — scroll-fragment IDs must not collide with `#route`
-- Hero is `100svh` height — sticky nav must account for this when calculating scroll threshold
+## Integration Architecture
 
----
+### 1. OG Image Redesign: Modify generate-og-image.js
 
-## Component Integration Map: What Needs to Change
+**Current state:** Simple center-crop of hero photo. No branding, no text.
 
-### New Components (create from scratch)
+**Target state:** Badge-based branded design with tagline overlay.
 
-**1. `StickyNav.astro`**
+**Approach: Extend existing pipeline script with sharp SVG compositing.**
 
-A new component, not a modification to any existing component. Placed in `index.astro` immediately after `<HeroSection />`, before the first `<section>`.
+Sharp 0.34.5 includes librsvg 2.61.2, which means it can render SVG to raster natively. The proven pattern for adding text/graphics to images with sharp is:
 
-Integration points:
-- Rendered between `<HeroSection />` and the gold `<section>` containing `DonateCallout` in `index.astro`
-- Links to 4 anchor IDs that must be added to existing sections: `#history`, `#route` (already exists), `#gallery`, `#sectors`
-- The nav starts in document flow (not fixed), becomes `position: fixed` at top when scrolled past the hero
-- Uses `IntersectionObserver` on `<HeroSection>` element to toggle the fixed class — consistent with the existing observer pattern already used by `ScrollReveal.astro` and `HiawathaExplainer.astro`
-- Does NOT use `[data-reveal]` (nav should appear immediately, not fade in)
-- Self-contained `<script>` inside the component, matching the Astro pattern
+1. Build an SVG string containing the design (badge graphic + text)
+2. Convert to Buffer: `Buffer.from(svgString)`
+3. Composite onto the base image: `sharp(base).composite([{ input: svgBuffer }])`
 
-Anchor IDs to add in `index.astro`:
-- `id="history"` — add to the `<section>` wrapping `<HiawathaExplainer />` (currently it has no wrapper section — `HiawathaExplainer` renders its own `<section>` element, so add `id="history"` as a prop or directly to `HiawathaExplainer`'s outer section)
-- `id="route"` — already exists on the RouteMap section
-- `id="gallery"` — add to the `<section>` that wraps `<PhotoGallery />` (line 82 in index.astro)
-- `id="sectors"` — add to the `<section>` wrapping `<RouteExplainer />` (RouteExplainer renders its own outer section, same pattern as HiawathaExplainer)
-
-**2. `RideEthos.astro`**
-
-A new component placed in `index.astro` between `<FloralDivider />` and `<HiawathaExplainer />`. Per the brief, it goes "above the MBTN callout" — however the page has two MBTN callout placements. Based on needs.md ("above the Munising Bay Trail Network callout below the hero"), this means between the hero area and the history section. The most defensible placement: after `<FloralDivider />`, before `<HiawathaExplainer />`.
-
-Content: Since June 7, 2014. Always free. Ride your own pace. Fellowship over competition. All levels welcome.
-
-Styling: Larger font, distinct color treatment to stand out. The existing `gold-section` (sun-500) is already used for the DonateCallout above this. Use a different color — the cream/parchment palette on forest-800 background would distinguish it, or a standalone cream bg with forest-950 text for contrast.
-
-No data dependencies. Pure content + styling.
-
-**3. `NeucadiaFooter.astro`**
-
-A new component replacing the existing informal footer text in `index.astro` (lines 98–112), or added after it. The current "footer" section contains the shield/turtle motif and Ojibwe attribution text — that should be preserved. The Neucadia footer is a separate, distinct element: full-width, single line, "Powered by Neucadia" with logo.
-
-The logo at `https://neucadia.com/assets/neucadia_logo.png` is an external PNG. For a static site, the options are:
-- Fetch and bundle the PNG in the build pipeline
-- `<img src="https://neucadia.com/assets/neucadia_logo.png">` with external reference
-- Text-only fallback if image unavailable
-
-Recommended: `<img>` with external src, `loading="lazy"`, explicit `width`/`height` for CLS prevention, `alt="Neucadia"`. This is a footer element — not LCP-critical. No pipeline change needed.
-
-Placement: After the existing `bg-forest-950` attribution section in `index.astro`. A new `<footer>` HTML element (not `<section>`) for semantic correctness. Full-width, visually distinct from the Ojibwe attribution above it.
-
-### Modified Components
-
-**4. `HiawathaExplainer.astro` — Light/Dark Mode**
-
-This is the most architecturally complex change. The component currently has a hardcoded dark background (`background-color: var(--color-forest-950)`).
-
-The requirement: `prefers-color-scheme` light mode gets a beige/off-white background. Both modes get faded desaturated inspiration images with scroll-triggered fade in/out.
-
-Three sub-problems:
-
-**A. Color scheme switching via CSS media query**
-
-Add to the existing `.hiawatha-section` style block:
-```css
-@media (prefers-color-scheme: light) {
-  .hiawatha-section {
-    background-color: #f5f0e8; /* --color-cream-100 */
-    color: var(--color-forest-950);
-  }
-  /* Override text colors for light mode readability */
-}
-```
-
-The existing typography uses hardcoded color variables (cream-100 text, amber-500/turquoise-400/sun-400/scarlet-400 headings). In light mode on a cream background, `--color-cream-100` text becomes invisible — it must be overridden. Each heading color (amber-500, turquoise-400, sun-400, scarlet-400) needs contrast checking against the light background. Most will be too light — will need darker variants from the existing palette.
-
-The museum plate, pull quote, and drop cap colors all need light mode overrides. This is the most CSS-intensive change in the milestone.
-
-**B. Inspiration images as faded backgrounds**
-
-49 inspiration images exist in `images/inspiration/`. These are `.webp` and `.jpg` files. They need to be served from `public/` — check if they're already copied by the pipeline. If not, a pipeline step or a direct `public/inspiration/` copy is needed.
-
-The `.subsection-bg::before` pseudo-element currently exists in `HiawathaExplainer.astro` (see `prefers-reduced-motion: reduce` rule at line 222 targeting `.subsection-bg::before`). This is the hook for background images — the parallax background was planned but appears partially stubbed. The pseudo-element already exists in reduced-motion fallback, meaning the full implementation was begun but the `background-image` rules were removed or never added for the three sub-sections.
-
-Architecture for inspiration images:
-- Three `subsection-bg` divs (poem-section, forest-section, ride-section) each get a `::before` pseudo-element with `background-image`, `background-size: cover`, `filter: grayscale(100%) brightness(0.3)` (dark mode) or `filter: grayscale(100%) brightness(0.85) saturate(0)` (light mode)
-- The `bg-visible` class toggle (already wired in the existing `data-bg-fade` IntersectionObserver script) controls opacity fade in/out
-- Image assignment: pick one inspiration image per sub-section — forest/wilderness for poem-section, forest landscape for forest-section, trail/bike image for ride-section
-
-**C. Scroll-triggered fade**
-
-The `[data-bg-fade]` + `bg-visible` class mechanism is already fully implemented in `HiawathaExplainer.astro` (lines 430–443). The observer fires at `threshold: 0.15`. This is the mechanism to use — no new JS needed. Adding the `::before` background image CSS and opacity transition is the only remaining work.
-
-**5. `index.astro` — Anchor ID additions**
-
-Not a component change — four `id=` attributes added to existing section elements. However, `HiawathaExplainer` and `RouteExplainer` both render their own outer `<section>` tag inside the component. Two options:
-
-Option A: Pass `id` as a prop to those components and apply it to their outer section.
-Option B: Wrap the `<HiawathaExplainer />` and `<RouteExplainer />` invocations in a `<div id="history">` / `<div id="sectors">` wrapper in `index.astro`.
-
-Option B is simpler — no component modification needed, and a wrapper div with just an `id` has no visual effect. It's a valid anchor target. Use this approach.
-
-**6. `BaseLayout.astro` — No changes expected**
-
-The `<main>` wrapper has no height constraint or overflow hidden that would interfere with a sticky nav. The `body` has `min-h-screen`. No changes needed.
-
----
-
-## Data Flow Changes
-
-No new data pipeline steps. All four features are pure frontend/CSS:
-
-| Feature | Data source | Pipeline impact |
-|---------|-------------|-----------------|
-| Sticky nav | Hardcoded links + scroll JS | None |
-| Ride ethos | Hardcoded content | None |
-| Neucadia footer | External URL for logo | None (external img) |
-| Light/dark history | CSS media query + existing inspiration images | Possibly: copy inspiration/ to public/inspiration/ if not already there |
-
-The inspiration images may need a pipeline step. Check: they exist at `images/inspiration/` but it's unclear if they're already in `public/`. The build pipeline's `copy-images` step copies from `images/` to `public/images/`. The `images/inspiration/` subfolder — if it's included in that copy step — is already available at `public/images/inspiration/`. Verify before adding a new pipeline step.
-
----
-
-## Sticky Nav: Scroll Behavior Architecture
-
-The standard approach for "nav that starts in flow, becomes fixed on scroll" has two sub-patterns:
-
-**Pattern A: IntersectionObserver on hero**
-- Place a sentinel element (or observe the `<HeroSection>` itself) at the bottom of the hero
-- When hero leaves viewport, add `.is-fixed` to nav; when it re-enters, remove it
-- Pro: No scroll event listener, consistent with existing site patterns
-- Con: Requires observing a specific element
-
-**Pattern B: CSS `position: sticky`**
-- Nav is `position: sticky; top: 0` in normal flow
-- Becomes sticky automatically when parent scrolls
-- Pro: Zero JavaScript needed
-- Con: The nav needs to be inside a parent that is taller than the nav (it is — the entire page content follows)
-
-Recommendation: CSS `position: sticky; top: 0` with a high `z-index`. This is the simplest, most reliable approach and requires no JavaScript at all. The only case where the IntersectionObserver is needed is if the nav should be visually different (e.g., transparent → opaque background) when it sticks — a CSS scroll-driven animation or `@supports` sticky check can handle that too.
-
-If a "background appears on stick" effect is wanted: use `position: sticky` + a CSS custom property updated on scroll, or use the IntersectionObserver on the hero sentinel. Both patterns are zero-dependency additions.
-
----
-
-## URL Hash Collision Risk
-
-The RouteMap uses `#route=100k` URL hash format (not a plain fragment ID). The sticky nav links use plain fragment IDs (`#history`, `#route`, `#gallery`, `#sectors`).
-
-**Collision:** `#route` in the nav links to the RouteMap section (already has `id="route"`). The RouteMap hash pattern is `#route=100k` (with `=` separator). The plain `#route` fragment will not match the RouteMap's regex `/^#route=(.+)$/` — it requires an `=` sign. So `href="#route"` in the nav is safe and will not trigger the route-switching logic.
-
-**Scroll offset issue:** When the sticky nav is fixed at the top (~48–56px), clicking `#route` will scroll such that the section heading is hidden behind the nav. This is the standard "sticky nav scroll offset" problem. Fix: add `scroll-margin-top: 56px` (or whatever the nav height is) to `#history`, `#route`, `#gallery`, `#sectors` via CSS. This is a single CSS rule in `global.css` or in `StickyNav.astro`'s style block.
-
----
-
-## Light/Dark Mode: CSS Scoping
-
-The `prefers-color-scheme` media query in Astro scoped styles works correctly. Astro's scoped style compiler adds a unique hash attribute to elements — `@media` queries inside scoped `<style>` blocks work identically to standard CSS. No special handling needed.
-
-The risk: the editorial content uses many explicit color variable references (`var(--color-cream-100)`, etc.) that are theme-agnostic (not dark-mode-aware). The light mode overrides need to be comprehensive. The `.hiawatha-section` class is the scope boundary — a single `@media (prefers-color-scheme: light) { .hiawatha-section { ... } }` block covering all nested selectors is the right approach.
-
-The `pull-quote` background (`var(--color-forest-800)`) on a light beige page will appear as a dark green box — which may actually be a desirable contrast element. Evaluate visually.
-
----
-
-## Component Build Order
-
-Dependencies between the four features:
-
-1. **Anchor IDs** (`index.astro` wrapper divs) — must be done before or alongside sticky nav, since the nav links to them. No external dependency.
-
-2. **Sticky nav** (`StickyNav.astro`) — depends on anchor IDs existing. Can be built and tested with placeholder anchors. No other dependencies.
-
-3. **Ride ethos** (`RideEthos.astro`) — fully independent. No anchor needed. Can be built in any order.
-
-4. **Neucadia footer** (`NeucadiaFooter.astro`) — fully independent. No anchor needed. Can be built in any order.
-
-5. **Light/dark history** (`HiawathaExplainer.astro` modification) — independent of other three features. Depends on inspiration images being available in public/. Most complex — should be built last or in a dedicated phase.
-
-Recommended phase order:
-1. Sticky nav + anchor IDs (coupled — one phase)
-2. Ride ethos explainer (standalone — can be its own small phase or bundled with footer)
-3. Neucadia footer (standalone — bundle with ride ethos)
-4. History light/dark mode (most complex — dedicated phase)
-
----
-
-## Inspiration Images: Pipeline Status
-
-The `images/inspiration/` directory contains 49 images (mix of `.webp` and `.jpg`). The build pipeline has a `copy-images` step. Whether inspiration images are included in that copy depends on what path pattern `copy-images` uses.
-
-If `copy-images` copies all of `images/` recursively, then `public/images/inspiration/*.webp` already exists after a build. If it copies specific files or skips subdirectories, a new pipeline entry is needed.
-
-Check the pipeline's `copy-images` step before writing any `background-image: url('/images/inspiration/...')` references. If images aren't served, the background will silently fail.
-
----
-
-## New Component Signatures
+**Recommended architecture for generate-og-image.js:**
 
 ```
-StickyNav.astro
-  Props: none
-  Renders: <nav> with 4 anchor links
-  Script: IntersectionObserver on hero sentinel OR relies on CSS position:sticky
-  Output CSS class: .sticky-nav (base), .sticky-nav--fixed (when scrolled)
+Step 1: Create 1200x630 base
+  - Option A: Solid color background (forest-900 #0d1a0d)
+  - Option B: Dimmed/tinted hero photo crop (current approach + dark overlay)
+  - Recommendation: Dark solid or gradient. The badge IS the visual. A photo
+    background competes with badge readability at small preview sizes.
 
-RideEthos.astro
-  Props: none
-  Renders: <section> with ethos content
-  No script needed
+Step 2: Build SVG overlay (1200x630 viewport)
+  - Render simplified shield path from BaseLayout symbol (M14 0 L0 38...)
+    at center, scaled to ~200px tall
+  - Add text elements: "HIAWATHA'S REVENGE" (National Park font)
+  - Add tagline: "100 Miles Through the Hiawatha National Forest"
+  - Add date: "June 6, 2026"
 
-NeucadiaFooter.astro
-  Props: none
-  Renders: <footer> with "Powered by" text and <img> logo
-  No script needed
+Step 3: Composite SVG onto base
+  sharp(baseBuffer)
+    .composite([{ input: Buffer.from(svgOverlay), top: 0, left: 0 }])
+    .jpeg({ quality: 85 })
+    .toFile('public/og-image.jpg')
+```
 
-HiawathaExplainer.astro (modified)
-  New CSS: @media (prefers-color-scheme: light) overrides
-  New CSS: .subsection-bg::before { background-image, opacity, transition }
-  New CSS: .bg-visible { opacity change for ::before }
-  Existing script: unchanged (already handles bg-visible toggle)
+**Font handling for SVG text in sharp:**
+Sharp/librsvg renders `<text>` elements using system fonts or fonts specified in the SVG. The site uses Google Fonts (National Park, Space Mono) loaded via Astro's font system, but these are not available as local font files during the pipeline build step.
+
+**Font strategy options:**
+| Approach | Pros | Cons | Recommendation |
+|----------|------|------|----------------|
+| System font fallback | Simple | Won't match site design | No |
+| Download .ttf to scripts/ | Matches site fonts | Manual font management | Yes -- preferred |
+| Convert text to SVG paths | No font dependency | Complex, fragile | No |
+| Use the full badge.svg as-is | No font needed | 21KB complex SVG, may render poorly | No |
+
+**Recommendation:** Download National Park .ttf (or .woff2 converted) to a `scripts/fonts/` directory. Reference in SVG via `@font-face` in SVG `<defs>`. This is a build-time-only asset, not deployed.
+
+**Performance note from sharp issue #2987:** SVG `<text>` compositing can take several seconds vs milliseconds for simple SVG. This is acceptable for a build-time script that runs once.
+
+**File changes:**
+| File | Action | What Changes |
+|------|--------|-------------|
+| `scripts/generate-og-image.js` | **Modify** | Replace center-crop with badge composite design |
+| `scripts/fonts/` | **Create** | Add National Park .ttf for OG image text rendering |
+
+**No changes to pipeline.js** -- the script name and position in pipeline remain the same. It still outputs `public/og-image.jpg` at 1200x630, so BaseLayout.astro OG meta tags remain valid without modification.
+
+---
+
+### 2. Sitemap: Use @astrojs/sitemap Integration
+
+**Why integration, not pipeline step:**
+- The sitemap must reflect Astro's actual generated pages, not a hardcoded list
+- `@astrojs/sitemap` hooks into Astro's build process and auto-discovers routes
+- It runs during `astro build`, not during the pre-build pipeline
+- The `site` URL is already configured in `astro.config.ts`
+
+**Why NOT a pipeline step:**
+- Pipeline runs BEFORE `astro build` (prebuild hook)
+- Pipeline scripts don't know which pages Astro will generate
+- A pipeline-generated sitemap in `public/` would be overwritten or duplicated
+
+**Installation:**
+```bash
+npx astro add sitemap
+# or: npm install @astrojs/sitemap
+```
+
+**Configuration change to astro.config.ts:**
+```typescript
+import sitemap from '@astrojs/sitemap';
+
+export default defineConfig({
+  site: 'https://hiawathasrevenge.com',
+  integrations: [sitemap()],
+  // ... existing config
+});
+```
+
+**Output:** `dist/sitemap-index.xml` and `dist/sitemap-0.xml` generated at build time.
+
+**File changes:**
+| File | Action | What Changes |
+|------|--------|-------------|
+| `astro.config.ts` | **Modify** | Add sitemap import and integration |
+| `package.json` | **Modify** | Add @astrojs/sitemap dependency |
+
+**No changes to pipeline.js.** The sitemap is generated by Astro's build, not the data pipeline.
+
+---
+
+### 3. robots.txt: Astro Page Endpoint
+
+**Why a page endpoint, not a static file:**
+- The robots.txt needs to reference the sitemap URL, which includes the full domain
+- A `src/pages/robots.txt.ts` endpoint can read `site` from Astro context, keeping things DRY with `astro.config.ts`
+- The current `public/` directory has no robots.txt, so no conflict
+- Built at `astro build` time alongside pages, not during pipeline
+
+**Why NOT a third-party integration (astro-robots-txt):**
+- The site is simple (2 user-facing pages: index + admin)
+- A 10-line endpoint file is simpler than adding another dependency
+- Full control over content without learning integration config
+
+**Implementation: `src/pages/robots.txt.ts`**
+```typescript
+import type { APIRoute } from 'astro';
+
+export const GET: APIRoute = ({ site }) => {
+  const sitemapURL = new URL('/sitemap-index.xml', site);
+  return new Response(
+    [
+      'User-agent: *',
+      'Allow: /',
+      'Disallow: /admin',
+      'Disallow: /api/',
+      '',
+      `Sitemap: ${sitemapURL.href}`,
+    ].join('\n'),
+    { headers: { 'Content-Type': 'text/plain; charset=utf-8' } }
+  );
+};
+```
+
+**Key detail:** Disallow `/admin` and `/api/` routes from crawling. The admin page and save-manifest API endpoint are not for public indexing.
+
+**File changes:**
+| File | Action | What Changes |
+|------|--------|-------------|
+| `src/pages/robots.txt.ts` | **Create** | Endpoint generating robots.txt with sitemap reference |
+
+---
+
+### 4. Favicon & Apple Touch Icon: Pipeline Script
+
+**Why a pipeline step, not an Astro integration:**
+- Favicons are static assets generated from the badge SVG source file
+- They belong in `public/` so they're served as-is (like the current favicon.svg)
+- The pipeline already handles image generation (generate-og-image.js, generate-thumbnails.js, generate-webp.js)
+- Generation only needs to happen when the badge SVG changes (idempotent)
+
+**Current favicon state:**
+```svg
+<!-- public/favicon.svg — current -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <text x="4" y="26" font-size="28">(tree emoji)</text>
+</svg>
+```
+This is a tree emoji rendered as SVG text. It works but is not branded.
+
+**Modern favicon strategy (per Evil Martians guide):**
+
+For this site, the minimal effective set is:
+
+| File | Size | Purpose | How Generated |
+|------|------|---------|---------------|
+| `public/favicon.svg` | vector | Modern browsers, supports dark mode | Hand-authored from shield motif |
+| `public/favicon.ico` | 32x32 | Legacy browser tab icon | sharp: SVG -> 32x32 PNG -> ICO wrapper |
+| `public/apple-touch-icon.png` | 180x180 | iOS home screen bookmark | sharp: SVG -> 180x180 PNG |
+
+**PWA icons (icon-192.png, icon-512.png) are NOT needed.** This is a static informational site for a cycling event, not a PWA. No `manifest.webmanifest` exists or is planned. Adding PWA assets for a single-page event site would be unnecessary complexity.
+
+**Badge SVG source for favicon -- which one?**
+
+The shield motif from BaseLayout.astro is ideal -- simple, recognizable at small sizes, already defined as a clean path:
+```
+M14 0 L0 38 Q2 36 8 34 L12 48 L14 56 L16 48 L20 34 Q26 36 28 38 Z
+```
+viewBox="0 0 28 56" (1:2 aspect ratio, arrowhead/shield shape).
+
+The full `images/badge.svg` (21KB Illustrator export with hundreds of complex path nodes for the event text/artwork) is far too detailed for favicon use. At 32x32 it would be an unrecognizable blob. The simplified shield arrowhead is the correct source.
+
+**Recommended approach: New pipeline script `scripts/generate-favicons.js`**
+
+```
+Step 1: Create favicon SVG
+  - Use shield motif path in a square viewBox (center 1:2 shield in 1:1 square)
+  - Fill with amber-500 (#f59e0b) on transparent or forest-900 (#0d1a0d) background
+  - Optionally add CSS @media (prefers-color-scheme) for dark mode variant
+  - Write to public/favicon.svg (replacing emoji version)
+
+Step 2: Generate apple-touch-icon.png
+  - Create an SVG with forest-900 background circle/rounded-rect + amber shield
+  - Render at 180x180 via sharp
+  - Write to public/apple-touch-icon.png
+
+Step 3: Generate favicon.ico (optional)
+  - Render favicon SVG at 32x32 via sharp -> PNG buffer
+  - Convert PNG to ICO format
+  - Write to public/favicon.ico
+```
+
+**ICO generation detail:**
+Sharp cannot output ICO format directly. Options:
+| Approach | Dependency | Complexity |
+|----------|-----------|------------|
+| `png-to-ico` npm package | ~3KB, no native deps | Simple -- feed 32x32 PNG buffer, get ICO buffer |
+| Skip .ico entirely | None | SVG favicon covers all modern browsers |
+
+**Recommendation:** Skip `.ico` and rely on SVG favicon. The site's audience (cyclists checking an event page) uses modern browsers. Chrome, Firefox, Edge, and Safari 15+ all support SVG favicons. The `<link rel="icon" href="/favicon.svg" type="image/svg+xml">` tag already exists in BaseLayout.astro. If ICO is desired later, `png-to-ico` can be added trivially.
+
+**BaseLayout.astro head changes for favicons:**
+```html
+<!-- Current (single line): -->
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+<!-- Updated: -->
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+```
+
+**Pipeline integration -- add BEFORE generate-og-image (new step 11, OG becomes step 12):**
+```javascript
+// In pipeline.js sharedSteps array:
+{ name: 'generate-favicons', script: 'scripts/generate-favicons.js' },
+{ name: 'generate-og-image', script: 'scripts/generate-og-image.js' },
+```
+
+**File changes:**
+| File | Action | What Changes |
+|------|--------|-------------|
+| `scripts/generate-favicons.js` | **Create** | New pipeline script for favicon generation |
+| `scripts/pipeline.js` | **Modify** | Add generate-favicons step before generate-og-image |
+| `public/favicon.svg` | **Replace** | Branded shield motif instead of tree emoji |
+| `public/apple-touch-icon.png` | **Create** | 180x180 PNG from shield SVG |
+| `src/layouts/BaseLayout.astro` | **Modify** | Add apple-touch-icon link tag |
+
+---
+
+### 5. Meta Tag & Structured Data Audit: Modify BaseLayout.astro
+
+**Current gaps identified:**
+
+**Meta tags -- missing or improvable:**
+| Issue | Current | Recommended Fix | Impact |
+|-------|---------|-----------------|--------|
+| No `og:site_name` | Missing | `<meta property="og:site_name" content="Hiawatha's Revenge" />` | Low -- improves FB rendering |
+| No `og:locale` | Missing | `<meta property="og:locale" content="en_US" />` | Low -- explicit locale |
+| No `og:image:type` | Missing | `<meta property="og:image:type" content="image/jpeg" />` | Low -- helps parsers |
+| No `og:image:alt` | Missing | `<meta property="og:image:alt" content="..." />` | Medium -- accessibility |
+| No `twitter:image:alt` | Missing | `<meta name="twitter:image:alt" content="..." />` | Medium -- accessibility |
+| No `theme-color` | Missing | `<meta name="theme-color" content="#0d1a0d" />` | Low -- browser chrome color |
+| Descriptions differ | Props default differs from schema `description` | Should use consistent description | Low |
+
+**Structured data -- gaps vs Google Event rich results requirements:**
+| Issue | Current | Required/Recommended | Severity |
+|-------|---------|---------------------|----------|
+| `location` lacks street address | City-level only ("Munising, Michigan") | Google **requires** `streetAddress` for rich results | **HIGH** |
+| No `offers` property | Missing | Recommended -- ticket info or "free" indicator | Medium |
+| No `url` property | Missing | Recommended -- canonical URL of event page | Medium |
+| `image` is single URL | OG image URL only | Google recommends multiple aspect ratios (16:9, 4:3, 1:1) | Low |
+| `description` differs from meta description | Longer version with MBTN mention | Should be consistent for SEO coherence | Low |
+
+**The location gap is the most impactful issue.** Google's Event rich results documentation explicitly requires a `PostalAddress` with `streetAddress`. The current schema only has `addressLocality`, `addressRegion`, and `addressCountry`. Without a street-level address, Google is unlikely to surface the event in rich results.
+
+**Note:** The `streetAddress` value (start location / venue for the ride) will need to be provided by the site owner. This is a content question, not a technical one.
+
+**File changes:**
+| File | Action | What Changes |
+|------|--------|-------------|
+| `src/layouts/BaseLayout.astro` | **Modify** | Add missing OG/meta tags, enhance structured data, add favicon links |
+
+---
+
+## Component Boundary Map
+
+```
+PIPELINE (prebuild)                    ASTRO BUILD
+========================              ========================
+
+scripts/pipeline.js
+  |
+  +-- [steps 1-10 unchanged]
+  |
+  +-- generate-favicons.js  [NEW]     astro.config.ts  [MODIFIED]
+  |     |                                |
+  |     +-> public/favicon.svg          +-- @astrojs/sitemap integration
+  |     +-> public/apple-touch-icon.png      |
+  |                                          +-> dist/sitemap-index.xml
+  +-- generate-og-image.js  [MODIFIED]       +-> dist/sitemap-0.xml
+        |
+        +-> public/og-image.jpg        src/pages/robots.txt.ts  [NEW]
+                                           |
+                                           +-> dist/robots.txt
+
+                                       src/layouts/BaseLayout.astro [MODIFIED]
+                                           |
+                                           +-> <head> meta tags (enhanced)
+                                           +-> structured data (enhanced)
+                                           +-> favicon link tags (updated)
+```
+
+**Key boundary principle:** Image/asset generation belongs in the pipeline (pre-build, uses sharp). Page/route generation belongs in Astro (build-time, knows about pages). Meta tag changes are in the layout template. The sitemap integration runs during Astro build, not in the pipeline.
+
+---
+
+## Suggested Build Order for Implementation
+
+The features have natural dependencies:
+
+```
+Phase ordering:
+
+1. Favicon generation (generate-favicons.js + BaseLayout apple-touch-icon link)
+   - No dependencies on other new features
+   - Replaces emoji favicon immediately
+   - Tests pipeline script creation pattern
+   - Smallest scope, fastest to validate
+
+2. Meta tag & structured data audit (BaseLayout.astro modifications)
+   - No dependencies on new files beyond favicon links (done in step 1)
+   - Can be validated with Google Rich Results Test
+   - streetAddress needs to be determined (user input required)
+   - High SEO impact for minimal effort
+
+3. OG image redesign (generate-og-image.js modification)
+   - Depends on font files being available in scripts/fonts/
+   - Most complex change (SVG composition with text rendering)
+   - Can be validated visually + with social preview tools (opengraph.xyz, etc.)
+
+4. robots.txt + sitemap (robots.txt.ts + @astrojs/sitemap)
+   - robots.txt references sitemap URL, so sitemap config should exist first
+   - Both are trivial to implement
+   - Should be done together since robots.txt references sitemap
+   - Lowest priority -- search engines find single-page sites fine without these
+```
+
+**Rationale for this order:**
+- Items 1 and 2 are independent and could be done in parallel
+- Item 3 is the most complex and benefits from getting simpler changes landed first
+- Item 4 is the simplest but has the least SEO impact for a single-page static site
+
+---
+
+## Anti-Patterns to Avoid
+
+### Anti-Pattern: Generating sitemap in the pipeline
+**Why bad:** The pipeline runs before `astro build` via the `prebuild` npm hook. It doesn't know what pages Astro will generate. Hardcoding URLs defeats the purpose of auto-discovery.
+**Instead:** Use `@astrojs/sitemap` integration which hooks into Astro's build process.
+
+### Anti-Pattern: Using the full 21KB badge.svg for favicons
+**Why bad:** Complex Illustrator SVG with hundreds of path nodes and embedded text. Renders as an unrecognizable blob at 32x32. May fail or look muddy in librsvg.
+**Instead:** Use the simplified shield motif path (single `<path>` element, ~60 bytes) from BaseLayout.astro's `<symbol id="shield-motif">`.
+
+### Anti-Pattern: Embedding font files in SVG as base64 for OG image
+**Why bad:** Bloats the SVG buffer, slows librsvg rendering, brittle with WOFF2 encoding.
+**Instead:** Reference local .ttf font file via `@font-face` in SVG `<defs>`, or install the font so librsvg can resolve it by family name.
+
+### Anti-Pattern: Putting robots.txt as static file in public/
+**Why bad:** The sitemap URL includes the full domain (`https://hiawathasrevenge.com/sitemap-index.xml`). A static file hardcodes it, breaking DRY with the `site` setting in `astro.config.ts`.
+**Instead:** Use `src/pages/robots.txt.ts` endpoint that reads `site` from Astro context.
+
+### Anti-Pattern: Over-engineering the favicon set (192, 512, maskable, manifest)
+**Why bad:** This is a single-page event website, not a PWA. Extra icons and a webmanifest add complexity for zero user benefit.
+**Instead:** Three files maximum: favicon.svg (modern browsers), favicon.ico (legacy, optional), apple-touch-icon.png (iOS).
+
+---
+
+## Dependency Map: New and Modified Files
+
+```
+NEW FILES:
+  scripts/generate-favicons.js       depends on: sharp (existing dep), shield motif path (hardcoded)
+  scripts/fonts/NationalPark.ttf     depends on: Google Fonts download (one-time manual step)
+  src/pages/robots.txt.ts            depends on: Astro site config (already set)
+  public/apple-touch-icon.png        generated by: generate-favicons.js
+
+MODIFIED FILES:
+  scripts/generate-og-image.js       depends on: scripts/fonts/NationalPark.ttf, sharp
+  scripts/pipeline.js                adds: generate-favicons step before generate-og-image
+  src/layouts/BaseLayout.astro       adds: meta tags, structured data fields, apple-touch-icon link
+  astro.config.ts                    adds: @astrojs/sitemap import and integration
+  package.json                       adds: @astrojs/sitemap dependency
+  public/favicon.svg                 replaced by: generate-favicons.js output (shield motif)
+
+UNCHANGED:
+  src/pages/index.astro              no changes needed
+  src/components/ShieldMotif.astro   no changes needed (still uses #shield-motif from BaseLayout)
+  src/components/HeroSection.astro   no changes needed (has its own inline badge SVG)
+  All other pipeline scripts         no changes needed
+  Pipeline step ordering             unchanged for existing steps; new step inserted before last
 ```
 
 ---
@@ -266,23 +440,20 @@ HiawathaExplainer.astro (modified)
 
 | Area | Confidence | Notes |
 |------|------------|-------|
-| Component placement | HIGH | Direct codebase analysis — exact line numbers verified |
-| Sticky nav scroll behavior | HIGH | CSS position:sticky is well-established; observer pattern matches existing site code |
-| URL hash collision | HIGH | RouteMap regex requires `=` separator — `#route` plain fragment is safe |
-| Light/dark color overrides | MEDIUM | CSS structure is clear; specific color values for light mode need visual validation |
-| Inspiration image availability | MEDIUM | Files exist in images/inspiration/ — pipeline copy behavior needs verification before implementation |
-| Neucadia logo format | MEDIUM | PNG at /assets/neucadia_logo.png confirmed via WebFetch; dimensions unknown |
+| OG image compositing with sharp | HIGH | sharp 0.34.5 + librsvg 2.61.2 confirmed installed; SVG composite pattern well-documented |
+| @astrojs/sitemap integration | HIGH | Official Astro integration, site URL already configured, static output mode |
+| robots.txt endpoint pattern | HIGH | Standard Astro static endpoint, verified against official docs |
+| Favicon generation with sharp | HIGH | SVG-to-PNG is core sharp functionality; shield path is simple geometry |
+| Font availability for OG text | MEDIUM | librsvg can render @font-face in SVG, but path resolution needs testing at implementation time |
+| Event structured data streetAddress | MEDIUM | Technical change is trivial, but the actual address value requires user input |
 
----
+## Sources
 
-## Open Questions
-
-1. **Does `copy-images` include `images/inspiration/` subdirectory?** — Check `scripts/pipeline.js` copy-images step before writing background-image CSS paths.
-
-2. **Which inspiration images map to which sub-section?** — Three sub-sections (poem, forest, ride) need one image each. Curatorial decision for implementation phase.
-
-3. **Sticky nav height for scroll-margin-top** — Final nav height determines the CSS offset value. Measure after building.
-
-4. **Neucadia logo dimensions** — No width/height known from research. Set `width` and `height` attributes after inspecting the actual PNG to prevent CLS.
-
-5. **Light mode text colors** — Specific color token choices for body text, headings, and accents on the cream-100 background need visual review. The existing WCAG contrast annotations in global.css (documented per token vs forest-900/forest-950) won't apply to a light background — new contrast calculations needed for the relevant tokens.
+- [Astro sitemap integration docs](https://docs.astro.build/en/guides/integrations-guide/sitemap/)
+- [Astro endpoints docs](https://docs.astro.build/en/guides/endpoints/)
+- [Sharp SVG text compositing (GitHub #1120)](https://github.com/lovell/sharp/issues/1120)
+- [Sharp SVG text performance (GitHub #2987)](https://github.com/lovell/sharp/issues/2987)
+- [How to Favicon in 2026 -- Evil Martians](https://evilmartians.com/chronicles/how-to-favicon-in-2021-six-files-that-fit-most-needs)
+- [Google Event structured data requirements](https://developers.google.com/search/docs/appearance/structured-data/event)
+- [astro-robots-txt npm](https://www.npmjs.com/package/astro-robots-txt)
+- [Astro project structure docs](https://docs.astro.build/en/basics/project-structure/)
