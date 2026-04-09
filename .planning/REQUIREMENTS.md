@@ -66,18 +66,18 @@ Deferred to later milestones.
 | SSI-01 | Phase 52 | Pending |
 | SSI-02 | Phase 52 | Pending |
 | SSI-03 | Phase 52 | Pending |
-| META-01 | Phase 50 | Pending |
-| META-02 | Phase 50 | Pending |
-| META-03 | Phase 50 | Pending |
-| META-04 | Phase 50 | Pending |
-| SCHEMA-01 | Phase 50 | Pending |
-| SCHEMA-02 | Phase 50 | Pending |
-| SCHEMA-03 | Phase 50 | Pending |
-| SCHEMA-04 | Phase 50 | Pending |
-| SCHEMA-05 | Phase 50 | Pending |
+| META-01 | Phase 50 | Complete |
+| META-02 | Phase 50 | Complete |
+| META-03 | Phase 50 | Complete |
+| META-04 | Phase 50 | Complete |
+| SCHEMA-01 | Phase 50 | Complete |
+| SCHEMA-02 | Phase 50 | Complete |
+| SCHEMA-03 | Phase 50 | Complete |
+| SCHEMA-04 | Phase 50 | Complete |
+| SCHEMA-05 | Phase 50 | Complete |
 | CRAWL-01 | Phase 53 | Pending |
 | CRAWL-02 | Phase 53 | Pending |
-| CRAWL-03 | Phase 50 | Pending |
+| CRAWL-03 | Phase 50 | Complete |
 | ICON-01 | Phase 51 | Pending |
 | ICON-02 | Phase 51 | Pending |
 | ICON-03 | Phase 51 | Pending |
@@ -90,4 +90,4 @@ Deferred to later milestones.
 
 ---
 *Requirements defined: 2026-04-09*
-*Last updated: 2026-04-09 after roadmap creation*
+*Last updated: 2026-04-09 — Phase 50 requirements complete*
