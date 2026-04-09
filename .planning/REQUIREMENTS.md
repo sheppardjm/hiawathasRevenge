@@ -53,7 +53,7 @@ Deferred to later milestones.
 
 | Feature | Reason |
 |---------|--------|
-| `SportsEvent` schema type | This is a ride, not a race — `Event` is correct |
+| `SportsEvent` schema type | This is a ride, not a race -- `Event` is correct |
 | Site-wide dark/light toggle for SEO | OS preference only; no user toggle needed |
 | Per-route OG images (#route=100k) | Single-page with hash routing; social crawlers ignore fragments |
 | AI crawler blocking (GPTBot, ClaudeBot) | No reason to block; site is public promotional content |
@@ -63,31 +63,31 @@ Deferred to later milestones.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| SSI-01 | — | Pending |
-| SSI-02 | — | Pending |
-| SSI-03 | — | Pending |
-| META-01 | — | Pending |
-| META-02 | — | Pending |
-| META-03 | — | Pending |
-| META-04 | — | Pending |
-| SCHEMA-01 | — | Pending |
-| SCHEMA-02 | — | Pending |
-| SCHEMA-03 | — | Pending |
-| SCHEMA-04 | — | Pending |
-| SCHEMA-05 | — | Pending |
-| CRAWL-01 | — | Pending |
-| CRAWL-02 | — | Pending |
-| CRAWL-03 | — | Pending |
-| ICON-01 | — | Pending |
-| ICON-02 | — | Pending |
-| ICON-03 | — | Pending |
-| ICON-04 | — | Pending |
+| SSI-01 | Phase 52 | Pending |
+| SSI-02 | Phase 52 | Pending |
+| SSI-03 | Phase 52 | Pending |
+| META-01 | Phase 50 | Pending |
+| META-02 | Phase 50 | Pending |
+| META-03 | Phase 50 | Pending |
+| META-04 | Phase 50 | Pending |
+| SCHEMA-01 | Phase 50 | Pending |
+| SCHEMA-02 | Phase 50 | Pending |
+| SCHEMA-03 | Phase 50 | Pending |
+| SCHEMA-04 | Phase 50 | Pending |
+| SCHEMA-05 | Phase 50 | Pending |
+| CRAWL-01 | Phase 53 | Pending |
+| CRAWL-02 | Phase 53 | Pending |
+| CRAWL-03 | Phase 50 | Pending |
+| ICON-01 | Phase 51 | Pending |
+| ICON-02 | Phase 51 | Pending |
+| ICON-03 | Phase 51 | Pending |
+| ICON-04 | Phase 51 | Pending |
 
 **Coverage:**
-- v1.11 requirements: 16 total
-- Mapped to phases: 0
-- Unmapped: 16 ⚠️
+- v1.11 requirements: 19 total
+- Mapped to phases: 19/19
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-04-09*
-*Last updated: 2026-04-09 after initial definition*
+*Last updated: 2026-04-09 after roadmap creation*
