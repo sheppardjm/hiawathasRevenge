@@ -49,7 +49,9 @@ Plans:
   2. Adding the site to iOS home screen shows a clean shield badge on a solid background (180x180 apple-touch-icon)
   3. Legacy browsers that request favicon.ico get a 32x32 fallback (no 404)
   4. HTML source contains all required icon link tags (favicon.svg, apple-touch-icon, favicon.ico)
-**Plans**: TBD
+**Plans:** 1 plan
+Plans:
+- [ ] 51-01-PLAN.md — Create shield badge favicons and wire into build pipeline
 
 ### Phase 52: OG Image Redesign
 **Goal**: Sharing the site on iMessage, Slack, Facebook, X, or Discord shows a branded card with badge, tagline, and event date -- not a raw photo crop
@@ -80,10 +82,10 @@ Plans:
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
 | 50. Meta Tags & Structured Data | v1.11 | 1/1 | ✓ Complete | 2026-04-09 |
-| 51. Favicon & Icons | v1.11 | 0/TBD | Not started | - |
+| 51. Favicon & Icons | v1.11 | 0/1 | Not started | - |
 | 52. OG Image Redesign | v1.11 | 0/TBD | Not started | - |
 | 53. Crawlability | v1.11 | 0/TBD | Not started | - |
 
 ---
 *Roadmap created: 2026-04-09*
-*Last updated: 2026-04-09 — Phase 50 complete*
+*Last updated: 2026-04-09 — Phase 51 planned*
