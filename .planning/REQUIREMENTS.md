@@ -9,9 +9,9 @@ Requirements for SEO & Social Sharing milestone.
 
 ### Social Share Image
 
-- [ ] **SSI-01**: OG image displays shield badge, tagline "A 100-Mile Gravel Ride Through the Hiawatha", and "June 6, 2026" on a dimmed hero photo background (1200x630 JPEG)
-- [ ] **SSI-02**: OG image uses a new filename (not `og-image.jpg`) to bust iMessage/Facebook/Slack caches
-- [ ] **SSI-03**: `og:image` meta tag points to the new image URL
+- [x] **SSI-01**: OG image displays shield badge, tagline "A 100-Mile Gravel Ride Through the Hiawatha", and "June 6, 2026" on a dimmed hero photo background (1200x630 JPEG)
+- [x] **SSI-02**: OG image uses a new filename (not `og-image.jpg`) to bust iMessage/Facebook/Slack caches
+- [x] **SSI-03**: `og:image` meta tag points to the new image URL
 
 ### Meta Tags
 
@@ -63,9 +63,9 @@ Deferred to later milestones.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| SSI-01 | Phase 52 | Pending |
-| SSI-02 | Phase 52 | Pending |
-| SSI-03 | Phase 52 | Pending |
+| SSI-01 | Phase 52 | Complete |
+| SSI-02 | Phase 52 | Complete |
+| SSI-03 | Phase 52 | Complete |
 | META-01 | Phase 50 | Complete |
 | META-02 | Phase 50 | Complete |
 | META-03 | Phase 50 | Complete |
@@ -90,4 +90,4 @@ Deferred to later milestones.
 
 ---
 *Requirements defined: 2026-04-09*
-*Last updated: 2026-04-09 — Phase 51 requirements complete*
+*Last updated: 2026-04-09 — Phase 52 requirements complete*

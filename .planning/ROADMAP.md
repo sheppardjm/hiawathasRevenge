@@ -62,7 +62,9 @@ Plans:
   2. The image uses a new filename (not og-image.jpg) so social platform caches show the updated design
   3. Text on the OG image is legible at thumbnail rendering size (300x158px)
   4. og:image meta tag points to the new image URL and SSI-03 is verified in page source
-**Plans**: TBD
+**Plans:** 1 plan
+Plans:
+- [x] 52-01-PLAN.md — Rewrite OG image generator with branded SVG composite and update meta tag reference
 
 ### Phase 53: Crawlability
 **Goal**: Search engines can discover and index every page through standard robots.txt and sitemap protocols
@@ -83,9 +85,9 @@ Plans:
 |-------|-----------|----------------|--------|-----------|
 | 50. Meta Tags & Structured Data | v1.11 | 1/1 | ✓ Complete | 2026-04-09 |
 | 51. Favicon & Icons | v1.11 | 1/1 | ✓ Complete | 2026-04-09 |
-| 52. OG Image Redesign | v1.11 | 0/TBD | Not started | - |
+| 52. OG Image Redesign | v1.11 | 1/1 | ✓ Complete | 2026-04-09 |
 | 53. Crawlability | v1.11 | 0/TBD | Not started | - |
 
 ---
 *Roadmap created: 2026-04-09*
-*Last updated: 2026-04-09 — Phase 51 complete*
+*Last updated: 2026-04-09 — Phase 52 complete*
