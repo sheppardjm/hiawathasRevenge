@@ -75,8 +75,8 @@ Deferred to later milestones.
 | SCHEMA-03 | Phase 50 | Complete |
 | SCHEMA-04 | Phase 50 | Complete |
 | SCHEMA-05 | Phase 50 | Complete |
-| CRAWL-01 | Phase 53 | Pending |
-| CRAWL-02 | Phase 53 | Pending |
+| CRAWL-01 | Phase 53 | Complete |
+| CRAWL-02 | Phase 53 | Complete |
 | CRAWL-03 | Phase 50 | Complete |
 | ICON-01 | Phase 51 | Complete |
 | ICON-02 | Phase 51 | Complete |
@@ -90,4 +90,4 @@ Deferred to later milestones.
 
 ---
 *Requirements defined: 2026-04-09*
-*Last updated: 2026-04-09 — Phase 52 requirements complete*
+*Last updated: 2026-04-09 — Phase 53 requirements complete (all v1.11 requirements complete)*

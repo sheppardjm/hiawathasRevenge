@@ -22,7 +22,7 @@ See .planning/MILESTONES.md for full history.
 - [x] **Phase 50: Meta Tags & Structured Data** - Complete OG tag set and Google-eligible Event schema
 - [x] **Phase 51: Favicon & Icons** - Branded browser chrome replacing tree emoji
 - [ ] **Phase 52: OG Image Redesign** - Badge+tagline composite share image
-- [ ] **Phase 53: Crawlability** - robots.txt and auto-generated sitemap
+- [x] **Phase 53: Crawlability** - robots.txt and auto-generated sitemap
 
 ## Phase Details
 
@@ -76,7 +76,7 @@ Plans:
   3. /robots.txt disallows /admin and /api/ paths from crawlers
 **Plans:** 1 plan
 Plans:
-- [ ] 53-01-PLAN.md — Install @astrojs/sitemap, create robots.txt, configure path filter
+- [x] 53-01-PLAN.md — Install @astrojs/sitemap, create robots.txt, configure path filter
 
 ## Progress
 
@@ -88,8 +88,8 @@ Plans:
 | 50. Meta Tags & Structured Data | v1.11 | 1/1 | ✓ Complete | 2026-04-09 |
 | 51. Favicon & Icons | v1.11 | 1/1 | ✓ Complete | 2026-04-09 |
 | 52. OG Image Redesign | v1.11 | 1/1 | ✓ Complete | 2026-04-09 |
-| 53. Crawlability | v1.11 | 0/TBD | Not started | - |
+| 53. Crawlability | v1.11 | 1/1 | ✓ Complete | 2026-04-09 |
 
 ---
 *Roadmap created: 2026-04-09*
-*Last updated: 2026-04-09 — Phase 52 complete*
+*Last updated: 2026-04-09 — Phase 53 complete (v1.11 milestone complete)*
