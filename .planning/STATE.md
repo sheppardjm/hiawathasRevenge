@@ -5,14 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-04-09)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive, visually stunning showcase that inspires them to ride it and support MBTN.
-**Current focus:** v1.11 Phase 50 -- Meta Tags & Structured Data
+**Current focus:** v1.11 Phase 51 -- Favicon & Icons
 
 ## Current Position
 
-Phase: 50 of 53 (Meta Tags & Structured Data)
+Phase: 51 of 53 (Favicon & Icons)
 Plan: 01 of 01
 Status: Phase complete
-Last activity: 2026-04-09 — Completed 50-01-PLAN.md (meta tags & structured data)
+Last activity: 2026-04-10 — Completed 51-01-PLAN.md (favicon & icons)
 
 Progress: [████░░░░░░░░░░░░░░░] 25% (v1.11)
 
@@ -43,6 +43,12 @@ Progress: [████░░░░░░░░░░░░░░░] 25% (v1.11
 - offers.isAccessibleForFree is boolean true (not string); offers.price is string "0" (not number)
 - admin.astro canonical gap accepted as won't-fix (redirects to / in prod, never crawled)
 
+**Phase 51-01 (Favicon & Icons):**
+- favicon.svg uses CSS classes; generate-favicons.js uses inline fill attributes (sharp does not process `<style>` blocks reliably for rasterization)
+- Icon link tag order: SVG → apple-touch-icon → ICO with sizes=32x32 (modern browsers prefer SVG; ICO is legacy fallback only)
+- No dark-mode media query needed in favicon.svg — forest-green background (#1a2e1a) works on both light and dark tab bars
+- to-ico ^1.1.5 added as devDependency for ICO encoding
+
 ### Pending Todos
 
 None.
@@ -59,6 +65,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-09T15:38:52Z
-Stopped at: Completed 50-01-PLAN.md — meta tags & structured data
+Last session: 2026-04-10T00:36:15Z
+Stopped at: Completed 51-01-PLAN.md — favicon & icons
 Resume file: None
