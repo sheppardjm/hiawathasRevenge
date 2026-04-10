@@ -1,9 +1,17 @@
 import { defineConfig, fontProviders } from 'astro/config';
+import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
   site: 'https://hiawathasrevenge.com',
   output: 'static',
+  integrations: [
+    sitemap({
+      filter: (page) =>
+        !page.includes('/admin') &&
+        !page.includes('/api/'),
+    }),
+  ],
   fonts: [
     {
       provider: fontProviders.google(),
