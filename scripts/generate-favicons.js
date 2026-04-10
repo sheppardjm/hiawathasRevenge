@@ -21,6 +21,7 @@ const FAVICON_SVG = Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" viewBox
 await sharp(FAVICON_SVG)
   .resize(180, 180)
   .flatten({ background: '#1a2e1a' })
+  .ensureAlpha()
   .png()
   .toFile(join(root, 'public/apple-touch-icon.png'));
 
@@ -30,6 +31,7 @@ console.log('✓ Generated public/apple-touch-icon.png (180x180)');
 const icoBuffer = await sharp(FAVICON_SVG)
   .resize(32, 32)
   .flatten({ background: '#1a2e1a' })
+  .ensureAlpha()
   .png()
   .toBuffer();
 
