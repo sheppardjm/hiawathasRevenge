@@ -78,10 +78,10 @@ Deferred to later milestones.
 | CRAWL-01 | Phase 53 | Pending |
 | CRAWL-02 | Phase 53 | Pending |
 | CRAWL-03 | Phase 50 | Complete |
-| ICON-01 | Phase 51 | Pending |
-| ICON-02 | Phase 51 | Pending |
-| ICON-03 | Phase 51 | Pending |
-| ICON-04 | Phase 51 | Pending |
+| ICON-01 | Phase 51 | Complete |
+| ICON-02 | Phase 51 | Complete |
+| ICON-03 | Phase 51 | Complete |
+| ICON-04 | Phase 51 | Complete |
 
 **Coverage:**
 - v1.11 requirements: 19 total
@@ -90,4 +90,4 @@ Deferred to later milestones.
 
 ---
 *Requirements defined: 2026-04-09*
-*Last updated: 2026-04-09 — Phase 50 requirements complete*
+*Last updated: 2026-04-09 — Phase 51 requirements complete*
