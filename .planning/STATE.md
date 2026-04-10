@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-04-09)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive, visually stunning showcase that inspires them to ride it and support MBTN.
-**Current focus:** v1.11 Phase 52 -- OG Image Redesign
+**Current focus:** v1.11 Phase 53 -- Crawlability
 
 ## Current Position
 
-Phase: 52 of 53 (OG Image Redesign)
+Phase: 53 of 53 (Crawlability)
 Plan: 01 of 01
 Status: Phase complete
-Last activity: 2026-04-10 — Completed 52-01-PLAN.md (og image redesign)
+Last activity: 2026-04-10 — Completed 53-01-PLAN.md (crawlability: robots.txt + sitemap)
 
-Progress: [██████████████░░░░░] 75% (v1.11)
+Progress: [████████████████████] 100% (v1.11)
 
 ## Performance Metrics
 
@@ -56,6 +56,12 @@ Progress: [██████████████░░░░░] 75% (v1.11
 - JPEG quality 85 (raised from 75) — text legibility on branded card takes priority
 - Font embedding pattern for pipeline scripts: readFileSync + base64 + SVG @font-face data URI
 
+**Phase 53-01 (Crawlability):**
+- Static public/robots.txt preferred over dynamic endpoint — fixed URL, no templating benefit
+- Sitemap directive uses sitemap-index.xml (not sitemap.xml) — @astrojs/sitemap generates sitemap-index.xml as entry point
+- filter() excludes /admin in sitemap — admin.astro is a page file discovered at build time; runtime redirect to / does not prevent sitemap inclusion
+- No changefreq or priority fields in sitemap — Google ignores both
+
 ### Pending Todos
 
 None.
@@ -72,6 +78,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-10T01:14:30Z
-Stopped at: Completed 52-01-PLAN.md — og image redesign
+Last session: 2026-04-10T01:58:43Z
+Stopped at: Completed 53-01-PLAN.md — crawlability (robots.txt + sitemap)
 Resume file: None
