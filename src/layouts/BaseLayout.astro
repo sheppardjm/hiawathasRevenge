@@ -14,7 +14,7 @@ const {
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
-const ogImageURL = new URL('/og-image.jpg', Astro.site);
+const ogImageURL = new URL('/og-card.jpg', Astro.site);
 
 const eventSchema = {
   "@context": "https://schema.org",
@@ -77,7 +77,7 @@ const eventSchema = {
     <meta property="og:image:height" content="630" />
     <meta property="og:site_name" content="Hiawatha's Revenge" />
     <meta property="og:locale" content="en_US" />
-    <meta property="og:image:alt" content="Autumn forest creek in Hiawatha National Forest — Hiawatha's Revenge 100-mile gravel ride" />
+    <meta property="og:image:alt" content="Hiawatha's Revenge shield badge with tagline 'A 100-Mile Gravel Ride Through the Hiawatha' and date June 6, 2026 on a forest photo background" />
     <meta property="og:image:type" content="image/jpeg" />
 
     <!-- Twitter/X Card (SEO-02) -->
@@ -85,7 +85,7 @@ const eventSchema = {
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageURL.href} />
-    <meta name="twitter:image:alt" content="Autumn forest creek in Hiawatha National Forest — Hiawatha's Revenge 100-mile gravel ride" />
+    <meta name="twitter:image:alt" content="Hiawatha's Revenge shield badge with tagline 'A 100-Mile Gravel Ride Through the Hiawatha' and date June 6, 2026 on a forest photo background" />
 
     <!-- Canonical URL (SEO-03) -->
     <link rel="canonical" href={canonicalURL.href} />
