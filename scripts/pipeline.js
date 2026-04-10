@@ -35,6 +35,7 @@ const sharedSteps = [
   { name: 'match-photos',              script: 'scripts/match-photos.js' },
   { name: 'copy-gpx',                  script: 'scripts/copy-gpx.js' },
   { name: 'generate-og-image',         script: 'scripts/generate-og-image.js' },
+  { name: 'generate-favicons',          script: 'scripts/generate-favicons.js' },
 ];
 
 let currentStep = null;
