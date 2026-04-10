@@ -74,7 +74,9 @@ Plans:
   1. /robots.txt returns valid directives with a Sitemap reference pointing to the correct sitemap URL
   2. sitemap.xml (or sitemap-index.xml) is auto-generated at build time via @astrojs/sitemap and lists the site's pages
   3. /robots.txt disallows /admin and /api/ paths from crawlers
-**Plans**: TBD
+**Plans:** 1 plan
+Plans:
+- [ ] 53-01-PLAN.md — Install @astrojs/sitemap, create robots.txt, configure path filter
 
 ## Progress
 
