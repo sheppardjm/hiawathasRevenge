@@ -74,7 +74,7 @@ Phases execute in numeric order. Phase 54 is the sole phase of v1.12.
 | 51. Favicon & Icons | v1.11 | 1/1 | ✓ Complete | 2026-04-09 |
 | 52. OG Image Redesign | v1.11 | 1/1 | ✓ Complete | 2026-04-09 |
 | 53. Crawlability | v1.11 | 1/1 | ✓ Complete | 2026-04-09 |
-| 54. Route Start Relocation & Data Regeneration | v1.12 | 2/2 | Complete   | 2026-05-29 |
+| 54. Route Start Relocation & Data Regeneration | v1.12 | 2/2 | Complete    | 2026-05-29 |
 
 (Phases 0-49 complete — see `.planning/milestones/` archives.)
 
