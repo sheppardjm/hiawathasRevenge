@@ -36,10 +36,10 @@
 
 | Requirement | Phase |
 |-------------|-------|
-| ROUTE-01 | _(filled by roadmap)_ |
-| ROUTE-02 | _(filled by roadmap)_ |
-| ROUTE-03 | _(filled by roadmap)_ |
-| ROUTE-04 | _(filled by roadmap)_ |
-| ROUTE-05 | _(filled by roadmap)_ |
-| ROUTE-06 | _(filled by roadmap)_ |
-| ROUTE-07 | _(filled by roadmap)_ |
+| ROUTE-01 | Phase 54 |
+| ROUTE-02 | Phase 54 |
+| ROUTE-03 | Phase 54 |
+| ROUTE-04 | Phase 54 |
+| ROUTE-05 | Phase 54 |
+| ROUTE-06 | Phase 54 |
+| ROUTE-07 | Phase 54 |

@@ -2,11 +2,11 @@
 gsd_state_version: 1.0
 milestone: v1.12
 milestone_name: Route Start Relocation
-status: planning
+status: roadmapped
 last_updated: "2026-05-29T14:37:46.512Z"
 last_activity: 2026-05-29
 progress:
-  total_phases: 0
+  total_phases: 1
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -20,14 +20,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-29)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive, visually stunning showcase that inspires them to ride it and support MBTN.
-**Current focus:** Planning next milestone (v1.11 SEO & Social Sharing shipped 2026-05-29)
+**Current focus:** v1.12 Route Start Relocation — relocate all three routes to the unified alt-start (46.34770, -86.72515) and regenerate all derived data ahead of the June 6, 2026 ride.
 
 ## Current Position
 
-Phase: Not started (defining requirements)
+Phase: 54 — Route Start Relocation & Data Regeneration (not started)
 Plan: —
-Status: Defining requirements
-Last activity: 2026-05-29 — Milestone v1.12 started
+Status: Roadmapped — ready to plan Phase 54
+Last activity: 2026-05-29 — v1.12 roadmap created (single phase, 7/7 requirements mapped)
 
 ## Performance Metrics
 
@@ -70,6 +70,17 @@ Items acknowledged and deferred at milestone close on 2026-05-29 (v1.11). All 19
 ### Decisions
 
 (Full decision log in PROJECT.md Key Decisions table)
+
+**Phase 54 (Route Start Relocation) — context for planning:**
+
+- New unified start/finish: `46.34770, -86.72515` (~2 km SW of old start). Same course footprint; only the start moves, rotating all mileage-anchored data.
+- Source GPX: three `(alt start)` exports in `~/Downloads` dated 2026-05-29 10:34.
+- Coordinate-based haversine sector snapping (200m threshold) should re-snap cleanly with no code change — see `scripts/route-config.js` SECTOR_DEFS.
+- Hardcoded mile values that must be re-derived: `RESTOCK_DEFS` (Camp 7 mile 44.7, Midway mile 75.7 in route-config.js) and photo mileage tags in the photo manifest.
+- Per-route sector membership to preserve: 100mi = 8 sectors, 100k = 5, 50k = 4 (route-config.js ROUTES).
+- Pipeline reference: 11-step pipeline.js (parse-gpx → resolve-annotations → generate-sector-details → compute-sector-elevations → shared steps).
+- `route-config.js` `elevationTargetRange` (100mi [2123, 2411] ft) may need updating if new track elevation shifts.
+- Node >=22.12.0 required — use Volta (`/Users/Sheppardjm/.volta/bin/node`).
 
 **Phase 50-01 (Meta Tags & Structured Data):**
 
@@ -117,10 +128,10 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-10T01:58:43Z
-Stopped at: Completed 53-01-PLAN.md — crawlability (robots.txt + sitemap)
+Last session: 2026-05-29
+Stopped at: v1.12 roadmap created — Phase 54 (Route Start Relocation & Data Regeneration), 7/7 requirements mapped
 Resume file: None
 
 ## Operator Next Steps
 
-- Start the next milestone with /gsd-new-milestone
+- Plan Phase 54 with `/gsd-plan-phase 54`
