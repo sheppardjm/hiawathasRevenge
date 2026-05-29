@@ -10,6 +10,8 @@ Visitors experience the beauty and scale of the Hiawatha's Revenge route through
 
 ## Current Milestone: v1.12 Route Start Relocation
 
+**Status:** ✅ Complete — Phase 54 shipped 2026-05-29. All three routes now start/finish at the new unified staging point (46.34770, -86.72515) with every piece of derived data (geometry, sector snapping, restock mileages, photo tags, per-route stats, served GPX) regenerated against the rotated course; full `npm run build` green.
+
 **Goal:** Move all three routes (100mi/100k/50k) to the new unified start/finish staging location and regenerate every piece of derived data so the site reflects the re-cut course accurately.
 
 **Target features:**
@@ -265,4 +267,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-05-29 — started milestone v1.12 Route Start Relocation*
+*Last updated: 2026-05-29 — completed Phase 54 (v1.12 Route Start Relocation milestone complete)*
