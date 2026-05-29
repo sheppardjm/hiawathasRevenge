@@ -20,7 +20,7 @@ const ROOT = resolve(__dirname, '..');
 // ---------------------------------------------------------------------------
 
 const MANIFEST_PATH = resolve(ROOT, 'public', 'data', 'photos-manifest.json');
-const ROUTE_PATH = resolve(ROOT, 'public', 'data', 'route-data.json');
+const ROUTE_PATH = resolve(ROOT, 'public', 'data', '100mi', 'route-data.json');
 const OUTPUT_PATH = resolve(ROOT, 'public', 'data', 'photos.json');
 
 // ---------------------------------------------------------------------------
