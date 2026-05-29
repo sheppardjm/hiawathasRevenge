@@ -7,14 +7,15 @@
       "shortName": "100mi",
       "gpxFile": "Munising_Hiawatha_s_Revenge.gpx",
       "color": "#c8973e",
-      "totalMiles": 101.98,
-      "elevationGainFeet": 2258,
+      "totalMiles": 101.91,
+      "elevationGainFeet": 2288,
       "sectorIds": [
         "sector-520",
         "sector-nf2266",
         "sector-bass-lake",
         "sector-nf2217",
         "sector-nd2225",
+        "sector-little-indian",
         "sector-doe-lake",
         "sector-rapid-river"
       ]
@@ -25,11 +26,12 @@
       "shortName": "100k",
       "gpxFile": "Hiawatha_s_Revenge_100k.gpx",
       "color": "#5b9279",
-      "totalMiles": 61.68,
-      "elevationGainFeet": 1616,
+      "totalMiles": 60.78,
+      "elevationGainFeet": 1535,
       "sectorIds": [
         "sector-520",
         "sector-nf2266",
+        "sector-little-indian",
         "sector-doe-lake",
         "sector-rapid-river"
       ]
@@ -40,8 +42,8 @@
       "shortName": "50k",
       "gpxFile": "Hiawatha_s_Revenge_50K_.gpx",
       "color": "#4a90c4",
-      "totalMiles": 31.19,
-      "elevationGainFeet": 809,
+      "totalMiles": 30.02,
+      "elevationGainFeet": 747,
       "sectorIds": [
         "sector-520",
         "sector-nf2266",

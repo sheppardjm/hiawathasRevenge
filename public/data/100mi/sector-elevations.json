@@ -3,792 +3,800 @@
     "id": "sector-520",
     "name": "520",
     "difficulty": "moderate",
-    "startMile": 1.03,
-    "endMile": 2.43,
+    "startMile": 99.3,
+    "endMile": 0,
     "elevationPoints": [
       {
-        "miles": 1,
-        "ele": 277.1
+        "miles": 99.3,
+        "ele": 276.1
       },
       {
-        "miles": 1.2,
-        "ele": 276.7
+        "miles": 99.5,
+        "ele": 278.5
       },
       {
-        "miles": 1.4,
-        "ele": 279.3
+        "miles": 99.7,
+        "ele": 277.4
       },
       {
-        "miles": 1.6,
-        "ele": 277.7
+        "miles": 100.2,
+        "ele": 265
       },
       {
-        "miles": 1.8,
-        "ele": 280.3
+        "miles": 100.3,
+        "ele": 265
       },
       {
-        "miles": 1.9,
-        "ele": 281.9
+        "miles": 100.4,
+        "ele": 264.7
       },
       {
-        "miles": 2,
-        "ele": 282.6
+        "miles": 100.6,
+        "ele": 268.5
       },
       {
-        "miles": 2.1,
-        "ele": 281.9
+        "miles": 100.8,
+        "ele": 280.2
       },
       {
-        "miles": 2.1,
-        "ele": 281.9
+        "miles": 100.9,
+        "ele": 294
       },
       {
-        "miles": 2.4,
-        "ele": 294.1
+        "miles": 101,
+        "ele": 308.8
+      },
+      {
+        "miles": 101.1,
+        "ele": 308
+      },
+      {
+        "miles": 101.2,
+        "ele": 307.7
+      },
+      {
+        "miles": 101.3,
+        "ele": 308
+      },
+      {
+        "miles": 101.5,
+        "ele": 314.7
+      },
+      {
+        "miles": 101.7,
+        "ele": 312.1
+      },
+      {
+        "miles": 101.9,
+        "ele": 314.1
       }
     ],
-    "eleMin": 276.7,
-    "eleMax": 294.1,
-    "eleGainMeters": 20,
-    "eleLossMeters": 3
+    "eleMin": 264.7,
+    "eleMax": 314.7,
+    "eleGainMeters": 56,
+    "eleLossMeters": 18
   },
   {
     "id": "sector-nf2266",
     "name": "NF2266",
     "difficulty": "moderate",
-    "startMile": 6.72,
-    "endMile": 9.9,
+    "startMile": 4,
+    "endMile": 7.15,
     "elevationPoints": [
       {
-        "miles": 6.7,
-        "ele": 290.9
+        "miles": 4,
+        "ele": 290.3
       },
       {
-        "miles": 7.4,
-        "ele": 288.1
+        "miles": 4.7,
+        "ele": 290
       },
       {
-        "miles": 7.9,
-        "ele": 281.7
+        "miles": 5.2,
+        "ele": 282.6
       },
       {
-        "miles": 8.1,
-        "ele": 270.5
+        "miles": 5.4,
+        "ele": 270.9
       },
       {
-        "miles": 8.3,
-        "ele": 275.5
+        "miles": 5.5,
+        "ele": 275.9
       },
       {
-        "miles": 8.4,
-        "ele": 278.4
+        "miles": 5.6,
+        "ele": 279.6
       },
       {
-        "miles": 8.6,
-        "ele": 279.1
+        "miles": 5.9,
+        "ele": 280.1
       },
       {
-        "miles": 8.9,
+        "miles": 6.2,
+        "ele": 275.1
+      },
+      {
+        "miles": 6.4,
         "ele": 274.5
       },
       {
-        "miles": 9.1,
-        "ele": 273.8
+        "miles": 6.8,
+        "ele": 275.5
       },
       {
-        "miles": 9.5,
-        "ele": 273.5
-      },
-      {
-        "miles": 9.9,
-        "ele": 272
+        "miles": 7.2,
+        "ele": 272.1
       }
     ],
-    "eleMin": 270.5,
-    "eleMax": 290.9,
-    "eleGainMeters": 9,
+    "eleMin": 270.9,
+    "eleMax": 290.3,
+    "eleGainMeters": 10,
     "eleLossMeters": 28
   },
   {
     "id": "sector-bass-lake",
     "name": "Bass Lake Rd",
     "difficulty": "easy",
-    "startMile": 25.25,
-    "endMile": 30.3,
+    "startMile": 22.61,
+    "endMile": 27.65,
     "elevationPoints": [
       {
-        "miles": 25.3,
+        "miles": 22.6,
         "ele": 224.4
       },
       {
-        "miles": 25.5,
-        "ele": 223.5
+        "miles": 22.9,
+        "ele": 223.3
       },
       {
-        "miles": 25.6,
-        "ele": 222.4
+        "miles": 22.9,
+        "ele": 222.3
       },
       {
-        "miles": 26.5,
-        "ele": 235.3
+        "miles": 23.8,
+        "ele": 236
       },
       {
-        "miles": 26.5,
+        "miles": 23.9,
         "ele": 233.9
       },
       {
-        "miles": 26.7,
-        "ele": 233.4
+        "miles": 24.1,
+        "ele": 231.8
       },
       {
-        "miles": 26.8,
+        "miles": 24.2,
         "ele": 229.3
       },
       {
-        "miles": 26.9,
-        "ele": 230.1
-      },
-      {
-        "miles": 27.2,
-        "ele": 224.1
-      },
-      {
-        "miles": 27.6,
-        "ele": 224.6
-      },
-      {
-        "miles": 27.8,
+        "miles": 24.2,
         "ele": 229.7
       },
       {
-        "miles": 28.2,
-        "ele": 238.1
+        "miles": 24.5,
+        "ele": 222.8
       },
       {
-        "miles": 28.3,
-        "ele": 237.6
+        "miles": 24.9,
+        "ele": 223.8
       },
       {
-        "miles": 28.7,
-        "ele": 235.1
+        "miles": 25.1,
+        "ele": 228.2
       },
       {
-        "miles": 28.8,
-        "ele": 234.8
+        "miles": 25.5,
+        "ele": 239.5
       },
       {
-        "miles": 29,
-        "ele": 232.8
+        "miles": 25.6,
+        "ele": 239.4
       },
       {
-        "miles": 29.1,
-        "ele": 230.4
+        "miles": 26.1,
+        "ele": 235.2
       },
       {
-        "miles": 29.4,
-        "ele": 218.1
+        "miles": 26.1,
+        "ele": 235
       },
       {
-        "miles": 29.5,
-        "ele": 217.9
+        "miles": 26.3,
+        "ele": 234.5
       },
       {
-        "miles": 29.5,
-        "ele": 217.3
+        "miles": 26.4,
+        "ele": 230.2
       },
       {
-        "miles": 29.6,
-        "ele": 217.2
+        "miles": 26.7,
+        "ele": 218.7
       },
       {
-        "miles": 29.7,
-        "ele": 218.4
+        "miles": 26.8,
+        "ele": 218.6
       },
       {
-        "miles": 30.3,
-        "ele": 224.1
+        "miles": 26.9,
+        "ele": 218.7
+      },
+      {
+        "miles": 27,
+        "ele": 216.1
+      },
+      {
+        "miles": 27.1,
+        "ele": 219.6
+      },
+      {
+        "miles": 27.7,
+        "ele": 223.4
       }
     ],
-    "eleMin": 217.2,
-    "eleMax": 238.1,
-    "eleGainMeters": 35,
-    "eleLossMeters": 35
+    "eleMin": 216.1,
+    "eleMax": 239.5,
+    "eleGainMeters": 38,
+    "eleLossMeters": 39
   },
   {
     "id": "sector-nf2217",
     "name": "NF2217-2218",
     "difficulty": "moderate",
-    "startMile": 36.75,
-    "endMile": 43.39,
+    "startMile": 34.1,
+    "endMile": 40.79,
     "elevationPoints": [
       {
-        "miles": 36.8,
-        "ele": 209
+        "miles": 34.1,
+        "ele": 208.5
       },
       {
-        "miles": 37.2,
-        "ele": 208.3
+        "miles": 34.6,
+        "ele": 211.2
       },
       {
-        "miles": 37.4,
-        "ele": 203.4
+        "miles": 34.7,
+        "ele": 203
+      },
+      {
+        "miles": 34.9,
+        "ele": 204.3
+      },
+      {
+        "miles": 35.1,
+        "ele": 207
+      },
+      {
+        "miles": 35.1,
+        "ele": 208.5
+      },
+      {
+        "miles": 35.4,
+        "ele": 214.3
+      },
+      {
+        "miles": 35.7,
+        "ele": 207.1
+      },
+      {
+        "miles": 35.9,
+        "ele": 227.6
+      },
+      {
+        "miles": 36.4,
+        "ele": 230.3
+      },
+      {
+        "miles": 36.6,
+        "ele": 224.6
+      },
+      {
+        "miles": 36.9,
+        "ele": 222.2
       },
       {
         "miles": 37.6,
-        "ele": 202.1
-      },
-      {
-        "miles": 37.7,
-        "ele": 206.1
-      },
-      {
-        "miles": 37.8,
-        "ele": 208.9
-      },
-      {
-        "miles": 38,
-        "ele": 213.4
-      },
-      {
-        "miles": 38.3,
-        "ele": 206.7
-      },
-      {
-        "miles": 38.5,
-        "ele": 220.1
-      },
-      {
-        "miles": 39,
-        "ele": 226.7
-      },
-      {
-        "miles": 39,
-        "ele": 228.3
-      },
-      {
-        "miles": 39.2,
-        "ele": 224.7
-      },
-      {
-        "miles": 39.5,
-        "ele": 222
-      },
-      {
-        "miles": 40.2,
         "ele": 234.5
       },
       {
-        "miles": 40.5,
-        "ele": 237
+        "miles": 37.8,
+        "ele": 233.7
       },
       {
-        "miles": 40.7,
+        "miles": 38.1,
         "ele": 236.9
       },
       {
-        "miles": 41.4,
-        "ele": 237.9
+        "miles": 38.7,
+        "ele": 237.5
       },
       {
-        "miles": 41.7,
-        "ele": 239
+        "miles": 39.1,
+        "ele": 238.9
       },
       {
-        "miles": 42,
-        "ele": 237
+        "miles": 39.3,
+        "ele": 236.4
       },
       {
-        "miles": 42.1,
-        "ele": 238
+        "miles": 40.5,
+        "ele": 236.4
       },
       {
-        "miles": 43.2,
+        "miles": 40.6,
+        "ele": 236.1
+      },
+      {
+        "miles": 40.8,
         "ele": 236.3
-      },
-      {
-        "miles": 43.3,
-        "ele": 236.3
-      },
-      {
-        "miles": 43.3,
-        "ele": 236.2
-      },
-      {
-        "miles": 43.4,
-        "ele": 234.9
       }
     ],
-    "eleMin": 202.1,
-    "eleMax": 239,
-    "eleGainMeters": 51,
-    "eleLossMeters": 25
+    "eleMin": 203,
+    "eleMax": 238.9,
+    "eleGainMeters": 55,
+    "eleLossMeters": 27
   },
   {
     "id": "sector-nd2225",
     "name": "ND2225",
     "difficulty": "moderate",
-    "startMile": 55.78,
-    "endMile": 59.58,
+    "startMile": 54.03,
+    "endMile": 57.84,
     "elevationPoints": [
       {
-        "miles": 55.8,
-        "ele": 263.8
+        "miles": 54,
+        "ele": 263.2
       },
       {
-        "miles": 55.9,
-        "ele": 265.4
+        "miles": 54.1,
+        "ele": 265.7
       },
       {
-        "miles": 56.1,
-        "ele": 266.7
+        "miles": 54.3,
+        "ele": 266.4
       },
       {
-        "miles": 56.3,
+        "miles": 54.5,
         "ele": 264.5
       },
       {
-        "miles": 56.4,
-        "ele": 259.6
+        "miles": 54.7,
+        "ele": 259.7
       },
       {
-        "miles": 56.6,
-        "ele": 257.4
+        "miles": 54.9,
+        "ele": 257.2
+      },
+      {
+        "miles": 55,
+        "ele": 257.5
+      },
+      {
+        "miles": 55.1,
+        "ele": 259.1
+      },
+      {
+        "miles": 55.3,
+        "ele": 257.3
+      },
+      {
+        "miles": 55.4,
+        "ele": 249.9
+      },
+      {
+        "miles": 55.6,
+        "ele": 254.5
+      },
+      {
+        "miles": 55.6,
+        "ele": 256
+      },
+      {
+        "miles": 55.7,
+        "ele": 255.3
+      },
+      {
+        "miles": 56,
+        "ele": 253
+      },
+      {
+        "miles": 56.1,
+        "ele": 252.4
+      },
+      {
+        "miles": 56.3,
+        "ele": 250.2
+      },
+      {
+        "miles": 56.4,
+        "ele": 249.5
+      },
+      {
+        "miles": 56.4,
+        "ele": 249.5
       },
       {
         "miles": 56.7,
-        "ele": 257
-      },
-      {
-        "miles": 56.8,
-        "ele": 258.6
+        "ele": 254.7
       },
       {
         "miles": 57,
-        "ele": 255.5
+        "ele": 254.5
       },
       {
-        "miles": 57.2,
-        "ele": 247.1
-      },
-      {
-        "miles": 57.3,
-        "ele": 252
+        "miles": 57.1,
+        "ele": 255.1
       },
       {
         "miles": 57.4,
-        "ele": 253.2
+        "ele": 248
       },
       {
         "miles": 57.5,
-        "ele": 253.3
+        "ele": 246.5
+      },
+      {
+        "miles": 57.6,
+        "ele": 247.1
       },
       {
         "miles": 57.7,
-        "ele": 253.2
+        "ele": 245.5
       },
       {
         "miles": 57.8,
-        "ele": 253.7
-      },
-      {
-        "miles": 58,
-        "ele": 251.1
-      },
-      {
-        "miles": 58.1,
-        "ele": 249.4
-      },
-      {
-        "miles": 58.3,
-        "ele": 251.9
-      },
-      {
-        "miles": 58.4,
-        "ele": 254.8
-      },
-      {
-        "miles": 58.6,
-        "ele": 255.5
-      },
-      {
-        "miles": 58.8,
-        "ele": 255.2
-      },
-      {
-        "miles": 58.8,
-        "ele": 255.6
-      },
-      {
-        "miles": 59.2,
         "ele": 244.4
       },
       {
-        "miles": 59.2,
-        "ele": 245.3
-      },
-      {
-        "miles": 59.3,
-        "ele": 245.7
-      },
-      {
-        "miles": 59.4,
-        "ele": 245.9
-      },
-      {
-        "miles": 59.5,
-        "ele": 247.2
-      },
-      {
-        "miles": 59.5,
-        "ele": 246.7
-      },
-      {
-        "miles": 59.6,
-        "ele": 244.8
+        "miles": 57.8,
+        "ele": 244.7
       }
     ],
     "eleMin": 244.4,
-    "eleMax": 266.7,
-    "eleGainMeters": 21,
-    "eleLossMeters": 40
+    "eleMax": 266.4,
+    "eleGainMeters": 18,
+    "eleLossMeters": 36
   },
   {
     "id": "sector-little-indian",
     "name": "Little Indian",
     "difficulty": "easy",
-    "startMile": 65.71,
-    "endMile": 71.23,
+    "startMile": 63.97,
+    "endMile": 69.49,
     "elevationPoints": [
       {
-        "miles": 65.7,
-        "ele": 230.4
+        "miles": 64,
+        "ele": 229.4
       },
       {
-        "miles": 65.9,
-        "ele": 230.5
-      },
-      {
-        "miles": 66.1,
-        "ele": 231
-      },
-      {
-        "miles": 66.3,
-        "ele": 230.3
-      },
-      {
-        "miles": 66.6,
-        "ele": 229.2
-      },
-      {
-        "miles": 66.8,
-        "ele": 228.4
-      },
-      {
-        "miles": 66.9,
-        "ele": 230.7
-      },
-      {
-        "miles": 67.1,
-        "ele": 231.1
-      },
-      {
-        "miles": 67.2,
-        "ele": 230.3
-      },
-      {
-        "miles": 67.4,
-        "ele": 230.3
-      },
-      {
-        "miles": 67.4,
+        "miles": 64.1,
         "ele": 230.1
       },
       {
-        "miles": 67.7,
-        "ele": 228.4
+        "miles": 64.4,
+        "ele": 231
       },
       {
-        "miles": 68,
-        "ele": 232.6
+        "miles": 64.6,
+        "ele": 230
       },
       {
-        "miles": 68.3,
-        "ele": 232.2
+        "miles": 64.9,
+        "ele": 230.3
       },
       {
-        "miles": 68.5,
+        "miles": 65.1,
+        "ele": 228.5
+      },
+      {
+        "miles": 65.2,
+        "ele": 230.3
+      },
+      {
+        "miles": 65.3,
+        "ele": 231.9
+      },
+      {
+        "miles": 65.5,
+        "ele": 229.9
+      },
+      {
+        "miles": 65.6,
+        "ele": 230.5
+      },
+      {
+        "miles": 65.7,
+        "ele": 230
+      },
+      {
+        "miles": 66,
+        "ele": 229.2
+      },
+      {
+        "miles": 66.3,
         "ele": 234
       },
       {
-        "miles": 68.8,
-        "ele": 236.2
+        "miles": 66.5,
+        "ele": 234.4
       },
       {
-        "miles": 68.9,
-        "ele": 236.4
+        "miles": 66.8,
+        "ele": 233.7
       },
       {
-        "miles": 68.9,
-        "ele": 239.6
+        "miles": 67.1,
+        "ele": 233.5
+      },
+      {
+        "miles": 67.1,
+        "ele": 235.8
+      },
+      {
+        "miles": 67.2,
+        "ele": 242.2
+      },
+      {
+        "miles": 67.3,
+        "ele": 240.2
+      },
+      {
+        "miles": 67.3,
+        "ele": 239
+      },
+      {
+        "miles": 67.5,
+        "ele": 235.6
+      },
+      {
+        "miles": 67.8,
+        "ele": 236
+      },
+      {
+        "miles": 68.4,
+        "ele": 234.9
       },
       {
         "miles": 69,
-        "ele": 239.1
+        "ele": 240.4
       },
       {
         "miles": 69.1,
-        "ele": 239.9
+        "ele": 244.6
       },
       {
-        "miles": 69.2,
-        "ele": 235.4
+        "miles": 69.3,
+        "ele": 247.7
       },
       {
-        "miles": 69.6,
-        "ele": 237.9
+        "miles": 69.3,
+        "ele": 247.7
       },
       {
-        "miles": 70.1,
-        "ele": 235.4
-      },
-      {
-        "miles": 70.8,
-        "ele": 241.1
-      },
-      {
-        "miles": 70.8,
-        "ele": 246.5
-      },
-      {
-        "miles": 71,
-        "ele": 247.8
-      },
-      {
-        "miles": 71.1,
-        "ele": 247.6
-      },
-      {
-        "miles": 71.2,
-        "ele": 236.2
+        "miles": 69.5,
+        "ele": 235.9
       }
     ],
-    "eleMin": 228.4,
-    "eleMax": 247.8,
-    "eleGainMeters": 31,
-    "eleLossMeters": 25
+    "eleMin": 228.5,
+    "eleMax": 247.7,
+    "eleGainMeters": 33,
+    "eleLossMeters": 27
   },
   {
     "id": "sector-doe-lake",
     "name": "Doe Lake",
     "difficulty": "easy",
-    "startMile": 84.66,
-    "endMile": 87.94,
+    "startMile": 83.02,
+    "endMile": 86.3,
     "elevationPoints": [
       {
-        "miles": 84.7,
-        "ele": 255.6
+        "miles": 83,
+        "ele": 257.6
       },
       {
-        "miles": 85,
+        "miles": 83.4,
         "ele": 258
       },
       {
-        "miles": 85.5,
-        "ele": 258
+        "miles": 83.7,
+        "ele": 256.8
       },
       {
-        "miles": 86.3,
-        "ele": 258
-      },
-      {
-        "miles": 86.8,
+        "miles": 83.9,
         "ele": 258.3
       },
       {
-        "miles": 86.9,
-        "ele": 258.4
+        "miles": 84.6,
+        "ele": 258.2
       },
       {
-        "miles": 87.1,
-        "ele": 259.2
+        "miles": 85.1,
+        "ele": 258
       },
       {
-        "miles": 87.2,
+        "miles": 85.2,
+        "ele": 258.6
+      },
+      {
+        "miles": 85.4,
+        "ele": 259.3
+      },
+      {
+        "miles": 85.6,
+        "ele": 259.4
+      },
+      {
+        "miles": 85.9,
+        "ele": 260
+      },
+      {
+        "miles": 86.2,
+        "ele": 259.1
+      },
+      {
+        "miles": 86.3,
         "ele": 259.5
-      },
-      {
-        "miles": 87.5,
-        "ele": 260.2
-      },
-      {
-        "miles": 87.8,
-        "ele": 258
-      },
-      {
-        "miles": 87.9,
-        "ele": 258
       }
     ],
-    "eleMin": 255.6,
-    "eleMax": 260.2,
-    "eleGainMeters": 5,
+    "eleMin": 256.8,
+    "eleMax": 260,
+    "eleGainMeters": 4,
     "eleLossMeters": 2
   },
   {
     "id": "sector-rapid-river",
     "name": "Ridge Rd",
     "difficulty": "hard",
-    "startMile": 94.46,
-    "endMile": 100.89,
+    "startMile": 92.82,
+    "endMile": 99.25,
     "elevationPoints": [
       {
-        "miles": 94.5,
-        "ele": 282.2
+        "miles": 92.8,
+        "ele": 282.5
       },
       {
-        "miles": 94.8,
-        "ele": 279
+        "miles": 93.2,
+        "ele": 281.2
       },
       {
-        "miles": 95,
-        "ele": 282.7
+        "miles": 93.4,
+        "ele": 284.1
       },
       {
-        "miles": 95.4,
-        "ele": 272.4
-      },
-      {
-        "miles": 95.5,
-        "ele": 272.4
-      },
-      {
-        "miles": 95.6,
-        "ele": 273.6
-      },
-      {
-        "miles": 96.3,
-        "ele": 269.2
-      },
-      {
-        "miles": 96.4,
-        "ele": 270
-      },
-      {
-        "miles": 96.5,
-        "ele": 269
-      },
-      {
-        "miles": 96.6,
-        "ele": 268.4
-      },
-      {
-        "miles": 96.7,
-        "ele": 269.5
-      },
-      {
-        "miles": 96.9,
-        "ele": 272.3
-      },
-      {
-        "miles": 97.1,
-        "ele": 274.7
-      },
-      {
-        "miles": 97.2,
-        "ele": 275.7
-      },
-      {
-        "miles": 97.5,
-        "ele": 277.9
-      },
-      {
-        "miles": 97.6,
-        "ele": 279.6
-      },
-      {
-        "miles": 97.7,
+        "miles": 93.8,
         "ele": 272.8
       },
       {
-        "miles": 97.9,
-        "ele": 265.1
+        "miles": 93.8,
+        "ele": 272.6
       },
       {
-        "miles": 98,
-        "ele": 263
+        "miles": 93.9,
+        "ele": 275.6
       },
       {
-        "miles": 98.1,
-        "ele": 259.7
-      },
-      {
-        "miles": 98.2,
-        "ele": 257.2
-      },
-      {
-        "miles": 98.3,
-        "ele": 264.9
-      },
-      {
-        "miles": 98.6,
-        "ele": 266.9
-      },
-      {
-        "miles": 98.8,
-        "ele": 266.5
-      },
-      {
-        "miles": 98.9,
-        "ele": 268.5
-      },
-      {
-        "miles": 99.1,
-        "ele": 268.5
-      },
-      {
-        "miles": 99.3,
-        "ele": 266.4
-      },
-      {
-        "miles": 99.4,
-        "ele": 268.2
-      },
-      {
-        "miles": 99.6,
+        "miles": 94.7,
         "ele": 271.3
       },
       {
-        "miles": 99.8,
+        "miles": 94.8,
+        "ele": 272
+      },
+      {
+        "miles": 94.9,
+        "ele": 271.9
+      },
+      {
+        "miles": 95,
         "ele": 271.8
       },
       {
-        "miles": 99.9,
-        "ele": 278
+        "miles": 95,
+        "ele": 272.8
       },
       {
-        "miles": 100.4,
-        "ele": 277.6
+        "miles": 95.2,
+        "ele": 273.1
       },
       {
-        "miles": 100.5,
-        "ele": 282
+        "miles": 95.5,
+        "ele": 275.2
       },
       {
-        "miles": 100.8,
-        "ele": 279.5
+        "miles": 95.6,
+        "ele": 276.6
       },
       {
-        "miles": 100.8,
-        "ele": 279.3
+        "miles": 95.9,
+        "ele": 278.3
       },
       {
-        "miles": 100.9,
-        "ele": 277.2
+        "miles": 96,
+        "ele": 280.6
+      },
+      {
+        "miles": 96.1,
+        "ele": 273
+      },
+      {
+        "miles": 96.2,
+        "ele": 264.7
+      },
+      {
+        "miles": 96.3,
+        "ele": 264.1
+      },
+      {
+        "miles": 96.5,
+        "ele": 261
+      },
+      {
+        "miles": 96.5,
+        "ele": 260.4
+      },
+      {
+        "miles": 96.7,
+        "ele": 264.8
+      },
+      {
+        "miles": 96.9,
+        "ele": 268.8
+      },
+      {
+        "miles": 97.2,
+        "ele": 268.4
+      },
+      {
+        "miles": 97.3,
+        "ele": 269.9
+      },
+      {
+        "miles": 97.5,
+        "ele": 269.4
+      },
+      {
+        "miles": 97.6,
+        "ele": 268.3
+      },
+      {
+        "miles": 97.8,
+        "ele": 270.5
+      },
+      {
+        "miles": 98,
+        "ele": 273.5
+      },
+      {
+        "miles": 98.1,
+        "ele": 273.2
+      },
+      {
+        "miles": 98.3,
+        "ele": 274.3
+      },
+      {
+        "miles": 98.8,
+        "ele": 276.5
+      },
+      {
+        "miles": 98.8,
+        "ele": 282.4
+      },
+      {
+        "miles": 99.1,
+        "ele": 280.4
+      },
+      {
+        "miles": 99.2,
+        "ele": 280.3
+      },
+      {
+        "miles": 99.3,
+        "ele": 279.1
       }
     ],
-    "eleMin": 257.2,
-    "eleMax": 282.7,
-    "eleGainMeters": 45,
-    "eleLossMeters": 50
+    "eleMin": 260.4,
+    "eleMax": 284.1,
+    "eleGainMeters": 40,
+    "eleLossMeters": 43
   }
 ]

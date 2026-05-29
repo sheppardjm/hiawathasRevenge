@@ -6,8 +6,8 @@
     "surface": "snowmobile trail",
     "stars": 2,
     "stravaLink": "https://www.strava.com/segments/28533709",
-    "startMile": 1.03,
-    "endMile": 2.43
+    "startMile": 99.3,
+    "endMile": 0
   },
   {
     "id": "sector-nf2266",
@@ -16,8 +16,8 @@
     "surface": "sand and gravel two-track",
     "stars": 5,
     "stravaLink": "https://www.strava.com/segments/28533671",
-    "startMile": 6.72,
-    "endMile": 9.9
+    "startMile": 4,
+    "endMile": 7.15
   },
   {
     "id": "sector-bass-lake",
@@ -26,8 +26,8 @@
     "surface": "packed gravel, county-maintained",
     "stars": 2,
     "stravaLink": "https://www.strava.com/segments/31852807",
-    "startMile": 25.25,
-    "endMile": 30.3
+    "startMile": 22.61,
+    "endMile": 27.65
   },
   {
     "id": "sector-nf2217",
@@ -36,8 +36,8 @@
     "surface": "compact gravel and hard-packed dirt",
     "stars": 2,
     "stravaLink": "https://www.strava.com/segments/41149550",
-    "startMile": 36.75,
-    "endMile": 43.39
+    "startMile": 34.1,
+    "endMile": 40.79
   },
   {
     "id": "sector-nd2225",
@@ -46,8 +46,8 @@
     "surface": "loose gravel transitioning to sandy patches",
     "stars": 3,
     "stravaLink": "https://www.strava.com/segments/39343281",
-    "startMile": 55.78,
-    "endMile": 59.58
+    "startMile": 54.03,
+    "endMile": 57.84
   },
   {
     "id": "sector-little-indian",
@@ -56,8 +56,8 @@
     "surface": "forest road gravel",
     "stars": 2,
     "stravaLink": "https://www.strava.com/segments/34542982",
-    "startMile": 65.71,
-    "endMile": 71.23
+    "startMile": 63.97,
+    "endMile": 69.49
   },
   {
     "id": "sector-doe-lake",
@@ -66,8 +66,8 @@
     "surface": "deep, loose gravel",
     "stars": 4,
     "stravaLink": "https://www.strava.com/segments/34543004",
-    "startMile": 84.66,
-    "endMile": 87.94
+    "startMile": 83.02,
+    "endMile": 86.3
   },
   {
     "id": "sector-rapid-river",
@@ -76,7 +76,7 @@
     "surface": "firm packed gravel, USFS-maintained",
     "stars": 2,
     "stravaLink": "https://www.strava.com/segments/41188200",
-    "startMile": 94.46,
-    "endMile": 100.89
+    "startMile": 92.82,
+    "endMile": 99.25
   }
 ]
