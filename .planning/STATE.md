@@ -1,17 +1,16 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.11
-milestone_name: SEO & Social Sharing
-status: Awaiting next milestone
-stopped_at: Completed 53-01-PLAN.md — crawlability (robots.txt + sitemap)
-last_updated: "2026-05-29T14:20:44.294Z"
-last_activity: 2026-05-29 — Milestone v1.11 completed and archived
+milestone: v1.12
+milestone_name: Route Start Relocation
+status: planning
+last_updated: "2026-05-29T14:37:46.512Z"
+last_activity: 2026-05-29
 progress:
-  total_phases: 4
-  completed_phases: 4
-  total_plans: 4
-  completed_plans: 4
-  percent: 100
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # Project State
@@ -25,10 +24,10 @@ See: .planning/PROJECT.md (updated 2026-05-29)
 
 ## Current Position
 
-Phase: Milestone v1.11 complete
+Phase: Not started (defining requirements)
 Plan: —
-Status: Awaiting next milestone
-Last activity: 2026-05-29 — Milestone v1.11 completed and archived
+Status: Defining requirements
+Last activity: 2026-05-29 — Milestone v1.12 started
 
 ## Performance Metrics
 

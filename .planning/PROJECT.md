@@ -8,6 +8,18 @@ An immersive editorial showcase website for Hiawatha's Revenge, a 100-mile cycli
 
 Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive, visually stunning showcase that inspires them to ride it and support MBTN.
 
+## Current Milestone: v1.12 Route Start Relocation
+
+**Goal:** Move all three routes (100mi/100k/50k) to the new unified start/finish staging location and regenerate every piece of derived data so the site reflects the re-cut course accurately.
+
+**Target features:**
+- Replace all three route GPX files with the new "(alt start)" tracks sharing start/finish at 46.34770, -86.72515 (~2 km SW of the old start)
+- Re-run the full build pipeline so route-data, annotations, sector snapping, and elevation are correct for all three new tracks
+- Re-derive restock point mileages and photo mileage tags against the rotated course
+- Update user-facing GPX downloads, route stats, and route-config elevation/distance references
+
+**Key context:** Source files are the three `(alt start)` GPX exports in `~/Downloads` (dated 2026-05-29 10:34). Same course footprint as current routes — sectors stay on-route — but the start moves ~2 km, so all mileage-anchored data rotates. Coordinate-based sector snapping (200m haversine) should re-snap cleanly; hardcoded mile values and photo tags must be re-derived. No new features or research — this is a data-accuracy refresh ahead of the June 6, 2026 ride.
+
 ## Requirements
 
 ### Validated
@@ -101,7 +113,10 @@ Visitors experience the beauty and scale of the Hiawatha's Revenge route through
 
 ### Active
 
-No active milestone — v1.11 shipped 2026-05-29. Define the next milestone via `/gsd-new-milestone`.
+**v1.12 Route Start Relocation** (in planning — started 2026-05-29):
+- All three route GPX files relocated to the unified alt-start location and pipeline regenerated
+- Restock mileages and photo mileage tags re-derived for the rotated course
+- User-facing GPX downloads and route stats updated
 
 **Candidate / deferred for future milestones:**
 - Android PWA install — `site.webmanifest` with 192x192 and 512x512 icons (MANIFEST-01, deferred from v1.11)
@@ -232,5 +247,22 @@ MBTN (mbtn.org) is the beneficiary — donate CTA links to their site.
 | Sitemap directive → sitemap-index.xml | @astrojs/sitemap emits sitemap-index.xml as entry point; sitemap.xml would 404 | ✓ Good — v1.11 |
 | Sitemap filter excludes /admin | admin.astro is a build-time page file; runtime redirect to / does not prevent inclusion | ✓ Good — v1.11 |
 
+## Evolution
+
+This document evolves at phase transitions and milestone boundaries.
+
+**After each phase transition** (via `/gsd-transition`):
+1. Requirements invalidated? → Move to Out of Scope with reason
+2. Requirements validated? → Move to Validated with phase reference
+3. New requirements emerged? → Add to Active
+4. Decisions to log? → Add to Key Decisions
+5. "What This Is" still accurate? → Update if drifted
+
+**After each milestone** (via `/gsd-complete-milestone`):
+1. Full review of all sections
+2. Core Value check — still the right priority?
+3. Audit Out of Scope — reasons still valid?
+4. Update Context with current state
+
 ---
-*Last updated: 2026-05-29 after v1.11 milestone completion*
+*Last updated: 2026-05-29 — started milestone v1.12 Route Start Relocation*
