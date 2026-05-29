@@ -40,19 +40,27 @@ Full phase details archived at `.planning/milestones/v1.11-ROADMAP.md`.
 ## Phase Details
 
 ### Phase 54: Route Start Relocation & Data Regeneration
+
 **Goal**: All three routes start and finish at the new unified staging point (46.34770, -86.72515), and every piece of derived data — route geometry, gravel sector snapping, restock mileages, photo mileage tags, per-route stats, and the downloadable GPX files — accurately reflects the rotated course.
 **Depends on**: Phase 53 (v1.11 baseline)
 **Requirements**: ROUTE-01, ROUTE-02, ROUTE-03, ROUTE-04, ROUTE-05, ROUTE-06, ROUTE-07
 **Success Criteria** (what must be TRUE):
+
   1. All three routes render on the map starting and finishing at the new staging point (46.34770, -86.72515), ~2 km SW of the old start, with no build errors from the pipeline.
   2. Gravel sectors appear correctly positioned on every route — 8 sectors on 100mi, 5 on 100k, 4 on 50k — each snapped to its on-route location.
   3. Restock markers (Camp 7 Lake on 100mi; Midway on 100mi/100k) show re-derived mileages that match their position along the new course, and photo map markers / gallery ordering reflect the rotated mileage tags.
   4. Per-route stats (distance and elevation gain) shown in the route selector and comparison sidebar fall within expected ranges for the new tracks, with `route-config.js` updated where references changed.
   5. The GPX download link serves the new alt-start track for each selected route.
-**Plans**: 2 plans
-Plans:
+
+**Plans**: 2 plansPlans:
+**Wave 1**
+
 - [ ] 54-01-PLAN.md — Pre-pipeline setup: swap alt-start GPX, fix match-photos.js path bug, run photo-mileage migration (ROUTE-01, ROUTE-05)
+
+**Wave 2** *(blocked on Wave 1 completion)*
+
 - [ ] 54-02-PLAN.md — Run pipeline, verify sector/restock/elevation/GPX gates, build smoke test (ROUTE-02, ROUTE-03, ROUTE-04, ROUTE-06, ROUTE-07)
+
 **UI hint**: yes
 
 ## Progress

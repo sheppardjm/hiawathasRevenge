@@ -410,7 +410,7 @@ After pipeline: `npm run build` must complete without TypeScript or Astro conten
 
 ---
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **Should we use a migration script or the admin UI to update photos-manifest.json?**
    - What we know: 56 photos need ~+1.59 mile shift with modulo wrap. The admin UI (admin.astro) now generates a downloadable file rather than saving directly. A migration script is deterministic and auditable.
