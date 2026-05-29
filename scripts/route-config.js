@@ -157,14 +157,14 @@ export const RESTOCK_DEFS = [
   {
     id: 'restock-camp7',
     name: 'Camp 7 Lake Campground',
-    mile: 44.7,
+    mile: 42.69,
     lat: 46.0549,
     lon: -86.5487,
   },
   {
     id: 'restock-midway',
     name: 'Midway General Store',
-    mile: 75.7,
+    mile: 74.22,
     lat: 46.1679,
     lon: -86.6236,
   },
