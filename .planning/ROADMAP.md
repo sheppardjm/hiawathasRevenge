@@ -55,7 +55,7 @@ Full phase details archived at `.planning/milestones/v1.11-ROADMAP.md`.
 **Plans**: 2 plansPlans:
 **Wave 1**
 
-- [ ] 54-01-PLAN.md — Pre-pipeline setup: swap alt-start GPX, fix match-photos.js path bug, run photo-mileage migration (ROUTE-01, ROUTE-05)
+- [x] 54-01-PLAN.md — Pre-pipeline setup: swap alt-start GPX, fix match-photos.js path bug, run photo-mileage migration (ROUTE-01, ROUTE-05)
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
@@ -74,7 +74,7 @@ Phases execute in numeric order. Phase 54 is the sole phase of v1.12.
 | 51. Favicon & Icons | v1.11 | 1/1 | ✓ Complete | 2026-04-09 |
 | 52. OG Image Redesign | v1.11 | 1/1 | ✓ Complete | 2026-04-09 |
 | 53. Crawlability | v1.11 | 1/1 | ✓ Complete | 2026-04-09 |
-| 54. Route Start Relocation & Data Regeneration | v1.12 | 0/2 | Not started | - |
+| 54. Route Start Relocation & Data Regeneration | v1.12 | 1/2 | In Progress|  |
 
 (Phases 0-49 complete — see `.planning/milestones/` archives.)
 
