@@ -49,7 +49,10 @@ Full phase details archived at `.planning/milestones/v1.11-ROADMAP.md`.
   3. Restock markers (Camp 7 Lake on 100mi; Midway on 100mi/100k) show re-derived mileages that match their position along the new course, and photo map markers / gallery ordering reflect the rotated mileage tags.
   4. Per-route stats (distance and elevation gain) shown in the route selector and comparison sidebar fall within expected ranges for the new tracks, with `route-config.js` updated where references changed.
   5. The GPX download link serves the new alt-start track for each selected route.
-**Plans**: TBD
+**Plans**: 2 plans
+Plans:
+- [ ] 54-01-PLAN.md — Pre-pipeline setup: swap alt-start GPX, fix match-photos.js path bug, run photo-mileage migration (ROUTE-01, ROUTE-05)
+- [ ] 54-02-PLAN.md — Run pipeline, verify sector/restock/elevation/GPX gates, build smoke test (ROUTE-02, ROUTE-03, ROUTE-04, ROUTE-06, ROUTE-07)
 **UI hint**: yes
 
 ## Progress
@@ -63,9 +66,9 @@ Phases execute in numeric order. Phase 54 is the sole phase of v1.12.
 | 51. Favicon & Icons | v1.11 | 1/1 | ✓ Complete | 2026-04-09 |
 | 52. OG Image Redesign | v1.11 | 1/1 | ✓ Complete | 2026-04-09 |
 | 53. Crawlability | v1.11 | 1/1 | ✓ Complete | 2026-04-09 |
-| 54. Route Start Relocation & Data Regeneration | v1.12 | 0/TBD | Not started | - |
+| 54. Route Start Relocation & Data Regeneration | v1.12 | 0/2 | Not started | - |
 
 (Phases 0-49 complete — see `.planning/milestones/` archives.)
 
 ---
-*Last updated: 2026-05-29 — v1.12 Route Start Relocation roadmap created (Phase 54)*
+*Last updated: 2026-05-29 — v1.12 Phase 54 planned (2 plans, 2 waves)*
