@@ -1,20 +1,34 @@
+---
+gsd_state_version: 1.0
+milestone: v1.11
+milestone_name: SEO & Social Sharing
+status: Awaiting next milestone
+stopped_at: Completed 53-01-PLAN.md — crawlability (robots.txt + sitemap)
+last_updated: "2026-05-29T14:20:44.294Z"
+last_activity: 2026-05-29 — Milestone v1.11 completed and archived
+progress:
+  total_phases: 4
+  completed_phases: 4
+  total_plans: 4
+  completed_plans: 4
+  percent: 100
+---
+
 # Project State
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-04-09)
+See: .planning/PROJECT.md (updated 2026-05-29)
 
 **Core value:** Visitors experience the beauty and scale of the Hiawatha's Revenge route through an immersive, visually stunning showcase that inspires them to ride it and support MBTN.
-**Current focus:** v1.11 Phase 53 -- Crawlability
+**Current focus:** Planning next milestone (v1.11 SEO & Social Sharing shipped 2026-05-29)
 
 ## Current Position
 
-Phase: 53 of 53 (Crawlability)
-Plan: 01 of 01
-Status: Phase complete
-Last activity: 2026-04-10 — Completed 53-01-PLAN.md (crawlability: robots.txt + sitemap)
-
-Progress: [████████████████████] 100% (v1.11)
+Phase: Milestone v1.11 complete
+Plan: —
+Status: Awaiting next milestone
+Last activity: 2026-05-29 — Milestone v1.11 completed and archived
 
 ## Performance Metrics
 
@@ -29,6 +43,28 @@ Progress: [████████████████████] 100% (v
 **v1.8 Summary:** 5 plans, 3 phases, 2 days
 **v1.9 Summary:** 1 plan, 1 phase, <1 day
 **v1.10 Summary:** 1 plan, 1 phase, <1 day
+**v1.11 Summary:** 4 plans, 4 phases, ~1 day
+
+## Deferred Items
+
+Items acknowledged and deferred at milestone close on 2026-05-29 (v1.11). All 19 v1.11 requirements were verified complete; these are pre-existing artifacts carried forward across v1.0–v1.11.
+
+| Category | Item | Status |
+|----------|------|--------|
+| debug | history-bg-paintings | diagnosed |
+| debug | history-light-mode-text | diagnosed |
+| debug | segment-cards-multi-photo | diagnosed |
+| uat_gap | Phase 00 (00-UAT.md) | diagnosed (0 pending) |
+| uat_gap | Phase 44 (44-UAT.md) | diagnosed (0 pending) |
+| uat_gap | Phase 51 (51-UAT.md) | diagnosed (0 pending) |
+| uat_gap | Phase 53 (53-UAT.md) | testing (3 pending) |
+| verification_gap | Phase 03 (03-VERIFICATION.md) | human_needed |
+| verification_gap | Phase 11 (11-VERIFICATION.md) | human_needed |
+| verification_gap | Phase 20 (20-VERIFICATION.md) | gaps_found |
+| verification_gap | Phase 22 (22-VERIFICATION.md) | human_needed |
+| verification_gap | Phase 25 (25-VERIFICATION.md) | gaps_found |
+| verification_gap | Phase 39 (39-01-VERIFICATION.md) | gaps_found |
+| verification_gap | Phase 52 (52-VERIFICATION.md) | human_needed |
 
 ## Accumulated Context
 
@@ -37,6 +73,7 @@ Progress: [████████████████████] 100% (v
 (Full decision log in PROJECT.md Key Decisions table)
 
 **Phase 50-01 (Meta Tags & Structured Data):**
+
 - og:locale uses underscore format `en_US` (not hyphen `en-US`)
 - theme-color hardcoded as `#1a2e1a` — CSS custom properties don't work in content attribute
 - Event startDate timezone is CDT (-05:00) for Michigan UP in June
@@ -44,12 +81,14 @@ Progress: [████████████████████] 100% (v
 - admin.astro canonical gap accepted as won't-fix (redirects to / in prod, never crawled)
 
 **Phase 51-01 (Favicon & Icons):**
+
 - favicon.svg uses CSS classes; generate-favicons.js uses inline fill attributes (sharp does not process `<style>` blocks reliably for rasterization)
 - Icon link tag order: SVG → apple-touch-icon → ICO with sizes=32x32 (modern browsers prefer SVG; ICO is legacy fallback only)
 - No dark-mode media query needed in favicon.svg — forest-green background (#1a2e1a) works on both light and dark tab bars
 - to-ico ^1.1.5 added as devDependency for ICO encoding
 
 **Phase 52-01 (OG Image Redesign):**
+
 - Output renamed og-card.jpg (was og-image.jpg) for social platform cache busting
 - Fonts stored in scripts/fonts/ — .astro/fonts/ doesn't exist at pipeline/prebuild run time
 - SVG overlay uses inline fill attributes on rect/path — CSS class fills unreliable in sharp/librsvg (consistent with phase 51 decision)
@@ -57,6 +96,7 @@ Progress: [████████████████████] 100% (v
 - Font embedding pattern for pipeline scripts: readFileSync + base64 + SVG @font-face data URI
 
 **Phase 53-01 (Crawlability):**
+
 - Static public/robots.txt preferred over dynamic endpoint — fixed URL, no templating benefit
 - Sitemap directive uses sitemap-index.xml (not sitemap.xml) — @astrojs/sitemap generates sitemap-index.xml as entry point
 - filter() excludes /admin in sitemap — admin.astro is a page file discovered at build time; runtime redirect to / does not prevent sitemap inclusion
@@ -81,3 +121,7 @@ None.
 Last session: 2026-04-10T01:58:43Z
 Stopped at: Completed 53-01-PLAN.md — crawlability (robots.txt + sitemap)
 Resume file: None
+
+## Operator Next Steps
+
+- Start the next milestone with /gsd-new-milestone
