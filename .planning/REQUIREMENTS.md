@@ -10,13 +10,13 @@
 
 ### Route Data
 
-- [ ] **ROUTE-01**: All three route GPX files (100mi, 100k, 50k) are replaced with the new alt-start tracks that start and finish at `46.34770, -86.72515`.
-- [ ] **ROUTE-02**: The build pipeline runs end-to-end on the three new tracks and regenerates route-data, annotations, sector-details, and elevation data without errors.
-- [ ] **ROUTE-03**: All on-route gravel sectors re-snap to the correct location on each new track, preserving per-route membership (8 sectors on 100mi, 5 on 100k, 4 on 50k).
-- [ ] **ROUTE-04**: Restock point mileages (Camp 7 Lake, Midway General Store) are re-derived to match the new 100mi course position.
-- [ ] **ROUTE-05**: Photo mileage tags are re-validated against the new course so map photo markers and gallery mileage ordering remain correct.
-- [ ] **ROUTE-06**: Per-route stats (distance, elevation gain) reflect the new tracks and fall within expected ranges; `route-config.js` `elevationTargetRange` and any hardcoded distances are updated if needed.
-- [ ] **ROUTE-07**: The user-downloadable GPX files served by the site are the new alt-start tracks for every route.
+- [x] **ROUTE-01**: All three route GPX files (100mi, 100k, 50k) are replaced with the new alt-start tracks that start and finish at `46.34770, -86.72515`.
+- [x] **ROUTE-02**: The build pipeline runs end-to-end on the three new tracks and regenerates route-data, annotations, sector-details, and elevation data without errors.
+- [x] **ROUTE-03**: All on-route gravel sectors re-snap to the correct location on each new track, preserving per-route membership (8 sectors on 100mi, 5 on 100k, 4 on 50k).
+- [x] **ROUTE-04**: Restock point mileages (Camp 7 Lake, Midway General Store) are re-derived to match the new 100mi course position.
+- [x] **ROUTE-05**: Photo mileage tags are re-validated against the new course so map photo markers and gallery mileage ordering remain correct.
+- [x] **ROUTE-06**: Per-route stats (distance, elevation gain) reflect the new tracks and fall within expected ranges; `route-config.js` `elevationTargetRange` and any hardcoded distances are updated if needed.
+- [x] **ROUTE-07**: The user-downloadable GPX files served by the site are the new alt-start tracks for every route.
 
 ---
 

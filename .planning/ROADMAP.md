@@ -35,7 +35,7 @@ Full phase details archived at `.planning/milestones/v1.11-ROADMAP.md`.
 
 **Milestone Goal:** Move all three routes (100mi/100k/50k) to the new unified start/finish staging location (46.34770, -86.72515) and regenerate every piece of derived data so the site reflects the re-cut course accurately ahead of the June 6, 2026 ride.
 
-- [ ] **Phase 54: Route Start Relocation & Data Regeneration** - Swap in the three alt-start GPX tracks, re-run the pipeline, and re-derive all mileage-anchored data for the rotated course
+- [x] **Phase 54: Route Start Relocation & Data Regeneration** - Swap in the three alt-start GPX tracks, re-run the pipeline, and re-derive all mileage-anchored data for the rotated course (completed 2026-05-29)
 
 ## Phase Details
 
@@ -59,7 +59,7 @@ Full phase details archived at `.planning/milestones/v1.11-ROADMAP.md`.
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
-- [ ] 54-02-PLAN.md — Run pipeline, verify sector/restock/elevation/GPX gates, build smoke test (ROUTE-02, ROUTE-03, ROUTE-04, ROUTE-06, ROUTE-07)
+- [x] 54-02-PLAN.md — Run pipeline, verify sector/restock/elevation/GPX gates, build smoke test (ROUTE-02, ROUTE-03, ROUTE-04, ROUTE-06, ROUTE-07)
 
 **UI hint**: yes
 
@@ -74,7 +74,7 @@ Phases execute in numeric order. Phase 54 is the sole phase of v1.12.
 | 51. Favicon & Icons | v1.11 | 1/1 | ✓ Complete | 2026-04-09 |
 | 52. OG Image Redesign | v1.11 | 1/1 | ✓ Complete | 2026-04-09 |
 | 53. Crawlability | v1.11 | 1/1 | ✓ Complete | 2026-04-09 |
-| 54. Route Start Relocation & Data Regeneration | v1.12 | 1/2 | In Progress|  |
+| 54. Route Start Relocation & Data Regeneration | v1.12 | 2/2 | Complete   | 2026-05-29 |
 
 (Phases 0-49 complete — see `.planning/milestones/` archives.)
 
