@@ -29,7 +29,11 @@
           obs.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.15 });
+    // threshold:0 + a bottom rootMargin reveals as soon as the section's top
+    // edge scrolls ~12% into view. A ratio-based threshold (e.g. 0.15) can never
+    // fire for sections taller than the viewport (e.g. #sectors on mobile, where
+    // 8 photo cards make the section several screens tall), leaving them hidden.
+    }, { threshold: 0, rootMargin: '0px 0px -12% 0px' });
 
     document.querySelectorAll('[data-reveal]').forEach(el => {
       if (el.getBoundingClientRect().top < window.innerHeight) {
